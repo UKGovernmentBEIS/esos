@@ -17,10 +17,13 @@ export class AlternativeComplianceRoutesStepFlowManager extends StepFlowManager 
   override resolveNextStepRoute(currentStep: string): string {
     const complianceRouteDistribution = this.store.select(notificationQuery.selectReportingObligation)()
       .reportingObligationDetails.complianceRouteDistribution;
+    const reportingObligationCategory = this.store.select(notificationQuery.selectReportingObligationCategory)();
 
     switch (currentStep) {
       case CurrentStep.TOTAL_ENERGY_CONSUMPTION_REDUCTION:
-        return `../${WizardStep.ASSETS}`;
+        return reportingObligationCategory === 'ISO_50001_COVERING_ENERGY_USAGE'
+          ? `../${WizardStep.ASSETS}`
+          : `../${WizardStep.ENERGY_CONSUMPTION_REDUCTION}`;
 
       case CurrentStep.ENERGY_CONSUMPTION_REDUCTION:
         return `../${WizardStep.ENERGY_CONSUMPTION_REDUCTION_CATEGORIES}`;

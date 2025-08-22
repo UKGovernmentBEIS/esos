@@ -24,7 +24,7 @@ public class OperatorAuthorityDeletionService {
     @Transactional
     public void deleteAccountOperatorAuthority(String userId, Long accountId) {
         List<Authority> authorities = authorityRepository.findByUserId(userId);
-        Authority authority = authorities.stream().filter(auth -> auth.getAccountId().equals(accountId))
+        Authority authority = authorities.stream().filter(auth -> accountId.equals(auth.getAccountId()))
             .findFirst().orElseThrow(() -> new BusinessException(AUTHORITY_USER_NOT_RELATED_TO_ACCOUNT));
 
         operatorAuthorityDeleteValidators.forEach(v -> v.validateDeletion(authority));

@@ -2,21 +2,17 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { combineLatest, first, map, MonoTypeOperatorFunction, pipe, switchMap, withLatestFrom } from 'rxjs';
+import { combineLatest, first, map, of, switchMap } from 'rxjs';
 
+import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { UserInputSummaryTemplateComponent } from '@shared/components/user-input-summary/user-input-summary.component';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
 import { PipesModule } from '@shared/pipes/pipes.module';
 import { SummaryHeaderComponent } from '@shared/summary-header/summary-header.component';
-import cleanDeep from 'clean-deep';
 
 import { ButtonDirective } from 'govuk-components';
 
-import {
-  OperatorInvitedUserInfoDTO,
-  OperatorUserRegistrationWithCredentialsDTO,
-  OperatorUsersRegistrationService,
-} from 'esos-api';
+import { OperatorUsersRegistrationService } from 'esos-api';
 
 import { UserRegistrationStore } from '../store/user-registration.store';
 
@@ -37,7 +33,7 @@ import { UserRegistrationStore } from '../store/user-registration.store';
 })
 export class SummaryComponent {
   userInfo$ = this.store.select('userRegistrationDTO');
-  invitationStatus$ = this.store.select('invitationStatus');
+  userEmail$ = this.store.select('email');
 
   isSubmitDisabled: boolean;
 
@@ -50,39 +46,29 @@ export class SummaryComponent {
 
   registerUser(): void {
     this.isSubmitDisabled = true;
-    const isNoPasswordInvitation = this.store.getState().invitationStatus === 'PENDING_USER_REGISTRATION_NO_PASSWORD';
 
-    combineLatest([this.store.select('userRegistrationDTO'), this.store.select('password'), this.store.select('token')])
+    combineLatest([
+      this.store.select('userRegistrationDTO'),
+      this.store.select('isInvited'),
+      this.store.select('token'),
+    ])
       .pipe(
         first(),
-        map(([user, password, emailToken]) => cleanDeep({ ...user, password, emailToken })),
-        withLatestFrom(this.store.select('isInvited')),
-        switchMap(([user, isInvited]: [OperatorUserRegistrationWithCredentialsDTO, boolean]) =>
-          isNoPasswordInvitation
-            ? this.operatorUsersRegistrationService
-                .registerNewUserFromInvitation(user)
-                .pipe(this.acceptInvitation(user))
-            : isInvited
-            ? this.operatorUsersRegistrationService
-                .registerNewUserFromInvitationWithCredentials(user)
-                .pipe(this.acceptInvitation(user))
-            : this.operatorUsersRegistrationService.registerUser(user),
+        switchMap(([user, isInvited, emailToken]) =>
+          isInvited
+            ? this.operatorUsersRegistrationService.acceptOperatorInvitationAndRegister({
+                operatorUserRegistrationDTO: user,
+                invitationTokenDTO: { token: emailToken },
+              })
+            : this.operatorUsersRegistrationService.registerCurrentOperatorUser(user),
+        ),
+        map(() => ({ url: '../success' })),
+        catchBadRequest([ErrorCodes.EMAIL1001], (res) =>
+          of({ url: '../../invalid-link', queryParams: { code: res.error.code } }),
         ),
       )
-      .subscribe(() =>
-        this.router.navigate([isNoPasswordInvitation ? '../../invitation' : '../success'], { relativeTo: this.route }),
+      .subscribe(({ queryParams, url }: { url: string; queryParams?: any }) =>
+        this.router.navigate([url], { relativeTo: this.route, queryParams }),
       );
-  }
-
-  private acceptInvitation(
-    user: OperatorUserRegistrationWithCredentialsDTO,
-  ): MonoTypeOperatorFunction<OperatorInvitedUserInfoDTO> {
-    return pipe(
-      switchMap(() =>
-        this.operatorUsersRegistrationService.acceptOperatorInvitation({
-          token: user.emailToken,
-        }),
-      ),
-    );
   }
 }

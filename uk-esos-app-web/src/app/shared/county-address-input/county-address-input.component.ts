@@ -34,7 +34,9 @@ export class CountyAddressInputComponent implements OnInit {
         GovukValidators.required('Enter a postcode'),
         GovukValidators.maxLength(64, 'The postcode should not be more than 64 characters'),
       ]),
-      county: new UntypedFormControl(address?.county, GovukValidators.required('Enter a county')),
+      county: new UntypedFormControl(address?.county, [
+        GovukValidators.maxLength(255, 'The county should not be more than 255 characters'),
+      ]),
     };
   }
 

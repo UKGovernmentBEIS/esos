@@ -5,7 +5,7 @@ import {
   canActivateResponsibleUndertaking,
   canActivateResponsibleUndertakingSummary,
 } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.guard';
-import { WizardStep } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
+import { ResponsibleUndertakingWizardStep } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
 import { backlinkResolver } from '@tasks/task-navigation';
 
 export const RESPONSIBLE_UNDERTAKING_ROUTES: Routes = [
@@ -20,19 +20,37 @@ export const RESPONSIBLE_UNDERTAKING_ROUTES: Routes = [
       import('@tasks/notification/subtasks/responsible-undertaking/summary').then((c) => c.SummaryComponent),
   },
   {
-    path: WizardStep.ORGANISATION_DETAILS,
+    path: ResponsibleUndertakingWizardStep.REGISTRATION_NUMBER,
+    title: 'Is the UK organisation registered at Companies House?',
+    canActivate: [canActivateResponsibleUndertaking],
+    loadComponent: () =>
+      import('@tasks/notification/subtasks/responsible-undertaking/organisation-registration-number').then(
+        (c) => c.OrganisationRegistrationNumberComponent,
+      ),
+  },
+  {
+    path: ResponsibleUndertakingWizardStep.ORGANISATION_DETAILS,
     title: responsibleUndertakingMap.organisationDetails.title,
     canActivate: [canActivateResponsibleUndertaking],
+    resolve: {
+      backlink: backlinkResolver(
+        ResponsibleUndertakingWizardStep.SUMMARY,
+        ResponsibleUndertakingWizardStep.REGISTRATION_NUMBER,
+      ),
+    },
     loadComponent: () =>
       import('@tasks/notification/subtasks/responsible-undertaking/organisation-details').then(
         (c) => c.OrganisationDetailsComponent,
       ),
   },
   {
-    path: WizardStep.TRADING_DETAILS,
+    path: ResponsibleUndertakingWizardStep.TRADING_DETAILS,
     title: responsibleUndertakingMap.tradingDetails.title,
     resolve: {
-      backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.ORGANISATION_DETAILS),
+      backlink: backlinkResolver(
+        ResponsibleUndertakingWizardStep.SUMMARY,
+        ResponsibleUndertakingWizardStep.ORGANISATION_DETAILS,
+      ),
     },
     canActivate: [canActivateResponsibleUndertaking],
     loadComponent: () =>
@@ -41,10 +59,13 @@ export const RESPONSIBLE_UNDERTAKING_ROUTES: Routes = [
       ),
   },
   {
-    path: WizardStep.ORGANISATION_CONTACT_DETAILS,
+    path: ResponsibleUndertakingWizardStep.ORGANISATION_CONTACT_DETAILS,
     title: responsibleUndertakingMap.organisationContactDetails.title,
     resolve: {
-      backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.TRADING_DETAILS),
+      backlink: backlinkResolver(
+        ResponsibleUndertakingWizardStep.SUMMARY,
+        ResponsibleUndertakingWizardStep.TRADING_DETAILS,
+      ),
     },
     canActivate: [canActivateResponsibleUndertaking],
     loadComponent: () =>
@@ -53,10 +74,26 @@ export const RESPONSIBLE_UNDERTAKING_ROUTES: Routes = [
       ),
   },
   {
-    path: WizardStep.HAS_OVERSEAS_PARENT_DETAILS,
+    path: ResponsibleUndertakingWizardStep.NOTIFICATION,
+    title: responsibleUndertakingMap.organisationContactDetails.title,
+    resolve: {
+      backlink: backlinkResolver(
+        ResponsibleUndertakingWizardStep.SUMMARY,
+        ResponsibleUndertakingWizardStep.ORGANISATION_CONTACT_DETAILS,
+      ),
+    },
+    canActivate: [canActivateResponsibleUndertaking],
+    loadComponent: () =>
+      import('@tasks/notification/subtasks/responsible-undertaking/notification').then((c) => c.NotificationComponent),
+  },
+  {
+    path: ResponsibleUndertakingWizardStep.HAS_OVERSEAS_PARENT_DETAILS,
     title: responsibleUndertakingMap.hasOverseasParentDetails.title,
     resolve: {
-      backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.ORGANISATION_CONTACT_DETAILS),
+      backlink: backlinkResolver(
+        ResponsibleUndertakingWizardStep.SUMMARY,
+        ResponsibleUndertakingWizardStep.NOTIFICATION,
+      ),
     },
     canActivate: [canActivateResponsibleUndertaking],
     loadComponent: () =>
@@ -65,10 +102,13 @@ export const RESPONSIBLE_UNDERTAKING_ROUTES: Routes = [
       ),
   },
   {
-    path: WizardStep.OVERSEAS_PARENT_DETAILS,
+    path: ResponsibleUndertakingWizardStep.OVERSEAS_PARENT_DETAILS,
     title: responsibleUndertakingMap.overseasParentDetails.title,
     resolve: {
-      backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.HAS_OVERSEAS_PARENT_DETAILS),
+      backlink: backlinkResolver(
+        ResponsibleUndertakingWizardStep.SUMMARY,
+        ResponsibleUndertakingWizardStep.HAS_OVERSEAS_PARENT_DETAILS,
+      ),
     },
     canActivate: [canActivateResponsibleUndertaking],
     loadComponent: () =>

@@ -1,11 +1,11 @@
-@include govuk-exports("govuk/component/accordion") {
-  $govuk-accordion-base-colour: govuk-colour("black");
-  $govuk-accordion-hover-colour: govuk-colour("light-grey", $legacy: "grey-3");
+@include govuk-exports('govuk/component/accordion') {
+  $govuk-accordion-base-colour: govuk-colour('black');
+  $govuk-accordion-hover-colour: govuk-colour('light-grey');
   $govuk-accordion-icon-focus-colour: $govuk-focus-colour;
   $govuk-accordion-bottom-border-width: 1px;
 
   .govuk-accordion {
-    @include govuk-responsive-margin(6, "bottom");
+    @include govuk-responsive-margin(6, 'bottom');
   }
 
   .govuk-accordion__section {
@@ -35,8 +35,8 @@
     margin-bottom: 0;
   }
 
-  // JavaScript enabled
-  .js-enabled {
+  // GOV.UK Frontend JavaScript enabled
+  .govuk-frontend-supported {
     .govuk-accordion {
       // Border at the bottom of the whole accordion
       border-bottom: $govuk-accordion-bottom-border-width solid $govuk-border-colour;
@@ -51,8 +51,8 @@
     .govuk-accordion__section-content {
       display: none;
 
-      @include govuk-responsive-padding(3, "top");
-      @include govuk-responsive-padding(8, "bottom");
+      @include govuk-responsive-padding(3, 'top');
+      @include govuk-responsive-padding(8, 'bottom');
     }
 
     // Hide the body of collapsed sections using `content-visibility` to enable
@@ -89,7 +89,7 @@
       cursor: pointer;
       -webkit-appearance: none;
 
-      @include govuk-media-query ($from: tablet) {
+      @include govuk-media-query($from: tablet) {
         margin-bottom: 14px;
       }
 
@@ -116,7 +116,7 @@
           background: $govuk-accordion-base-colour;
         }
 
-        .govuk-accordion-nav__chevron:after {
+        .govuk-accordion-nav__chevron::after {
           color: $govuk-accordion-hover-colour;
         }
       }
@@ -128,7 +128,7 @@
           background: $govuk-accordion-base-colour;
         }
 
-        .govuk-accordion-nav__chevron:after {
+        .govuk-accordion-nav__chevron::after {
           color: $govuk-accordion-icon-focus-colour;
         }
       }
@@ -154,16 +154,9 @@
 
       vertical-align: middle;
 
-      // IE8 fallback of icon
-      @include _govuk-if-ie8 {
-        display: inline-block;
-        max-height: 20px;
-        line-height: 1;
-      }
-
       // Create inner chevron arrow
-      &:after {
-        content: "";
+      &::after {
+        content: '';
         box-sizing: border-box;
         display: block;
 
@@ -174,39 +167,16 @@
         width: govuk-px-to-rem(6px);
         height: govuk-px-to-rem(6px);
 
-        -webkit-transform: rotate(-45deg);
-
-            -ms-transform: rotate(-45deg);
-
-                transform: rotate(-45deg);
+        transform: rotate(-45deg);
 
         border-top: govuk-px-to-rem(2px) solid;
         border-right: govuk-px-to-rem(2px) solid;
-
-        // IE8 fallback of icon with HTML symbol
-        @include _govuk-if-ie8 {
-          content: "\25B2"; // "▲"
-          position: relative;
-          border: 0;
-        }
       }
     }
 
     // Rotate icon to create "Down" version
     .govuk-accordion-nav__chevron--down {
-      -webkit-transform: rotate(180deg);
-          -ms-transform: rotate(180deg);
-              transform: rotate(180deg);
-
-      // IE8 fallback of arrow icon
-      @include _govuk-if-ie8 {
-        &:after {
-          content: "\25BC"; // "▼"
-          -webkit-transform: none;
-              -ms-transform: none;
-                  transform: none;
-        }
-      }
+      transform: rotate(180deg);
     }
 
     .govuk-accordion__section-button {
@@ -230,7 +200,7 @@
       cursor: pointer;
       -webkit-appearance: none;
 
-      @include govuk-media-query ($from: tablet) {
+      @include govuk-media-query($from: tablet) {
         padding-bottom: govuk-spacing(2);
       }
 
@@ -252,7 +222,7 @@
           background: $govuk-accordion-base-colour;
         }
 
-        .govuk-accordion-nav__chevron:after {
+        .govuk-accordion-nav__chevron::after {
           color: $govuk-accordion-hover-colour;
         }
       }
@@ -273,7 +243,7 @@
           background: $govuk-accordion-base-colour;
         }
 
-        .govuk-accordion-nav__chevron:after {
+        .govuk-accordion-nav__chevron::after {
           color: $govuk-accordion-icon-focus-colour;
         }
       }
@@ -292,7 +262,7 @@
       padding-bottom: govuk-spacing(3);
       border-bottom: 0;
 
-      @include govuk-media-query ($from: tablet) {
+      @include govuk-media-query($from: tablet) {
         padding-bottom: govuk-spacing(4);
       }
     }
@@ -302,7 +272,7 @@
     .govuk-accordion__section-button:focus .govuk-accordion__section-toggle-focus {
       padding-bottom: 3px;
 
-      @include govuk-media-query ($from: desktop) {
+      @include govuk-media-query($from: desktop) {
         padding-bottom: 2px;
       }
     }
@@ -322,7 +292,7 @@
 
     // Add toggle link with Chevron icon on left.
     .govuk-accordion__section-toggle {
-      @include govuk-typography-responsive($size: 19);
+      @include govuk-font-size($size: 19);
       @include govuk-typography-weight-regular;
       color: $govuk-link-colour;
     }
@@ -390,3 +360,5 @@
     }
   }
 }
+
+/*# sourceMappingURL=_index.scss.map */

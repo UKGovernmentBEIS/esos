@@ -49,7 +49,7 @@ describe('ComplianceRouteDistributionComponent', () => {
   });
 
   it('should show fields', () => {
-    expect(iso5001Pct()).toBeVisible();
+    expect(iso50001Pct()).toBeVisible();
     expect(displayEnergyCertificatePct()).toBeVisible();
     expect(greenDealAssessmentPct()).toBeVisible();
     expect(energyAuditsPct()).toBeVisible();
@@ -67,7 +67,7 @@ describe('ComplianceRouteDistributionComponent', () => {
 
   it('should save subtask when reason provided', async () => {
     const submitSpy = jest.spyOn(taskService, 'saveSubtask');
-    await user.type(iso5001Pct(), '25');
+    await user.type(iso50001Pct(), '25');
     await user.type(displayEnergyCertificatePct(), '25');
     await user.type(greenDealAssessmentPct(), '25');
     await user.type(energyAuditsPct(), '25');
@@ -106,7 +106,7 @@ describe('ComplianceRouteDistributionComponent', () => {
     return screen.getByRole('button', { name: 'Save and continue' });
   }
 
-  function iso5001Pct() {
+  function iso50001Pct() {
     return screen.getByLabelText(/ISO 50001/);
   }
 
@@ -123,7 +123,7 @@ describe('ComplianceRouteDistributionComponent', () => {
   }
 
   function energyNotAuditedPct() {
-    return screen.getByLabelText(/Energy use not audited/);
+    return screen.getByLabelText(/covered by any compliance route/);
   }
 
   function totalPct() {

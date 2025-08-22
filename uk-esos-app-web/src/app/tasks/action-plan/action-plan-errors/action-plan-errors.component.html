@@ -1,0 +1,28 @@
+@if (actionPlanErrorService.error()) {
+  @if (errorList(); as errorList) {
+    <div #container aria-labelledby="error-summary-title" class="govuk-error-summary" role="alert" tabindex="-1">
+      <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+      <div class="govuk-error-summary__body">
+        <ul class="govuk-list">
+          @for (error of errorList; track error) {
+            <li class="subtask-list govuk-!-margin-bottom-4">
+              <ul class="govuk-list error-message-list govuk-!-margin-0">
+                @for (message of error.data[0]; track message) {
+                  <li class="govuk-error-message error-message govuk-!-margin-bottom-0">
+                    {{ message }}
+                  </li>
+                }
+              </ul>
+              @if (error.link && error.subtask) {
+                <a govukLink [routerLink]="[error.link]" [relativeTo]="route" aria-label="Change subtask answers">
+                  Change {{ subtaskNameMapper[error.subtask] }} answers
+                </a>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+  <esos-action-plan-submit-action />
+}

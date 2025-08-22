@@ -43,11 +43,11 @@ describe('TotalEnergyConsumptionReductionComponent', () => {
     }
 
     get totalEnergyConsumptionReduction() {
-      return this.getInputValue('#totalEnergyConsumptionReduction');
+      return this.getInputValue('#totalEnergyConsumptionReduction.energyConsumption');
     }
 
     set totalEnergyConsumptionReduction(value: number) {
-      this.setInputValue('#totalEnergyConsumptionReduction', value);
+      this.setInputValue('#totalEnergyConsumptionReduction.energyConsumption', value);
     }
 
     get errorSummary(): HTMLDivElement {
@@ -91,7 +91,7 @@ describe('TotalEnergyConsumptionReductionComponent', () => {
       expect(page.errorSummary).toBeFalsy();
       expect(page.heading1).toBeTruthy();
       expect(page.heading1.textContent.trim()).toEqual(
-        'What is the total organisational potential annual reduction in energy consumption?',
+        'Total annual reduction in energy consumption and energy spend from implementing energy saving measures',
       );
       expect(page.submitButton).toBeTruthy();
     });
@@ -112,7 +112,10 @@ describe('TotalEnergyConsumptionReductionComponent', () => {
           noc: {
             alternativeComplianceRoutes: {
               ...mockAlternativeComplianceRoutes,
-              totalEnergyConsumptionReduction: 2,
+              totalEnergyConsumptionReduction: {
+                energyConsumption: 2,
+                energyCost: null,
+              },
             },
           },
         },
@@ -136,7 +139,10 @@ describe('TotalEnergyConsumptionReductionComponent', () => {
           noc: {
             alternativeComplianceRoutes: {
               ...mockAlternativeComplianceRoutes,
-              totalEnergyConsumptionReduction: 1,
+              totalEnergyConsumptionReduction: {
+                energyConsumption: 1,
+                energyCost: null,
+              },
             },
           },
         },
@@ -164,7 +170,7 @@ describe('TotalEnergyConsumptionReductionComponent', () => {
       expect(page.errorSummary).toBeFalsy();
       expect(page.heading1).toBeTruthy();
       expect(page.heading1.textContent.trim()).toEqual(
-        'What is the total organisational potential annual reduction in energy consumption?',
+        'Total annual reduction in energy consumption and energy spend from implementing energy saving measures',
       );
       expect(page.totalEnergyConsumptionReduction).toEqual('12');
       expect(page.submitButton).toBeTruthy();

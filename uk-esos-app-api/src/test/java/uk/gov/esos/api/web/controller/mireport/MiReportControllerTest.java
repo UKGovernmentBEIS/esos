@@ -140,7 +140,7 @@ class MiReportControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(pmrvUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(pmrvUser, new RoleType[]{RoleType.REGULATOR});
+            .evaluate(pmrvUser, new RoleType[]{RoleType.REGULATOR}, true);
 
         mockMvc.perform(MockMvcRequestBuilders.get(MI_REPORT_BASE_CONTROLLER_PATH + "/types")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -177,14 +177,12 @@ class MiReportControllerTest {
             .andExpect(jsonPath("$.results[0].['User role']").value(accountUserContact.getRole()))
             .andExpect(jsonPath("$.results[0].['Account ID']").value(accountUserContact.getAccountId()))
             .andExpect(jsonPath("$.results[0].['Account name']").value(accountUserContact.getAccountName()))
-            .andExpect(jsonPath("$.results[0].['Account status']").value(accountUserContact.getAccountStatus().toString()))
-            .andExpect(jsonPath("$.results[0].['Account type']").value(accountUserContact.getAccountType().toString()))
-            .andExpect(jsonPath("$.results[0].['User status']").value(accountUserContact.getAuthorityStatus().toString()))
-            .andExpect(jsonPath("$.results[0].['Is User Financial contact?']").value(accountUserContact.getFinancialContact()))
+            .andExpect(jsonPath("$.results[0].['Account status']").value(accountUserContact.getAccountStatus()))
+            .andExpect(jsonPath("$.results[0].['Account registration number']").value(accountUserContact.getRegistrationNumber()))
+            .andExpect(jsonPath("$.results[0].['User status']").value(accountUserContact.getAuthorityStatus()))
             .andExpect(jsonPath("$.results[0].['Is User Primary contact?']").value(accountUserContact.getPrimaryContact()))
             .andExpect(jsonPath("$.results[0].['Is User Secondary contact?']").value(accountUserContact.getSecondaryContact()))
-            .andExpect(jsonPath("$.results[0].['Is User Service contact?']").value(accountUserContact.getServiceContact()))
-            .andExpect(jsonPath("$.results[0].['Permit ID']").value(accountUserContact.getPermitId()));
+            .andExpect(jsonPath("$.results[0].['Location of registered office']").value(accountUserContact.getAccountLocation()));
         verify(miReportService, times(1))
             .generateReport(pmrvUser.getCompetentAuthority(), accountType, reportParams);
     }
@@ -219,7 +217,7 @@ class MiReportControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(pmrvUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(pmrvUser, new RoleType[]{RoleType.REGULATOR});
+            .evaluate(pmrvUser, new RoleType[]{RoleType.REGULATOR}, true);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post(MI_REPORT_BASE_CONTROLLER_PATH)
@@ -255,7 +253,7 @@ class MiReportControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(pmrvUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(pmrvUser, new RoleType[]{RoleType.REGULATOR});
+            .evaluate(pmrvUser, new RoleType[]{RoleType.REGULATOR}, true);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(MI_REPORT_BASE_CONTROLLER_PATH + REQUEST_TASK_TYPES_CONTROLLER_PATH))
@@ -274,13 +272,11 @@ class MiReportControllerTest {
             .email(ACCOUNT_ID)
             .accountName("account name")
             .accountStatus(OrganisationAccountStatus.LIVE.name())
-            .accountType(AccountType.ORGANISATION.name())
+            .registrationNumber("00985635")
             .authorityStatus(AuthorityStatus.ACTIVE.name())
-            .financialContact(Boolean.TRUE)
             .primaryContact(Boolean.TRUE)
             .secondaryContact(Boolean.FALSE)
-            .serviceContact(Boolean.FALSE)
-            .permitId("Permit id 1")
+            .accountLocation(CompetentAuthorityEnum.ENGLAND.name())
             .build();
 
         return AccountsUsersContactsMiReportResult.builder()

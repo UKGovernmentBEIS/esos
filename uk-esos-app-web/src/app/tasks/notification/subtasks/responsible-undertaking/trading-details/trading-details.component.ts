@@ -7,8 +7,8 @@ import { responsibleUndertakingMap } from '@shared/subtask-list-maps/subtask-lis
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import {
-  CurrentStep,
   RESPONSIBLE_UNDERTAKING_SUB_TASK,
+  ResponsibleUndertakingCurrentStep,
 } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
 import { TASK_FORM } from '@tasks/task-form.token';
 import produce from 'immer';
@@ -49,7 +49,7 @@ export class TradingDetailsComponent {
   onSubmit() {
     this.service.saveSubtask({
       subtask: RESPONSIBLE_UNDERTAKING_SUB_TASK,
-      currentStep: CurrentStep.TRADING_DETAILS,
+      currentStep: ResponsibleUndertakingCurrentStep.TRADING_DETAILS,
       route: this.route,
       payload: produce(this.service.payload, (payload) => {
         payload.noc.responsibleUndertaking.tradingDetails = this.form.value;

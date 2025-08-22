@@ -82,7 +82,7 @@ describe('EnergyAuditsComponent', () => {
   it('should render all elements and no errors', () => {
     expect(page.errorSummary).toBeFalsy();
     expect(page.heading).toBeTruthy();
-    expect(page.heading.textContent.trim()).toEqual('Add an energy audit (optional)');
+    expect(page.heading.textContent.trim()).toEqual('Add an energy audit');
     expect(page.internalHeading.textContent.trim()).toEqual('Energy audits added');
     expect(page.addButton).toBeTruthy();
     expect(page.submitButton).toBeTruthy();

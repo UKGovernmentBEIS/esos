@@ -33,7 +33,7 @@ import uk.gov.esos.api.user.operator.domain.OperatorUserDTO;
 class OperatorUserManagementServiceTest {
 
 	@InjectMocks
-        private OperatorUserManagementService service;
+    private OperatorUserManagementService service;
 	
 	@Mock
 	private OperatorUserAuthService operatorUserAuthService;
@@ -143,7 +143,7 @@ class OperatorUserManagementServiceTest {
 		// Verify
 		assertEquals(ErrorCode.AUTHORITY_USER_NOT_RELATED_TO_ACCOUNT, businessException.getErrorCode());
 		verify(operatorAuthorityService, times(1)).findOperatorUserAuthorityRoleListByAccount(accountId);
-		verify(operatorUserAuthService, never()).updateOperatorUser(anyString(), any());
+		verify(operatorUserAuthService, never()).updateOperatorUser(anyString(), any(OperatorUserDTO.class));
 	}
 
 	@Test
@@ -161,7 +161,7 @@ class OperatorUserManagementServiceTest {
 		// Verify
 		assertEquals(ErrorCode.AUTHORITY_USER_NOT_RELATED_TO_ACCOUNT, businessException.getErrorCode());
 		verify(operatorAuthorityService, times(1)).findOperatorUserAuthorityRoleListByAccount(accountId);
-		verify(operatorUserAuthService, never()).updateOperatorUser(anyString(), any());
+		verify(operatorUserAuthService, never()).updateOperatorUser(anyString(), any(OperatorUserDTO.class));
 	}
 	
 	@Test

@@ -11,8 +11,6 @@ import uk.gov.esos.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.esos.api.authorization.core.domain.dto.AuthorityDTO;
 import uk.gov.esos.api.authorization.core.service.AuthorityService;
 import uk.gov.esos.api.competentauthority.CompetentAuthorityEnum;
-import uk.gov.esos.api.user.core.domain.dto.UserInfoDTO;
-import uk.gov.esos.api.user.core.domain.enumeration.AuthenticationStatus;
 import uk.gov.esos.api.user.core.service.auth.UserAuthService;
 import uk.gov.esos.api.web.controller.authorization.orchestrator.dto.LoginStatus;
 
@@ -24,6 +22,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.esos.api.authorization.core.domain.Permission.PERM_ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW_VIEW_TASK;
 
@@ -95,24 +94,6 @@ class UserAuthorityQueryOrchestratorTest {
     }
 
     @Test
-    void getUserLoginStatusInfo_when_no_active_authorities_but_temp_disabled_then_temp_disabled() {
-        final String userId = "userId";
-
-        AuthorityDTO authority1 = createAuthority(1L, AuthorityStatus.TEMP_DISABLED);
-        AuthorityDTO authority2 = createAuthority(2L, AuthorityStatus.DISABLED);
-
-        when(authorityService.getAuthoritiesByUserId(userId)).thenReturn(List.of(authority1, authority2));
-
-        // Invoke
-        LoginStatus actual = orchestrator.getUserLoginStatusInfo(userId);
-
-        // Verify
-        assertThat(actual).isEqualTo(LoginStatus.TEMP_DISABLED);
-        verify(authorityService, times(1)).getAuthoritiesByUserId(userId);
-        verify(userAuthService, never()).getUserByUserId(anyString());
-    }
-
-    @Test
     void getUserLoginStatusInfo_when_nor_active_authorities_neither_temp_disabled_then_disabled() {
         final String userId = "userId";
 
@@ -148,12 +129,10 @@ class UserAuthorityQueryOrchestratorTest {
     }
 
     @Test
-    void getUserLoginStatusInfo_when_no_authorities_and_auth_status_not_deleted_then_no_authority() {
+    void getUserLoginStatusInfo_when_no_authorities() {
         final String userId = "userId";
-        final UserInfoDTO userInfoDTO = UserInfoDTO.builder().status(AuthenticationStatus.REGISTERED).build();
 
         when(authorityService.getAuthoritiesByUserId(userId)).thenReturn(Collections.emptyList());
-        when(userAuthService.getUserByUserId(userId)).thenReturn(userInfoDTO);
 
         // Invoke
         LoginStatus actual = orchestrator.getUserLoginStatusInfo(userId);
@@ -161,24 +140,7 @@ class UserAuthorityQueryOrchestratorTest {
         // Verify
         assertThat(actual).isEqualTo(LoginStatus.NO_AUTHORITY);
         verify(authorityService, times(1)).getAuthoritiesByUserId(userId);
-        verify(userAuthService, times(1)).getUserByUserId(userId);
-    }
-
-    @Test
-    void getUserLoginStatusInfo_when_no_authorities_and_auth_status_is_deleted_then_deleted() {
-        final String userId = "userId";
-        final UserInfoDTO userInfoDTO = UserInfoDTO.builder().status(AuthenticationStatus.DELETED).build();
-
-        when(authorityService.getAuthoritiesByUserId(userId)).thenReturn(Collections.emptyList());
-        when(userAuthService.getUserByUserId(userId)).thenReturn(userInfoDTO);
-
-        // Invoke
-        LoginStatus actual = orchestrator.getUserLoginStatusInfo(userId);
-
-        // Verify
-        assertThat(actual).isEqualTo(LoginStatus.DELETED);
-        verify(authorityService, times(1)).getAuthoritiesByUserId(userId);
-        verify(userAuthService, times(1)).getUserByUserId(userId);
+        verifyNoInteractions(userAuthService);
     }
 
     private AuthorityDTO createAuthority(Long accountId, AuthorityStatus status) {

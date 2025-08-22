@@ -2,13 +2,14 @@ import { Provider } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 
 import { RequestTaskStore } from '@common/request-task/+state';
-import {
-  energySavingsCategoriesFieldValidators,
-  energySavingsTotalsEqualValidator,
-  totalEnergySavingsCategoriesGreaterThanZeroValidator,
-} from '@shared/components/energy-savings-categories-input/energy-savings-categories-input.validators';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { TASK_FORM } from '@tasks/task-form.token';
+
+import {
+  energyConsumptionIntegerOptionalValidators,
+  energyCostNumberWithDecimalsOptionalValidators,
+  reductionPairValidator,
+} from '../alternative-compliance-routes.validators';
 
 export const energyConsumptionReductionCategoriesFormProvider: Provider = {
   provide: TASK_FORM,
@@ -16,43 +17,104 @@ export const energyConsumptionReductionCategoriesFormProvider: Provider = {
   useFactory: (fb: UntypedFormBuilder, store: RequestTaskStore) => {
     const state = store.select(notificationQuery.selectAlternativeComplianceRoutes);
     const energyConsumptionReductionCategories = state()?.energyConsumptionReductionCategories;
-    const totalEnergyConsumptionReduction = state()?.energyConsumptionReduction.total;
 
-    return fb.group(
-      {
-        energyManagementPractices: [
-          energyConsumptionReductionCategories?.energyManagementPractices ?? 0,
-          energySavingsCategoriesFieldValidators,
-        ],
-        behaviourChangeInterventions: [
-          energyConsumptionReductionCategories?.behaviourChangeInterventions ?? 0,
-          energySavingsCategoriesFieldValidators,
-        ],
-        training: [energyConsumptionReductionCategories?.training ?? 0, energySavingsCategoriesFieldValidators],
-        controlsImprovements: [
-          energyConsumptionReductionCategories?.controlsImprovements ?? 0,
-          energySavingsCategoriesFieldValidators,
-        ],
-        shortTermCapitalInvestments: [
-          energyConsumptionReductionCategories?.shortTermCapitalInvestments ?? 0,
-          energySavingsCategoriesFieldValidators,
-        ],
-        longTermCapitalInvestments: [
-          energyConsumptionReductionCategories?.longTermCapitalInvestments ?? 0,
-          energySavingsCategoriesFieldValidators,
-        ],
-        otherMeasures: [
-          energyConsumptionReductionCategories?.otherMeasures ?? 0,
-          energySavingsCategoriesFieldValidators,
-        ],
-      },
-      {
-        updateOn: 'change',
-        validators: [
-          totalEnergySavingsCategoriesGreaterThanZeroValidator(),
-          energySavingsTotalsEqualValidator(totalEnergyConsumptionReduction),
-        ],
-      },
-    );
+    return fb.group({
+      energyManagementPractices: fb.group(
+        {
+          energyConsumption: [
+            energyConsumptionReductionCategories?.energyManagementPractices?.energyConsumption ?? null,
+            energyConsumptionIntegerOptionalValidators,
+          ],
+          energyCost: [
+            energyConsumptionReductionCategories?.energyManagementPractices?.energyCost ?? null,
+            energyCostNumberWithDecimalsOptionalValidators,
+          ],
+        },
+        {
+          updateOn: 'change',
+          validators: [reductionPairValidator()],
+        },
+      ),
+      behaviourChangeInterventions: fb.group(
+        {
+          energyConsumption: [
+            energyConsumptionReductionCategories?.behaviourChangeInterventions?.energyConsumption ?? null,
+            energyConsumptionIntegerOptionalValidators,
+          ],
+          energyCost: [
+            energyConsumptionReductionCategories?.behaviourChangeInterventions?.energyCost ?? null,
+            energyCostNumberWithDecimalsOptionalValidators,
+          ],
+        },
+        {
+          updateOn: 'change',
+          validators: [reductionPairValidator()],
+        },
+      ),
+      training: fb.group(
+        {
+          energyConsumption: [
+            energyConsumptionReductionCategories?.training?.energyConsumption ?? null,
+            energyConsumptionIntegerOptionalValidators,
+          ],
+          energyCost: [
+            energyConsumptionReductionCategories?.training?.energyCost ?? null,
+            energyCostNumberWithDecimalsOptionalValidators,
+          ],
+        },
+        {
+          updateOn: 'change',
+          validators: [reductionPairValidator()],
+        },
+      ),
+      controlsImprovements: fb.group(
+        {
+          energyConsumption: [
+            energyConsumptionReductionCategories?.controlsImprovements?.energyConsumption ?? null,
+            energyConsumptionIntegerOptionalValidators,
+          ],
+          energyCost: [
+            energyConsumptionReductionCategories?.controlsImprovements?.energyCost ?? null,
+            energyCostNumberWithDecimalsOptionalValidators,
+          ],
+        },
+        {
+          updateOn: 'change',
+          validators: [reductionPairValidator()],
+        },
+      ),
+      capitalInvestments: fb.group(
+        {
+          energyConsumption: [
+            energyConsumptionReductionCategories?.capitalInvestments?.energyConsumption ?? null,
+            energyConsumptionIntegerOptionalValidators,
+          ],
+          energyCost: [
+            energyConsumptionReductionCategories?.capitalInvestments?.energyCost ?? null,
+            energyCostNumberWithDecimalsOptionalValidators,
+          ],
+        },
+        {
+          updateOn: 'change',
+          validators: [reductionPairValidator()],
+        },
+      ),
+      otherMeasures: fb.group(
+        {
+          energyConsumption: [
+            energyConsumptionReductionCategories?.otherMeasures?.energyConsumption ?? null,
+            energyConsumptionIntegerOptionalValidators,
+          ],
+          energyCost: [
+            energyConsumptionReductionCategories?.otherMeasures?.energyCost ?? null,
+            energyCostNumberWithDecimalsOptionalValidators,
+          ],
+        },
+        {
+          updateOn: 'change',
+          validators: [reductionPairValidator()],
+        },
+      ),
+    });
   },
 };

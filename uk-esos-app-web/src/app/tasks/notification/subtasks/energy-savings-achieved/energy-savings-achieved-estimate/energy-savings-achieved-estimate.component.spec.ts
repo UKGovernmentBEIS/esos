@@ -77,7 +77,7 @@ describe('EnergySavingsAchievedEstimateComponent', () => {
 
   it('should display heading and all form fields', () => {
     expect(page.heading1.textContent.trim()).toEqual(
-      'What is the breakdown of an estimate of energy savings achieved during the compliance period, which for the third compliance period is 6 December 2019 to 5 December 2023?',
+      'What is the breakdown of an estimate of the energy savings achieved during the third compliance period?',
     );
 
     expect(page.buildings).toBe('0');

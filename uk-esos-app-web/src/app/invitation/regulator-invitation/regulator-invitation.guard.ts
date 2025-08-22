@@ -1,44 +1,67 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Resolve, Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlSerializer } from '@angular/router';
 
-import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, combineLatest, first, map, Observable, of, switchMap, throwError } from 'rxjs';
 
+import { AuthService } from '@core/services/auth.service';
+import { AuthStore, selectIsLoggedIn } from '@core/store';
 import { isBadRequest } from '@error/business-errors';
 
-import { InvitedUserInfoDTO, RegulatorUsersRegistrationService } from 'esos-api';
+import { RegulatorUsersRegistrationService, UserTokenService } from 'esos-api';
 
 @Injectable({ providedIn: 'root' })
-export class RegulatorInvitationGuard implements CanActivate, Resolve<InvitedUserInfoDTO> {
-  private invitedUser: InvitedUserInfoDTO;
-
+export class RegulatorInvitationGuard implements CanActivate {
   constructor(
+    private readonly authStore: AuthStore,
     private readonly router: Router,
     private readonly regulatorUsersRegistrationService: RegulatorUsersRegistrationService,
+    private readonly userTokenService: UserTokenService,
+    private readonly authService: AuthService,
+    private urlSerializer: UrlSerializer,
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
-    const token = route.queryParamMap.get('token');
+  canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
+    const urlTree = this.urlSerializer.parse(state.url);
 
-    return token
-      ? this.regulatorUsersRegistrationService.acceptRegulatorInvitation({ token }).pipe(
-          tap((invitedUser) => (this.invitedUser = invitedUser)),
-          map(() => true),
-          catchError((res: unknown) => {
-            if (isBadRequest(res)) {
-              this.router.navigate(['invitation/regulator/invalid-link'], {
-                queryParams: { code: res.error.code },
-              });
+    const token = urlTree.queryParams['token'];
+    if (!token) {
+      this.router.navigate(['invitation/regulator/invalid-link']);
+      return of(false);
+    }
 
-              return of(false);
-            } else {
-              return throwError(() => res);
-            }
-          }),
-        )
-      : of(this.router.parseUrl('landing'));
-  }
+    return this.authService.checkUser().pipe(
+      switchMap(() => combineLatest([this.authStore.pipe(selectIsLoggedIn)])),
+      switchMap(([isLoggedIn]) => {
+        if (!isLoggedIn) {
+          return this.userTokenService.resolveEmailByToken({ token, type: 'REGULATOR_INVITATION' }).pipe(
+            map(({ email }) => {
+              const redirectTo = 'start-login';
+              const tree = this.router.parseUrl(redirectTo);
+              tree.queryParams = {
+                redirectUrl: window.location.origin + state.url,
+                email,
+              };
+              return tree;
+            }),
+          );
+        } else {
+          return this.regulatorUsersRegistrationService
+            .acceptRegulatorInvitationAndRegister({ token })
+            .pipe(map(() => true));
+        }
+      }),
+      catchError((res: unknown) => {
+        if (isBadRequest(res)) {
+          this.router.navigate(['invitation/regulator/invalid-link'], {
+            queryParams: { code: res.error.code },
+          });
 
-  resolve(): InvitedUserInfoDTO {
-    return this.invitedUser;
+          return of(false);
+        } else {
+          return throwError(() => res);
+        }
+      }),
+      first(),
+    );
   }
 }

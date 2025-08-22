@@ -1,12 +1,12 @@
 <esos-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  heading="Provide details of the Lead Assessor who has reviewed your ESOS notification"
+  heading="Enter the details of the lead assessor who reviewed the assessment"
   caption="Lead assessor details"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <div govukFieldsetHint>This can be either an internal or external lead assessor.</div>
   <div formControlName="firstName" govuk-text-input label="First name" widthClass="govuk-!-width-two-thirds"></div>
   <div formControlName="lastName" govuk-text-input label="Last name" widthClass="govuk-!-width-two-thirds"></div>
   <div formControlName="email" govuk-text-input label="Email address" widthClass="govuk-!-width-two-thirds"></div>

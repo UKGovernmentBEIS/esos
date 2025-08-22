@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { resolveRegistrationNumber } from '@accounts/organisation-account-application/components/organisation-companies-house-container/user-verified-registration-number.resolver';
 import { PendingRequestGuard } from '@core/guards/pending-request.guard';
 import { ORGANISATION_ACCOUNT_STATE_PROVIDER } from '@shared/providers/organisation-account.state.provider';
 
@@ -9,10 +10,9 @@ import {
   OrganisationAccountApplicationReceivedComponent,
   OrganisationAccountApplicationSummaryPageComponent,
 } from './components';
-import { OrganisationAddressContainerComponent } from './components/organisation-address-container/organisation-address.container.component';
 import { OrganisationCompaniesHouseContainerComponent } from './components/organisation-companies-house-container/organisation-companies-house-container.component';
+import { OrganisationDetailsContainerComponent } from './components/organisation-details-container/organisation-details-container.component';
 import { OrganisationLocationContainerComponent } from './components/organisation-location-container/organisation-location-container.component';
-import { OrganisationNameContainerComponent } from './components/organisation-name-container/organisation-name-container.component';
 
 export const ROUTES: Routes = [
   {
@@ -29,52 +29,46 @@ export const ROUTES: Routes = [
     children: [
       {
         path: '',
+        title: 'Is the UK organisation registered at Companies House?',
+        resolve: { resolveRegistrationNumber },
         component: OrganisationCompaniesHouseContainerComponent,
       },
       {
-        path: 'name',
-        component: OrganisationNameContainerComponent,
+        path: 'details',
+        title: 'Enter the organisation details',
+        component: OrganisationDetailsContainerComponent,
         data: {
           backlink: '..',
         },
       },
       {
-        path: 'address',
-        component: OrganisationAddressContainerComponent,
-        data: {
-          backlink: '../name',
-        },
-      },
-      {
         path: 'location',
+        title: ' Where is your registered office located?',
         component: OrganisationLocationContainerComponent,
         data: {
-          backlink: '../address',
+          backlink: '../details',
         },
       },
     ],
   },
   {
     path: 'cancel',
-    data: { pageTitle: 'Cancel Organisation account creation', breadcrumb: true },
+    title: 'Cancel Organisation account creation',
+    data: { breadcrumb: true },
     component: OrganisationAccountApplicationCancelComponent,
   },
   {
     path: 'summary',
+    title: 'Check the information provided before submitting',
     data: {
-      pageTitle: 'Check the information provided before submitting',
       breadcrumb: 'Organisation account summary',
     },
-    //TODO SummaryGuard should be created here.
-    // canActivate: [SummaryGuard],
     component: OrganisationAccountApplicationSummaryPageComponent,
     canDeactivate: [PendingRequestGuard],
   },
   {
     path: 'submitted',
-    data: {
-      pageTitle: 'Your organisation account has been created',
-    },
+    title: 'Your organisation account has been created',
     component: OrganisationAccountApplicationReceivedComponent,
   },
 ];

@@ -16,8 +16,6 @@ import { Observable } from 'rxjs';
 
 import { Configuration } from '../configuration';
 import { CustomHttpParameterCodec } from '../encoder';
-import { InvitedUserEnableDTO } from '../model/invitedUserEnableDTO';
-import { InvitedUserInfoDTO } from '../model/invitedUserInfoDTO';
 import { TokenDTO } from '../model/tokenDTO';
 import { BASE_PATH } from '../variables';
 
@@ -84,111 +82,39 @@ export class RegulatorUsersRegistrationService {
   }
 
   /**
-   * Accept invitation for regulator user
+   * Accept invitation and register for regulator user
    * @param tokenDTO
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public acceptRegulatorInvitation(tokenDTO: TokenDTO): Observable<InvitedUserInfoDTO>;
-  public acceptRegulatorInvitation(
+  public acceptRegulatorInvitationAndRegister(tokenDTO: TokenDTO): Observable<any>;
+  public acceptRegulatorInvitationAndRegister(
     tokenDTO: TokenDTO,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<InvitedUserInfoDTO>>;
-  public acceptRegulatorInvitation(
+  ): Observable<HttpResponse<any>>;
+  public acceptRegulatorInvitationAndRegister(
     tokenDTO: TokenDTO,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<InvitedUserInfoDTO>>;
-  public acceptRegulatorInvitation(
+  ): Observable<HttpEvent<any>>;
+  public acceptRegulatorInvitationAndRegister(
     tokenDTO: TokenDTO,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<InvitedUserInfoDTO>;
-  public acceptRegulatorInvitation(
+  ): Observable<any>;
+  public acceptRegulatorInvitationAndRegister(
     tokenDTO: TokenDTO,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (tokenDTO === null || tokenDTO === undefined) {
-      throw new Error('Required parameter tokenDTO was null or undefined when calling acceptRegulatorInvitation.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (httpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = ['application/json'];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected !== undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    let responseType_: 'text' | 'json' = 'json';
-    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-      responseType_ = 'text';
-    }
-
-    return this.httpClient.post<InvitedUserInfoDTO>(
-      `${this.configuration.basePath}/v1.0/regulator-users/registration/accept-invitation`,
-      tokenDTO,
-      {
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
-  }
-
-  /**
-   * Enable a new regulator user from invitation
-   * @param invitedUserEnableDTO
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public enableRegulatorInvitedUser(invitedUserEnableDTO: InvitedUserEnableDTO): Observable<any>;
-  public enableRegulatorInvitedUser(
-    invitedUserEnableDTO: InvitedUserEnableDTO,
-    observe: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<any>>;
-  public enableRegulatorInvitedUser(
-    invitedUserEnableDTO: InvitedUserEnableDTO,
-    observe: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<any>>;
-  public enableRegulatorInvitedUser(
-    invitedUserEnableDTO: InvitedUserEnableDTO,
-    observe: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any>;
-  public enableRegulatorInvitedUser(
-    invitedUserEnableDTO: InvitedUserEnableDTO,
-    observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any> {
-    if (invitedUserEnableDTO === null || invitedUserEnableDTO === undefined) {
       throw new Error(
-        'Required parameter invitedUserEnableDTO was null or undefined when calling enableRegulatorInvitedUser.',
+        'Required parameter tokenDTO was null or undefined when calling acceptRegulatorInvitationAndRegister.',
       );
     }
 
@@ -216,9 +142,9 @@ export class RegulatorUsersRegistrationService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.put<any>(
-      `${this.configuration.basePath}/v1.0/regulator-users/registration/enable-from-invitation`,
-      invitedUserEnableDTO,
+    return this.httpClient.post<any>(
+      `${this.configuration.basePath}/v1.0/regulator-users/registration/accept-invitation-and-register`,
+      tokenDTO,
       {
         responseType: <any>responseType_,
         withCredentials: this.configuration.withCredentials,

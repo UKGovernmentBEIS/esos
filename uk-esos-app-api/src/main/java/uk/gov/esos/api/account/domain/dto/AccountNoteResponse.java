@@ -14,4 +14,5 @@ public class AccountNoteResponse {
     
     private List<AccountNoteDto> accountNotes;
     private Long totalItems;
+    private boolean hasUserEditPermission;
 }

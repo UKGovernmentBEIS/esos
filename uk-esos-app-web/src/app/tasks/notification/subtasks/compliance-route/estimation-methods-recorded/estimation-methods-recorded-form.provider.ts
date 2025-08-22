@@ -12,7 +12,7 @@ export const estimationMethodsRecordedFormProvider: Provider = {
   deps: [UntypedFormBuilder, RequestTaskStore],
   useFactory: (fb: UntypedFormBuilder, store: RequestTaskStore) => {
     const areEstimationMethodsRecorded = store.select(notificationQuery.selectComplianceRoute)()
-      ?.areEstimationMethodsRecordedInEvidencePack;
+      ?.areEstimationMethodsRecorded;
 
     return fb.group({
       areEstimationMethodsRecorded: [areEstimationMethodsRecorded, GovukValidators.required('Select an option')],

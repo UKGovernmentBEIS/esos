@@ -11,21 +11,21 @@
 /// @type String
 /// @access public
 
-$govuk-assets-path: "/assets/" !default;
+$govuk-assets-path: '/assets/' !default;
 
 /// Path to the images folder, with trailing slash.
 ///
 /// @type String
 /// @access public
 
-$govuk-images-path: "#{$govuk-assets-path}images/" !default;
+$govuk-images-path: '#{$govuk-assets-path}images/' !default;
 
 /// Path to the fonts folder, with trailing slash.
 ///
 /// @type String
 /// @access public
 
-$govuk-fonts-path: "#{$govuk-assets-path}fonts/" !default;
+$govuk-fonts-path: '#{$govuk-assets-path}fonts/' !default;
 
 /// Custom image URL function
 ///
@@ -80,3 +80,5 @@ $govuk-image-url-function: false !default;
 /// @access public
 
 $govuk-font-url-function: false !default;
+
+/*# sourceMappingURL=_assets.scss.map */

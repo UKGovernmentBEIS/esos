@@ -1,0 +1,46 @@
+<esos-wizard-step
+  [formGroup]="form"
+  [heading]="responsibleUndertakingMap.isBehalfOfTrust.title"
+  [caption]="responsibleUndertakingMap.title"
+  (formSubmit)="onSubmit()"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <div formControlName="isBehalfOfTrust" govuk-radio>
+    <govuk-radio-option [value]="true" label="Yes">
+      <ng-container govukConditionalContent>
+        <div
+          formControlName="trustName"
+          govuk-text-input
+          hint="Description or name of relevant trust assets (optional)"
+          widthClass="govuk-!-width-one-third"
+        ></div>
+      </ng-container>
+    </govuk-radio-option>
+    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+  </div>
+
+  <govuk-details summary="Help me answer this question">
+    <p class="govuk-body">
+      Assets held in trust must be included in ESOS if the organisation that is party to the agreement for the supply of
+      energy to the assets qualifies for ESOS.
+    </p>
+    <p class="govuk-body">The qualification of these parties is determined in the normal way.</p>
+    <p class="govuk-body">
+      Where there is no energy supply, the trust assets will not need to be included in an ESOS assessment because trust
+      assets only fall into ESOS if an energy supply agreement is held. Please note that the concept of a supply
+      agreement being in place only affects the qualification of trusts for ESOS, all other types of undertaking which
+      meet the qualification criteria will be required to participate in ESOS if they meet the qualification criteria.
+    </p>
+    <p class="govuk-body">
+      Trustees, operators, AIFMs and third party undertakings which have a responsibility to undertake an ESOS
+      assessment in relation to assets held in trust must participate separately in relation to the trust, themselves
+      and any other trust for which they have ESOS responsibilities.
+    </p>
+    <p class="govuk-body">
+      See guidance 1.7.3 to view table that summarises how responsibility for ESOS compliance for a trust asset is
+      determined.
+    </p>
+  </govuk-details>
+</esos-wizard-step>

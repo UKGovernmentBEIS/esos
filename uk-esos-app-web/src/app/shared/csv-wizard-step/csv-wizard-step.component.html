@@ -5,6 +5,9 @@
 
   <ng-content></ng-content>
   <button esosPendingButton govukButton type="submit" *ngIf="!hideSubmit">{{ submitText }}</button>
+  <div *ngIf="showReturnLink">
+    <esos-return-to-task-or-action-page />
+  </div>
   <div *ngIf="showCancelLink">
     <a govukLink [routerLink]="cancelLinkPath">Cancel</a>
   </div>

@@ -1,28 +1,34 @@
-<ng-container *ngIf="data?.energyConsumption">
-  <h2 class="govuk-heading-m">
-    What is an estimate of the potential annual reduction in energy consumption in kWh which could be achieved as a
-    result of implementing all energy saving opportunities identified through energy audits?
-  </h2>
-
-  <esos-energy-consumption-details-summary-template
-    [energyConsumption]="data.energyConsumption"
-    [changeLink]="changeLink?.STEP1"
+<!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+<ng-container *ngIf="data?.implementationEnergyConsumption != null">
+  <h2 class="govuk-heading-m">{{ energySavingsOpportunityMap.implementationEnergyConsumption.title }}</h2>
+  <esos-total-energy-consumption-reduction-summary-template
+    [totalEnergyConsumptionReduction]="data.implementationEnergyConsumption"
+    [name]="'Total annual reduction'"
     [isEditable]="isEditable"
     [queryParams]="queryParams"
-  ></esos-energy-consumption-details-summary-template>
+    [changeLink]="changeLink?.STEP1"
+  ></esos-total-energy-consumption-reduction-summary-template>
 </ng-container>
 
-<ng-container *ngIf="data?.energySavingsCategories">
-  <h2 class="govuk-heading-m">
-    What is an estimate of the potential annual reduction in energy consumption in kWh which could be achieved as a
-    result of implementing all energy saving opportunities against the following energy saving categories identified
-    through energy audits?
-  </h2>
+<ng-container *ngIf="data?.energyConsumption">
+  <h2 class="govuk-heading-m">{{ energySavingsOpportunityMap.energyConsumption.title }}</h2>
 
-  <esos-energy-saving-categories-details-summary-template
-    [energySavingsCategories]="data?.energySavingsCategories"
+  <esos-energy-consumption-details-with-cost-summary-template
+    [energyConsumption]="data.energyConsumption"
     [changeLink]="changeLink?.STEP2"
     [isEditable]="isEditable"
     [queryParams]="queryParams"
-  ></esos-energy-saving-categories-details-summary-template>
+  >
+  </esos-energy-consumption-details-with-cost-summary-template>
+</ng-container>
+
+<ng-container *ngIf="data?.energySavingsCategories">
+  <h2 class="govuk-heading-m">{{ energySavingsOpportunityMap.energySavingsCategories.title }}</h2>
+
+  <esos-energy-savings-categories-details-with-cost-summary-template
+    [energySavingsCategories]="data?.energySavingsCategories"
+    [changeLink]="changeLink?.STEP3"
+    [isEditable]="isEditable"
+    [queryParams]="queryParams"
+  ></esos-energy-savings-categories-details-with-cost-summary-template>
 </ng-container>

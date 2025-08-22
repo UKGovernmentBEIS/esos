@@ -92,6 +92,35 @@ class RequestDetailsRepositoryIT extends AbstractContainerBaseTest {
         assertThat(actualOpt).isEmpty();
     }
 
+    @Test
+    void findRequestDetailsByIdAndAccountId() {
+        long accountId = 1L;
+        Request request = createRequest(1L, RequestType.ORGANISATION_ACCOUNT_OPENING, RequestStatus.IN_PROGRESS, CompetentAuthorityEnum.ENGLAND);
+        createRequest(accountId, RequestType.ORGANISATION_ACCOUNT_OPENING, RequestStatus.COMPLETED, CompetentAuthorityEnum.ENGLAND);
+        flushAndClear();
+
+        Optional<RequestDetailsDTO> actualOpt = repo.findRequestDetailsByIdAndAccountId(request.getId(), accountId);
+
+        assertThat(actualOpt).isNotEmpty();
+        RequestDetailsDTO actual = actualOpt.get();
+        assertThat(actual.getId()).isEqualTo(request.getId());
+        assertThat(actual.getRequestType()).isEqualTo(request.getType());
+        assertThat(actual.getRequestStatus()).isEqualTo(request.getStatus());
+        assertThat(actual.getCreationDate()).isEqualTo(request.getCreationDate().toLocalDate());
+    }
+
+    @Test
+    void findRequestDetailsByIdAndAccountId_not_found() {
+        long accountId = 1L;
+        createRequest(1L, RequestType.ORGANISATION_ACCOUNT_OPENING, RequestStatus.IN_PROGRESS, CompetentAuthorityEnum.ENGLAND);
+        Request request = createRequest(accountId, RequestType.ORGANISATION_ACCOUNT_OPENING, RequestStatus.COMPLETED, CompetentAuthorityEnum.ENGLAND);
+        flushAndClear();
+
+        Optional<RequestDetailsDTO> actualOpt = repo.findRequestDetailsByIdAndAccountId(request.getId(), 2L);
+
+        assertThat(actualOpt).isEmpty();
+    }
+
     private Request createRequest(Long accountId, RequestType type, RequestStatus status, CompetentAuthorityEnum ca) {
         return createRequest(accountId, type, status, ca, null);
     }

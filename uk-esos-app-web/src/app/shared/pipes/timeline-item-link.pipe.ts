@@ -9,9 +9,9 @@ export class TimelineItemLinkPipe implements PipeTransform {
     switch (value.type) {
       case 'ORGANISATION_ACCOUNT_OPENING_APPROVED':
       case 'ORGANISATION_ACCOUNT_OPENING_REJECTED':
-        return [routerLooks + 'installation-account', 'submitted-decision', value.id];
       case 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED':
-        return [routerLooks + 'installation-account', 'summary', value.id];
+      case 'ORGANISATION_ACCOUNT_OPENING_CREATED':
+        return [routerLooks + 'timeline', value.id];
 
       case 'PAYMENT_MARKED_AS_PAID':
         return [routerLooks + 'payment', 'actions', value.id, 'paid'];
@@ -46,6 +46,33 @@ export class TimelineItemLinkPipe implements PipeTransform {
         return null;
 
       case 'VERIFICATION_STATEMENT_CANCELLED':
+        return null;
+
+      case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SENT_TO_EDIT':
+      case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RETURNED_TO_SUBMIT':
+      case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMITTED':
+        return [routerLooks + 'timeline', value.id];
+      case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RE_INITIATED':
+        return null;
+
+      case 'ACTION_PLAN_P3_APPLICATION_SUBMITTED':
+        return [routerLooks + 'timeline', value.id];
+      case 'ACTION_PLAN_P3_APPLICATION_RE_INITIATED':
+      case 'ACTION_PLAN_APPLICATION_CANCELLED':
+        return null;
+
+      case 'ACCOUNT_CLOSURE_APPLICATION_SUBMITTED':
+        return [routerLooks + 'timeline', value.id];
+      case 'ACCOUNT_CLOSURE_APPLICATION_CANCELLED':
+        return null;
+
+      case 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED':
+      case 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED':
+        return [routerLooks + 'timeline', value.id];
+      case 'PROGRESS_UPDATE_1_APPLICATION_CANCELLED':
+      case 'PROGRESS_UPDATE_1_P3_APPLICATION_RE_INITIATED':
+      case 'PROGRESS_UPDATE_2_APPLICATION_CANCELLED':
+      case 'PROGRESS_UPDATE_2_P3_APPLICATION_RE_INITIATED':
         return null;
 
       default:

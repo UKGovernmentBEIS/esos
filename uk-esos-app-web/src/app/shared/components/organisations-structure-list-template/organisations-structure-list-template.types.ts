@@ -1,9 +1,4 @@
-import { OrganisationAssociatedWithRU, OrganisationDetails, OrganisationStructure } from 'esos-api';
-
-export type Organisation = Partial<OrganisationAssociatedWithRU> &
-  Partial<{ organisationDetails: string; name: OrganisationDetails['name'] }>;
-
-export type RuOrganisation = Omit<OrganisationStructure, 'organisationsAssociatedWithRU'>;
+import { OrganisationDetails } from 'esos-api';
 
 export interface OrganisationStructureListTemplateViewModel {
   header: string;

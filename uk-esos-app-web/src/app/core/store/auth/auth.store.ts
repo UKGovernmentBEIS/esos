@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { AuthState, initialState } from '@core/store/auth/auth.state';
+import { Permissions } from '@shared/interfaces';
 import { KeycloakProfile } from 'keycloak-js';
 
 import { ApplicationUserDTO, TermsDTO, UserStateDTO } from 'esos-api';
@@ -31,6 +32,10 @@ export class AuthStore extends Store<AuthState> {
 
   setTerms(terms: TermsDTO) {
     this.setState({ ...this.getState(), terms });
+  }
+
+  setRegulatorPermissions(regulatorPermissions: Permissions) {
+    this.setState({ ...this.getState(), regulatorPermissions });
   }
 
   reset(): void {

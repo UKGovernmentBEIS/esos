@@ -7,9 +7,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import uk.gov.esos.api.account.domain.dto.AccountSearchCriteria;
-import uk.gov.esos.api.account.domain.dto.AccountSearchResults;
 import uk.gov.esos.api.account.organisation.domain.OrganisationAccount;
-import uk.gov.esos.api.account.organisation.domain.dto.OrganisationAccountSearchResultsInfoDTO;
+import uk.gov.esos.api.account.organisation.domain.dto.AccountSearchResults;
 import uk.gov.esos.api.competentauthority.CompetentAuthorityEnum;
 
 import java.util.List;
@@ -21,19 +20,19 @@ public class OrganisationAccountCustomRepositoryImpl implements OrganisationAcco
     private EntityManager entityManager;
 
     @Override
-    public AccountSearchResults<OrganisationAccountSearchResultsInfoDTO> findByAccountIds(List<Long> accountIds, AccountSearchCriteria searchCriteria) {
-        return new AccountSearchResults<>(
-                constructQuery(accountIds, null, null, searchCriteria, false).getResultList(),
-                ((Number) constructQuery(accountIds, null, null, searchCriteria, true).getSingleResult()).longValue()
-        );
+    public AccountSearchResults findByAccountIds(List<Long> accountIds, AccountSearchCriteria searchCriteria) {
+        return AccountSearchResults.builder()
+                .accounts(constructQuery(accountIds, null, null, searchCriteria, false).getResultList())
+                .total(((Number) constructQuery(accountIds, null, null, searchCriteria, true).getSingleResult()).longValue())
+                .build();
     }
 
     @Override
-    public AccountSearchResults<OrganisationAccountSearchResultsInfoDTO> findByCompAuth(CompetentAuthorityEnum compAuth, AccountSearchCriteria searchCriteria) {
-        return new AccountSearchResults<>(
-                constructQuery(null, compAuth, null, searchCriteria, false).getResultList(),
-                ((Number) constructQuery(null, compAuth, null, searchCriteria, true).getSingleResult()).longValue()
-        );
+    public AccountSearchResults findByCompAuth(CompetentAuthorityEnum compAuth, AccountSearchCriteria searchCriteria) {
+        return AccountSearchResults.builder()
+                .accounts(constructQuery(null, compAuth, null, searchCriteria, false).getResultList())
+                .total(((Number) constructQuery(null, compAuth, null, searchCriteria, true).getSingleResult()).longValue())
+                .build();
     }
 
     private Query constructQuery(List<Long> accountIds,

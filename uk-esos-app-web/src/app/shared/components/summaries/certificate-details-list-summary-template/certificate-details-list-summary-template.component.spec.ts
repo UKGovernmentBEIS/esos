@@ -36,6 +36,12 @@ describe('CertificateDetailsListSummaryTemplateComponent', () => {
         validUntil: '2021-01-01T00:00:00.000Z',
       },
     ];
+    component.columns = [
+      { field: 'certificateNumber', header: 'Certificate number', widthClass: 'govuk-!-width-one-third' },
+      { field: 'validFrom', header: 'Valid from' },
+      { field: 'validUntil', header: 'Valid until' },
+      { field: 'change', header: '' },
+    ];
     page = new Page(fixture);
     fixture.detectChanges();
   });

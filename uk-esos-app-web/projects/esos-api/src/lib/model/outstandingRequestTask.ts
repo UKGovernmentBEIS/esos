@@ -17,12 +17,22 @@ export interface OutstandingRequestTask {
   Account_name?: string;
   Legal_Entity_name?: string;
   Workflow_ID?: string;
-  Workflow_type?: 'ORGANISATION_ACCOUNT_OPENING' | 'NOTIFICATION_OF_COMPLIANCE_P3';
+  Workflow_type?:
+    | 'ORGANISATION_ACCOUNT_OPENING'
+    | 'NOTIFICATION_OF_COMPLIANCE_P3'
+    | 'ACTION_PLAN_P3'
+    | 'ACCOUNT_CLOSURE'
+    | 'PROGRESS_UPDATE_1_P3'
+    | 'PROGRESS_UPDATE_2_P3';
   Workflow_task_name?:
     | 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW'
     | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT'
     | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT'
-    | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT';
+    | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT'
+    | 'ACTION_PLAN_P3_APPLICATION_SUBMIT'
+    | 'ACCOUNT_CLOSURE_SUBMIT'
+    | 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT'
+    | 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT';
   Workflow_task_assignee?: string;
   Workflow_task_due_date?: string;
   Workflow_task_days_remaining?: number;

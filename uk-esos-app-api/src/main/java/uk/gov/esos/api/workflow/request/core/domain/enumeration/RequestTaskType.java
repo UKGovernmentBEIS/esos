@@ -20,7 +20,6 @@ import static uk.gov.esos.api.workflow.request.flow.common.taskhandler.DynamicUs
  * Task type enum. <br/>
  * Note: The enum is used in bpmn workflow engine to set the user task definition key (ID), e.g. <br/>
  * <i>&lt;bpmn:userTask id="ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW" name="Review application"&gt;</i>
- *
  */
 @Getter
 public enum RequestTaskType {
@@ -29,8 +28,8 @@ public enum RequestTaskType {
         @Override
         public List<RequestTaskActionType> getAllowedRequestTaskActionTypes() {
             return List.of(
-                RequestTaskActionType.ORGANISATION_ACCOUNT_OPENING_AMEND_APPLICATION,
-                RequestTaskActionType.ORGANISATION_ACCOUNT_OPENING_SUBMIT_DECISION);
+                    RequestTaskActionType.ORGANISATION_ACCOUNT_OPENING_AMEND_APPLICATION,
+                    RequestTaskActionType.ORGANISATION_ACCOUNT_OPENING_SUBMIT_DECISION);
         }
     },
 
@@ -63,26 +62,74 @@ public enum RequestTaskType {
         public List<RequestTaskActionType> getAllowedRequestTaskActionTypes() {
             return List.of();
         }
+    },
+
+    ACTION_PLAN_P3_APPLICATION_SUBMIT(true, RequestType.ACTION_PLAN_P3) {
+        @Override
+        public List<RequestTaskActionType> getAllowedRequestTaskActionTypes() {
+            return List.of(
+                    RequestTaskActionType.ACTION_PLAN_P3_SUBMIT_APPLICATION,
+                    RequestTaskActionType.ACTION_PLAN_P3_SAVE_APPLICATION_SUBMIT,
+                    RequestTaskActionType.ACTION_PLAN_CANCEL_APPLICATION
+
+            );
+        }
+    },
+
+    ACCOUNT_CLOSURE_SUBMIT(true, RequestType.ACCOUNT_CLOSURE) {
+        @Override
+        public List<RequestTaskActionType> getAllowedRequestTaskActionTypes() {
+            return List.of(
+                    RequestTaskActionType.ACCOUNT_CLOSURE_SUBMIT_APPLICATION,
+                    RequestTaskActionType.ACCOUNT_CLOSURE_SAVE_APPLICATION_SUBMIT,
+                    RequestTaskActionType.ACCOUNT_CLOSURE_CANCEL_APPLICATION
+            );
+        }
+    },
+
+    PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT(true, RequestType.PROGRESS_UPDATE_1_P3) {
+        @Override
+        public List<RequestTaskActionType> getAllowedRequestTaskActionTypes() {
+            return List.of(
+                    RequestTaskActionType.PROGRESS_UPDATE_1_P3_SUBMIT_APPLICATION,
+                    RequestTaskActionType.PROGRESS_UPDATE_1_P3_SAVE_APPLICATION_SUBMIT,
+                    RequestTaskActionType.PROGRESS_UPDATE_1_CANCEL_APPLICATION
+
+            );
+        }
+    },
+
+    PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT(true, RequestType.PROGRESS_UPDATE_2_P3) {
+        @Override
+        public List<RequestTaskActionType> getAllowedRequestTaskActionTypes() {
+            return List.of(
+                    RequestTaskActionType.PROGRESS_UPDATE_2_P3_SUBMIT_APPLICATION,
+                    RequestTaskActionType.PROGRESS_UPDATE_2_P3_SAVE_APPLICATION_SUBMIT,
+                    RequestTaskActionType.PROGRESS_UPDATE_2_CANCEL_APPLICATION
+
+            );
+        }
     };
 
+
     private final boolean assignable;
-	private final RequestType requestType;
+    private final RequestType requestType;
     private final RequestExpirationType expirationKey;
 
-    private RequestTaskType(boolean assignable, RequestType requestType) {
-    	this(assignable, requestType, null);
+    RequestTaskType(boolean assignable, RequestType requestType) {
+        this(assignable, requestType, null);
     }
 
-    private RequestTaskType(boolean assignable, RequestType requestType, RequestExpirationType expirationKey) {
-    	this.assignable = assignable;
-    	this.requestType = requestType;
-    	this.expirationKey = expirationKey;
+    RequestTaskType(boolean assignable, RequestType requestType, RequestExpirationType expirationKey) {
+        this.assignable = assignable;
+        this.requestType = requestType;
+        this.expirationKey = expirationKey;
     }
 
     public abstract List<RequestTaskActionType> getAllowedRequestTaskActionTypes();
 
     public boolean isExpirable() {
-    	return expirationKey != null;
+        return expirationKey != null;
     }
 
     /**
@@ -92,28 +139,28 @@ public enum RequestTaskType {
      */
     public static Set<RequestTaskType> getSupportingRequestTaskTypes() {
         return Set.of(
-            RequestTaskType.NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT
+                RequestTaskType.NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT
         );
     }
 
     public static Set<RequestTaskType> getMakePaymentTypes() {
         return Stream.of(RequestTaskType.values())
-            .filter(requestTaskType -> requestTaskType.name().endsWith(MAKE_PAYMENT.name()))
-            .collect(Collectors.toSet());
+                .filter(requestTaskType -> requestTaskType.name().endsWith(MAKE_PAYMENT.name()))
+                .collect(Collectors.toSet());
     }
 
     public static Set<RequestTaskType> getTrackPaymentTypes() {
         return Stream.of(RequestTaskType.values())
-            .filter(requestTaskType -> requestTaskType.name().endsWith(TRACK_PAYMENT.name()))
-            .collect(Collectors.toSet());
+                .filter(requestTaskType -> requestTaskType.name().endsWith(TRACK_PAYMENT.name()))
+                .collect(Collectors.toSet());
     }
 
     public static Set<RequestTaskType> getConfirmPaymentTypes() {
         return Stream.of(RequestTaskType.values())
-            .filter(requestTaskType -> requestTaskType.name().endsWith(CONFIRM_PAYMENT.name()))
-            .collect(Collectors.toSet());
+                .filter(requestTaskType -> requestTaskType.name().endsWith(CONFIRM_PAYMENT.name()))
+                .collect(Collectors.toSet());
     }
-    
+
     public static Set<RequestTaskType> getRfiResponseTypes() {
         return Stream.of(RequestTaskType.values())
                 .filter(requestTaskType -> requestTaskType.name().endsWith(RFI_RESPONSE_SUBMIT.name()))
@@ -139,14 +186,14 @@ public enum RequestTaskType {
     }
 
     public static Set<RequestTaskType> getRfiRdeWaitForResponseTypes() {
-		return Stream.concat(getRfiWaitForResponseTypes().stream(), getRdeWaitForResponseTypes().stream())
-				.collect(Collectors.toSet());
+        return Stream.concat(getRfiWaitForResponseTypes().stream(), getRdeWaitForResponseTypes().stream())
+                .collect(Collectors.toSet());
     }
 
     public static Set<RequestTaskType> getWaitForRequestTaskTypes() {
         return Stream.of(RequestTaskType.values())
-            .filter(requestTaskType -> requestTaskType.toString().contains("WAIT_FOR"))
-            .collect(Collectors.toSet());
+                .filter(requestTaskType -> requestTaskType.toString().contains("WAIT_FOR"))
+                .collect(Collectors.toSet());
     }
 
     public static Set<RequestTaskType> getTaskTypesRelatedToVerifier() {

@@ -1,0 +1,9 @@
+@media print {
+  .govuk-accordion__section-content[hidden] {
+    content-visibility: auto;
+    display: block;
+  }
+  button {
+    display: none;
+  }
+}

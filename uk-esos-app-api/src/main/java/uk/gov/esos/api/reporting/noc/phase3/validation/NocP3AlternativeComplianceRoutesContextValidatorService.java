@@ -2,6 +2,7 @@ package uk.gov.esos.api.reporting.noc.phase3.validation;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
+
 import uk.gov.esos.api.reporting.noc.common.domain.NocValidationResult;
 import uk.gov.esos.api.reporting.noc.common.domain.NocViolation;
 import uk.gov.esos.api.reporting.noc.common.validation.NocSectionConstraintValidatorService;
@@ -19,8 +20,13 @@ import java.util.Set;
 @Service
 public class NocP3AlternativeComplianceRoutesContextValidatorService extends NocP3SectionValidatorService<AlternativeComplianceRoutes> implements NocP3SectionContextValidator {
 
-	public NocP3AlternativeComplianceRoutesContextValidatorService(NocSectionConstraintValidatorService<AlternativeComplianceRoutes> nocSectionConstraintValidatorService) {
+	private final PotentialReductionEnergyCostValidator potentialReductionEnergyCostValidator;
+
+	public NocP3AlternativeComplianceRoutesContextValidatorService(
+			NocSectionConstraintValidatorService<AlternativeComplianceRoutes> nocSectionConstraintValidatorService,
+			PotentialReductionEnergyCostValidator potentialReductionEnergyCostValidator) {
 		super(nocSectionConstraintValidatorService);
+		this.potentialReductionEnergyCostValidator = potentialReductionEnergyCostValidator;
 	}
 
 	@Override
@@ -37,8 +43,7 @@ public class NocP3AlternativeComplianceRoutesContextValidatorService extends Noc
             case ISO_50001_COVERING_ENERGY_USAGE -> {
                 // hide QID41,42, show QID100
                 if(ObjectUtils.isNotEmpty(nocSection.getEnergyConsumptionReduction()) 
-                		|| ObjectUtils.isNotEmpty(nocSection.getEnergyConsumptionReductionCategories())
-                		|| ObjectUtils.isEmpty(nocSection.getTotalEnergyConsumptionReduction())) {
+                		|| ObjectUtils.isNotEmpty(nocSection.getEnergyConsumptionReductionCategories())) {
                 	nocViolations.add(new NocViolation(this.getSectionName(), NocViolation.NocViolationMessage.INVALID_ENERGY_CONSUMPTION_REDUCTION));
                 }
 
@@ -48,15 +53,19 @@ public class NocP3AlternativeComplianceRoutesContextValidatorService extends Noc
                 yield nocViolations;
             }
             case PARTIAL_ENERGY_ASSESSMENTS, LESS_THAN_40000_KWH_PER_YEAR, ALTERNATIVE_ENERGY_ASSESSMENTS_95_TO_100 -> {
-                // hide QID100, show QID41,42
-                if(ObjectUtils.isNotEmpty(nocSection.getTotalEnergyConsumptionReduction())
-                		|| ObjectUtils.isEmpty(nocSection.getEnergyConsumptionReduction()) 
-                		|| ObjectUtils.isEmpty(nocSection.getEnergyConsumptionReductionCategories())) {
-                	nocViolations.add(new NocViolation(this.getSectionName(), NocViolation.NocViolationMessage.INVALID_ENERGY_CONSUMPTION_REDUCTION));
-                }
 
                 // validate dependencies on QID 44,17,76,77
                 validateComplianceRoutes(nocSection, nocViolations, nocContainer.getNoc().getReportingObligation());
+
+				// Validate consumption energy total cost
+				if(!potentialReductionEnergyCostValidator.isEnergyConsumptionValid(nocSection.getEnergyConsumptionReduction())) {
+					nocViolations.add(new NocViolation(this.getSectionName(), NocViolation.NocViolationMessage.INVALID_ENERGY_CONSUMPTION_REDUCTION_COST));
+				}
+
+				// Validate energy savings categories total cost
+				if(!potentialReductionEnergyCostValidator.isEnergySavingsCategoriesValid(nocSection.getEnergyConsumptionReductionCategories())) {
+					nocViolations.add(new NocViolation(this.getSectionName(), NocViolation.NocViolationMessage.INVALID_ENERGY_SAVINGS_CATEGORIES_COST));
+				}
                 
                 yield nocViolations;
             }
@@ -65,13 +74,29 @@ public class NocP3AlternativeComplianceRoutesContextValidatorService extends Noc
     }
 
 	@Override
-    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories() {
-        return Set.of(
-                ReportingObligationCategory.ISO_50001_COVERING_ENERGY_USAGE,
-                ReportingObligationCategory.PARTIAL_ENERGY_ASSESSMENTS,
-                ReportingObligationCategory.LESS_THAN_40000_KWH_PER_YEAR,
-                ReportingObligationCategory.ALTERNATIVE_ENERGY_ASSESSMENTS_95_TO_100
-        );
+    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories(NocP3Container nocContainer) {
+		boolean alternativeRoutesExist = Optional.ofNullable(nocContainer.getNoc().getReportingObligation())
+    			.map(ReportingObligation::getReportingObligationDetails)
+    			.map(ReportingObligationDetails::getComplianceRouteDistribution)
+    			.map(ar -> ar.getIso50001Pct().compareTo(0) > 0 || 
+    					ar.getDisplayEnergyCertificatePct().compareTo(0) > 0 || 
+    					ar.getGreenDealAssessmentPct().compareTo(0) > 0)
+    			.orElse(false);
+		
+		if (alternativeRoutesExist) {
+			return Set.of(
+	                ReportingObligationCategory.ISO_50001_COVERING_ENERGY_USAGE,
+	                ReportingObligationCategory.PARTIAL_ENERGY_ASSESSMENTS,
+	                ReportingObligationCategory.LESS_THAN_40000_KWH_PER_YEAR,
+	                ReportingObligationCategory.ALTERNATIVE_ENERGY_ASSESSMENTS_95_TO_100
+	        );
+		} else {
+			return Set.of(
+	                ReportingObligationCategory.ISO_50001_COVERING_ENERGY_USAGE,
+	                ReportingObligationCategory.PARTIAL_ENERGY_ASSESSMENTS,
+	                ReportingObligationCategory.ALTERNATIVE_ENERGY_ASSESSMENTS_95_TO_100
+	        );
+		}
     }
 
     @Override

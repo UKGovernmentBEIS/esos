@@ -1,40 +1,32 @@
-<div class="govuk-grid-row">
-  <div class="govuk-heading-m govuk-!-margin-left-3">Phases</div>
-  <div class="govuk-grid-column-full" *ngIf="report$ | async as reports">
-    <ng-container *ngFor="let report of reports">
-      <div class="govuk-!-margin-bottom-9">
-        <div class="govuk-heading-m">{{ report.phase | phases }}</div>
-        <ul class="govuk-list">
-          <li *ngFor="let details of report.reportsDetails" class="search-results-list_item govuk-!-margin-bottom-3">
-            <div class="govuk-grid-row">
-              <div class="govuk-grid-column-three-quarters">
-                <div class="govuk-!-margin-bottom-3">
-                  <a [routerLink]="['phases', details.id]" govukLink class="govuk-!-margin-bottom-3">
-                    {{ details.requestType | i18nSelect: reportsTypesTagsMap }}
-                  </a>
-                </div>
-                <div class="govuk-!-margin-bottom-2">{{ details.requestMetadata | reportingSubheading }}</div>
-              </div>
-              <div class="govuk-grid-column-one-quarter">
-                <span
-                  class="search-results-list_item_status govuk-tag govuk-tag--{{
-                    details.requestStatus | statusTagColor
-                  }} float-right"
-                >
-                  <strong>{{ details.requestStatus | i18nSelect: reportsStatusesTagMap }}</strong>
-                </span>
-              </div>
+<h2 class="govuk-heading-m">Phases</h2>
+@if (report$ | async; as reports) {
+  @for (report of reports; track report) {
+    <h3 class="govuk-heading-s">{{ report.phase | phases }}</h3>
+    <ul class="govuk-list">
+      @for (details of report.reportsDetails; track details) {
+        <li class="search-results-list_item">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-three-quarters">
+              <a [routerLink]="['phases', details.id]" govukLink>
+                {{ details.requestType | i18nSelect: reportsTypesTagsMap }}
+              </a>
             </div>
-          </li>
-        </ul>
-      </div>
-    </ng-container>
+            <div class="govuk-grid-column-one-quarter govuk-!-text-align-right">
+              <govuk-tag [color]="details.requestStatus | statusTagColor">
+                {{ details.requestStatus | i18nSelect: reportsStatusesTagMap }}
+              </govuk-tag>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  }
 
-    <esos-pagination
-      *ngIf="(totalReportsNumber$ | async) > 0 && showPagination$ | async"
+  @if ((totalReportsNumber$ | async) > 0 && showPagination$ | async) {
+    <govuk-pagination
       [count]="totalReportsNumber$ | async"
       (currentPageChange)="page$.next($event)"
       [pageSize]="pageSize"
-    ></esos-pagination>
-  </div>
-</div>
+    ></govuk-pagination>
+  }
+}

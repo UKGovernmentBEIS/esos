@@ -1,0 +1,43 @@
+<govuk-details summary="Guidance for activity codes">
+  <p class="govuk-body">
+    If you do not have an activity code for the undertaking, you are advised to select a standard industrial
+    classification (SIC) code using the Office for National Statistic's ‘<a
+      class="govuk-link"
+      rel="noreferrer noopener"
+      target="_blank"
+      href="https://www.ons.gov.uk/file?uri=/methodology/classificationsandstandards/ukstandardindustrialclassificationofeconomicactivities/uksic2007/publisheduksicsummaryofstructureworksheet.xlsx"
+      >Summary of Structure worksheet</a
+    >’ in the following link:
+    <a
+      class="govuk-link"
+      rel="noreferrer noopener"
+      target="_blank"
+      href="https://www.ons.gov.uk/methodology/classificationsandstandards/ukstandardindustrialclassificationofeconomicactivities/uksic2007"
+      >UK SIC 2007 - Office for National Statistics</a
+    >.
+  </p>
+
+  <p class="govuk-body">
+    SIC codes are 5-digit codes used to classify economic activity, which are structured according to the formula:
+    Division-Group-Class-(Sub-class). The digits for the economic activity which relate to the first part of the formula
+    are repeated for every part which follows, with a further number being added each time to provide greater detail
+    about the economic activity. The 5-digit 'sub-class' provides the SIC code, or, if the activity does not have a
+    sub-class, the number 0 should be added to the digits in 'class' to provide the 5-digit SIC code.
+  </p>
+
+  <p class="govuk-body">Up to 4 SIC codes may be selected to describe the undertaking's economic activities.</p>
+
+  <p class="govuk-body govuk-!-font-weight-bold">Example</p>
+
+  <p class="govuk-body">
+    A charity which retails second-hand goods (other than antiques) through charity shops would identify the SIC code
+    for this activity using the ONS Summary of Structure worksheet as follows:
+  </p>
+
+  <govuk-table [columns]="columns" [data]="data"></govuk-table>
+
+  <p class="govuk-body">
+    In this example, the sub-class provides the 5-digit SIC code 47.79/9. Only the numbers 47799 are entered into the
+    system (not the decimal point or forward slash).
+  </p>
+</govuk-details>

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { BehaviorSubject, map, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, shareReplay, switchMap } from 'rxjs';
 
 import { StatusTagColorPipe } from '@common/request-task/pipes/status-tag-color';
 import { DestroySubject } from '@core/services/destroy-subject.service';
-import { AuthStore, selectUserRoleType } from '@core/store/auth';
+import { AuthStore } from '@core/store/auth';
 import { RelatedTasksComponent } from '@shared/components/related-tasks/related-tasks.component';
 import { TimelineComponent } from '@shared/components/timeline/timeline.component';
 import { TimelineItemComponent } from '@shared/components/timeline/timeline-item.component';
@@ -71,11 +71,17 @@ export class WorkflowItemComponent extends WorkflowItemAbstractComponent {
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
-  userRoleType$ = this.authStore.pipe(selectUserRoleType);
-
-  validRequestCreateActionsTypes$ = this.accountId$.pipe(
-    switchMap((accountId) => {
-      return this.requestsService.getAvailableAccountWorkflows(accountId);
+  validRequestCreateActionsTypes$ = combineLatest([this.accountId$, this.requestInfo$]).pipe(
+    switchMap(([accountId, requestInfo]) => {
+      switch (requestInfo.requestType) {
+        case 'NOTIFICATION_OF_COMPLIANCE_P3':
+        case 'ACTION_PLAN_P3':
+        case 'PROGRESS_UPDATE_1_P3':
+        case 'PROGRESS_UPDATE_2_P3':
+          return this.requestsService.getAvailableRequestWorkflows(requestInfo.id);
+        default:
+          return this.requestsService.getAvailableAccountWorkflows(accountId);
+      }
     }),
     map((availableCreateActions) =>
       (Object.keys(availableCreateActions) as RequestCreateActionProcessDTO['requestCreateActionType'][]).filter(

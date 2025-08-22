@@ -1,0 +1,29 @@
+<esos-wizard-step
+  (formSubmit)="submit()"
+  [formGroup]="form"
+  heading="Is the responsible undertaking a highest parent which has agreed to aggregate with one or more other highest parents to comply as one participant?"
+  caption="Organisation structure"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <div
+    formControlName="isHighestParent"
+    govuk-radio
+    legend="Is the responsible undertaking a highest parent which has agreed to aggregate with one or more other highest parents to comply as one participant?"
+    [isLegendHidden]="true"
+  >
+    <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>
+    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+  </div>
+
+  <govuk-details summary="Help me answer this question">
+    <p class="govuk-body">
+      Under the ESOS regulations, two or more highest parents (meaning parent undertakings that do not themselves have a
+      parent which is required to participate in ESOS), can agree to aggregate so that their respective highest parent
+      groups may comply as one participant. The highest parents must agree which of them is to be the responsible
+      undertaking.
+    </p>
+  </govuk-details>
+
+</esos-wizard-step>

@@ -1,20 +1,30 @@
 <esos-wizard-step
   [formGroup]="formGroup"
   [heading]="heading"
-  caption="{{ isFirstCompliancePeriod ? 'First compliance period' : 'Second compliance period' }}"
+  [caption]="isFirstCompliancePeriod ? 'First compliance period' : 'Second compliance period'"
   submitText="Save and continue"
   [hideSubmit]="false"
   (formSubmit)="submit()"
+  [showReturnLink]="true"
 >
-  <ng-container *ngIf="isFirstCompliancePeriod; else second">
-    <p class="govuk-body">The first compliance period lasted from 17 July 2014 to 5 December 2015.</p>
-  </ng-container>
-  <ng-template #second>
-    <p class="govuk-body">The second compliance period lasted from 6 December 2015 to 5 December 2019.</p>
-  </ng-template>
+  <p class="govuk-hint">{{ hint }}</p>
+
+  <p class="govuk-hint">
+    Providing this information is optional, and would support the government to analyse the impact of the scheme.
+  </p>
+
+  <p class="govuk-hint govuk-!-margin-bottom-6">
+    You do not need to give this information in order to comply with the ESOS requirements.
+  </p>
 
   <div formControlName="informationExists" govuk-radio>
-    <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>
-    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+    <govuk-radio-option [value]="'YES'" [label]="'YES' | skipQuestion"></govuk-radio-option>
+    <govuk-radio-option [value]="'NO'" [label]="'NO' | skipQuestion"></govuk-radio-option>
+    <p>or</p>
+    <govuk-radio-option
+      value="SKIP_QUESTION"
+      [label]="'SKIP_QUESTION' | skipQuestion"
+      [divider]="true"
+    ></govuk-radio-option>
   </div>
 </esos-wizard-step>

@@ -5,7 +5,14 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <div formControlName="email" govuk-text-input label="Email address" hint="This should be a business email address" widthClass="govuk-!-width-two-thirds"></div>
+  <div
+    formControlName="email"
+    govuk-text-input
+    label="Email address"
+    hint="This should be a business email address"
+    widthClass="govuk-!-width-two-thirds"
+  ></div>
   <div esos-phone-input formControlName="phoneNumber" label="Telephone number"></div>
 </esos-wizard-step>

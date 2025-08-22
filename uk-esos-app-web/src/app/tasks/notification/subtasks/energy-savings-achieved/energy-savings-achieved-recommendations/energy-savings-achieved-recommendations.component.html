@@ -1,10 +1,11 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="What is the breakdown of the proportion of energy savings achieved which relate to recommendations from the following categories?"
+  heading="What is the breakdown of the proportion of energy savings achieved which relate to recommendations from the following categories? (optional)"
   caption="Energy savings achieved"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
   <div
     govuk-text-input
@@ -35,9 +36,7 @@
 
   <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Total</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Total</h2>
 
-  <p class="govuk-body">The total combined breakdown of energy savings achieved must be 100%</p>
-
-  <p class="govuk-body">{{ totalPercentage() }} %</p>
+  <p class="govuk-body">{{ totalPercentage() | noDataEntered : '%' }}</p>
 </esos-wizard-step>

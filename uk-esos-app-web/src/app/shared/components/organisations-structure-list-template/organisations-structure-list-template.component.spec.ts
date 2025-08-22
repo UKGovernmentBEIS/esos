@@ -33,31 +33,35 @@ describe('ListTableComponent', () => {
       wizardStep: {},
       isEditable: false,
       organisationDetails: {
+        name: 'Ru Org Name',
+        registrationNumber: '1111',
+        type: 'SIC',
+        codes: ['2222'],
         city: 'City',
         county: 'Powys',
         line1: 'Line 1',
         line2: 'Line 2',
-        name: 'Ru Org Name',
         postcode: 'Postcode',
       },
     };
     component.organisationStructure = computed(() => ({
-      hasCeasedToBePartOfGroup: false,
-      isPartOfArrangement: true,
-      isPartOfFranchise: false,
-      isTrust: true,
+      isHighestParent: true,
+      isNonComplyingUndertakingsIncluded: false,
       organisationsAssociatedWithRU: [
         {
+          registrationNumberExist: false,
           hasCeasedToBePartOfGroup: true,
-          isCoveredByThisNotification: true,
+          classificationCodesDetails: {
+            areSameAsRU: true,
+          },
           isParentOfResponsibleUndertaking: true,
           isPartOfArrangement: true,
           isPartOfFranchise: false,
           isSubsidiaryOfResponsibleUndertaking: true,
-          isTrust: false,
           organisationName: 'Organisation name',
         },
       ],
+      isGroupStructureChartProvided: true,
     }));
     page = new Page(fixture);
     fixture.detectChanges();
@@ -76,8 +80,26 @@ describe('ListTableComponent', () => {
     const cells = Array.from(page.organisationsTable.querySelectorAll('td'));
 
     expect(cells.map((cell) => cell.textContent.trim())).toEqual([
-      ...['Ru Org Name  Responsible undertaking', '✓', '✓', '', '', '', '✓', '', ''],
-      ...['Organisation name', '✓', '✓', '✓', '✓', '', '', '✓', ''],
+      ...[
+        `Ru Org Name
+1111RUShow activity codes SIC:  2222`,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+      ],
+      ...[
+        `Organisation name
+Show activity codesSame as the RU's`,
+        '✓',
+        '✓',
+        '✓',
+        '',
+        '✓',
+        '',
+      ],
     ]);
   });
 });

@@ -1,46 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NonAuthGuard } from '../core/guards/non-auth.guard';
-import { PendingRequestGuard } from '../core/guards/pending-request.guard';
-import { ChoosePasswordComponent } from './choose-password/choose-password.component';
+import { PendingRequestGuard } from '@core/guards/pending-request.guard';
+
 import { ContactDetailsComponent } from './contact-details/contact-details.component';
-import { EmailComponent } from './email/email.component';
-import { EmailConfirmedComponent } from './email-confirmed/email-confirmed.component';
-import { ClaimOperatorGuard } from './guards/claim-operator.guard';
-import { ConfirmedEmailGuard } from './guards/confirmed-email.guard';
+import { InviteOperatorGuard } from './guards/invite-operator.guard';
+import { RegisterUserGuard } from './guards/register-user.guard';
 import { InvalidEmailLinkComponent } from './invalid-email-link/invalid-email-link.component';
 import { InvalidInvitationLinkComponent } from './invalid-invitation-link/invalid-invitation-link.component';
 import { InvitationComponent } from './invitation/invitation.component';
-import { StartProcessComponent } from './start-process/start-process.component';
 import { SuccessComponent } from './success/success.component';
 import { SummaryComponent } from './summary/summary.component';
 import { UserRegistrationComponent } from './user-registration/user-registration.component';
 
 const routes: Routes = [
   {
-    path: '',
-    pathMatch: 'full',
-    data: { pageTitle: 'Create an Energy Savings Opportunity Scheme sign-in' },
-    component: StartProcessComponent,
-    canActivate: [NonAuthGuard],
-  },
-  {
-    path: 'email',
-    data: { pageTitle: 'What is your email address?' },
-    component: EmailComponent,
-    canDeactivate: [PendingRequestGuard],
-    canActivate: [NonAuthGuard],
-  },
-  {
     path: 'invalid-link',
     component: InvalidEmailLinkComponent,
-  },
-  {
-    path: 'email-confirmed',
-    data: { pageTitle: 'Email address confirmed' },
-    component: EmailConfirmedComponent,
-    canActivate: [ConfirmedEmailGuard],
   },
   {
     path: 'invitation',
@@ -48,9 +24,9 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        canActivate: [ClaimOperatorGuard],
-        resolve: { account: ClaimOperatorGuard },
-        data: { pageTitle: 'You have been added as a user to this organisation account' },
+        canActivate: [InviteOperatorGuard],
+        resolve: { operatorInvitedUserInfoDTO: InviteOperatorGuard },
+        title: 'You have been added as a user to this organisation account',
         component: InvitationComponent,
         pathMatch: 'full',
       },
@@ -61,29 +37,29 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'user',
+    path: 'register',
     component: UserRegistrationComponent,
-    canActivate: [ConfirmedEmailGuard],
+    canActivate: [RegisterUserGuard],
     children: [
       {
+        path: '',
+        redirectTo: 'contact-details',
+        pathMatch: 'full',
+      },
+      {
         path: 'contact-details',
-        data: { pageTitle: 'Enter your details' },
+        title: 'Enter your details',
         component: ContactDetailsComponent,
       },
       {
-        path: 'choose-password',
-        data: { pageTitle: 'Choose a password', backlink: '../contact-details' },
-        component: ChoosePasswordComponent,
-      },
-      {
         path: 'summary',
-        data: { pageTitle: 'Check your answers' },
+        title: 'Check your answers',
         component: SummaryComponent,
         canDeactivate: [PendingRequestGuard],
       },
       {
         path: 'success',
-        data: { pageTitle: "You've successfully created a user account" },
+        title: 'You have successfully created a user account',
         component: SuccessComponent,
       },
     ],

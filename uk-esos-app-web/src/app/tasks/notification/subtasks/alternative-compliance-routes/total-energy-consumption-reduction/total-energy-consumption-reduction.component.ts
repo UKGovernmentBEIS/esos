@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
 import { alternativeComplianceRoutesMap } from '@shared/subtask-list-maps/subtask-list-maps';
+import { getFixedCostOptional } from '@shared/utils/bignumber.utils';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import {
@@ -14,12 +15,12 @@ import { totalEnergyConsumptionReductionFormProvider } from '@tasks/notification
 import { TASK_FORM } from '@tasks/task-form.token';
 import produce from 'immer';
 
-import { DetailsComponent, TextInputComponent } from 'govuk-components';
+import { TextInputComponent } from 'govuk-components';
 
 @Component({
   selector: 'esos-total-energy-consumption-reduction',
   standalone: true,
-  imports: [TextInputComponent, WizardStepComponent, ReactiveFormsModule, DetailsComponent],
+  imports: [TextInputComponent, WizardStepComponent, ReactiveFormsModule],
   templateUrl: './total-energy-consumption-reduction.component.html',
   providers: [totalEnergyConsumptionReductionFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +42,10 @@ export class TotalEnergyConsumptionReductionComponent {
       payload: produce(this.service.payload, (payload) => {
         payload.noc.alternativeComplianceRoutes = {
           ...payload.noc.alternativeComplianceRoutes,
-          totalEnergyConsumptionReduction: this.form.get('totalEnergyConsumptionReduction').value,
+          totalEnergyConsumptionReduction: {
+            energyConsumption: this.form.get('totalEnergyConsumptionReduction').value.energyConsumption ?? null,
+            energyCost: getFixedCostOptional(this.form.get('totalEnergyConsumptionReduction').value.energyCost),
+          },
         };
       }),
     });

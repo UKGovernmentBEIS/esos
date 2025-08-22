@@ -1,9 +1,8 @@
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
+import { allOrNoneGroupValidator } from '@shared/validators/form-group-validators/all-or-none.validator';
 import { CertificateDetailsStep } from '@tasks/notification/subtasks/alternative-compliance-routes/alternative-compliance-routes.types';
 import { validUntilLaterThanValidFromValidator } from '@tasks/notification/subtasks/alternative-compliance-routes/alternative-compliance-routes.validators';
-
-import { GovukValidators } from 'govuk-components';
 
 import { CertificateDetails, ComplianceRouteDistribution } from 'esos-api';
 
@@ -37,25 +36,21 @@ export const addCertificateDetailsGroup = (
 ): UntypedFormGroup => {
   return new UntypedFormGroup(
     {
-      certificateNumber: new UntypedFormControl(certificateDetails?.certificateNumber ?? null, {
-        validators: GovukValidators.required(getCertificateNumberErrorMessage(step)),
-      }),
-      validFrom: new UntypedFormControl(
-        certificateDetails?.validFrom ? new Date(certificateDetails?.validFrom) : null,
-        {
-          validators: GovukValidators.required('Enter a date'),
-        },
-      ),
+      certificateNumber: new UntypedFormControl(certificateDetails?.certificateNumber ?? null),
+      validFrom: new UntypedFormControl(certificateDetails?.validFrom ? new Date(certificateDetails?.validFrom) : null),
       validUntil: new UntypedFormControl(
         certificateDetails?.validUntil ? new Date(certificateDetails?.validUntil) : null,
-        {
-          validators: GovukValidators.required('Enter a date'),
-        },
       ),
     },
     {
-      updateOn: 'change',
-      validators: [validUntilLaterThanValidFromValidator()],
+      validators: [
+        allOrNoneGroupValidator({
+          certificateNumber: getCertificateNumberErrorMessage(step),
+          validFrom: 'Enter a date',
+          validUntil: 'Enter a date',
+        }),
+        validUntilLaterThanValidFromValidator(),
+      ],
     },
   );
 };

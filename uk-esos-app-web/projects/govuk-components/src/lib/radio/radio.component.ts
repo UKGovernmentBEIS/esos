@@ -45,6 +45,7 @@ export class RadioComponent<T>
   @Input() radioSize: 'medium' | 'large' = 'large';
   @Input() isInline = false;
   @Input() legendSize: LegendSizeType = 'normal';
+  @Input() isLegendHidden = false;
   @ContentChildren(RadioOptionComponent) readonly options: QueryList<RadioOptionComponent<T>>;
   private onChange: (_: T) => any;
   private onBlur: () => any;

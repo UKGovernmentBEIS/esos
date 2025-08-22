@@ -6,7 +6,7 @@ import { DashboardPageComponent } from '@shared/dashboard';
 const routes: Routes = [
   {
     path: '',
-    data: { pageTitle: 'UK Emissions Trading Scheme reporting dashboard' },
+    title: 'Dashboard',
     component: DashboardPageComponent,
   },
 ];

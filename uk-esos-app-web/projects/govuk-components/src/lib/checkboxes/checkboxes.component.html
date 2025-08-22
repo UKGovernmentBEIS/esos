@@ -13,6 +13,7 @@
   ></govuk-error-message>
   <div [class.govuk-checkboxes--small]="size === 'small'" class="govuk-checkboxes">
     <ng-container *ngFor="let option of options">
+      <div *ngIf="option.divider" class="govuk-checkboxes__divider">or</div>
       <ng-container [ngTemplateOutlet]="option.optionTemplate"></ng-container>
       <ng-container [ngTemplateOutlet]="option.conditionalTemplate"></ng-container>
     </ng-container>

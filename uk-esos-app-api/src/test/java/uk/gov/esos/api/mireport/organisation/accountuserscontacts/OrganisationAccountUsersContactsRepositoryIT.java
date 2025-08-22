@@ -52,16 +52,15 @@ class OrganisationAccountUsersContactsRepositoryIT extends AbstractContainerBase
         AccountUserContact accountUserContactExpected = AccountUserContact
                 .builder()
                 .userId(userId)
-                .accountType(account.getAccountType().name())
+                .registrationNumber(account.getRegistrationNumber())
                 .accountId(account.getOrganisationId())
                 .accountName(account.getName())
                 .accountStatus(account.getStatus().name())
                 .primaryContact(true)
                 .secondaryContact(false)
-                .financialContact(true)
-                .serviceContact(false)
                 .authorityStatus(authority.getStatus().name())
                 .role(role.getName())
+                .accountLocation(CompetentAuthorityEnum.ENGLAND.name())
                 .build();
 
         //invoke
@@ -109,7 +108,9 @@ class OrganisationAccountUsersContactsRepositoryIT extends AbstractContainerBase
                         .build())
                 .name("accountName")
                 .contacts(contacts)
+                .registrationNumber(String.format("%08d", id))
                 .emissionTradingScheme(EmissionTradingScheme.UK_ETS_INSTALLATIONS)
+                .location(ca)
                 .build();
         entityManager.persist(account);
         return account;

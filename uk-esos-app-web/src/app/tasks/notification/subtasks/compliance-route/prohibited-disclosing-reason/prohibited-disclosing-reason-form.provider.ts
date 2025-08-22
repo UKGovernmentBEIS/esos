@@ -18,9 +18,7 @@ export const prohibitedDisclosingReasonFormProvider: Provider = {
       partsProhibitedFromDisclosingReason: [
         partsProhibitedFromDisclosingReason,
         [
-          GovukValidators.required(
-            'Explain why disclosure of parts of the ESOS report or supplying information is prohibited by law',
-          ),
+          GovukValidators.required('Enter the reason that disclosure of this information is prohibited'),
           GovukValidators.maxLength(10000, 'Enter up to 10000 characters'),
         ],
       ],

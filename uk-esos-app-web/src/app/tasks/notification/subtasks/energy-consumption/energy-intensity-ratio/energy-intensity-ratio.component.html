@@ -1,55 +1,153 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="What is the energy intensity ratio for each organisational purpose?"
+  [heading]="'Energy intensity ratios for your ' + heading"
   caption="Energy consumption"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <h2 class="govuk-heading-m">Buildings</h2>
-  <esos-energy-intensity-ratio-input
-    formGroupName="buildingsIntensityRatio"
-    [hasAdditionalInfo]="true"
-  ></esos-energy-intensity-ratio-input>
+  <div class="govuk-body">
+    <p>
+      You must provide at least one energy intensity ratio for each organisational purpose where you are responsible for
+      energy used.
+    </p>
 
-  <h2 class="govuk-heading-m">Transport</h2>
+    <p>When calculating energy intensity ratios you can:</p>
+    <ul>
+      <li>
+        use indicators of activity that you consider adequately reflect your organisation’s activities. You may choose
+        from indicators recommended in the guidance at section 6 on complying with ESOS (and summarised below under each
+        organisational purpose heading), or you are free to decide on different ones.
+      </li>
 
-  <h3 class="govuk-heading-s">Freights</h3>
-  <esos-energy-intensity-ratio-input formGroupName="freightsIntensityRatio"></esos-energy-intensity-ratio-input>
+      <li>
+        use the number of energy intensity ratios that you consider appropriate to reflect your organisation’s
+        activities. Multiple activities can potentially be represented by a single energy intensity ratio or, if more
+        detail is appropriate, by multiple energy intensity ratios.
+      </li>
+    </ul>
 
-  <h3 class="govuk-heading-s">Passengers</h3>
-  <esos-energy-intensity-ratio-input
-    formGroupName="passengersIntensityRatio"
-    [hasAdditionalInfo]="true"
-  ></esos-energy-intensity-ratio-input>
+    <govuk-details summary="How to calculate energy intensity ratios">
+      <p>
+        The energy intensity ratio is calculated as follows:<br />
+        Energy intensity ratio = energy consumption in kWh for the organisational purpose ÷ an indicator of activity
+        associated with assets held, or activities carried out by the participant for the organisational purpose, over
+        the reference period ('Indicator of activity' means the same as 'quantifiable factor' in paragraph 25C(3) of the
+        ESOS Regulations 2014 as amended by the ESOS (Amendment) Regulations 2023.).
+      </p>
 
-  <h2 class="govuk-heading-m">Industrial processes</h2>
-  <esos-energy-intensity-ratio-input
-    formGroupName="industrialProcessesIntensityRatio"
-    [hasAdditionalInfo]="true"
-  ></esos-energy-intensity-ratio-input>
+      <p>Requirements:</p>
+      <ul>
+        <li>
+          calculate the energy intensity ratios using total energy consumption, or significant energy consumption if you
+          have elected to use this, attributable to each organisational purpose, ie: transport, industrial process,
+          buildings or other.
+        </li>
 
-  <h2 class="govuk-heading-m">Other</h2>
-  <ng-container *ngIf="otherProcessesIntensityRatiosFormArray.length > 0; else addOther">
-    <div formArrayName="otherProcessesIntensityRatios">
-      <div *ngFor="let otherGroup of otherProcessesIntensityRatiosFormArray; index as i">
-        <esos-energy-intensity-ratio-input [formGroupName]="i" [hasAdditionalInfo]="true">
-          <div govuk-text-input label="Title" formControlName="name"></div>
-        </esos-energy-intensity-ratio-input>
-        <p class="govuk-body">
-          <a class="govuk-link" [routerLink]="[]" (click)="deleteRatioGroup(i)">Remove organisational purpose</a>
-        </p>
-      </div>
-    </div>
+        <li>
+          the indicator of activity for each organisational purpose is intended to be an indicator of assets or
+          activities carried out by the participant for that purpose (see below for recommended indicators).
+        </li>
 
-    <button govukSecondaryButton type="button" (click)="addOtherRatioGroup()">
-      Add another organisational purpose
-    </button>
-  </ng-container>
+        <li>the indicator of activity must relate to the reference period</li>
 
-  <ng-template #addOther>
-    <div>
-      <button govukSecondaryButton type="button" (click)="addOtherRatioGroup()">Add other organisational purpose</button>
-    </div>
-  </ng-template>
+        <li>
+          Your energy intensity ratios must cover the entirety of the energy consumption comprising your total (or, as
+          applicable) significant energy consumption
+        </li>
+      </ul>
+
+      <p>It is recommended:</p>
+      <ul>
+        <li>
+          that where multiple energy intensity ratios are calculated, they each relate to separate (ie non overlapping)
+          portions of the total or significant energy consumption.
+        </li>
+
+        <li>
+          to use verifiable data for calculations relating to indicators of activity, or estimates where verifiable data
+          is unavailable.
+        </li>
+      </ul>
+    </govuk-details>
+
+    <ng-container *ngIf="energyConsumption?.buildings > 0">
+      <h2 class="govuk-heading-m">Buildings: {{ energyConsumption?.buildings }} kWh</h2>
+
+      <p>The recommended indicator of activity is kWh per m2 of floor area.</p>
+
+      <esos-energy-intensity-ratio-input
+        formGroupName="buildings"
+        [intensityRatioFormArray]="buildingsIntensityRatioFormArray"
+        [type]="'buildings'"
+        (addRatioGroupEvent)="addRatioGroup($event)"
+        (deleteRatioGroupEvent)="deleteRatioGroup($event)"
+      ></esos-energy-intensity-ratio-input>
+    </ng-container>
+
+    <ng-container *ngIf="energyConsumption?.transport > 0">
+      <h2 class="govuk-heading-m">Transport: {{ energyConsumption?.transport }} kWh</h2>
+
+      <p>
+        The recommended indicators of activity are kWh per person mile travelled for passenger transport and kWh per
+        tonne mile travelled for freight transport.
+      </p>
+
+      <p>
+        If you have both passenger and freight transport, it is recommended that you calculate separate ratios for each,
+        or you may calculate a single ratio, in which case you can use the methodology for freight and estimate the mass
+        of passengers transported for each journey.
+      </p>
+
+      <esos-energy-intensity-ratio-input
+        formGroupName="transport"
+        [intensityRatioFormArray]="transportIntensityRatioFormArray"
+        [type]="'transport'"
+        (addRatioGroupEvent)="addRatioGroup($event)"
+        (deleteRatioGroupEvent)="deleteRatioGroup($event)"
+      ></esos-energy-intensity-ratio-input>
+    </ng-container>
+
+    <ng-container *ngIf="energyConsumption?.industrialProcesses > 0">
+      <h2 class="govuk-heading-m">Industrial processes: {{ energyConsumption?.industrialProcesses }} kWh</h2>
+
+      <p>
+        The recommended indicators of activity are mass in tonnes, volume in litres or individual production units (such
+        as cars, fridges and so on).
+      </p>
+
+      <p>
+        If you have a number of industrial facilities in your corporate group where the output of one facility is the
+        input of another facility it is recommended that only the final output from the chain of processes is used for
+        the energy intensity ratio.
+      </p>
+
+      <esos-energy-intensity-ratio-input
+        formGroupName="industrialProcesses"
+        [intensityRatioFormArray]="industrialProcessesIntensityRatioFormArray"
+        [type]="'industrialProcesses'"
+        (addRatioGroupEvent)="addRatioGroup($event)"
+        (deleteRatioGroupEvent)="deleteRatioGroup($event)"
+      ></esos-energy-intensity-ratio-input>
+    </ng-container>
+
+    <ng-container *ngIf="energyConsumption?.otherProcesses > 0">
+      <h2 class="govuk-heading-m">Other energy uses: {{ energyConsumption?.otherProcesses }} kWh</h2>
+
+      <p>
+        Where your organisation uses energy for a purpose other than buildings, transport or industrial processes, you
+        can either provide an energy intensity ratio for each of those other uses, or a single indicator covering all
+        other uses, whichever is most appropriate.
+      </p>
+
+      <esos-energy-intensity-ratio-input
+        formGroupName="otherProcesses"
+        [intensityRatioFormArray]="otherProcessesIntensityRatiosFormArray"
+        [type]="'otherProcesses'"
+        (addRatioGroupEvent)="addRatioGroup($event)"
+        (deleteRatioGroupEvent)="deleteRatioGroup($event)"
+      ></esos-energy-intensity-ratio-input>
+    </ng-container>
+  </div>
 </esos-wizard-step>

@@ -112,7 +112,7 @@ class RegulatorUserInvitationControllerTest {
                 .fileContent(fileContent)
                 .fileSize(fileContent.length)
                 .build();
-	    verify(regulatorUserInvitationService, times(1)).inviteRegulatorUser(invitedUser, expectedSignatureDTO, currentUser);
+	    verify(regulatorUserInvitationService, times(1)).inviteUser(invitedUser, expectedSignatureDTO, currentUser);
     }
 
 	@Test

@@ -2,15 +2,13 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { combineLatest, filter, takeUntil, tap } from 'rxjs';
+import { takeUntil, tap } from 'rxjs';
 
 import { DestroySubject } from '@core/services/destroy-subject.service';
 import { CountyAddressInputComponent } from '@shared/county-address-input/county-address-input.component';
 import { phoneInputValidators } from '@shared/phone-input/phone-input.validators';
 
 import { GovukValidators } from 'govuk-components';
-
-import { OperatorUsersRegistrationService } from 'esos-api';
 
 import { UserRegistrationStore } from '../store/user-registration.store';
 @Component({
@@ -36,13 +34,7 @@ export class ContactDetailsComponent implements OnInit {
         GovukValidators.maxLength(255, 'Your last name should not be larger than 255 characters'),
       ],
     ],
-    jobTitle: [
-      null,
-      [
-        GovukValidators.required('Enter your job title'),
-        GovukValidators.maxLength(255, 'Your job title should not be larger than 255 characters'),
-      ],
-    ],
+    jobTitle: [null, [GovukValidators.maxLength(255, 'Your job title should not be larger than 255 characters')]],
     phoneNumber: [
       { countryCode: '44', number: null },
       [GovukValidators.empty('Enter your phone number'), ...phoneInputValidators],
@@ -56,18 +48,15 @@ export class ContactDetailsComponent implements OnInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly store: UserRegistrationStore,
-    private readonly operatorUsersRegistrationService: OperatorUsersRegistrationService,
     private readonly fb: UntypedFormBuilder,
     private readonly destroy$: DestroySubject,
   ) {}
 
   ngOnInit(): void {
-    combineLatest([this.store.select('userRegistrationDTO'), this.store.select('email')])
+    this.store
       .pipe(
         takeUntil(this.destroy$),
-        tap(([, email]) => this.form.patchValue({ email })),
-        filter(([user]) => !!user),
-        tap(([user]) => this.form.patchValue({ ...user })),
+        tap((user) => this.form.patchValue({ email: user.email, ...user.userRegistrationDTO })),
       )
       .subscribe();
   }
@@ -75,19 +64,14 @@ export class ContactDetailsComponent implements OnInit {
   submitContactDetails(): void {
     if (this.form.valid) {
       const { ...model } = this.form.value;
-      this.store.setState({ ...this.store.getState(), userRegistrationDTO: model });
+      this.store.setState({
+        ...this.store.getState(),
+        userRegistrationDTO: model,
+      });
 
-      this.router.navigate(
-        [
-          this.store.getState().isSummarized ||
-          this.store.getState().invitationStatus === 'PENDING_USER_REGISTRATION_NO_PASSWORD'
-            ? '../summary'
-            : '../choose-password',
-        ],
-        {
-          relativeTo: this.route,
-        },
-      );
+      this.router.navigate(['../summary'], {
+        relativeTo: this.route,
+      });
     } else {
       this.isSummaryDisplayed = true;
     }

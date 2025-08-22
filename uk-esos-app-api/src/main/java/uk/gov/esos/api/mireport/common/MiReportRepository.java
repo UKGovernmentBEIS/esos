@@ -11,7 +11,7 @@ import uk.gov.esos.api.mireport.common.domain.dto.MiReportSearchResult;
 import java.util.List;
 
 @Repository
-public interface MiReportRepository extends JpaRepository<MiReportEntity, Long> {
+public interface MiReportRepository extends JpaRepository<MiReportEntity, Integer> {
 
     @Transactional(readOnly = true)
     List<MiReportSearchResult> findByCompetentAuthorityAndAccountType(CompetentAuthorityEnum competentAuthority, AccountType accountType);

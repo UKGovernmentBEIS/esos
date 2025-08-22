@@ -25,6 +25,7 @@ import uk.gov.esos.api.web.constants.SwaggerApiInfo;
 import uk.gov.esos.api.web.controller.exception.ErrorResponse;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping(path = "/v1.0/file-attachments")
@@ -47,7 +48,7 @@ public class FileAttachmentController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        ContentDisposition.builder("attachment").filename(file.getFileName()).build().toString())
+                        ContentDisposition.builder("attachment").filename(file.getFileName(), StandardCharsets.UTF_8).build().toString())
                 .contentType(MediaType.parseMediaType(file.getFileType()))
                 .body(new ByteArrayResource(file.getFileContent()));
     }

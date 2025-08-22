@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { BehaviorSubject, combineLatest, distinctUntilChanged, map, switchMap } from 'rxjs';
 
+import { MoreLessComponent } from '@shared/more-less/more-less.component';
 import { GovukDatePipe } from '@shared/pipes/govuk-date.pipe';
 import { SharedModule } from '@shared/shared.module';
 
@@ -11,8 +12,9 @@ import { RequestNoteDto, RequestNotesService } from 'esos-api';
 @Component({
   selector: 'esos-request-notes',
   templateUrl: './request-notes.component.html',
+  styleUrls: ['./request-notes.component.scss'],
   standalone: true,
-  imports: [GovukDatePipe, RouterLink, SharedModule],
+  imports: [GovukDatePipe, MoreLessComponent, RouterLink, SharedModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestNotesComponent {

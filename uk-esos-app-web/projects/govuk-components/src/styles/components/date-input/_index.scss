@@ -1,9 +1,9 @@
-@import "../error-message/index";
-@import "../input/index";
-@import "../hint/index";
-@import "../label/index";
+@import '../error-message/index';
+@import '../input/index';
+@import '../hint/index';
+@import '../label/index';
 
-@include govuk-exports("govuk/component/date-input") {
+@include govuk-exports('govuk/component/date-input') {
   .govuk-date-input {
     @include govuk-clearfix;
     // font-size: 0 removes whitespace caused by inline-block
@@ -24,3 +24,5 @@
     margin-bottom: 0;
   }
 }
+
+/*# sourceMappingURL=_index.scss.map */

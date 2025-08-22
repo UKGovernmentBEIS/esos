@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -31,6 +33,9 @@ import uk.gov.esos.api.account.domain.dto.AccountNoteResponse;
 import uk.gov.esos.api.account.repository.AccountNoteRepository;
 import uk.gov.esos.api.account.transform.AccountNoteMapper;
 import uk.gov.esos.api.authorization.core.domain.AppUser;
+import uk.gov.esos.api.authorization.rules.domain.Scope;
+import uk.gov.esos.api.authorization.rules.services.resource.AccountAuthorizationResourceService;
+import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.common.exception.BusinessException;
 import uk.gov.esos.api.common.note.NotePayload;
 import uk.gov.esos.api.common.note.NoteRequest;
@@ -48,6 +53,9 @@ class AccountNoteServiceTest {
     private AccountNoteRepository accountNoteRepository;
 
     @Mock
+    private AccountAuthorizationResourceService accountAuthorizationResourceService;
+
+    @Mock
     private AccountNoteMapper accountNoteMapper;
 
     @Mock
@@ -60,61 +68,149 @@ class AccountNoteServiceTest {
     private DateService dateService;
 
     @Test
-    void getAccountNotesByAccountId() {
-
+    void getAccountNotesByAccountId_regulator() {
         final Long accountId = 1L;
+        final AppUser appUser = AppUser.builder().userId("userId").roleType(RoleType.REGULATOR).build();
 
         final NotePayload notePayload1 = NotePayload.builder().note("note 1").build();
         final NotePayload notePayload2 = NotePayload.builder().note("note 2").build();
         
-        final AccountNote accountNote1 = AccountNote.builder().accountId(accountId).payload(notePayload1).build();
-        final AccountNote accountNote2 = AccountNote.builder().accountId(accountId).payload(notePayload2).build();
+        final AccountNote accountNote1 = AccountNote.builder().accountId(accountId).payload(notePayload1).roleType(RoleType.OPERATOR).build();
+        final AccountNote accountNote2 = AccountNote.builder().accountId(accountId).payload(notePayload2).roleType(RoleType.REGULATOR).build();
         final List<AccountNote> accountNotes = List.of(accountNote1, accountNote2);
 
-        final AccountNoteDto accountNoteDto1 = AccountNoteDto.builder().accountId(accountId).payload(notePayload1).build();
-        final AccountNoteDto accountNoteDto2 = AccountNoteDto.builder().accountId(accountId).payload(notePayload2).build();
+        final AccountNoteDto accountNoteDto1 = AccountNoteDto.builder().accountId(accountId).payload(notePayload1).isEditable(false).build();
+        final AccountNoteDto accountNoteDto2 = AccountNoteDto.builder().accountId(accountId).payload(notePayload2).isEditable(true).build();
         final List<AccountNoteDto> accountNoteDtos = List.of(accountNoteDto1, accountNoteDto2);
         
         final Page<AccountNote> pagedAccountNoteDtos = new PageImpl<>(accountNotes, PageRequest.of(1, 5), 15);
         
         when(accountNoteRepository.findAccountNotesByAccountIdOrderByLastUpdatedOnDesc(PageRequest.of(1, 5), accountId))
             .thenReturn(pagedAccountNoteDtos);
-        when(accountNoteMapper.toAccountNoteDTO(accountNote1)).thenReturn(accountNoteDto1);
-        when(accountNoteMapper.toAccountNoteDTO(accountNote2)).thenReturn(accountNoteDto2);
-        
-        final AccountNoteResponse actualResult = accountNoteService.getAccountNotesByAccountId(accountId, 1, 5);
+        when(accountNoteMapper.toAccountNoteDTO(accountNote1, false)).thenReturn(accountNoteDto1);
+        when(accountNoteMapper.toAccountNoteDTO(accountNote2, true)).thenReturn(accountNoteDto2);
 
-        final AccountNoteResponse expectedResult = AccountNoteResponse.builder().accountNotes(accountNoteDtos).totalItems(15L).build();
-        
+        final AccountNoteResponse expectedResult = AccountNoteResponse.builder()
+        		.accountNotes(accountNoteDtos)
+        		.totalItems(15L)
+        		.hasUserEditPermission(true)
+        		.build();
+
+        // Invoke
+        final AccountNoteResponse actualResult = accountNoteService.getAccountNotesByAccountId(appUser, accountId, 1, 5);
+
+        // Verify
         assertThat(actualResult).isEqualTo(expectedResult);
 
-        verify(accountNoteMapper, times(1)).toAccountNoteDTO(accountNote1);
-        verify(accountNoteMapper, times(1)).toAccountNoteDTO(accountNote2);
-        verify(accountNoteRepository, times(1)).findAccountNotesByAccountIdOrderByLastUpdatedOnDesc(PageRequest.of(1, 5), accountId);
+        verify(accountNoteMapper, times(1)).toAccountNoteDTO(accountNote1, false);
+        verify(accountNoteMapper, times(1)).toAccountNoteDTO(accountNote2, true);
+        verify(accountNoteRepository, times(1))
+                .findAccountNotesByAccountIdOrderByLastUpdatedOnDesc(PageRequest.of(1, 5), accountId);
+        verify(accountNoteRepository, never()).findAccountNotesByAccountIdAndRoleTypeOrderByLastUpdatedOnDesc(any(), anyLong(), any());
         verify(fileNoteService, timeout(2000).times(1)).cleanUpUnusedFiles();
+        verifyNoInteractions(accountAuthorizationResourceService);
     }
 
     @Test
-    void getNote() {
+    void getAccountNotesByAccountId_operator() {
+        final Long accountId = 1L;
+        final AppUser appUser = AppUser.builder().userId("userId").roleType(RoleType.OPERATOR).build();
 
+        final NotePayload notePayload1 = NotePayload.builder().note("note 1").build();
+        final NotePayload notePayload2 = NotePayload.builder().note("note 2").build();
+
+        final AccountNote accountNote1 = AccountNote.builder().accountId(accountId).payload(notePayload1).roleType(RoleType.OPERATOR).build();
+        final AccountNote accountNote2 = AccountNote.builder().accountId(accountId).payload(notePayload2).roleType(RoleType.OPERATOR).build();
+        final List<AccountNote> accountNotes = List.of(accountNote1, accountNote2);
+
+        final AccountNoteDto accountNoteDto1 = AccountNoteDto.builder().accountId(accountId).payload(notePayload1).isEditable(false).build();
+        final AccountNoteDto accountNoteDto2 = AccountNoteDto.builder().accountId(accountId).payload(notePayload2).isEditable(false).build();
+        final List<AccountNoteDto> accountNoteDtos = List.of(accountNoteDto1, accountNoteDto2);
+
+        final Page<AccountNote> pagedAccountNoteDtos = new PageImpl<>(accountNotes, PageRequest.of(1, 5), 15);
+
+        when(accountNoteRepository.findAccountNotesByAccountIdAndRoleTypeOrderByLastUpdatedOnDesc(PageRequest.of(1, 5), accountId, RoleType.OPERATOR))
+                .thenReturn(pagedAccountNoteDtos);
+        when(accountNoteMapper.toAccountNoteDTO(accountNote1, false)).thenReturn(accountNoteDto1);
+        when(accountNoteMapper.toAccountNoteDTO(accountNote2, false)).thenReturn(accountNoteDto2);
+        when(accountAuthorizationResourceService.hasUserScopeToAccount(appUser, accountId, Scope.EDIT_ACCOUNT_NOTE)).thenReturn(false);
+
+        final AccountNoteResponse expectedResult = AccountNoteResponse.builder()
+        		.accountNotes(accountNoteDtos)
+        		.totalItems(15L)
+        		.hasUserEditPermission(false)
+        		.build();
+
+        // Invoke
+        final AccountNoteResponse actualResult = accountNoteService.getAccountNotesByAccountId(appUser, accountId, 1, 5);
+
+        // Verify
+        assertThat(actualResult).isEqualTo(expectedResult);
+
+        verify(accountNoteMapper, times(1)).toAccountNoteDTO(accountNote1, false);
+        verify(accountNoteMapper, times(1)).toAccountNoteDTO(accountNote2, false);
+        verify(accountNoteRepository, times(1))
+                .findAccountNotesByAccountIdAndRoleTypeOrderByLastUpdatedOnDesc(PageRequest.of(1, 5), accountId, RoleType.OPERATOR);
+        verify(accountNoteRepository, never()).findAccountNotesByAccountIdOrderByLastUpdatedOnDesc(any(), anyLong());
+        verify(fileNoteService, timeout(2000).times(1)).cleanUpUnusedFiles();
+        verify(accountAuthorizationResourceService, times(1))
+                .hasUserScopeToAccount(appUser, accountId, Scope.EDIT_ACCOUNT_NOTE);
+    }
+
+    @Test
+    void getNote_operator() {
+        final Long accountId = 1L;
         final long noteId = 2L;
+        final AppUser appUser = AppUser.builder().userId("userId").roleType(RoleType.OPERATOR).build();
+
         final AccountNote accountNote = AccountNote.builder()
-            .payload(NotePayload.builder()
-                .note("the note")
-                .build())
-            .build();
+                .payload(NotePayload.builder().note("the note").build())
+                .roleType(RoleType.OPERATOR)
+                .accountId(accountId)
+                .build();
         final AccountNoteDto accountNoteDto = AccountNoteDto.builder()
-            .payload(NotePayload.builder()
-                .note("the note")
-                .build())
-            .build();
+                .payload(NotePayload.builder().note("the note").build())
+                .isEditable(false)
+                .build();
 
         when(accountNoteRepository.findById(noteId)).thenReturn(Optional.of(accountNote));
-        when(accountNoteMapper.toAccountNoteDTO(accountNote)).thenReturn(accountNoteDto);
+        when(accountAuthorizationResourceService.hasUserScopeToAccount(appUser, accountId, Scope.EDIT_ACCOUNT_NOTE)).thenReturn(false);
+        when(accountNoteMapper.toAccountNoteDTO(accountNote, false)).thenReturn(accountNoteDto);
 
-        accountNoteService.getNote(noteId);
+        // Invoke
+        accountNoteService.getNote(appUser, noteId);
 
+        // Verify
         verify(accountNoteRepository, times(1)).findById(noteId);
+        verify(accountAuthorizationResourceService, times(1))
+                .hasUserScopeToAccount(appUser, accountId, Scope.EDIT_ACCOUNT_NOTE);
+    }
+
+    @Test
+    void getNote_regulator() {
+        final Long accountId = 1L;
+        final long noteId = 2L;
+        final AppUser appUser = AppUser.builder().userId("userId").roleType(RoleType.REGULATOR).build();
+
+        final AccountNote accountNote = AccountNote.builder()
+                .payload(NotePayload.builder().note("the note").build())
+                .roleType(RoleType.OPERATOR)
+                .accountId(accountId)
+                .build();
+        final AccountNoteDto accountNoteDto = AccountNoteDto.builder()
+                .payload(NotePayload.builder().note("the note").build())
+                .isEditable(false)
+                .build();
+
+        when(accountNoteRepository.findById(noteId)).thenReturn(Optional.of(accountNote));
+        when(accountNoteMapper.toAccountNoteDTO(accountNote, false)).thenReturn(accountNoteDto);
+
+        // Invoke
+        accountNoteService.getNote(appUser, noteId);
+
+        // Verify
+        verify(accountNoteRepository, times(1)).findById(noteId);
+        verifyNoInteractions(accountAuthorizationResourceService);
     }
     
     @Test

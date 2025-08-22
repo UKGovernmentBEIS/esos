@@ -1,19 +1,24 @@
-<div class="govuk-!-width-two-thirds">
-  <esos-wizard-step
-    [formGroup]="formGroup"
-    (formSubmit)="onSubmit()"
-    heading="Location of registered office or principal place of activity (where no registered office exists)"
-    caption="Organisation details"
-    [showBackLink]="true"
-    [showCancelLink]="showCancelLink"
-    [cancelLinkPath]="cancelLinkPath"
-  >
-    <div govuk-radio formControlName="location">
-      <govuk-radio-option
-        *ngFor="let option of options | keyvalue: originalOrder"
-        [label]="option.value"
-        [value]="option.key"
-      ></govuk-radio-option>
-    </div>
-  </esos-wizard-step>
-</div>
+<esos-wizard-step
+  [formGroup]="formGroup"
+  (formSubmit)="onSubmit()"
+  heading="Where is your registered office located?"
+  caption="Organisation details"
+  [showBackLink]="true"
+  [showCancelLink]="showCancelLink"
+  [cancelLinkPath]="cancelLinkPath"
+>
+  <div class="govuk-body">
+    <p class="govuk-!-margin-bottom-1">
+      If you do not have a registered office, select the location that is your principal place of activity.
+    </p>
+    <p class="govuk-!-margin-top-0">The location determines your regulator or compliance body.</p>
+  </div>
+
+  <div govuk-radio formControlName="location" legend="Where is your registered office located?" [isLegendHidden]="true">
+    <govuk-radio-option
+      *ngFor="let option of options | keyvalue : originalOrder"
+      [label]="option.value"
+      [value]="option.key"
+    ></govuk-radio-option>
+  </div>
+</esos-wizard-step>

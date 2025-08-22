@@ -8,22 +8,18 @@ import { COMPLIANCE_ROUTE_SUB_TASK } from './compliance-route.helper';
 export class ComplianceRouteSideEffect extends SideEffect {
   override subtask = COMPLIANCE_ROUTE_SUB_TASK;
 
-  override apply(
-    currentPayload: NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload,
-  ): NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload {
+  apply<T extends NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload>(currentPayload: T): T {
     return produce(currentPayload, (payload) => {
-      const areDataEstimated = payload?.noc?.complianceRoute?.areDataEstimated;
+      const twelveMonthsVerifiableDataUsed = payload?.noc?.complianceRoute?.areTwelveMonthsVerifiableDataUsed;
       const energyConsumptionProfilingUsed = payload?.noc?.complianceRoute?.energyConsumptionProfilingUsed;
       const partsProhibitedFromDisclosingExist = payload?.noc?.complianceRoute?.partsProhibitedFromDisclosingExist;
 
-      if (areDataEstimated === true) {
-        delete payload?.noc?.complianceRoute?.twelveMonthsVerifiableDataUsed;
-      } else if (areDataEstimated === false) {
-        delete payload?.noc?.complianceRoute?.areEstimationMethodsRecordedInEvidencePack;
+      if (twelveMonthsVerifiableDataUsed === true) {
+        delete payload?.noc?.complianceRoute?.twelveMonthsVerifiableDataUsedReason;
       }
 
-      if (energyConsumptionProfilingUsed == 'YES') {
-        delete payload?.noc?.complianceRoute?.energyAudits;
+      if (energyConsumptionProfilingUsed === 'YES') {
+        delete payload?.noc?.complianceRoute?.isEnergyConsumptionProfilingNotUsedRecorded;
       } else if (['NO', 'NOT_APPLICABLE'].includes(energyConsumptionProfilingUsed)) {
         delete payload?.noc?.complianceRoute?.areEnergyConsumptionProfilingMethodsRecorded;
       }

@@ -3,6 +3,7 @@ import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
+import { SkipQuestionPipe } from '@shared/pipes/skip-question.pipe';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import { TASK_FORM } from '@tasks/task-form.token';
@@ -17,7 +18,7 @@ import { energySavingsAchievedCategoriesExistFormProvider } from './energy-savin
   selector: 'esos-energy-savings-achieved-categories-exist',
   templateUrl: './energy-savings-achieved-categories-exist.component.html',
   standalone: true,
-  imports: [GovukComponentsModule, ReactiveFormsModule, WizardStepComponent],
+  imports: [GovukComponentsModule, ReactiveFormsModule, SkipQuestionPipe, WizardStepComponent],
   providers: [energySavingsAchievedCategoriesExistFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

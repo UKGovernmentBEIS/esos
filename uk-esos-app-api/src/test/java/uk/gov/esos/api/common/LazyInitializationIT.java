@@ -12,7 +12,9 @@ import org.springframework.test.context.transaction.TestTransaction;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.esos.api.AbstractContainerBaseTest;
 import uk.gov.esos.api.account.repository.AccountRepository;
+import uk.gov.esos.api.authorization.core.domain.Permission;
 import uk.gov.esos.api.authorization.core.domain.Role;
+import uk.gov.esos.api.authorization.core.domain.RolePermission;
 import uk.gov.esos.api.authorization.core.repository.RoleRepository;
 import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.workflow.request.core.domain.Request;
@@ -21,6 +23,7 @@ import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestActionTyp
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestStatus;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestType;
 import uk.gov.esos.api.workflow.request.core.repository.RequestActionRepository;
+import uk.gov.esos.api.workflow.request.flow.esos.accountorganisationopening.submit.domain.OrganisationAccountOpeningApplicationSubmittedRequestActionPayload;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestActionPayloadType.ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED_PAYLOAD;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Testcontainers
@@ -51,11 +55,17 @@ class LazyInitializationIT extends AbstractContainerBaseTest {
     @Test
     void testLazyInitialization_whenLazyOneToManyAccessedAfterSessionCloses_thenThrowException() {
 
+        RolePermission rolePermission = RolePermission.builder()
+                .permission(Permission.PERM_TASK_ASSIGNMENT)
+                .build();
+        entityManager.persist(rolePermission);
+
         final Role role = new Role();
         role.setName("roleName");
         role.setCode("roleCode");
         role.setType(RoleType.OPERATOR);
         role.setRolePermissions(new ArrayList<>());
+        role.addPermission(rolePermission);
 
         entityManager.persist(role);
         entityManager.flush();
@@ -66,11 +76,11 @@ class LazyInitializationIT extends AbstractContainerBaseTest {
         TestTransaction.end();
 
         assertEquals(1, roles.size());
-        assertThrows(LazyInitializationException.class, () -> roles.get(0).getRolePermissions());
+        assertThrows(LazyInitializationException.class, () -> roles.get(0).getRolePermissions().get(0).getRole());
     }
 
     @Test
-    void testLazyInitialization_whenLazyBasicAccessedAfterSessionCloses_thenThrowException() {
+    void  testLazyInitialization_whenLazyBasicJsonAccessedAfterSessionCloses_thenThrowException() {
 
         Request request = Request.builder()
             .id("1")
@@ -80,12 +90,17 @@ class LazyInitializationIT extends AbstractContainerBaseTest {
             .build();
 
         RequestAction requestAction = RequestAction.builder()
-            .request(request)
-            .type(RequestActionType.ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED)
-            .submitterId("userId")
-            .submitter("username")
-            .creationDate(LocalDateTime.now())
-            .build();
+                .type(RequestActionType.ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED)
+                .submitterId("userId")
+                .submitter("username")
+                .creationDate(LocalDateTime.now())
+                .payload(OrganisationAccountOpeningApplicationSubmittedRequestActionPayload.builder()
+                        .payloadType(ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED_PAYLOAD)
+                        .build())
+                .build();
+
+        request.setRequestActions(new ArrayList<>());
+        request.addRequestAction(requestAction);
 
         entityManager.persist(request);
         entityManager.persist(requestAction);

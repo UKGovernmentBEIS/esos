@@ -9,7 +9,7 @@ import {
   canActivateEnergyConsumption,
   canActivateEnergyConsumptionSummary,
 } from '@tasks/notification/subtasks/energy-consumption/energy-consumption.guard';
-import { WizardStep } from '@tasks/notification/subtasks/energy-consumption/energy-consumption.helper';
+import { EnergyConsumptionWizardStep } from '@tasks/notification/subtasks/energy-consumption/energy-consumption.helper';
 import { backlinkResolver } from '@tasks/task-navigation';
 
 export const ENERGY_CONSUMPTION_ROUTES: Routes = [
@@ -25,31 +25,31 @@ export const ENERGY_CONSUMPTION_ROUTES: Routes = [
         loadComponent: () => import('./summary/summary.component').then((c) => c.EnergyConsumptionSummaryComponent),
       },
       {
-        path: WizardStep.TOTAL_ENERGY,
+        path: EnergyConsumptionWizardStep.TOTAL_ENERGY,
         canActivate: [canActivateEnergyConsumption],
         title: 'What is the total energy consumption in kWh for the reference period?',
         loadComponent: () => import('./total-energy/total-energy.component').then((c) => c.TotalEnergyComponent),
       },
       {
-        path: WizardStep.USE_SIGNIFICANT_ENERGY,
+        path: EnergyConsumptionWizardStep.USE_SIGNIFICANT_ENERGY,
         canActivate: [canActivateEnergyConsumption],
         title: 'Have you used significant energy consumption?',
-        resolve: { backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.TOTAL_ENERGY) },
+        resolve: { backlink: backlinkResolver(EnergyConsumptionWizardStep.SUMMARY, EnergyConsumptionWizardStep.TOTAL_ENERGY) },
         loadComponent: () =>
           import('./use-significant-energy/use-significant-energy.component').then(
             (c) => c.UseSignificantEnergyComponent,
           ),
       },
       {
-        path: WizardStep.SIGNIFICANT_ENERGY,
+        path: EnergyConsumptionWizardStep.SIGNIFICANT_ENERGY,
         canActivate: [canActivateEnergyConsumption],
         title: 'What is the significant energy consumption in kWh for the reference period?',
-        resolve: { backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.USE_SIGNIFICANT_ENERGY) },
+        resolve: { backlink: backlinkResolver(EnergyConsumptionWizardStep.SUMMARY, EnergyConsumptionWizardStep.USE_SIGNIFICANT_ENERGY) },
         loadComponent: () =>
           import('./significant-energy/significant-energy.component').then((c) => c.SignificantEnergyComponent),
       },
       {
-        path: WizardStep.ENERGY_INTENSITY_RATIO,
+        path: EnergyConsumptionWizardStep.ENERGY_INTENSITY_RATIO,
         canActivate: [canActivateEnergyConsumption],
         title: 'What is the energy intensity ratio for each organisational purpose?',
         resolve: {
@@ -61,10 +61,10 @@ export const ENERGY_CONSUMPTION_ROUTES: Routes = [
             const isChangeClicked = !!router.getCurrentNavigation().finalUrl.queryParams?.change;
 
             return isChangeClicked
-              ? WizardStep.SUMMARY
+              ? EnergyConsumptionWizardStep.SUMMARY
               : energyConsumption.significantEnergyConsumptionExists
-              ? '../' + WizardStep.SIGNIFICANT_ENERGY
-              : '../' + WizardStep.USE_SIGNIFICANT_ENERGY;
+              ? '../' + EnergyConsumptionWizardStep.SIGNIFICANT_ENERGY
+              : '../' + EnergyConsumptionWizardStep.USE_SIGNIFICANT_ENERGY;
           },
         },
         loadComponent: () =>
@@ -73,10 +73,10 @@ export const ENERGY_CONSUMPTION_ROUTES: Routes = [
           ),
       },
       {
-        path: WizardStep.ADDITIONAL_INFO,
+        path: EnergyConsumptionWizardStep.ADDITIONAL_INFO,
         canActivate: [canActivateEnergyConsumption],
         title: 'Do you want to add more information to give context to the energy intensity ratio?',
-        resolve: { backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.ENERGY_INTENSITY_RATIO) },
+        resolve: { backlink: backlinkResolver(EnergyConsumptionWizardStep.SUMMARY, EnergyConsumptionWizardStep.ENERGY_INTENSITY_RATIO) },
         loadComponent: () =>
           import('./additional-info/additional-info.component').then((c) => c.AdditionalInfoComponent),
       },

@@ -9,9 +9,7 @@ describe('AccountTypePipe', () => {
     expect(pipe).toBeTruthy();
   });
 
-  it('hould properly transform account types', () => {
-    expect(pipe.transform('INSTALLATION')).toEqual('Installation');
-    expect(pipe.transform('AVIATION')).toEqual('Aviation');
+  it('should properly transform account types', () => {
     expect(pipe.transform('ORGANISATION')).toEqual('Organisation');
     expect(pipe.transform(undefined)).toEqual(null);
   });

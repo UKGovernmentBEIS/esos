@@ -7,7 +7,6 @@ import { PageHeadingComponent } from '@shared/page-heading/page-heading.componen
   selector: 'esos-legislation',
   standalone: true,
   templateUrl: './legislation.component.html',
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PageHeadingComponent, BackToTopComponent],
 })

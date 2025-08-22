@@ -1,158 +1,124 @@
-<ng-container *ngIf="data?.totalEnergyConsumption">
+<ng-container *ngIf="energyConsumptionDetails?.totalEnergyConsumption">
   <h2 class="govuk-heading-m">What is the total energy consumption in kWh for the reference period?</h2>
+
   <esos-energy-consumption-details-summary-template
     [isEditable]="isEditable"
-    [energyConsumption]="data.totalEnergyConsumption"
+    [energyConsumption]="energyConsumptionDetails.totalEnergyConsumption"
     [queryParams]="queryParams"
     [changeLink]="changeLink.TOTAL_ENERGY"
   ></esos-energy-consumption-details-summary-template>
 </ng-container>
 
 <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
-<ng-container *ngIf="data?.significantEnergyConsumptionExists != null">
+<ng-container *ngIf="energyConsumptionDetails?.significantEnergyConsumptionExists != null">
   <h2 class="govuk-heading-m">Have you used significant energy consumption?</h2>
+
   <dl govuk-summary-list>
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ data?.significantEnergyConsumptionExists | booleanToText }}</dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>
+        {{ energyConsumptionDetails?.significantEnergyConsumptionExists | booleanToText }}
+      </dd>
+      <dd govukSummaryListColumnActions *ngIf="isEditable">
         <a govukLink [routerLink]="[changeLink.USE_SIGNIFICANT_ENERGY]" [queryParams]="queryParams">Change</a>
       </dd>
     </div>
   </dl>
 </ng-container>
 
-<ng-container *ngIf="data?.significantEnergyConsumption">
+<ng-container *ngIf="energyConsumptionDetails?.significantEnergyConsumption">
   <h2 class="govuk-heading-m">What is the significant energy consumption in kWh for the reference period?</h2>
+
   <esos-energy-consumption-details-summary-template
     [isEditable]="isEditable"
-    [energyConsumption]="data.significantEnergyConsumption"
+    [energyConsumption]="energyConsumptionDetails.significantEnergyConsumption"
     [queryParams]="queryParams"
     [changeLink]="changeLink.SIGNIFICANT_ENERGY"
   ></esos-energy-consumption-details-summary-template>
 </ng-container>
 
-<ng-container *ngIf="data?.energyIntensityRatioData as ratioData">
-  <h2 class="govuk-heading-m">What is the energy intensity ratio for each organisational purpose?</h2>
+<ng-container *ngIf="energyConsumptionDetails?.energyIntensityRatioData as ratioData">
+  <h2 class="govuk-heading-m">
+    Energy intensity ratios for your
+    {{ energyConsumptionDetails?.significantEnergyConsumptionExists ? 'significant' : 'total' }} energy consumption
+  </h2>
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-3" />
 
-  <h2 class="govuk-heading-m">Buildings</h2>
-  <dl govuk-summary-list>
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey>Intensity ratio</dt>
-      <dt govukSummaryListRowKey>Unit</dt>
-      <dd govukSummaryListRowActions *ngIf="isEditable"></dd>
-    </div>
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ ratioData.buildingsIntensityRatio.ratio }}</dd>
-      <dd govukSummaryListRowValue>kWh/{{ ratioData.buildingsIntensityRatio.unit }}</dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a govukLink [routerLink]="[changeLink.ENERGY_INTENSITY_RATIO]" [queryParams]="queryParams">Change</a>
-      </dd>
-    </div>
-    <div govukSummaryListRow *ngIf="ratioData.buildingsIntensityRatio.additionalInformation">
-      <dt govukSummaryListRowKey>Additional Information</dt>
-      <dd govukSummaryListRowValue class="pre-wrap">{{ ratioData.buildingsIntensityRatio.additionalInformation }}</dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a govukLink [routerLink]="[changeLink.ENERGY_INTENSITY_RATIO]" [queryParams]="queryParams">Change</a>
-      </dd>
-    </div>
-  </dl>
+  <ng-container
+    *ngIf="
+      energyConsumptionDetails?.significantEnergyConsumption?.buildings > 0 ||
+      energyConsumptionDetails?.totalEnergyConsumption?.buildings > 0
+    "
+  >
+    <h2 class="govuk-heading-m">Buildings</h2>
+    <esos-energy-intensity-ratio-table-summary-template
+      [changeLink]="changeLink.ENERGY_INTENSITY_RATIO"
+      [isEditable]="isEditable"
+      [queryParams]="queryParams"
+      [energyIntensityRatioDetails]="ratioData.buildings"
+    ></esos-energy-intensity-ratio-table-summary-template>
+  </ng-container>
 
-  <h2 class="govuk-heading-m">Transport</h2>
-  <dl govuk-summary-list>
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey></dt>
-      <dt govukSummaryListRowKey>Intensity ratio</dt>
-      <dt govukSummaryListRowKey>Unit</dt>
-      <dd govukSummaryListRowActions *ngIf="isEditable"></dd>
-    </div>
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey>Freights</dt>
-      <dd govukSummaryListRowValue>{{ ratioData.freightsIntensityRatio.ratio }}</dd>
-      <dd govukSummaryListRowValue>kWh/{{ ratioData.freightsIntensityRatio.unit }}</dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a govukLink [routerLink]="[changeLink.ENERGY_INTENSITY_RATIO]" [queryParams]="queryParams">Change</a>
-      </dd>
-    </div>
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey>Passengers</dt>
-      <dd govukSummaryListRowValue>{{ ratioData.passengersIntensityRatio.ratio }}</dd>
-      <dd govukSummaryListRowValue>kWh/{{ ratioData.passengersIntensityRatio.unit }}</dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a govukLink [routerLink]="[changeLink.ENERGY_INTENSITY_RATIO]" [queryParams]="queryParams">Change</a>
-      </dd>
-    </div>
-    <div govukSummaryListRow *ngIf="ratioData.passengersIntensityRatio.additionalInformation">
-      <dt govukSummaryListRowKey>Additional Information</dt>
-      <dd govukSummaryListRowValue class="pre-wrap">{{ ratioData.passengersIntensityRatio.additionalInformation }}</dd>
-      <dd govukSummaryListRowValue></dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a govukLink [routerLink]="[changeLink.ENERGY_INTENSITY_RATIO]" [queryParams]="queryParams">Change</a>
-      </dd>
-    </div>
-  </dl>
+  <ng-container
+    *ngIf="
+      energyConsumptionDetails?.significantEnergyConsumption?.transport > 0 ||
+      energyConsumptionDetails?.totalEnergyConsumption?.transport > 0
+    "
+  >
+    <h2 class="govuk-heading-m">Transport</h2>
+    <esos-energy-intensity-ratio-table-summary-template
+      [changeLink]="changeLink.ENERGY_INTENSITY_RATIO"
+      [isEditable]="isEditable"
+      [queryParams]="queryParams"
+      [energyIntensityRatioDetails]="ratioData.transport"
+    ></esos-energy-intensity-ratio-table-summary-template>
+  </ng-container>
 
-  <h2 class="govuk-heading-m">Industrial Processes</h2>
-  <dl govuk-summary-list>
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey>Intensity ratio</dt>
-      <dt govukSummaryListRowKey>Unit</dt>
-      <dd govukSummaryListRowActions *ngIf="isEditable"></dd>
-    </div>
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ ratioData.industrialProcessesIntensityRatio.ratio }}</dd>
-      <dd govukSummaryListRowValue>kWh/{{ ratioData.industrialProcessesIntensityRatio.unit }}</dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a govukLink [routerLink]="[changeLink.ENERGY_INTENSITY_RATIO]" [queryParams]="queryParams">Change</a>
-      </dd>
-    </div>
-    <div govukSummaryListRow *ngIf="ratioData.industrialProcessesIntensityRatio.additionalInformation">
-      <dt govukSummaryListRowKey>Additional Information</dt>
-      <dd govukSummaryListRowValue class="pre-wrap">
-        {{ ratioData.industrialProcessesIntensityRatio.additionalInformation }}
-      </dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a govukLink [routerLink]="[changeLink.ENERGY_INTENSITY_RATIO]" [queryParams]="queryParams">Change</a>
-      </dd>
-    </div>
-  </dl>
+  <ng-container
+    *ngIf="
+      energyConsumptionDetails?.significantEnergyConsumption?.industrialProcesses > 0 ||
+      energyConsumptionDetails?.totalEnergyConsumption?.industrialProcesses > 0
+    "
+  >
+    <h2 class="govuk-heading-m">Industrial Processes</h2>
+    <esos-energy-intensity-ratio-table-summary-template
+      [changeLink]="changeLink.ENERGY_INTENSITY_RATIO"
+      [isEditable]="isEditable"
+      [queryParams]="queryParams"
+      [energyIntensityRatioDetails]="ratioData.industrialProcesses"
+    ></esos-energy-intensity-ratio-table-summary-template>
+  </ng-container>
 
-  <ng-container *ngFor="let otherRatioData of ratioData.otherProcessesIntensityRatios">
-    <h2 class="govuk-heading-m">{{ otherRatioData.name }}</h2>
-    <dl govuk-summary-list>
-      <div govukSummaryListRow>
-        <dt govukSummaryListRowKey>Intensity ratio</dt>
-        <dt govukSummaryListRowKey>Unit</dt>
-        <dd govukSummaryListRowActions *ngIf="isEditable"></dd>
-      </div>
-      <div govukSummaryListRow>
-        <dd govukSummaryListRowValue>{{ otherRatioData.ratio }}</dd>
-        <dd govukSummaryListRowValue>kWh/{{ otherRatioData.unit }}</dd>
-        <dd govukSummaryListRowActions *ngIf="isEditable">
-          <a govukLink [routerLink]="[changeLink.ENERGY_INTENSITY_RATIO]" [queryParams]="queryParams">Change</a>
-        </dd>
-      </div>
-      <div govukSummaryListRow *ngIf="otherRatioData.additionalInformation">
-        <dt govukSummaryListRowKey>Additional Information</dt>
-        <dd govukSummaryListRowValue class="pre-wrap">{{ otherRatioData.additionalInformation }}</dd>
-        <dd govukSummaryListRowActions *ngIf="isEditable">
-          <a govukLink [routerLink]="[changeLink.ENERGY_INTENSITY_RATIO]" [queryParams]="queryParams">Change</a>
-        </dd>
-      </div>
-    </dl>
+  <ng-container
+    *ngIf="
+      energyConsumptionDetails?.significantEnergyConsumption?.otherProcesses > 0 ||
+      energyConsumptionDetails?.totalEnergyConsumption?.otherProcesses > 0
+    "
+  >
+    <h2 class="govuk-heading-m">Other energy uses</h2>
+    <esos-energy-intensity-ratio-table-summary-template
+      [changeLink]="changeLink.ENERGY_INTENSITY_RATIO"
+      [isEditable]="isEditable"
+      [queryParams]="queryParams"
+      [energyIntensityRatioDetails]="ratioData.otherProcesses"
+    ></esos-energy-intensity-ratio-table-summary-template>
   </ng-container>
 </ng-container>
 
 <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
-<ng-container *ngIf="data?.additionalInformationExists != null">
+<ng-container *ngIf="energyConsumptionDetails?.additionalInformationExists != null">
   <h2 class="govuk-heading-m">Do you want to add more information to give context to the energy intensity ratio?</h2>
+
   <dl govuk-summary-list>
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>
-        {{ data.additionalInformationExists | booleanToText }}
-        <span *ngIf="data.additionalInformation" class="pre-wrap"><br />{{ data?.additionalInformation }}</span>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>
+        {{ energyConsumptionDetails.additionalInformationExists | booleanToText }}
+        <br />
+        <span *ngIf="energyConsumptionDetails.additionalInformation" class="pre-wrap">
+          {{ energyConsumptionDetails?.additionalInformation }}
+        </span>
       </dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
+
+      <dd govukSummaryListColumnActions *ngIf="isEditable">
         <a govukLink [routerLink]="[changeLink.ADDITIONAL_INFO]" [queryParams]="queryParams">Change</a>
       </dd>
     </div>

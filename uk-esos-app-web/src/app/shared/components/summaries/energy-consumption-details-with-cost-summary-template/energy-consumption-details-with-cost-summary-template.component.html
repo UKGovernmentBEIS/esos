@@ -1,0 +1,38 @@
+<govuk-table [columns]="columns" [data]="data">
+  <ng-template let-column="column" let-row="row" let-index="index">
+    <ng-container [ngSwitch]="column.field">
+      <ng-container *ngSwitchCase="'name'">
+        <strong>{{ row[column.field] }}</strong>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'energy'">
+        <ng-container *ngIf="index !== data.length - 1; else totalEnergy">{{ row[column.field] }}</ng-container>
+        <ng-template #totalEnergy>
+          <div class="govuk-!-text-align-right">
+            <strong>{{ row[column.field] | noDataEntered }}</strong>
+          </div>
+        </ng-template>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'cost'">
+        <ng-container *ngIf="index !== data.length - 1; else totalCost">
+          <div class="govuk-!-text-align-right">
+            {{ row[column.field] }}
+          </div>
+        </ng-container>
+
+        <ng-template #totalCost>
+          <div class="govuk-!-text-align-right">
+            <strong>{{ row[column.field] | noDataEnteredForCost }}</strong>
+          </div>
+        </ng-template>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>
+        <div class="govuk-!-text-align-right" *ngIf="row.name !== 'Total' && isEditable">
+          <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+</govuk-table>

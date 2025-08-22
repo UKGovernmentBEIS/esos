@@ -96,8 +96,16 @@ describe('OperatorsComponent', () => {
       });
     }
 
-    get contactRadios() {
-      return this.rows.map((row) => row.querySelectorAll<HTMLInputElement>('input[type="radio"]'));
+    get contactTypeSelect() {
+      return this.rows.map((row) => row.querySelector<HTMLInputElement>('select[name$=".contactType"]'));
+    }
+
+    set contactTypeSelectsValue(value: string[]) {
+      this.queryAll<HTMLSelectElement>('select[name$=".contactType"]').forEach((select, index) => {
+        if (value[index] !== undefined) {
+          this.setInputValue(`#${select.id}`, value[index]);
+        }
+      });
     }
 
     get locks() {
@@ -153,7 +161,6 @@ describe('OperatorsComponent', () => {
   const createComponent = () => {
     fixture = TestBed.createComponent(OperatorsComponent);
     component = fixture.componentInstance;
-    component.currentTab = 'users';
     page = new Page(fixture);
     fixture.detectChanges();
   };
@@ -201,7 +208,7 @@ describe('OperatorsComponent', () => {
 
     it('should render the title', () => {
       const element: HTMLElement = fixture.nativeElement;
-      const header = element.querySelector('h1[class="govuk-heading-l"]');
+      const header = element.querySelector('h2[class="govuk-heading-m"]');
 
       expect(header).toBeTruthy();
       expect(header.innerHTML.trim()).toEqual('Users and contacts');
@@ -287,18 +294,14 @@ describe('OperatorsComponent', () => {
       expect(page.roleSelectsValue[0]).toEqual('operator_admin');
     });
 
-    it('should show radio buttons for advanced users but not for restricted users', () => {
+    it('should show select input for advanced users but not for restricted users', () => {
       setUserAsRegulator();
       fixture.detectChanges();
 
-      expect(page.contactRadios[0][0]).toBeTruthy();
-      expect(page.contactRadios[0][1]).toBeTruthy();
-      expect(page.contactRadios[1][0]).toBeFalsy();
-      expect(page.contactRadios[1][1]).toBeFalsy();
-      expect(page.contactRadios[2][0]).toBeFalsy();
-      expect(page.contactRadios[2][1]).toBeFalsy();
-      expect(page.contactRadios[3][0]).toBeTruthy();
-      expect(page.contactRadios[3][1]).toBeTruthy();
+      expect(page.contactTypeSelect[0]).toBeTruthy();
+      expect(page.contactTypeSelect[1]).toBeFalsy();
+      expect(page.contactTypeSelect[2]).toBeFalsy();
+      expect(page.contactTypeSelect[3]).toBeTruthy();
     });
 
     it('should not accept submission without at least one active operator admin', () => {
@@ -330,27 +333,6 @@ describe('OperatorsComponent', () => {
       );
     });
 
-    it('should not accept submission with the same primary and secondary contact', () => {
-      page.contactRadios[0][0].click();
-      page.contactRadios[0][1].click();
-      fixture.detectChanges();
-
-      page.usersFormSubmitButton.click();
-      fixture.detectChanges();
-
-      expect(page.usersFormSubmitButton.disabled).toBeFalsy();
-      expect(page.errorSummary).toBeTruthy();
-      expect(page.errorSummary.textContent).toContain(
-        'You cannot assign the same user as a primary and secondary contact on your account',
-      );
-
-      page.contactRadios[3][1].click();
-      page.usersFormSubmitButton.click();
-      fixture.detectChanges();
-
-      expect(page.errorSummary).toBeFalsy();
-    });
-
     it('should not accept submission without at least one active primary contact', () => {
       page.roleSelectsValue = ['operator_admin'];
       fixture.detectChanges();
@@ -370,6 +352,22 @@ describe('OperatorsComponent', () => {
       fixture.detectChanges();
 
       expect(page.errorSummary).toBeFalsy();
+    });
+
+    it('should not accept submission with more then one same contact type', () => {
+      page.contactTypeSelectsValue = ['PRIMARY', 'PRIMARY'];
+      page.usersFormSubmitButton.click();
+      fixture.detectChanges();
+
+      expect(page.errorSummary).toBeTruthy();
+      expect(page.errorSummary.textContent).toContain('Primary contact must be unique');
+
+      page.contactTypeSelectsValue = ['SECONDARY', 'SECONDARY'];
+      page.usersFormSubmitButton.click();
+      fixture.detectChanges();
+
+      expect(page.errorSummary).toBeTruthy();
+      expect(page.errorSummary.textContent).toContain('Secondary contact must be unique');
     });
 
     it('should display correct dropdown values in users table', () => {
@@ -400,8 +398,8 @@ describe('OperatorsComponent', () => {
     it('should disable the inputs of a disabled record', () => {
       expect(page.nameColumns[1].textContent.trim()).toEqual('Darth Vader');
       expect(page.rows[1].querySelector('select[name$=".roleCode"]')).toBeFalsy();
-      page.contactRadios[1].forEach((radio) => expect(radio.disabled).toBeTruthy());
-      page.contactRadios[0].forEach((radio) => expect(radio.disabled).toBeFalsy());
+      expect(page.contactTypeSelect[1]).toBeFalsy();
+      expect(page.contactTypeSelect[0]).toBeTruthy();
 
       page.accountStatusSelectsValue = [undefined, 'ACTIVE'];
       fixture.detectChanges();
@@ -507,14 +505,14 @@ describe('OperatorsComponent', () => {
       expect(page.addUserFormButton).toBeFalsy();
     });
 
-    it('should not show locked status sign', () => {
+    it('should show locked status sign', () => {
       setUserAsRegulator();
       fixture.detectChanges();
-      page.locks.forEach((lock) => expect(lock).toBeFalsy());
+      expect(page.locks).toHaveLength(1);
 
       setUserAsOperator();
       fixture.detectChanges();
-      page.locks.forEach((lock) => expect(lock).toBeFalsy());
+      expect(page.locks).toHaveLength(1);
     });
 
     it('should not render save changes button', () => {
@@ -545,10 +543,8 @@ describe('OperatorsComponent', () => {
 
     it('should display check marks for declaring contact types', () => {
       const checkNonEditableContacts = () => {
-        expect(page.rows[0].querySelectorAll('td')[2].textContent.trim()).toEqual('✓');
-        expect(page.rows[0].querySelectorAll('td')[3].textContent.trim()).toBeFalsy();
-        expect(page.rows[3].querySelectorAll('td')[3].textContent.trim()).toEqual('✓');
-        expect(page.rows[3].querySelectorAll('td')[2].textContent.trim()).toBeFalsy();
+        expect(page.rows[0].querySelectorAll('td')[2].textContent.trim()).toEqual('Primary contact');
+        expect(page.rows[3].querySelectorAll('td')[2].textContent.trim()).toEqual('Secondary contact');
         expect(page.roleSelects[0]).toBeFalsy();
         expect(page.roleSelects[2]).toBeFalsy();
       };
@@ -563,12 +559,12 @@ describe('OperatorsComponent', () => {
     });
   });
 
-  describe('for unapproved accounts', () => {
+  describe('for accounts in awaiting approval status', () => {
     let account: OrganisationAccountDTO;
     beforeEach(async () => {
       account = {
         ...mockedOrganisationAccount,
-        status: 'UNAPPROVED',
+        status: 'AWAITING_APPROVAL',
       };
     });
 
@@ -579,7 +575,7 @@ describe('OperatorsComponent', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should not display the add new user button when account is in unapproved status', () => {
+    it('should not display the add new user button when account is in awaiting approval status', () => {
       setUserAsRegulator();
       fixture.detectChanges();
 
@@ -596,7 +592,7 @@ describe('OperatorsComponent', () => {
     beforeEach(async () => {
       account = {
         ...mockedOrganisationAccount,
-        status: 'UNAPPROVED',
+        status: 'DENIED',
       };
     });
 

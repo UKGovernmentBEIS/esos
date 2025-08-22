@@ -1,0 +1,70 @@
+<dl govuk-summary-list [hasBorders]="true">
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ proposedMeasureContentMap.title }}</dt>
+    <dd govukSummaryListRowValue>{{ data?.haveEnergyEfficiencyMeasures | booleanToText }}</dd>
+    @if (isEditable) {
+      <dd govukSummaryListRowActions>
+        <a
+          govukLink
+          class="govuk-link--no-visited-state"
+          [routerLink]="[stepUrls.PROPOSED_MEASURES]"
+          [queryParams]="{ change: true }"
+          >Change</a
+        >
+      </dd>
+    }
+  </div>
+  @if (data?.haveEnergyEfficiencyMeasures === false) {
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>{{ proposedMeasureContentMap.noMeasureContextLabel }}</dt>
+      <dd govukSummaryListRowValue>{{ data?.noMeasureContext }}</dd>
+      @if (isEditable) {
+        <dd govukSummaryListRowActions>
+          <a
+            govukLink
+            class="govuk-link--no-visited-state"
+            [routerLink]="[stepUrls.PROPOSED_MEASURES]"
+            [queryParams]="{ change: true }"
+            >Change</a
+          >
+        </dd>
+      }
+    </div>
+  }
+</dl>
+
+@if (data?.energyEfficiencyMeasures?.length) {
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-7">Energy efficiency measures added</h2>
+}
+
+@for (energyEfficiencyMeasure of data?.energyEfficiencyMeasures; track measureIndex; let measureIndex = $index) {
+  <div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">{{ energyEfficiencyMeasure.measureName }}</h2>
+      @if (isEditable) {
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            <a
+              govukLink
+              class="govuk-link--no-visited-state"
+              [routerLink]="[measureIndex + '/' + stepUrls.EDIT_MEASURE]"
+              >Edit</a
+            >
+          </li>
+          <li class="govuk-summary-card__action">
+            <a
+              govukLink
+              class="govuk-link--no-visited-state"
+              [routerLink]="[measureIndex + '/' + stepUrls.REMOVE_MEASURE]"
+              >Remove</a
+            >
+          </li>
+        </ul>
+      }
+    </div>
+
+    <div class="govuk-summary-card__content">
+      <esos-energy-efficiency-measure-summary-list-template [data]="energyEfficiencyMeasure" />
+    </div>
+  </div>
+}

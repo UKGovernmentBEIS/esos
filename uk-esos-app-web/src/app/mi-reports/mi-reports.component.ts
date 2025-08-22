@@ -15,14 +15,14 @@ import { createTablePage, miReportTypeDescriptionMap, miReportTypeLinkMap } from
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MiReportsComponent {
+  private data$: Observable<MiReportSearchResult[]> = this.route.data.pipe(map((data) => data.miReports));
+
   readonly pageSize = 10;
   readonly miReportTypeLinkMap = miReportTypeLinkMap;
 
   tableColumns: GovukTableColumn[] = [{ field: 'description', header: 'MI Report Type' }];
-
   currentPage$ = new BehaviorSubject<number>(1);
-
-  private data$: Observable<MiReportSearchResult[]> = this.route.data.pipe(map((data) => data.miReports));
+  totalPages$ = this.data$.pipe(map((reports) => reports.length));
 
   currentPageData$ = combineLatest([this.data$, this.currentPage$]).pipe(
     map(([data, currentPage]) =>
@@ -31,12 +31,10 @@ export class MiReportsComponent {
           ...p,
           description: miReportTypeDescriptionMap[p.miReportType],
         }))
-        .sort((a, b) => a.description.localeCompare(b.description)),
+        .sort((a, b) => a.description?.localeCompare(b.description)),
     ),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
-
-  totalPages$ = this.data$.pipe(map((reports) => reports.length));
 
   constructor(private readonly route: ActivatedRoute) {}
 }

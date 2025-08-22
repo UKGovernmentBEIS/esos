@@ -19,4 +19,5 @@ public interface NotificationEmailService {
     void notifyRecipient(EmailData emailData, String recipientEmail);
     
     void notifyRecipients(EmailData emailData, List<String> recipientsEmails, List<String> ccRecipientsEmails);
+    
 }

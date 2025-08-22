@@ -4,9 +4,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ORGANISATION_ACCOUNT_STATE_PROVIDER } from '@shared/providers/organisation-account.state.provider';
 
+import { mockCreateOrganisationAccountStateProvider } from '../../../testing/mock-create-organisation-account.state.provider';
+import { mockCreateOrganisationAccountStore } from '../../../testing/mock-create-organisation-account.store';
 import { initialState, OrganisationAccountStore } from '../../+state';
-import { mockCreateOrganisationAccountStateProvider } from '../../testing/mock-create-organisation-account.state.provider';
-import { mockOrganisationAccountStore } from '../../testing/mock-organisation-account.store';
 import { OrganisationLocationContainerComponent } from './organisation-location-container.component';
 
 describe('OrganisationLocationContainerComponent', () => {
@@ -16,13 +16,13 @@ describe('OrganisationLocationContainerComponent', () => {
   let navigateSpy: jest.SpyInstance;
 
   beforeEach(async () => {
-    mockOrganisationAccountStore.setLocation.mockClear();
-    mockOrganisationAccountStore._state.next(initialState);
+    mockCreateOrganisationAccountStore.setLocation.mockClear();
+    mockCreateOrganisationAccountStore._state.next(initialState);
 
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, OrganisationLocationContainerComponent],
       providers: [
-        { provide: OrganisationAccountStore, useValue: mockOrganisationAccountStore },
+        { provide: OrganisationAccountStore, useValue: mockCreateOrganisationAccountStore },
         { provide: ActivatedRoute, useValue: { snapshot: {} } },
         { provide: ORGANISATION_ACCOUNT_STATE_PROVIDER, useValue: mockCreateOrganisationAccountStateProvider },
       ],
@@ -47,7 +47,7 @@ describe('OrganisationLocationContainerComponent', () => {
         get: jest.fn().mockReturnValue({ value: 'Test Location' }),
       } as any;
       component.onSubmit(mockFormGroup);
-      expect(mockOrganisationAccountStore.setLocation).toHaveBeenCalledWith('Test Location');
+      expect(mockCreateOrganisationAccountStore.setLocation).toHaveBeenCalledWith('Test Location');
       expect(navigateSpy).toHaveBeenCalledWith(['../summary'], expect.anything());
     });
 
@@ -57,7 +57,7 @@ describe('OrganisationLocationContainerComponent', () => {
         dirty: false,
       } as any;
       component.onSubmit(mockFormGroup);
-      expect(mockOrganisationAccountStore.setLocation).not.toHaveBeenCalled();
+      expect(mockCreateOrganisationAccountStore.setLocation).not.toHaveBeenCalled();
       expect(navigateSpy).toHaveBeenCalledWith(['../summary'], expect.anything());
     });
   });

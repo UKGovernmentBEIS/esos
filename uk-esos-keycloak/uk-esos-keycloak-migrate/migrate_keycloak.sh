@@ -12,6 +12,8 @@ set -e
 CURRENT_PATH="$(dirname "$0")"
 source "$CURRENT_PATH/common/functions.sh"
 source "$CURRENT_PATH/migrate_keycloak_vars.sh"
+source "$CURRENT_PATH/common/one_login_related_vars.sh"
+source "$CURRENT_PATH/common/one_login_related_functions.sh"
 
 logMessage ">>>>>>>>>> Start keycloak configuration >>>>>>>>>>"
 
@@ -45,6 +47,14 @@ changelogScripts=(
 "19_update_configuration_camunda_identity_service.sh"
 "20_update_otp_algorithm.sh"
 "21_update_uk_esos_realm_password_policy_hashiterations.sh"
+"22_update_uk_esos_realm_account_console_disable_clients.sh"
+"23_configure_esos_browser_add_user_session_count_limiter.sh"
+"24_configure_esos_browser_user_session_count_limiter_configuration_to_required.sh"
+"25_configure_esos_browser_user_session_count_limiter_configuration.sh"
+"26_create_onelogin_idp_configuration.sh"
+"27_create_one_login_first_broker_login_flow.sh"
+"28_update_esos_realm_settings_for_onelogin.sh"
+"29_add_onelogin_idp_event_listener.sh"
 )
 
 updatelogScripts=(
@@ -57,6 +67,7 @@ updatelogScripts=(
 "05_add_realm_admin_role_to_esos_api_service_user.sh"
 "06_add_roles_to_camunda_identity_service_service_user.sh"
 "07_update_uk_esos_realm.sh"
+"08_disable_org_and_browser_forms_auth.sh"
 )
 
 #Get already executed scripts as concatenated string

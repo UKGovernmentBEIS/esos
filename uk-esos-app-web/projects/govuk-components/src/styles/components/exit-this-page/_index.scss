@@ -1,10 +1,10 @@
-@import "../button/index";
+@import '../button/index';
 
-@include govuk-exports("govuk/component/exit-this-page") {
-  $indicator-size: .75em;
+@include govuk-exports('govuk/component/exit-this-page') {
+  $indicator-size: 0.75em;
 
   .govuk-exit-this-page {
-    @include govuk-responsive-margin(8, "bottom");
+    @include govuk-responsive-margin(8, 'bottom');
     position: -webkit-sticky;
     position: sticky;
     z-index: 1000;
@@ -44,18 +44,11 @@
     display: inline-block;
     width: $indicator-size;
     height: $indicator-size;
-    margin: 0 .125em;
+    margin: 0 0.125em;
     border-width: 2px;
     border-style: solid;
     border-radius: 50%;
-
-    @include _govuk-not-ie8 {
-      border-color: currentcolor;
-    }
-
-    @include _govuk-if-ie8 {
-      border-color: govuk-colour("white");
-    }
+    border-color: currentcolor;
   }
 
   .govuk-exit-this-page__indicator-light--on {
@@ -75,7 +68,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: govuk-colour("white");
+    background-color: govuk-colour('white');
   }
 
   // This class is added to the body when the Exit This Page button is activated
@@ -95,3 +88,5 @@
     }
   }
 }
+
+/*# sourceMappingURL=_index.scss.map */

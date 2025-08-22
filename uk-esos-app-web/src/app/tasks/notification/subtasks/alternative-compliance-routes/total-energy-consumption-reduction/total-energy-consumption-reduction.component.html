@@ -5,20 +5,27 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
   <p class="govuk-body">
-    Enter the total potential reduction from implementing all energy saving opportunities from alternative compliance
-    routes.
+    To the extent that you have obtained the information through your chosen alternative compliance routes, calculate
+    the sum of all the estimates of annual reductions in energy consumption and energy spend which would be achieved as
+    a result of implementing the energy saving measures identified by your alternative compliance routes.
   </p>
-  <div
-    formControlName="totalEnergyConsumptionReduction"
-    govuk-text-input
-    inputType="number"
-    label="Total Energy in kWh"
-    [widthClass]="'govuk-!-width-one-third'"
-    suffix="kWh"
-  ></div>
-  <govuk-details summary="Help me answer this question">
-    <p class="govuk-body">TBD</p>
-  </govuk-details>
+
+  <div class="row-flex" formGroupName="totalEnergyConsumptionReduction">
+    <div class="govuk-grid-column-one-third align-self-end">
+      <div
+        govuk-text-input
+        inputType="number"
+        suffix="kWh"
+        label="Potential reduction in energy consumption"
+        formControlName="energyConsumption"
+      ></div>
+    </div>
+
+    <div class="govuk-grid-column-one-third align-self-end">
+      <div govuk-text-input prefix="£" label="Potential reduction in energy spend" formControlName="energyCost"></div>
+    </div>
+  </div>
 </esos-wizard-step>

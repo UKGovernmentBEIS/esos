@@ -52,7 +52,6 @@ export class DetailsComponent {
         jobTitle: [
           user.jobTitle,
           [
-            GovukValidators.required('Enter your job title'),
             GovukValidators.maxLength(255, 'Your job title should not be larger than 255 characters'),
           ],
         ],

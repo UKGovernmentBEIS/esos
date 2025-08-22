@@ -33,6 +33,9 @@ describe('OrganisationAccountApplicationSummaryPageComponent', () => {
       postcode: '12345',
     },
     competentAuthority: 'ENGLAND',
+    type: 'OTHER',
+    otherTypeName: 'some classification name',
+    codes: ['CodeA', 'CodeB', 'CodeC'],
   };
   const applicationPayload: OrganisationAccountOpeningSubmitApplicationCreateActionPayload = {
     payloadType: 'ORGANISATION_ACCOUNT_OPENING_SUBMIT_APPLICATION_PAYLOAD',
@@ -44,6 +47,9 @@ describe('OrganisationAccountApplicationSummaryPageComponent', () => {
     county: 'West Sussex',
     city: 'city',
     postcode: '12345',
+    type: 'OTHER',
+    otherTypeName: 'some classification name',
+    codes: ['CodeA', 'CodeB', 'CodeC'],
   };
 
   beforeEach(async () => {

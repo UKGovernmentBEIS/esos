@@ -1,21 +1,23 @@
-import { OperatorInvitedUserInfoDTO, OperatorUserRegistrationDTO } from 'esos-api';
+import { AuthStore } from '@core/store';
+
+import { OperatorUserRegistrationDTO } from 'esos-api';
 
 export interface UserRegistrationState {
-  userRegistrationDTO?: Omit<OperatorUserRegistrationDTO, 'emailToken'>;
+  userRegistrationDTO?: OperatorUserRegistrationDTO;
   email?: string;
-  password?: string;
   token?: string;
-  isSummarized?: boolean;
   isInvited?: boolean;
-  invitationStatus?: OperatorInvitedUserInfoDTO['invitationStatus'];
 }
 
-export const initialState: UserRegistrationState = {
-  userRegistrationDTO: null,
-  email: null,
-  password: null,
-  token: null,
-  isSummarized: false,
-  isInvited: false,
-  invitationStatus: null,
+export const initialState: (authStore: AuthStore) => UserRegistrationState = (authStore: AuthStore) => {
+  return {
+    userRegistrationDTO: {
+      firstName: authStore.getState()?.user?.firstName,
+      lastName: authStore.getState()?.user?.lastName,
+      address: { line1: null, city: null, postcode: null },
+    },
+    email: authStore.getState()?.user?.email,
+    token: null,
+    isInvited: false,
+  };
 };

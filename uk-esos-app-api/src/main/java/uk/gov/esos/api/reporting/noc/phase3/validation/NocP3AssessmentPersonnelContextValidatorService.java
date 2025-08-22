@@ -24,7 +24,7 @@ public class NocP3AssessmentPersonnelContextValidatorService extends NocP3Sectio
     }
 
     @Override
-    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories() {
+    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories(NocP3Container nocContainer) {
         return Set.of(
                 ReportingObligationCategory.ESOS_ENERGY_ASSESSMENTS_95_TO_100,
                 ReportingObligationCategory.ISO_50001_COVERING_ENERGY_USAGE,

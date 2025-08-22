@@ -3,39 +3,52 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { RequestTaskStore } from '@common/request-task/+state';
 import {
+  csvColumnDiffValidator,
+  csvColumnNumberValidator,
+  csvFieldBooleanValidator,
+  csvFieldDuplicateValidator,
+  csvFieldEmptyRowValidator,
+  csvFieldMaxLengthValidator,
+  csvFieldPatternValidator,
+  csvFieldRequiredValidator,
   emptyFileValidator,
   fileExtensionValidator,
   fileNameLengthValidator,
   maxFileSizeValidator,
 } from '@shared/validators';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
-import { organisationStructureCsvMap } from '@tasks/notification/subtasks/organisation-structure/upload-csv/organisation-structure-csv.map';
 import {
-  csvColumnOrgStrDiffValidator,
-  csvColumnOrgStrNumberValidator,
-  csvFieldOrgStrBooleanValidator,
-  csvFieldOrgStrMaxLengthValidator,
-  csvFieldOrgStrPatternValidator,
-  csvFieldOrgStrRequiredValidator,
+  FlattenedOrganisationAssociatedWithRU,
+  organisationStructureCsvMap,
+} from '@tasks/notification/subtasks/organisation-structure/upload-csv/organisation-structure-csv.map';
+import {
+  csvFieldOrgStrClassificationNameValidator,
+  csvFieldOrgStrClassificationTypeValidator,
+  csvFieldOrgStrCodeFirstValidator,
+  csvFieldOrgStrParentSubsidiaryEqualityValidator,
+  csvFieldOrgStrRegistrationNumberValidator,
 } from '@tasks/notification/subtasks/organisation-structure/upload-csv/validators';
-import { csvFieldOrgStrRegistrationNumberValidator } from '@tasks/notification/subtasks/organisation-structure/upload-csv/validators/csv-field-org-str-registration-number.validator';
-import { csvFieldOrgStrUniqueValidator } from '@tasks/notification/subtasks/organisation-structure/upload-csv/validators/csv-field-org-str-unique.validator';
 import { TASK_FORM } from '@tasks/task-form.token';
 
-import { GovukValidators } from 'govuk-components';
-
-import { OrganisationAssociatedWithRU } from 'esos-api';
-
+/**
+ * Form based on FlattenedOrganisationAssociatedWithRU.
+ * Since CSV cannot pass as object, we flatten it then transform it to OrganisationsAssociatedWithRU
+ */
 export interface OrganisationsAssociatedWithRUFormModel {
   organisationName: FormControl<string | null>;
   registrationNumber: FormControl<string | null>;
-  isCoveredByThisNotification: FormControl<boolean | null>;
   isPartOfArrangement: FormControl<boolean | null>;
   isParentOfResponsibleUndertaking: FormControl<boolean | null>;
   isSubsidiaryOfResponsibleUndertaking: FormControl<boolean | null>;
   isPartOfFranchise: FormControl<boolean | null>;
-  isTrust: FormControl<boolean | null>;
   hasCeasedToBePartOfGroup: FormControl<boolean | null>;
+  areSameAsRU: FormControl<boolean | null>;
+  type: FormControl<'SIC' | 'OTHER' | null>;
+  otherTypeName: FormControl<string | null>;
+  code1: FormControl<string | null>;
+  code2: FormControl<string | null>;
+  code3: FormControl<string | null>;
+  code4: FormControl<string | null>;
 }
 
 export type OrganisationsRUFormArray = FormArray<FormGroup<OrganisationsAssociatedWithRUFormModel>>;
@@ -51,7 +64,7 @@ export const uploadCsvFormProvider: Provider = {
   deps: [RequestTaskStore, FormBuilder],
   useFactory: (store: RequestTaskStore, fb: FormBuilder) => {
     const registrationNumberRU = store.select(notificationQuery.selectResponsibleUndertaking)()?.organisationDetails
-      .registrationNumber;
+      ?.registrationNumber;
 
     return fb.group<UploadCSVFormModel>({
       organisationsRU: fb.array([] as FormGroup<OrganisationsAssociatedWithRUFormModel>[], {
@@ -60,7 +73,10 @@ export const uploadCsvFormProvider: Provider = {
       }),
       columns: fb.control(null, {
         updateOn: 'change',
-        validators: [csvColumnOrgStrNumberValidator(), csvColumnOrgStrDiffValidator()],
+        validators: [
+          csvColumnNumberValidator(organisationStructureCsvMap),
+          csvColumnDiffValidator(organisationStructureCsvMap),
+        ],
       }),
       file: fb.control(null, {
         updateOn: 'change',
@@ -76,14 +92,11 @@ export const uploadCsvFormProvider: Provider = {
 };
 
 export const addOrganisationRUGroup = (
-  organisationAssociatedWithRU: OrganisationAssociatedWithRU,
+  organisationAssociatedWithRU: FlattenedOrganisationAssociatedWithRU,
 ): FormGroup<OrganisationsAssociatedWithRUFormModel> => {
   return new FormGroup<OrganisationsAssociatedWithRUFormModel>({
     organisationName: new FormControl<string | null>(organisationAssociatedWithRU?.organisationName ?? null),
     registrationNumber: new FormControl<string | null>(organisationAssociatedWithRU?.registrationNumber ?? null),
-    isCoveredByThisNotification: new FormControl<boolean | null>(
-      organisationAssociatedWithRU?.isCoveredByThisNotification ?? null,
-    ),
     isPartOfArrangement: new FormControl<boolean | null>(organisationAssociatedWithRU?.isPartOfArrangement ?? null),
     isParentOfResponsibleUndertaking: new FormControl<boolean | null>(
       organisationAssociatedWithRU?.isParentOfResponsibleUndertaking ?? null,
@@ -92,27 +105,43 @@ export const addOrganisationRUGroup = (
       organisationAssociatedWithRU?.isSubsidiaryOfResponsibleUndertaking ?? null,
     ),
     isPartOfFranchise: new FormControl<boolean | null>(organisationAssociatedWithRU?.isPartOfFranchise ?? null),
-    isTrust: new FormControl<boolean | null>(organisationAssociatedWithRU?.isTrust ?? null),
     hasCeasedToBePartOfGroup: new FormControl<boolean | null>(
       organisationAssociatedWithRU?.hasCeasedToBePartOfGroup ?? null,
     ),
+    areSameAsRU: new FormControl<boolean | null>(organisationAssociatedWithRU?.areSameAsRU ?? null),
+    type: new FormControl<'SIC' | 'OTHER' | null>(organisationAssociatedWithRU?.type ?? null),
+    otherTypeName: new FormControl<string | null>(organisationAssociatedWithRU?.otherTypeName ?? null),
+    code1: new FormControl<string | null>(organisationAssociatedWithRU?.code1 ?? null),
+    code2: new FormControl<string | null>(organisationAssociatedWithRU?.code2 ?? null),
+    code3: new FormControl<string | null>(organisationAssociatedWithRU?.code3 ?? null),
+    code4: new FormControl<string | null>(organisationAssociatedWithRU?.code4 ?? null),
   });
 };
 
 export const uploadCSVFormValidators = (registrationNumberRU: string) => [
-  GovukValidators.required('Upload a CSV file'),
+  csvFieldEmptyRowValidator(),
 
-  csvFieldOrgStrRequiredValidator('organisationName'),
-  csvFieldOrgStrMaxLengthValidator('organisationName', 255),
-
-  csvFieldOrgStrPatternValidator(
-    'registrationNumber',
-    new RegExp('^[a-zA-Z]{1}\\d{7}$|^[a-zA-Z]{2}\\d{6}$'),
-    `The field '${organisationStructureCsvMap.registrationNumber}' must be 8 digits, either 1 letter followed by 7 digits or 2 letters followed by 6 digits. If your Company Registration Number has less than 8 digits then you may need to add zeros at the beginning.`,
+  // organisationName
+  csvFieldMaxLengthValidator<FlattenedOrganisationAssociatedWithRU>(
+    'organisationName',
+    organisationStructureCsvMap,
+    255,
   ),
-  csvFieldOrgStrUniqueValidator(
+  csvFieldRequiredValidator<FlattenedOrganisationAssociatedWithRU>('organisationName', organisationStructureCsvMap),
+
+  // registrationNumber
+  csvFieldPatternValidator<FlattenedOrganisationAssociatedWithRU>(
     'registrationNumber',
+    organisationStructureCsvMap,
+    new RegExp('^(?:\\d{8}|[A-Z]\\d{7}|[A-Z]{2}\\d{5}[A-Z0-9])$'),
+    `The Company Registration Number must be either 8 digits, 1 letter followed by 7 digits, 2 letters followed by 6 digits or 2 letters followed by 5 digits followed by a final letter. If your Company Registration Number has less than 8 digits then you may need to add zeros at the beginning`,
+    true,
+  ),
+  csvFieldDuplicateValidator<FlattenedOrganisationAssociatedWithRU>(
+    'registrationNumber',
+    organisationStructureCsvMap,
     'There are duplicated organisation registration numbers in the file',
+    true,
   ),
   csvFieldOrgStrRegistrationNumberValidator(
     'registrationNumber',
@@ -120,11 +149,62 @@ export const uploadCSVFormValidators = (registrationNumberRU: string) => [
     'There is an organisation with the same registration number as the one of the responsible undertaking',
   ),
 
-  csvFieldOrgStrBooleanValidator('isCoveredByThisNotification'),
-  csvFieldOrgStrBooleanValidator('isPartOfArrangement'),
-  csvFieldOrgStrBooleanValidator('isParentOfResponsibleUndertaking'),
-  csvFieldOrgStrBooleanValidator('isSubsidiaryOfResponsibleUndertaking'),
-  csvFieldOrgStrBooleanValidator('isPartOfFranchise'),
-  csvFieldOrgStrBooleanValidator('isTrust'),
-  csvFieldOrgStrBooleanValidator('hasCeasedToBePartOfGroup'),
+  // isPartOfArrangement
+  csvFieldBooleanValidator<FlattenedOrganisationAssociatedWithRU>(
+    'isPartOfArrangement',
+    organisationStructureCsvMap,
+    true,
+  ),
+
+  // hasCeasedToBePartOfGroup
+  csvFieldBooleanValidator<FlattenedOrganisationAssociatedWithRU>(
+    'hasCeasedToBePartOfGroup',
+    organisationStructureCsvMap,
+    true,
+  ),
+
+  // isPartOfFranchise
+  csvFieldBooleanValidator<FlattenedOrganisationAssociatedWithRU>(
+    'isPartOfFranchise',
+    organisationStructureCsvMap,
+    true,
+  ),
+
+  // isParentOfResponsibleUndertaking
+  csvFieldOrgStrParentSubsidiaryEqualityValidator(),
+  csvFieldBooleanValidator<FlattenedOrganisationAssociatedWithRU>(
+    'isParentOfResponsibleUndertaking',
+    organisationStructureCsvMap,
+    true,
+  ),
+
+  // isSubsidiaryOfResponsibleUndertaking
+  csvFieldBooleanValidator<FlattenedOrganisationAssociatedWithRU>(
+    'isSubsidiaryOfResponsibleUndertaking',
+    organisationStructureCsvMap,
+    true,
+  ),
+
+  // areSameAsRU
+  csvFieldBooleanValidator<FlattenedOrganisationAssociatedWithRU>('areSameAsRU', organisationStructureCsvMap, true),
+
+  // type
+  csvFieldOrgStrClassificationTypeValidator(),
+
+  // otherTypeName
+  csvFieldMaxLengthValidator<FlattenedOrganisationAssociatedWithRU>('otherTypeName', organisationStructureCsvMap, 255),
+  csvFieldOrgStrClassificationNameValidator(),
+
+  // code1
+  csvFieldMaxLengthValidator<FlattenedOrganisationAssociatedWithRU>('code1', organisationStructureCsvMap, 255),
+  csvFieldOrgStrCodeFirstValidator(),
+
+  // code2
+  csvFieldMaxLengthValidator<FlattenedOrganisationAssociatedWithRU>('code2', organisationStructureCsvMap, 255),
+
+  // code3
+  csvFieldMaxLengthValidator<FlattenedOrganisationAssociatedWithRU>('code3', organisationStructureCsvMap, 255),
+
+  // code4
+  csvFieldMaxLengthValidator<FlattenedOrganisationAssociatedWithRU>('code4', organisationStructureCsvMap, 255),
 ];

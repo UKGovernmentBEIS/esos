@@ -14,13 +14,13 @@ import { PhoneNumberDTO } from './phoneNumberDTO';
 export interface ContactPerson {
   firstName: string;
   lastName: string;
-  jobTitle: string;
+  jobTitle?: string;
   phoneNumber?: PhoneNumberDTO;
   mobileNumber?: PhoneNumberDTO;
   email: string;
   line1: string;
   line2?: string;
   city: string;
-  county: string;
+  county?: string;
   postcode: string;
 }

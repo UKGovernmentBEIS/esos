@@ -1,18 +1,19 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="Add the assessment personnel"
+  heading="Add the assessment personnel (optional)"
   caption="Assessment personnel"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
   <div class="govuk-body">
-    <p>Add the people who have</p>
+    <p>Where recorded, provide details of individuals who have contributed at least 5% to the total of either:</p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>carried out a significant proportion of site visits</li>
-      <li>gathered the data used to carry out the energy audit</li>
-      <li>drafted sections of the ESOS report</li>
+      <li>time spent on site visits</li>
+      <li>data collected for the ESOS audit</li>
+      <li>the text of the ESOS report</li>
     </ul>
 
     <a govukSecondaryButton [routerLink]="'../' + wizardStep.STEP_FORM" type="button">Add person</a>

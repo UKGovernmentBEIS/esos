@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 import { OrganisationAccountOpeningSubmitApplicationCreateActionPayload } from './organisationAccountOpeningSubmitApplicationCreateActionPayload';
+import { ProgressUpdate1RequestCreateActionPayload } from './progressUpdate1RequestCreateActionPayload';
+import { ProgressUpdate2RequestCreateActionPayload } from './progressUpdate2RequestCreateActionPayload';
 import { ReportRelatedRequestCreateActionPayload } from './reportRelatedRequestCreateActionPayload';
 import { RequestCreateActionEmptyPayload } from './requestCreateActionEmptyPayload';
 
@@ -17,9 +19,21 @@ import { RequestCreateActionEmptyPayload } from './requestCreateActionEmptyPaylo
  * The request create action body
  */
 export interface RequestCreateActionProcessDTO {
-  requestCreateActionType: 'ORGANISATION_ACCOUNT_OPENING_SUBMIT_APPLICATION' | 'NOTIFICATION_OF_COMPLIANCE_P3';
+  requestCreateActionType:
+    | 'ORGANISATION_ACCOUNT_OPENING_SUBMIT_APPLICATION'
+    | 'NOTIFICATION_OF_COMPLIANCE_P3'
+    | 'RE_INITIATE_NOTIFICATION_OF_COMPLIANCE_P3'
+    | 'ACTION_PLAN_P3'
+    | 'RE_INITIATE_ACTION_PLAN_P3'
+    | 'ACCOUNT_CLOSURE'
+    | 'PROGRESS_UPDATE_1_P3'
+    | 'RE_INITIATE_PROGRESS_UPDATE_1_P3'
+    | 'PROGRESS_UPDATE_2_P3'
+    | 'RE_INITIATE_PROGRESS_UPDATE_2_P3';
   requestCreateActionPayload:
     | OrganisationAccountOpeningSubmitApplicationCreateActionPayload
+    | ProgressUpdate1RequestCreateActionPayload
+    | ProgressUpdate2RequestCreateActionPayload
     | ReportRelatedRequestCreateActionPayload
     | RequestCreateActionEmptyPayload;
 }

@@ -8,4 +8,5 @@ export interface UsersTableItem {
   roleCode?: string;
   roleName?: string;
   jobTitle?: string;
+  contactType?: string;
 }

@@ -45,24 +45,8 @@ describe('ConfirmationComponent', () => {
   it('should show summary values', () => {
     expect(page.summaryListValues).toEqual([
       [
-        "has reviewed the recommendations of your organisation's ESOS assessment or alternative routes to compliance (e.g. ISO 50001)",
-        'Yes',
-      ],
-      ['is satisfied, to the best of their knowledge, that the organisation is within the scope of the scheme', 'Yes'],
-      ['is satisfied, to the best of their knowledge, that the organisation is compliant with the scheme', 'Yes'],
-      [
-        'is satisfied, to the best of their knowledge, that relevant sections of the ESOS report, and supporting information where relevant, have been shared with all undertakings in the corporate group, unless there is a declared reason why this is prohibited by law',
-        'Yes',
-      ],
-      [
-        'is satisfied, to the best of their knowledge, that the information provided in this notification is correct',
-        'Yes',
-      ],
-      ['is satisfied, to the best of their knowledge, that the organisation is within the scope of the scheme', 'Yes'],
-      ['is satisfied, to the best of their knowledge, that the organisation is compliant with the scheme', 'Yes'],
-      [
-        'is satisfied, to the best of their knowledge, that the information provided in this notification is correct',
-        'Yes',
+        'I confirm that the responsible officer has reviewed the recommendations of the ESOS assessment and is satisfied that, to the best of their knowledge, the following statements are true:',
+        'the organisation is within scope of the schemethe organisation is compliant with the scheme the relevant sections of the ESOS report have been shared with all undertakings in the corporate group, unless there is a declared reason why this is prohibited by law the information provided in this notification of compliance is correct',
       ],
       ['First name', 'John'],
       ['Last name', 'Doe'],
@@ -76,20 +60,9 @@ describe('ConfirmationComponent', () => {
       ['Phone number 1', 'UK (44) 1234567890'],
       ['Phone number 2', ''],
 
-      ['2 Feb 2022', ''],
       [
-        "has reviewed the recommendations of your organisation's ESOS assessment or alternative routes to compliance (e.g. ISO 50001)",
-        'Yes',
-      ],
-      ['is satisfied, to the best of their knowledge, that the organisation is within the scope of the scheme', 'Yes'],
-      ['is satisfied, to the best of their knowledge, that the organisation is compliant with the scheme', 'Yes'],
-      [
-        'Is satisfied, to the best of their knowledge, that relevant sections of the ESOS report, and supporting information where relevant, have been shared with all undertakings in the corporate group, unless there is a declared reason why this is prohibited by law',
-        'Yes',
-      ],
-      [
-        'is satisfied, to the best of their knowledge, that the information provided in this notification is correct',
-        'Yes',
+        'I confirm that a second responsible officer has reviewed the recommendations of the ESOS assessment and is satisfied that, to the best of their knowledge, the following statements are true:',
+        'the organisation is within scope of the schemethe organisation is compliant with the scheme the relevant sections of the ESOS report have been shared with all undertakings in the corporate group, unless there is a declared reason why this is prohibited by law the information provided in this notification of compliance is correct',
       ],
       ['First name', 'Jane'],
       ['Last name', 'Doe'],

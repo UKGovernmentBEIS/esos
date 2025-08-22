@@ -42,7 +42,7 @@ describe('ReportingObligationSummaryComponent', () => {
               reportingObligation: {
                 qualificationType: 'QUALIFY',
                 reportingObligationDetails: {
-                  qualificationReasonTypes: ['TURNOVER_MORE_THAN_44M', 'STAFF_MEMBERS_MORE_THAN_250'],
+                  qualificationReasonType: 'TURNOVER_MORE_THAN_44M',
                   energyResponsibilityType: 'RESPONSIBLE',
                   complianceRouteDistribution: {
                     iso50001Pct: 25,

@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
 <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
 <ng-container *ngIf="energySavingsRecommendationsExist != null">
   <h2 class="govuk-heading-m">
@@ -6,9 +7,9 @@
   </h2>
 
   <dl govuk-summary-list>
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ energySavingsRecommendationsExist | booleanToText }}</dd>
-      <dd *ngIf="isEditable" govukSummaryListRowActions>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>{{ energySavingsRecommendationsExist | skipQuestion }}</dd>
+      <dd *ngIf="isEditable" govukSummaryListColumnActions>
         <a govukLink [routerLink]="changeLinkExist" [queryParams]="queryParams">Change</a>
       </dd>
     </div>
@@ -18,13 +19,15 @@
 <ng-container *ngIf="energySavingsRecommendations">
   <h2 class="govuk-heading-m">
     What is the breakdown of the proportion of energy savings achieved which relate to recommendations from the
-    following categories?
+    following categories? (optional)
   </h2>
 
   <dl govuk-summary-list>
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Energy audits</dt>
-      <dd govukSummaryListRowValue>{{ energySavingsRecommendations.energyAudits }} kWh</dd>
+      <dd govukSummaryListRowValue>
+        {{ energySavingsRecommendations.energyAudits != null ? energySavingsRecommendations.energyAudits + ' %' : '' }}
+      </dd>
       <dd *ngIf="isEditable" govukSummaryListRowActions>
         <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
       </dd>
@@ -32,7 +35,13 @@
 
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Alternative compliance routes</dt>
-      <dd govukSummaryListRowValue>{{ energySavingsRecommendations.alternativeComplianceRoutes }} kWh</dd>
+      <dd govukSummaryListRowValue>
+        {{
+          energySavingsRecommendations.alternativeComplianceRoutes != null
+            ? energySavingsRecommendations.alternativeComplianceRoutes + ' %'
+            : ''
+        }}
+      </dd>
       <dd *ngIf="isEditable" govukSummaryListRowActions>
         <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
       </dd>
@@ -40,7 +49,9 @@
 
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Other</dt>
-      <dd govukSummaryListRowValue>{{ energySavingsRecommendations.other }} kWh</dd>
+      <dd govukSummaryListRowValue>
+        {{ energySavingsRecommendations.other != null ? energySavingsRecommendations.other + ' %' : '' }}
+      </dd>
       <dd *ngIf="isEditable" govukSummaryListRowActions>
         <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
       </dd>
@@ -49,7 +60,10 @@
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Total</dt>
       <dd govukSummaryListRowValue>
-        <strong>{{ energySavingsRecommendations.total }}</strong> kWh
+        <strong>
+          {{ energySavingsRecommendations.total | noDataEntered }}
+        </strong>
+        {{ energySavingsRecommendations.total != null ? ' %' : '' }}
       </dd>
     </div>
   </dl>

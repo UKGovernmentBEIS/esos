@@ -10,11 +10,12 @@
  * Do not edit the class manually.
  */
 import { OrganisationAssociatedWithRU } from './organisationAssociatedWithRU';
+import { OrganisationUndertakingDetails } from './organisationUndertakingDetails';
 
 export interface OrganisationStructure {
-  isPartOfArrangement: boolean;
-  isPartOfFranchise: boolean;
-  isTrust: boolean;
-  hasCeasedToBePartOfGroup: boolean;
+  isHighestParent: boolean;
+  isNonComplyingUndertakingsIncluded: boolean;
+  organisationUndertakingDetails?: Array<OrganisationUndertakingDetails>;
   organisationsAssociatedWithRU?: Array<OrganisationAssociatedWithRU>;
+  isGroupStructureChartProvided: boolean;
 }

@@ -36,7 +36,7 @@ describe('EnergyConsumptionSummaryComponent', () => {
 
   class Page extends BasePage<EnergyConsumptionSummaryComponent> {
     get submitButton() {
-      return this.query<HTMLButtonElement>('button[type="button"]');
+      return this.query<HTMLButtonElement>('button[type="submit"]');
     }
   }
 
@@ -87,8 +87,44 @@ describe('EnergyConsumptionSummaryComponent', () => {
         noc: {
           ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.noc,
           energyConsumptionDetails: {
-            ...mockEnergyConsumptionDetails,
-            energyIntensityRatioData: mockEnergyConsumptionDetails.energyIntensityRatioData,
+            additionalInformation: 'Additional info',
+            additionalInformationExists: true,
+            energyIntensityRatioData: {
+              buildings: {
+                additionalInformation: 'Buildings additional information',
+                energyIntensityRatios: [
+                  {
+                    ratio: '50',
+                    unit: 'm2',
+                  },
+                ],
+              },
+              industrialProcesses: {
+                additionalInformation: 'Industrial processes additional information',
+                energyIntensityRatios: [
+                  {
+                    ratio: '70',
+                    unit: 'm2',
+                  },
+                ],
+              },
+            },
+            significantEnergyConsumption: {
+              buildings: 100,
+              industrialProcesses: 45,
+              otherProcesses: 0,
+              significantEnergyConsumptionPct: 96,
+              total: 145,
+              transport: 0,
+            },
+            significantEnergyConsumptionExists: true,
+            totalEnergyConsumption: {
+              buildings: 100,
+              industrialProcesses: 50,
+              otherProcesses: 0,
+              total: 150,
+              transport: 0,
+            },
           },
         },
         nocSectionsCompleted: {

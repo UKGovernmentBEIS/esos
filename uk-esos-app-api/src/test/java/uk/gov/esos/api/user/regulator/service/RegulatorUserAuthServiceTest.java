@@ -3,18 +3,21 @@ package uk.gov.esos.api.user.regulator.service;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.files.common.domain.dto.FileDTO;
 import uk.gov.esos.api.files.common.domain.dto.FileInfoDTO;
+import uk.gov.esos.api.user.core.domain.enumeration.AuthenticationStatus;
 import uk.gov.esos.api.user.core.domain.enumeration.KeycloakUserAttributes;
 import uk.gov.esos.api.user.core.domain.model.UserDetails;
 import uk.gov.esos.api.user.core.service.UserSignatureValidatorService;
 import uk.gov.esos.api.user.core.service.auth.AuthService;
 import uk.gov.esos.api.user.core.service.auth.UserDetailsSaveException;
-import uk.gov.esos.api.user.core.service.auth.UserRegistrationService;
+import uk.gov.esos.api.user.core.service.auth.UserInvitationService;
 import uk.gov.esos.api.user.regulator.domain.RegulatorInvitedUserDetailsDTO;
 import uk.gov.esos.api.user.regulator.domain.RegulatorUserDTO;
 import uk.gov.esos.api.user.regulator.transform.RegulatorInviteUserMapper;
@@ -25,6 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +41,7 @@ class RegulatorUserAuthServiceTest {
 	private AuthService authService;
 	
 	@Mock
-	private UserRegistrationService userRegistrationService;
+	private UserInvitationService userRegistrationService;
 	
 	@Mock
 	private UserSignatureValidatorService userSignatureValidatorService;
@@ -76,7 +80,7 @@ class RegulatorUserAuthServiceTest {
     }
 
 	@Test
-	void registerRegulatorInvitedUser() throws UserDetailsSaveException {
+	void saveInvitedUser() throws UserDetailsSaveException {
 		String email = "email";
 		RegulatorInvitedUserDetailsDTO regulatorInvitedUserDetailsDTO =
 				RegulatorInvitedUserDetailsDTO.builder()
@@ -100,16 +104,16 @@ class RegulatorUserAuthServiceTest {
                 .build();
 		
 		when(regulatorInviteUserMapper.toUserRepresentation(regulatorInvitedUserDetailsDTO)).thenReturn(keycloakUser);
-		when(userRegistrationService.registerInvitedUser(keycloakUser)).thenReturn(userId);
+		when(userRegistrationService.saveInvitedUser(keycloakUser, RoleType.REGULATOR)).thenReturn(userId);
 		
 		//invoke
-		String userIdFound = service.registerRegulatorInvitedUser(regulatorInvitedUserDetailsDTO, signature);
+		String userIdFound = service.saveInvitedUser(regulatorInvitedUserDetailsDTO, signature);
 
 		assertThat(userIdFound).isEqualTo(userId);
 
 		verify(userSignatureValidatorService, times(1)).validateSignature(signature);
 		verify(regulatorInviteUserMapper, times(1)).toUserRepresentation(regulatorInvitedUserDetailsDTO);
-		verify(userRegistrationService, times(1)).registerInvitedUser(keycloakUser);
+		verify(userRegistrationService, times(1)).saveInvitedUser(keycloakUser, RoleType.REGULATOR);
 	}
 
 	@Test
@@ -140,7 +144,28 @@ class RegulatorUserAuthServiceTest {
 		verify(authService, times(1)).getUserRepresentationById(userId);
 		verify(regulatorUserMapper, times(1)).toUserRepresentation(regulatorUserDTO, userId,
 				userRepresentation.getUsername(), userRepresentation.getEmail(), userRepresentation.getAttributes());
-		verify(authService, times(1)).updateUser(userRepresentationUpdated);
+		verify(authService, times(1)).saveUser(userRepresentationUpdated);
+	}
+	
+	@Test
+	void registerUser() {
+		String userId = "user";
+		String username = "username";
+		UserRepresentation userRepresentation = createUserRepresentation(userId, "email1", username);
+
+		when(authService.getUserRepresentationById(userId)).thenReturn(userRepresentation);
+
+		//invoke
+		service.registerUser(userId);
+
+		verify(authService, times(1)).getUserRepresentationById(userId);
+		
+		ArgumentCaptor<UserRepresentation> userCaptor = ArgumentCaptor.forClass(UserRepresentation.class);
+        verify(authService, times(1)).saveUser(userCaptor.capture());
+        var userCaptured = userCaptor.getValue();
+        assertThat(userCaptured.getAttributes()).containsEntry(KeycloakUserAttributes.USER_STATUS.getName(), List.of(
+        		AuthenticationStatus.REGISTERED.name()
+        		));
 	}
 
 	private UserRepresentation createUserRepresentation(String id, String email, String username) {

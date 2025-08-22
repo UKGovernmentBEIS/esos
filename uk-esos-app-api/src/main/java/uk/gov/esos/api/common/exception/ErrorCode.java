@@ -21,7 +21,7 @@ public enum ErrorCode {
     VERIFICATION_LINK_EXPIRED("EMAIL1001", HttpStatus.BAD_REQUEST, "The verification link has expired", true),
 
     /** Codes for Account errors. */
-    ACCOUNT_ALREADY_EXISTS("ACCOUNT1001", HttpStatus.BAD_REQUEST, "Account name already exists"),
+    ACCOUNT_REGISTRATION_NUMBER_ALREADY_EXISTS("ACCOUNT1001", HttpStatus.BAD_REQUEST, "Account registration number already exists"),
     ACCOUNT_FIELD_NOT_AMENDABLE("ACCOUNT1003", HttpStatus.BAD_REQUEST, "Non amendable account fields"),
     ACCOUNT_NOT_RELATED_TO_CA("ACCOUNT1004", HttpStatus.BAD_REQUEST, "Account is not related to competent authority", true),
     ACCOUNT_NOT_RELATED_TO_VB("ACCOUNT1005", HttpStatus.BAD_REQUEST, "Account is not related to verification body", true),
@@ -88,8 +88,6 @@ public enum ErrorCode {
     EXTERNAL_CONTACT_CA_NAME_EMAIL_ALREADY_EXISTS("EXTCONTACT1003", HttpStatus.BAD_REQUEST, "External contact with ca-name and ca-email already exists"),
     EXTERNAL_CONTACT_CA_MISSING("EXTCONTACT1004", HttpStatus.BAD_REQUEST, "External contact ids are missing"),
     
-    AER_REQUEST_IS_NOT_AER("AER1006", HttpStatus.BAD_REQUEST, "Provided request id is not of type AER"),
-    
     /** Unknown code error. */
     INTERNAL_SERVER("INT1001", HttpStatus.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()),
 
@@ -103,6 +101,7 @@ public enum ErrorCode {
 
     /** Token error code. */
     INVALID_TOKEN("TOKEN1001", HttpStatus.BAD_REQUEST, "Invalid Token", true),
+    TOKEN_USER_NOT_INVITEE("TOKEN1002", HttpStatus.BAD_REQUEST, "Invalid Token - Current user is not the invitee", true),
     INVALID_OTP("OTP1001", HttpStatus.BAD_REQUEST, "Invalid OTP", true),
 
     /** Resource not found error code. */
@@ -138,7 +137,35 @@ public enum ErrorCode {
     CUSTOM_REPORT_ERROR("REPORT1001", HttpStatus.BAD_REQUEST, "Custom query could not be executed", true),
 
     /** NOTIFICATION_OF COMPLIANCE */
-    INVALID_NOC("NOC1001", HttpStatus.BAD_REQUEST, "Invalid NOC");
+    INVALID_NOC("NOC1001", HttpStatus.BAD_REQUEST, "Invalid NOC"),
+    NOC_INVALID_SUBMIT_DATE("NOC1002",HttpStatus.BAD_REQUEST, "Invalid Submission Date"),
+
+
+    /** Companies House API error codes */
+    UNAVAILABLE_CH_API("COMPANYINFO1001", HttpStatus.SERVICE_UNAVAILABLE, "Companies House API is currently unavailable"),
+    UNAUTHORIZED_CH_API("COMPANYINFO1002", HttpStatus.SERVICE_UNAVAILABLE, "Companies House API authorization failed"),
+    TOO_MANY_REQUESTS_CH_API("COMPANYINFO1003", HttpStatus.SERVICE_UNAVAILABLE, "Companies House API rate limiting reached"),
+
+	/** Account onboarding registry error codes */
+	DUPLICATE_VALUES_EXIST("ONBOARDING1001", HttpStatus.BAD_REQUEST, "Duplicate values exist in the provided list"),
+	VALUES_ALREADY_EXIST("ONBOARDING1002", HttpStatus.BAD_REQUEST, "Values already exist"),
+
+    /** Action Plan error codes */
+    ACTION_PLAN_INVALID_SUBMIT_DATE("AP1001",HttpStatus.BAD_REQUEST, "Invalid Submission Date"),
+    INVALID_ACTION_PLAN("AP1002", HttpStatus.BAD_REQUEST, "Invalid ACTION PLAN"),
+
+    /** Account Closure */
+    INVALID_ACCOUNT_CLOSURE("ACL1001", HttpStatus.BAD_REQUEST, "Invalid ACCOUNT CLOSURE, reason must not be empty"),
+
+    PROGRESS_UPDATE_1_P3_MISSING_ACTION_PLAN_SBM_DATE("PU11001", HttpStatus.NOT_FOUND, "Action plan submission date does not exist"),
+
+    /** Progress Update  error codes */
+    PROGRESS_UPDATE_INVALID_SUBMIT_DATE("PU11002",HttpStatus.BAD_REQUEST, "Invalid Submission Date"),
+    INVALID_PROGRESS_UPDATE_1("PU11003", HttpStatus.BAD_REQUEST, "Invalid Progress Update 1 "),
+    INVALID_PROGRESS_UPDATE_2("PU21004", HttpStatus.BAD_REQUEST, "Invalid Progress Update 2 "),
+
+
+    ;
 
     /** The error code. */
     private final String code;

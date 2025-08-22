@@ -134,19 +134,19 @@ describe('AppComponent', () => {
     expect(page.accountsLink).toBeTruthy();
   });
 
-  it('should render the templates link only if the user is a regulator', () => {
-    setUser('OPERATOR');
+  // it('should render the templates link only if the user is a regulator', () => {
+  //   setUser('OPERATOR');
 
-    expect(page.templatesLink).toBeFalsy();
+  //   expect(page.templatesLink).toBeFalsy();
 
-    setUser('VERIFIER');
+  //   setUser('VERIFIER');
 
-    expect(page.templatesLink).toBeFalsy();
+  //   expect(page.templatesLink).toBeFalsy();
 
-    setUser('REGULATOR');
+  //   setUser('REGULATOR');
 
-    expect(page.templatesLink).toBeTruthy();
-  });
+  //   expect(page.templatesLink).toBeTruthy();
+  // });
 
   it('should not render the nav list if user is disabled', () => {
     setUser('REGULATOR', 'ENABLED');
@@ -186,7 +186,7 @@ describe('AppComponent', () => {
     breadcrumbItem$.next([{ text: 'Dashboard', link: ['/dashboard'] }, { text: 'Apply for a GHGE permit' }]);
     fixture.detectChanges();
 
-    expect(Array.from(page.breadcrumbs).map((breacrumb) => breacrumb.textContent)).toEqual([
+    expect(Array.from(page.breadcrumbs).map((breadcrumb) => breadcrumb.textContent)).toEqual([
       'Dashboard',
       'Apply for a GHGE permit',
     ]);

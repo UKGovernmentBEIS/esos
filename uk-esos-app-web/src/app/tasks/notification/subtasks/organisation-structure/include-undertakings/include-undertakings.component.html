@@ -1,0 +1,19 @@
+<esos-wizard-step
+  (formSubmit)="submit()"
+  [formGroup]="form"
+  heading="Did the responsible undertaking’s group include any undertakings on 31 December 2022 which either disaggregated from, or ceased to be part of the participant before 5 June 2024 and which are not complying as if they were still a member of the participant?"
+  caption="Organisation structure"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <div
+    formControlName="isNonComplyingUndertakingsIncluded"
+    govuk-radio
+    legend="Did the responsible undertaking’s group include any undertakings on 31 December 2022 which either disaggregated from, or ceased to be part of the participant before 5 June 2024 and which are not complying as if they were still a member of the participant?"
+    [isLegendHidden]="true"
+  >
+    <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>
+    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+  </div>
+</esos-wizard-step>

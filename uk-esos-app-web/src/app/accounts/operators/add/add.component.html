@@ -3,13 +3,15 @@
 
   <ng-container [ngSwitch]="userType$ | async">
     <ng-container *ngSwitchCase="'operator_admin'">
-      <h2 class="govuk-heading-l">Add an advanced user</h2>
+      <esos-page-heading size="l">Add an advanced user</esos-page-heading>
+
       <p class="govuk-body">This user will have permissions to:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>Add and remove other users from your account</li>
         <li>Perform all account tasks</li>
         <li>Submit Notification of Compliance</li>
       </ul>
+
       <p class="govuk-body">
         You should only grant these permissions to a person that is authorised to do so and is employed by the
         organisation.
@@ -17,13 +19,15 @@
     </ng-container>
 
     <ng-container *ngSwitchCase="'operator'">
-      <h2 class="govuk-heading-l">Add a restricted user</h2>
+      <esos-page-heading size="l">Add a restricted user</esos-page-heading>
+
       <p class="govuk-body">This user will have permissions to:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>View account details</li>
         <li>View tasks</li>
         <li>Assign - Re-assign tasks</li>
       </ul>
+
       <p class="govuk-body">They will not be able to add and remove other users from your account.</p>
     </ng-container>
   </ng-container>
@@ -35,14 +39,17 @@
       formControlName="email"
       govuk-text-input
       inputType="email"
+      hint="Enter an email address in the correct format, like name@example.com"
       label="Enter the email address they use to access the service"
       widthClass="govuk-!-width-two-thirds"
     ></div>
     <button esosPendingButton govukButton type="submit">Submit</button>
   </form>
 </ng-container>
+
 <ng-template #confirmSection>
   <govuk-panel [title]="'An account confirmation email has been sent to ' + (confirmAddedEmail$ | async)"></govuk-panel>
+
   <h3 class="govuk-heading-m">What happens next</h3>
   <p class="govuk-body">
     The new user will appear in the specified account once they have confirmed their email address.

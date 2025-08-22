@@ -25,6 +25,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -69,8 +70,6 @@ class NotificationEmailServiceImplTest {
         when(notificationEmail.getAutoSender()).thenReturn(sendFrom);
 
         service.notifyRecipient(emailData, recipientEmail);
-
-        Thread.sleep(100);
         
         Email expectedEmail = Email.builder()
                 .sendFrom(sendFrom)
@@ -80,7 +79,7 @@ class NotificationEmailServiceImplTest {
                 .text(emailNotificationContent.getText())
                 .attachments(emailData.getAttachments())
                 .build();
-        verify(sendEmailService, times(1)).sendMail(expectedEmail);
+        verify(sendEmailService, timeout(100).times(1)).sendMail(expectedEmail);
         verify(notificationTemplateProcessService, times(1)).processEmailNotificationTemplate(emailData.getNotificationTemplateData().getTemplateName(),
                 emailData.getNotificationTemplateData().getCompetentAuthority(),
                 emailData.getNotificationTemplateData().getAccountType(),
@@ -111,8 +110,6 @@ class NotificationEmailServiceImplTest {
         when(notificationEmail.getAutoSender()).thenReturn(sendFrom);
 
         service.notifyRecipients(emailData, List.of(recipientEmail), ccRecipients);
-
-        Thread.sleep(100);
         
         Email expectedEmail = Email.builder()
                 .sendFrom(sendFrom)
@@ -122,7 +119,7 @@ class NotificationEmailServiceImplTest {
                 .text(emailNotificationContent.getText())
                 .attachments(emailData.getAttachments())
                 .build();
-        verify(sendEmailService, times(1)).sendMail(expectedEmail);
+        verify(sendEmailService, timeout(100).times(1)).sendMail(expectedEmail);
         verify(notificationTemplateProcessService, times(1)).processEmailNotificationTemplate(emailData.getNotificationTemplateData().getTemplateName(),
                 emailData.getNotificationTemplateData().getCompetentAuthority(),
                 emailData.getNotificationTemplateData().getAccountType(),
@@ -144,8 +141,6 @@ class NotificationEmailServiceImplTest {
         .thenThrow(BusinessException.class);
 
         assertThrows(BusinessException.class, () -> service.notifyRecipient(emailData, recipientEmail));
-
-        Thread.sleep(100);
         
         verify(notificationTemplateProcessService, times(1)).processEmailNotificationTemplate(emailData.getNotificationTemplateData().getTemplateName(),
                 emailData.getNotificationTemplateData().getCompetentAuthority(),

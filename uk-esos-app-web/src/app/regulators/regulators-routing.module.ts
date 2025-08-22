@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { PendingRequestGuard } from '../core/guards/pending-request.guard';
+import { PendingRequestGuard } from '@core/guards/pending-request.guard';
+
 import { DeleteComponent } from './delete/delete.component';
 import { DeleteResolver } from './delete/delete.resolver';
 import { DetailsComponent } from './details/details.component';
@@ -14,14 +15,15 @@ import { RegulatorsGuard } from './regulators.guard';
 const routes: Routes = [
   {
     path: '',
-    data: { pageTitle: 'Regulator users' },
+    title: 'Regulator Users',
     component: RegulatorsComponent,
     resolve: { regulators: RegulatorsGuard },
     canDeactivate: [PendingRequestGuard],
   },
   {
     path: 'add',
-    data: { pageTitle: 'Add a new user', breadcrumb: true },
+    title: 'Add a new user',
+    data: { breadcrumb: true },
     component: DetailsComponent,
     canDeactivate: [PendingRequestGuard],
   },
@@ -30,8 +32,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        title: 'User details',
         data: {
-          pageTitle: 'User details',
           breadcrumb: ({ user }) => `${user.firstName} ${user.lastName}`,
         },
         pathMatch: 'full',
@@ -44,8 +46,8 @@ const routes: Routes = [
       },
       {
         path: 'delete',
+        title: 'Confirm that this user account will be deleted',
         data: {
-          pageTitle: 'Confirm that this user account will be deleted',
           breadcrumb: ({ user }) => `Delete ${user.firstName} ${user.lastName}`,
         },
         component: DeleteComponent,

@@ -1,28 +1,23 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { AuthService } from '../../core/services/auth.service';
-
 @Component({
   selector: 'esos-regulator-confirmation',
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-panel>You've successfully activated your user account</govuk-panel>
-        <p class="govuk-body">
-          When you sign in to the ESOS reporting service for the first time, you'll be asked to set up two factor
-          authentication using the FreeOTP Authenticator app. You'll be able to view guidance on how to download and use
-          the app.
-        </p>
+        <govuk-panel>You've successfully created a user account</govuk-panel>
+        <p class="govuk-body">Your GOV.UK One Login is now linked to your ESOS user account.</p>
+        <p class="govuk-body">We've sent you an email with your user account details.</p>
         <h3 class="govuk-heading-m">What happens next</h3>
-        <p class="govuk-body">
-          You can sign in to the ESOS reporting service and apply to create a new organisation account.
-        </p>
-        <a routerLink="." (click)="authService.login()" govukLink>Go to my dashboard</a>
+        <p class="govuk-body">Your user account must be activated by Regulator.</p>
+        <button type="button" (click)="goToLanding()" govukButton>Continue</button>
       </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvitationConfirmationComponent {
-  constructor(readonly authService: AuthService) {}
+  goToLanding(): void {
+    window.location.href = '/';
+  }
 }

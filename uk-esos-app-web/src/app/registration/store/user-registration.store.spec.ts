@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { firstValueFrom, of } from 'rxjs';
 
-import { OperatorUserRegistrationWithCredentialsDTO } from 'esos-api';
+import { OperatorUserRegistrationDTO } from 'esos-api';
 
 import { CountryServiceStub } from '../../../testing';
 import { CountryService } from '../../core/services/country.service';
@@ -11,12 +11,10 @@ import { UserRegistrationStore } from './user-registration.store';
 describe('UserRegistrationStore', () => {
   let store: UserRegistrationStore;
 
-  const mockUserDTO: OperatorUserRegistrationWithCredentialsDTO = {
+  const mockUserDTO: OperatorUserRegistrationDTO = {
     firstName: 'John',
     lastName: 'Doe',
     jobTitle: 'job title',
-    emailToken: 'test@email.com',
-    password: 'test',
     address: {
       line1: 'Line 1',
       line2: null,

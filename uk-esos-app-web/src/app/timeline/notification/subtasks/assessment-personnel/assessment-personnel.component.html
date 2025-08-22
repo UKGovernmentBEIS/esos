@@ -1,12 +1,5 @@
 <ng-container *ngIf="vm() as vm">
   <esos-page-heading size="xl">Assessment personnel</esos-page-heading>
 
-  <ng-container *ngIf="vm.data">
-    <h2 class="govuk-heading-m">
-      List the persons who have carried out a significant proportion of site visits and/or gathering the data used for
-      carrying out the energy audit, and/or drafting sections of the ESOS report
-    </h2>
-
-    <esos-personnel-list-template [personnel]="vm.data"></esos-personnel-list-template>
-  </ng-container>
+  <esos-personnel-list-template [personnel]="vm.data"></esos-personnel-list-template>
 </ng-container>

@@ -1,0 +1,24 @@
+@import '../../styles/base';
+
+.govuk-summary-list {
+  .govuk-summary-list__column {
+    border-top: 1px solid $govuk-border-colour !important;
+    border-bottom: none !important;
+
+    & > :last-child {
+      padding-right: 0;
+    }
+
+    .govuk-summary-list__key {
+      font-weight: inherit;
+    }
+
+    @include govuk-media-query($until: tablet) {
+      margin-bottom: govuk-spacing(3) !important;
+    }
+
+    @include govuk-media-query($from: tablet) {
+      display: table-row !important;
+    }
+  }
+}

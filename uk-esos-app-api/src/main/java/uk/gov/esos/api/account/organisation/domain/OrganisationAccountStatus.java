@@ -4,9 +4,10 @@ import uk.gov.esos.api.account.domain.enumeration.AccountStatus;
 
 public enum OrganisationAccountStatus implements AccountStatus {
 
-    UNAPPROVED,
+    AWAITING_APPROVAL,
     LIVE,
-    DENIED
+    DENIED,
+    CLOSED
     ;
 
     @Override

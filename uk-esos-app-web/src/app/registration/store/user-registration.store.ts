@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
+import { AuthStore } from '@core/store';
 import { Store } from '@core/store/store';
 
 import { initialState, UserRegistrationState } from './user-registration.state';
@@ -7,6 +8,12 @@ import { initialState, UserRegistrationState } from './user-registration.state';
 @Injectable({ providedIn: 'root' })
 export class UserRegistrationStore extends Store<UserRegistrationState> {
   constructor() {
-    super(initialState);
+    const authStore = inject(AuthStore);
+    super(initialState(authStore));
+  }
+
+  override reset(): void {
+    const authStore = inject(AuthStore);
+    this.setState(initialState(authStore));
   }
 }

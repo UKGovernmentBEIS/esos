@@ -1,9 +1,11 @@
 <ng-container *ngIf="leadAssessor.leadAssessorType">
-  <h2 class="govuk-heading-m">Was the Lead Assessor internal or external to your organisational group?</h2>
+  <h2 class="govuk-heading-m">
+    Is the lead assessor who reviewed your ESOS assessment internal or external to your corporate group?
+  </h2>
 
   <dl govuk-summary-list>
     <div govukSummaryListColumn>
-      <dd govukSummaryListColumnValue>{{ leadAssessor.leadAssessorType === 'INTERNAL' ? 'Internal' : 'External' }}</dd>
+      <dd govukSummaryListColumnValue>{{ leadAssessor.leadAssessorType | internalExternal }}</dd>
       <dd govukSummaryListColumnActions *ngIf="isEditable">
         <a govukLink [routerLink]="[wizardStep.STEP_TYPE]" [queryParams]="{ change: true }">Change</a>
       </dd>
@@ -12,14 +14,14 @@
 </ng-container>
 
 <ng-container *ngIf="leadAssessor.leadAssessorDetails">
-  <h2 class="govuk-heading-m">Provide details of the Lead Assessor who has reviewed your ESOS notification</h2>
+  <h2 class="govuk-heading-m">Enter the details of the lead assessor who reviewed the assessment</h2>
 
   <dl govuk-summary-list>
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>First name</dt>
       <dd govukSummaryListRowValue>{{ leadAssessor.leadAssessorDetails.firstName }}</dd>
       <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
+        <a govukLink [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
       </dd>
     </div>
 
@@ -27,7 +29,7 @@
       <dt govukSummaryListRowKey>Last name</dt>
       <dd govukSummaryListRowValue>{{ leadAssessor.leadAssessorDetails.lastName }}</dd>
       <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
+        <a govukLink [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
       </dd>
     </div>
 
@@ -35,7 +37,7 @@
       <dt govukSummaryListRowKey>Email address</dt>
       <dd govukSummaryListRowValue>{{ leadAssessor.leadAssessorDetails.email }}</dd>
       <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
+        <a govukLink [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
       </dd>
     </div>
 
@@ -43,7 +45,7 @@
       <dt govukSummaryListRowKey>Professional body</dt>
       <dd govukSummaryListRowValue>{{ leadAssessor.leadAssessorDetails.professionalBody | professionalBody }}</dd>
       <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
+        <a govukLink [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
       </dd>
     </div>
 
@@ -51,7 +53,7 @@
       <dt govukSummaryListRowKey>Membership name</dt>
       <dd govukSummaryListRowValue>{{ leadAssessor.leadAssessorDetails.membershipNumber }}</dd>
       <dd govukSummaryListRowActions *ngIf="isEditable">
-        <a [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
+        <a govukLink [routerLink]="[wizardStep.STEP_DETAILS]" [queryParams]="{ change: true }">Change</a>
       </dd>
     </div>
   </dl>
@@ -60,12 +62,18 @@
 <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
 <ng-container *ngIf="leadAssessor.hasLeadAssessorConfirmation != null">
   <h2 class="govuk-heading-m">
-    Has the Lead Assessor reviewed and confirmed that the assessment meets the ESOS requirements ?
+    Has the lead assessor reviewed and confirmed that the assessment meets the ESOS requirements ?
   </h2>
 
   <dl govuk-summary-list>
     <div govukSummaryListColumn>
-      <dd govukSummaryListColumnValue>{{ leadAssessor.hasLeadAssessorConfirmation | booleanToText }}</dd>
+      <dd govukSummaryListColumnValue>
+        {{
+          leadAssessor.hasLeadAssessorConfirmation
+            ? 'Yes, the lead assessor reviewed and confirmed that the assessment meets the ESOS requirements'
+            : 'Yes, the lead assessor reviewed but not confirmed that the assessment meets the ESOS requirements'
+        }}
+      </dd>
       <dd govukSummaryListColumnActions *ngIf="isEditable">
         <a govukLink [routerLink]="[wizardStep.STEP_REQUIREMENTS]" [queryParams]="{ change: true }">Change</a>
       </dd>

@@ -9,17 +9,15 @@ import { ENERGY_SAVINGS_ACHIEVED_SUB_TASK } from './energy-savings-achieved.help
 export class EnergySavingsAchievedSideEffect extends SideEffect {
   override subtask = ENERGY_SAVINGS_ACHIEVED_SUB_TASK;
 
-  override apply(
-    currentPayload: NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload,
-  ): NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload {
+  apply<T extends NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload>(currentPayload: T): T {
     return produce(currentPayload, (payload) => {
       const energySavingsAchieved = this.store.select(notificationQuery.selectEnergySavingsAchieved)();
 
-      if (energySavingsAchieved?.energySavingCategoriesExist === false) {
+      if (['NO', 'SKIP_QUESTION'].includes(energySavingsAchieved?.energySavingCategoriesExist)) {
         delete payload?.noc?.energySavingsAchieved?.energySavingsCategories;
       }
 
-      if (energySavingsAchieved?.energySavingsRecommendationsExist === false) {
+      if (['NO', 'SKIP_QUESTION'].includes(energySavingsAchieved?.energySavingsRecommendationsExist)) {
         delete payload?.noc?.energySavingsAchieved?.energySavingsRecommendations;
       }
     });

@@ -17,4 +17,10 @@ public @interface AuthorizedRole {
      * The permitted {@link RoleType}.
      */
     RoleType[] roleType();
+    
+    /**
+     * Whether authorities existence is required (in general tr
+     * @return
+     */
+    boolean authoritiesRequired() default true;
 }

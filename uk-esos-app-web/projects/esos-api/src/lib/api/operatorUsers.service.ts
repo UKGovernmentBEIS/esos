@@ -148,9 +148,7 @@ export class OperatorUsersService {
     }
 
     return this.httpClient.get<OperatorUserDTO>(
-      `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(
-        String(accountId),
-      )}/${encodeURIComponent(String(userId))}`,
+      `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(String(accountId))}/${encodeURIComponent(String(userId))}`,
       {
         responseType: <any>responseType_,
         withCredentials: this.configuration.withCredentials,
@@ -228,9 +226,7 @@ export class OperatorUsersService {
     }
 
     return this.httpClient.patch<OperatorUserDTO>(
-      `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(
-        String(accountId),
-      )}/${encodeURIComponent(String(userId))}/reset-2fa`,
+      `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(String(accountId))}/${encodeURIComponent(String(userId))}/reset-2fa`,
       null,
       {
         responseType: <any>responseType_,
@@ -408,9 +404,7 @@ export class OperatorUsersService {
     }
 
     return this.httpClient.patch<OperatorUserDTO>(
-      `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(
-        String(accountId),
-      )}/${encodeURIComponent(String(userId))}`,
+      `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(String(accountId))}/${encodeURIComponent(String(userId))}`,
       operatorUserDTO,
       {
         responseType: <any>responseType_,

@@ -2,11 +2,11 @@
   <esos-page-heading caption="Organisation structure">Check your answers</esos-page-heading>
 
   <ng-container *ngIf="vm.data">
-    <h2 class="govuk-heading-m">Enter details about the organisation structure of the responsible undertaking (RU)</h2>
     <esos-organisation-structure-summary-page
       [vm]="vm"
       [organisationStructure]="organisationStructure"
       (removeOrganisationSummary)="removeOrganisation($event)"
+      (removeUndertakingOrganisationSummary)="removeUndertakingOrganisation($event)"
     ></esos-organisation-structure-summary-page>
   </ng-container>
 
@@ -14,7 +14,7 @@
     *ngIf="vm.sectionsCompleted[vm.subtaskName] !== 'COMPLETED' && vm.isEditable"
     (click)="submit()"
     govukButton
-    type="button"
+    type="submit"
   >
     Confirm and continue
   </button>

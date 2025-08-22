@@ -1,0 +1,30 @@
+<div class="govuk-!-width-two-thirds">
+  <esos-wizard-step
+    [formGroup]="form"
+    [heading]="contentMap.title"
+    [caption]="caption"
+    (formSubmit)="onSubmit()"
+    submitText="Save and continue"
+    [hideSubmit]="false"
+    [showReturnLink]="true"
+  >
+    <p class="govuk-body govuk-!-margin-bottom-7">
+      If a different responsible undertaking from yourself submitted the last notification, you may provide their
+      details on this page.
+    </p>
+
+    <div
+      class="govuk-!-margin-bottom-7"
+      formControlName="otherResponsibleUndertakingName"
+      govuk-text-input
+      [label]="contentMap.otherResponsibleUndertakingName"
+    ></div>
+    <div
+      class="govuk-!-margin-bottom-9"
+      widthClass="govuk-!-width-one-third"
+      formControlName="otherResponsibleUndertakingCrn"
+      govuk-text-input
+      [label]="contentMap.otherResponsibleUndertakingCrn"
+    ></div>
+  </esos-wizard-step>
+</div>

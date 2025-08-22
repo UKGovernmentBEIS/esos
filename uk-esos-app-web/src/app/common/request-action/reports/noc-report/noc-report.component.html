@@ -1,0 +1,142 @@
+<ng-container *ngIf="vm() as vm">
+  <esos-page-heading size="xl">
+    Phase 3 notification of compliance - {{ vm.requestId }}
+    <div class="govuk-!-margin-top-2">
+      <p class="govuk-body">{{ vm.submittedBy }}</p>
+    </div>
+    <div class="govuk-!-margin-top-2">
+      <p class="govuk-body">{{ vm.creationDate | govukDate : 'datetime' }}</p>
+    </div>
+  </esos-page-heading>
+
+  <ng-container *ngIf="vm.nocP3?.reportingObligation as reportingObligation">
+    <esos-page-heading size="l">Reporting obligation</esos-page-heading>
+    <esos-reporting-obligation-summary-page [data]="reportingObligation"></esos-reporting-obligation-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.responsibleUndertaking as responsibleUndertaking">
+    <esos-page-heading size="l">{{ vm.responsibleUndertakingMap.title }}</esos-page-heading>
+    <esos-responsible-undertaking-summary-page
+      [responsibleUndertaking]="responsibleUndertaking"
+      [responsibleUndertakingMap]="vm.responsibleUndertakingMap"
+    ></esos-responsible-undertaking-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.contactPersons as contactPersons">
+    <esos-page-heading size="l">Contact persons</esos-page-heading>
+    <esos-contact-persons-summary-page [data]="contactPersons"></esos-contact-persons-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.organisationStructure">
+    <esos-page-heading size="l">Organisation structure</esos-page-heading>
+    <h2 class="govuk-heading-m">Enter details about the organisation structure of the responsible undertaking (RU)</h2>
+    <esos-organisation-structure-summary-page
+      [vm]="vm.organisationStructureViewModel"
+      [organisationStructure]="vm.organisationStructure"
+      [printMode]="true"
+    ></esos-organisation-structure-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.complianceRoute">
+    <esos-page-heading size="l">Compliance route</esos-page-heading>
+    <esos-compliance-route-summary-page
+      [vm]="vm.complianceRouteViewModel"
+      [complianceRoute]="vm.complianceRoute"
+    ></esos-compliance-route-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.energyConsumptionDetails as energyConsumptionDetails">
+    <esos-page-heading size="l">Energy consumption</esos-page-heading>
+    <esos-energy-consumption-summary-page
+      [energyConsumptionDetails]="energyConsumptionDetails"
+      [changeLink]="{}"
+    ></esos-energy-consumption-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.energySavingsOpportunities as energySavingsOpportunities">
+    <esos-page-heading size="l">Energy savings opportunities</esos-page-heading>
+    <esos-energy-savings-opportunities-summary-page
+      [data]="energySavingsOpportunities"
+      [energySavingsOpportunityMap]="vm.energySavingsOpportunityMap"
+    ></esos-energy-savings-opportunities-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.alternativeComplianceRoutes as alternativeComplianceRoutes">
+    <esos-page-heading size="l">Alternative routes to compliance</esos-page-heading>
+    <esos-alternative-compliance-routes-summary-page
+      [data]="alternativeComplianceRoutes"
+      [alternativeComplianceRoutesMap]="vm.alternativeComplianceRoutesMap"
+    ></esos-alternative-compliance-routes-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.energySavingsAchieved as energySavingsAchieved">
+    <esos-page-heading size="l">Energy savings achieved</esos-page-heading>
+    <esos-energy-savings-achieved-summary-page
+      [data]="energySavingsAchieved"
+      [wizardStep]="{}"
+    ></esos-energy-savings-achieved-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.leadAssessor as leadAssessor">
+    <esos-page-heading size="l">Lead assessor details</esos-page-heading>
+    <esos-lead-assessor-details-summary-page [leadAssessor]="leadAssessor"></esos-lead-assessor-details-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.assessmentPersonnel as assessmentPersonnel">
+    <esos-page-heading size="l">Assessment personnel</esos-page-heading>
+    <h2 class="govuk-heading-m">
+      List the persons who have carried out a significant proportion of site visits and/or gathering the data used for
+      carrying out the energy audit, and/or drafting sections of the ESOS report
+    </h2>
+    <esos-personnel-list-template [personnel]="assessmentPersonnel?.personnel"></esos-personnel-list-template>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.secondCompliancePeriod as secondCompliancePeriod">
+    <esos-page-heading size="l">Second compliance period</esos-page-heading>
+    <esos-compliance-periods-summary-page
+      [compliancePeriod]="secondCompliancePeriod"
+      [isFirstCompliancePeriod]="false"
+      [wizardStep]="vm.compliancePeriodWizardStep"
+    ></esos-compliance-periods-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.firstCompliancePeriod as firstCompliancePeriod">
+    <esos-page-heading size="l">First compliance period</esos-page-heading>
+    <esos-compliance-periods-summary-page
+      [compliancePeriod]="firstCompliancePeriod"
+      [isFirstCompliancePeriod]="true"
+      [wizardStep]="vm.compliancePeriodWizardStep"
+    ></esos-compliance-periods-summary-page>
+    <div style="page-break-after: always">&nbsp;</div>
+    <div style="page-break-before: always">&nbsp;</div>
+  </ng-container>
+
+  <ng-container *ngIf="vm.nocP3?.confirmations as confirmations">
+    <esos-page-heading size="l">Confirmation</esos-page-heading>
+    <esos-confirmation-summary-page [confirmation]="confirmations"></esos-confirmation-summary-page>
+  </ng-container>
+</ng-container>

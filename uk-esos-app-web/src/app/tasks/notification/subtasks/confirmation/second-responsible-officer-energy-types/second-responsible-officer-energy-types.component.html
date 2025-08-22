@@ -1,10 +1,14 @@
 <esos-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  heading="Confirm that a 2nd responsible officer..."
-  caption="Confirmation"
+  heading="Second responsible officer review"
+  caption="Responsible officer confirmation"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <esos-responsibility-types controlName="secondResponsibleOfficerEnergyTypes"></esos-responsibility-types>
+  <esos-responsibility-types
+    controlName="secondResponsibleOfficerEnergyTypes"
+    [isSecondOfficer]="true"
+  ></esos-responsibility-types>
 </esos-wizard-step>

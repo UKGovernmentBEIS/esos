@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { TaskService } from '@common/forms/services/task.service';
-import { RequestTaskStore } from '@common/request-task/+state';
+import { TaskServiceExtended } from '@common/forms/services/task.service';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 
@@ -28,8 +27,7 @@ import { ButtonDirective, LinkDirective } from 'govuk-components';
 })
 export class ReturnToSubmitActionComponent {
   constructor(
-    private readonly store: RequestTaskStore,
-    private readonly service: TaskService<NotificationTaskPayload>,
+    private readonly service: TaskServiceExtended<NotificationTaskPayload>,
     readonly route: ActivatedRoute,
   ) {}
 

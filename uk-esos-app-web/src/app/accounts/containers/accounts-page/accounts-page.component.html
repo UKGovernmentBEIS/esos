@@ -4,47 +4,71 @@
   </ng-container>
 
   <ng-template #search>
-    <ng-container *ngIf="vm.userRoleType !== 'VERIFIER' || vm.total > 0">
-      <govuk-error-summary *ngIf="vm.isSummaryDisplayed" [form]="searchForm"></govuk-error-summary>
+    <div class="govuk-grid-row">
+      <div
+        *ngIf="vm.userRoleType !== 'VERIFIER' || vm.total > 0"
+        [class]="vm.regulatorRelatedActions.length > 0 ? 'govuk-grid-column-two-thirds' : 'govuk-grid-column-full'"
+      >
+        <govuk-error-summary *ngIf="vm.isSummaryDisplayed" [form]="searchForm"></govuk-error-summary>
 
-      <esos-page-heading size="xl">Accounts</esos-page-heading>
-      <span class="govuk-hint">Enter ID, name or code</span>
+        <esos-page-heading size="xl">Accounts</esos-page-heading>
 
-      <div class="govuk-grid-row">
-        <form (ngSubmit)="onSearch()" [formGroup]="searchForm" id="search-form">
-          <div class="govuk-grid-column-full">
-            <div class="govuk-grid-row">
+        <div class="govuk-grid-row">
+          <form (ngSubmit)="onSearch()" [formGroup]="searchForm" id="search-form">
+            <div class="row-flex govuk-!-margin-0">
               <div class="govuk-grid-column-three-quarters">
-                <div formControlName="term" govuk-text-input></div>
+                <div
+                  formControlName="term"
+                  govuk-text-input
+                  hint="Enter at least 3 characters of the Organisation ID, Registration number, or Organisation name"
+                  label="Enter at least 3 characters of the Organisation ID, Registration number, or Organisation name"
+                  [isLabelHidden]="true"
+                  inputType="search"
+                  aria-description="search results will appear below"
+                ></div>
               </div>
-              <div class="govuk-grid-column-one-quarter">
+
+              <div class="govuk-grid-column-one-quarter align-self-end">
                 <button esosPendingButton govukButton type="submit">Search</button>
               </div>
             </div>
-          </div>
-          <div class="govuk-grid-column-full">
-            <ng-container *ngIf="vm.accounts?.length; else noResults">
-              <esos-accounts-list
-                [accounts]="vm.accounts"
-                (selectAccount)="navigateToAccount($event.id)"
-              ></esos-accounts-list>
-              <esos-pagination
-                *ngIf="vm.total > vm.pageSize"
-                [count]="vm.total"
-                (currentPageChange)="onPageChange($event)"
-                [pageSize]="vm.pageSize"
-              ></esos-pagination>
-            </ng-container>
-            <ng-template #noResults>
-              <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                  <p class="govuk-body" tabindex="-1">There are no results to show</p>
+
+            <div class="govuk-grid-column-full">
+              <ng-container
+                *ngIf="vm.accounts?.length; else noResults"
+                aria-live="polite"
+                role="region"
+                aria-atomic="true"
+              >
+                <esos-accounts-list
+                  [accounts]="vm.accounts"
+                  (selectAccount)="navigateToAccount($event.id)"
+                ></esos-accounts-list>
+
+                <govuk-pagination
+                  *ngIf="vm.total > vm.pageSize"
+                  [count]="vm.total"
+                  (currentPageChange)="onPageChange($event)"
+                  [pageSize]="vm.pageSize"
+                  role="group"
+                ></govuk-pagination>
+              </ng-container>
+
+              <ng-template #noResults>
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-full">
+                    <p class="govuk-body" tabindex="-1" role="status">There are no results to show</p>
+                  </div>
                 </div>
-              </div>
-            </ng-template>
-          </div>
-        </form>
+              </ng-template>
+            </div>
+          </form>
+        </div>
       </div>
-    </ng-container>
+
+      <div *ngIf="vm.regulatorRelatedActions.length > 0" class="govuk-grid-column-one-third">
+        <esos-account-related-actions [actionItems]="vm.regulatorRelatedActions"></esos-account-related-actions>
+      </div>
+    </div>
   </ng-template>
 </ng-container>

@@ -13,10 +13,9 @@ import { EnergyConsumption } from './energyConsumption';
 import { SignificantEnergyConsumption } from './significantEnergyConsumption';
 
 export interface FirstCompliancePeriodDetails {
-  organisationalEnergyConsumption: EnergyConsumption;
-  significantEnergyConsumptionExists: boolean;
+  organisationalEnergyConsumption?: number;
+  organisationalEnergyConsumptionBreakdown?: EnergyConsumption;
   significantEnergyConsumption?: SignificantEnergyConsumption;
   explanation?: string;
-  potentialReductionExists: boolean;
   potentialReduction?: EnergyConsumption;
 }

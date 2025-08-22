@@ -6,6 +6,9 @@ export interface OrganisationAccountOpeningApplicationState {
   name: string;
   address: CountyAddressDTO;
   competentAuthority: OrganisationAccountDTO['competentAuthority'];
+  type: OrganisationAccountDTO['type'];
+  otherTypeName?: OrganisationAccountDTO['otherTypeName'];
+  codes: OrganisationAccountDTO['codes'];
 }
 
 export const initialState: OrganisationAccountOpeningApplicationState = {
@@ -20,4 +23,7 @@ export const initialState: OrganisationAccountOpeningApplicationState = {
     postcode: null,
   },
   competentAuthority: 'ENGLAND', // Defaulted to 'ENGLAND', can be changed as necessary.
+  type: null,
+  otherTypeName: null,
+  codes: [],
 };

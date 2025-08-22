@@ -1,66 +1,73 @@
-<ng-container *ngIf="currentTab === 'users'">
-  <govuk-error-summary *ngIf="isSummaryDisplayed$ | async" [form]="usersForm"></govuk-error-summary>
-  <esos-page-heading size="l">Users and contacts</esos-page-heading>
-  <ng-container *ngIf="(isAccountEditable$ | async) === true && isEditable$ | async">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <form
-          (ngSubmit)="addUser(addUserForm.get('userType').value)"
-          [formGroup]="addUserForm"
-          class="govuk-grid-row row-container"
-          id="add-user-form"
-          name="add-user"
-        >
-          <div class="govuk-grid-column-two-thirds">
-            <div
-              [options]="userType$ | async"
-              formControlName="userType"
-              govuk-select
-              label="Add a new user"
-              widthClass="govuk-!-width-full"
-            ></div>
-          </div>
-          <div class="govuk-grid-column-one-third">
-            <button govukButton type="submit">Continue</button>
-          </div>
-        </form>
-      </div>
+<govuk-error-summary *ngIf="isSummaryDisplayed$ | async" [form]="usersForm"></govuk-error-summary>
+<h2 class="govuk-heading-m">Users and contacts</h2>
+
+<ng-container *ngIf="(isAccountEditable$ | async) === true && isEditable$ | async">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <form
+        (ngSubmit)="addUser(addUserForm.get('userType').value)"
+        [formGroup]="addUserForm"
+        class="govuk-grid-row row-container"
+        id="add-user-form"
+        name="add-user"
+      >
+        <div class="govuk-grid-column-two-thirds">
+          <div
+            [options]="userType$ | async"
+            formControlName="userType"
+            govuk-select
+            label="Add a new user"
+            widthClass="govuk-!-width-full"
+          ></div>
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+          <button govukButton type="submit">Continue</button>
+        </div>
+      </form>
     </div>
-    <govuk-details summary="Learn more about user types, roles and permissions">
-      <article>
-        <h3 class="govuk-heading-s govuk-!-padding-bottom-3">User types</h3>
-        <section>
-          <h4 class="govuk-heading-s govuk-!-font-weight-bold">Advanced user</h4>
-          <p class="govuk-!-padding-left-3 govuk-!-padding-bottom-3">
-            Every Organisation account must have at least one person assigned as Advanced user. Advanced users are able
-            to add and delete other users on the account. They can also be assigned as the primary or secondary contact
-            or the service contact.
-          </p>
-        </section>
-        <section>
-          <h4 class="govuk-heading-s govuk-!-font-weight-bold">Restricted user</h4>
-          <p class="govuk-!-padding-left-3 govuk-!-padding-bottom-3">
-            You may need to employ the services of a Restricted user to access this service and help you with all of the
-            tasks relating to your Notification of Compliance.
-          </p>
-        </section>
-      </article>
-      <article>
-        <h3 class="govuk-heading-s govuk-!-padding-bottom-3 govuk-!-padding-top-6">User permissions</h3>
-        <section>
-          <h4 class="govuk-heading-s govuk-!-font-weight-bold">Primary and secondary contacts</h4>
-          <p class="govuk-!-padding-left-3 govuk-!-padding-bottom-3">
-            Responsible for day-to-day operations. The Organisation must have a primary site contact and can have a
-            secondary site contact too. Both can send / receive messages to the relevant Compliance Body and both can
-            initiate and receive tasks on the system. Person who receives all legal and regulatory notices and
-            correspondence. An individual with this role will be the official representative of the legal entity holding
-            the registered account.
-          </p>
-        </section>
-      </article>
-    </govuk-details>
-  </ng-container>
-  <form (ngSubmit)="saveUsers()" [formGroup]="usersForm" id="users-form" name="users">
+  </div>
+
+  <govuk-details summary="Learn more about user types, roles and permissions">
+    <article>
+      <h2 class="govuk-heading-m">User types</h2>
+
+      <section>
+        <h3 class="govuk-heading-s govuk-!-font-weight-bold">Advanced user</h3>
+        <p class="govuk-!-padding-left-3">
+          Every Organisation account must have at least one person assigned as Advanced user. Advanced users are able to
+          add and delete other users on the account. They can also be assigned as the primary or secondary contact or
+          the service contact.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="govuk-heading-s govuk-!-font-weight-bold">Restricted user</h3>
+        <p class="govuk-!-padding-left-3">
+          You may need to employ the services of a Restricted user to access this service and help you with all of the
+          tasks relating to your Notification of Compliance.
+        </p>
+      </section>
+    </article>
+
+    <article>
+      <h2 class="govuk-heading-m govuk-!-padding-top-3">User permissions</h2>
+      <section>
+        <h3 class="govuk-heading-s govuk-!-font-weight-bold">Primary and secondary contacts</h3>
+        <p class="govuk-!-padding-left-3">
+          Responsible for day-to-day operations. The Organisation must have a primary site contact and can have a
+          secondary site contact too. Both can send / receive messages to the relevant Compliance Body and both can
+          initiate and receive tasks on the system. Person who receives all legal and regulatory notices and
+          correspondence. An individual with this role will be the official representative of the legal entity holding
+          the registered account.
+        </p>
+      </section>
+    </article>
+  </govuk-details>
+</ng-container>
+
+<form (ngSubmit)="saveUsers()" [formGroup]="usersForm" id="users-form" name="users">
+  <div class="overflow-auto overflow-auto-table">
     <govuk-table
       [columns]="(isEditable$ | async) ? editableCols : nonEditableCols"
       [form]="usersForm"
@@ -70,79 +77,101 @@
       <ng-template let-column="column" let-index="index" let-row="row">
         <div [ngSwitch]="column.field" class="cell-container">
           <ng-container *ngSwitchCase="'name'">
-            <a
-              *ngIf="
-                (userId$ | async) === row.userId || ((isEditable$ | async) && row.authorityStatus !== 'PENDING');
-                else simpleUserName
-              "
-              [routerLink]="['users', row.userId]"
-            >
-              {{ row | userFullName }}
-            </a>
+            <div class="fixed-width">
+              <a
+                govukLink
+                *ngIf="
+                  (userId$ | async) === row.userId || ((isEditable$ | async) && row.authorityStatus !== 'PENDING');
+                  else simpleUserName
+                "
+                [routerLink]="['users', row.userId]"
+              >
+                {{ row | userFullName }}
+              </a>
+            </div>
             <ng-template #simpleUserName>{{ row | userFullName }}</ng-template>
           </ng-container>
+
           <ng-container *ngSwitchCase="'roleName'" formArrayName="usersArray">
             <ng-container [formGroupName]="index">
               <ng-container
                 *ngIf="
                   (isEditable$ | async) === false ||
                     row.authorityStatus === 'PENDING' ||
-                    !(['operator', 'operator_admin'] | includes: row.roleCode) ||
+                    !(['operator', 'operator_admin'] | includes : row.roleCode) ||
                     usersArray.at(index).get('authorityStatus').value === 'DISABLED';
                   else selectRole
                 "
               >
                 {{ row[column.field] }}
               </ng-container>
+
               <ng-template #selectRole>
                 <div
                   [options]="userTypes"
                   formControlName="roleCode"
                   govuk-select
                   widthClass="govuk-!-width-full"
+                  label="User type"
+                  [isLabelHidden]="true"
                 ></div>
               </ng-template>
             </ng-container>
           </ng-container>
+
           <ng-container *ngSwitchCase="'authorityStatus'" formArrayName="usersArray">
             <ng-container *ngIf="row.authorityStatus !== 'PENDING'; else simpleStatus" [formGroupName]="index">
               <esos-user-locked *ngIf="row.locked"></esos-user-locked>
+
               <div
                 [options]="row.authorityStatus === 'ACCEPTED' ? authorityStatusesAccepted : authorityStatuses"
                 formControlName="authorityStatus"
                 govuk-select
                 widthClass="govuk-!-width-full"
+                label="Account status"
+                [isLabelHidden]="true"
               ></div>
             </ng-container>
+
             <ng-template #simpleStatus>Awaiting confirmation</ng-template>
           </ng-container>
+
           <ng-container *ngSwitchCase="'deleteBtn'">
-            <a [routerLink]="['users', row.userId, 'delete']" govukLink> Remove </a>
+            <a
+              govukLink
+              [routerLink]="['users', row.userId, 'delete']"
+              [attr.aria-label]="'Remove account ' + userFullName(row)"
+            >
+              Remove
+            </a>
           </ng-container>
-          <ng-container *ngSwitchDefault formGroupName="contactTypes">
-            <ng-container *ngIf="(isEditable$ | async) === true; else nonEditableContact">
+
+          <ng-container *ngSwitchDefault formGroupName="usersArray">
+            <ng-container *ngIf="(isEditable$ | async) === true; else nonEditableContact" [formGroupName]="index">
               <div
                 *ngIf="row.authorityStatus !== 'PENDING' && row.roleCode !== 'operator'"
-                [formControlName]="column.field"
-                [index]="index"
-                [isDisabled]="usersArray.at(index).get('authorityStatus').value === 'DISABLED'"
-                [value]="row.userId"
-                esos-radio-option
+                [options]="contactTypeOptions"
+                formControlName="contactType"
+                govuk-select
+                widthClass="govuk-!-width-full"
+                label="Contact type"
+                [isLabelHidden]="true"
               ></div>
             </ng-container>
+
             <ng-template #nonEditableContact>
-              <ng-container *ngIf="row.userId === contactTypes.get(column.field).value"> &#10003;</ng-container>
+              {{ getContactTypeText(row[column.field]) }}
             </ng-template>
           </ng-container>
         </div>
       </ng-template>
     </govuk-table>
+  </div>
 
-    <div *ngIf="isEditable$ | async">
-      <div *ngIf="(accountAuthorities$ | async)?.length > 0" class="govuk-button-group">
-        <button esosPendingButton govukButton type="submit">Save</button>
-        <button govukSecondaryButton type="button" (click)="refresh$.next()">Discard changes</button>
-      </div>
+  <div *ngIf="isEditable$ | async">
+    <div *ngIf="(accountAuthorities$ | async)?.length > 0" class="govuk-button-group">
+      <button esosPendingButton govukButton type="submit">Save</button>
+      <button govukSecondaryButton type="button" (click)="refresh$.next()">Discard changes</button>
     </div>
-  </form>
-</ng-container>
+  </div>
+</form>

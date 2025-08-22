@@ -25,6 +25,8 @@ import uk.gov.esos.api.files.common.domain.dto.FileDTO;
 import uk.gov.esos.api.files.documents.service.FileDocumentTemplateTokenService;
 import uk.gov.esos.api.web.controller.exception.ExceptionControllerAdvice;
 
+import java.nio.charset.StandardCharsets;
+
 @ExtendWith(MockitoExtension.class)
 class FileDocumentTemplateControllerTest {
 
@@ -71,7 +73,7 @@ class FileDocumentTemplateControllerTest {
         assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_PDF.toString());
         assertThat(response.getContentAsByteArray()).isEqualTo(fileContent);
         assertThat(response.getHeader(HttpHeaders.CONTENT_DISPOSITION)).isEqualTo(
-            ContentDisposition.builder("document").filename(name).build().toString());
+            ContentDisposition.builder("document").filename(name, StandardCharsets.UTF_8).build().toString());
 
         verify(fileDocumenTemplateTokenService, times(1)).getFileDTOByToken(token);
     }

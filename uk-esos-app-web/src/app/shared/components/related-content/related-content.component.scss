@@ -1,7 +1,0 @@
-@use 'sass:map';
-@use 'base' as govuk;
-
-.app-related-items {
-  padding-top: govuk.govuk-spacing(2);
-  border-top: govuk.$govuk-border-width-form-element solid map.get(govuk.$govuk-colours, 'blue');
-}

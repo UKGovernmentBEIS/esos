@@ -36,4 +36,11 @@ public interface RequestRepository extends JpaRepository<Request, String> {
 
     @Transactional(readOnly = true)
     boolean existsByAccountIdAndType(Long accountId, RequestType type);
+
+    @Transactional(readOnly = true)
+    boolean existsByAccountIdAndTypeAndStatus(Long accountId, RequestType type, RequestStatus status);
+
+    @Transactional(readOnly = true)
+    Optional<Request> findByAccountIdAndType(Long accountId, RequestType type);
+
 }

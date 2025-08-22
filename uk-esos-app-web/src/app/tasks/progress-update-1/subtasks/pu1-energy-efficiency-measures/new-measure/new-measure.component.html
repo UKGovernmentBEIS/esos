@@ -1,0 +1,75 @@
+<esos-wizard-step
+  [formGroup]="form"
+  [heading]="title()"
+  [caption]="caption"
+  (formSubmit)="onSubmit()"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <div class="govuk-!-width-two-thirds">
+    <p class="govuk-body govuk-!-margin-top-7 govuk-!-margin-bottom-7">
+      Only add measures that were not included in the action plan, but which have been implemented since it was
+      submitted though not later than 5 December 2025. If the measure was implemented after this date it must be
+      considered in Progress Update 2.
+    </p>
+
+    <div
+      class="govuk-!-margin-bottom-8"
+      formControlName="measureName"
+      govuk-text-input
+      [label]="contentMap.measureName.title"
+      labelSize="medium"
+    ></div>
+
+    <div
+      class="govuk-!-margin-bottom-8"
+      govuk-checkboxes
+      formControlName="measureScheme"
+      [legend]="contentMap.measureScheme.title"
+      legendSize="medium"
+      [hint]="contentMap.measureScheme.subtitle"
+    >
+      @for (option of contentMap.measureScheme.options; track $index) {
+        <govuk-checkbox [value]="option" [label]="option | measureScheme">
+          @if (option === 'OTHER') {
+            <ng-container govukConditionalContent>
+              <div
+                formControlName="otherMeasureSchemeName"
+                govuk-text-input
+                [label]="contentMap.otherMeasureSchemeName.title"
+                labelSize="normal"
+              ></div>
+            </ng-container>
+          }
+        </govuk-checkbox>
+      }
+    </div>
+
+    <esos-fieldset-reduction-energy-consumption
+      formControlName="reductionEnergyConsumption2024To2025"
+      [title]="contentMap.reductionEnergyConsumption2024To2025.title"
+      [subtitle]="contentMap.reductionEnergyConsumption2024To2025.subtitle"
+    />
+    <esos-fieldset-reduction-energy-consumption
+      formControlName="reductionEnergyConsumption2023To2024"
+      [title]="contentMap.reductionEnergyConsumption2023To2024.title"
+      [subtitle]="contentMap.reductionEnergyConsumption2023To2024.subtitle"
+    />
+    <esos-fieldset-estimation-method-type
+      formControlName="estimationMethodType"
+      [title]="contentMap.estimationMethodType.title"
+      [subtitle]="contentMap.estimationMethodType.subtitle"
+      [options]="contentMap.estimationMethodType.options"
+      [otherMethodLabel]="contentMap.estimationMethodDescription.title"
+    />
+
+    <div
+      formControlName="measureContext"
+      govuk-textarea
+      [label]="contentMap.measureContext.title"
+      labelSize="medium"
+      [maxLength]="10000"
+    ></div>
+  </div>
+</esos-wizard-step>

@@ -50,14 +50,15 @@ const route = {
 };
 ```
 
-- `boolean`: When `true` the route's breadcrumb will be the same as the `pageTitle` property from the route's data or the route's `title` property (whichever is non-null in that order). When `false`
+- `boolean`: When `true` the route's breadcrumb will be the same as the route's `title` property. When `false`
   the breadcrumbs **will not show at all** on the page e.g.
 
 ```typescript
 const route = {
   path: 'heroes',
   component: HeroesListComponent,
-  data: { pageTitle: 'Heroes', breadcrumb: true },
+  title: 'Heroes',
+  data: { breadcrumb: true },
 };
 ```
 

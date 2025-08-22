@@ -1,33 +1,14 @@
 <esos-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  heading="Confirm that the organisation has no energy responsibility, despite qualifying for the scheme, and that the board director..."
-  caption="Confirmation"
+  heading="Responsible officer review"
+  caption="Responsible officer confirmation"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <p class="govuk-body">
-    In the absence of a board director, an individual with management control can confirm the following.
-  </p>
-  <p class="govuk-body">
-    This should only be another individual with management control where a board director does not exist.
-  </p>
-
-  <div govuk-checkboxes formControlName="noEnergyResponsibilityAssessmentTypes">
-    <govuk-checkbox
-      [value]="'SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME'"
-      label="is satisfied, to the best of their knowledge, that the organisation is within the scope of the scheme"
-    >
-    </govuk-checkbox>
-    <govuk-checkbox
-      [value]="'SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME'"
-      label="is satisfied, to the best of their knowledge, that the organisation is compliant with the scheme"
-    >
-    </govuk-checkbox>
-    <govuk-checkbox
-      [value]="'SATISFIED_WITH_INFORMATION_PROVIDED'"
-      label="is satisfied, to the best of their knowledge, that the information provided in this notification is correct"
-    >
-    </govuk-checkbox>
-  </div>
+  <esos-responsibility-types
+    controlName="noEnergyResponsibilityAssessmentTypes"
+    [hasNoEnergyResponsibility]="true"
+  ></esos-responsibility-types>
 </esos-wizard-step>

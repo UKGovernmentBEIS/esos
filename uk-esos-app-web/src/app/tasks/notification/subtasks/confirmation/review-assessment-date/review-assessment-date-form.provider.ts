@@ -1,8 +1,9 @@
 import { Provider } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, ValidatorFn } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 
 import { RequestTaskStore } from '@common/request-task/+state';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
+import { dateAfterDecSixValidator } from '@tasks/notification/subtasks/confirmation/confirmation.validators';
 import { TASK_FORM } from '@tasks/task-form.token';
 
 import { GovukValidators } from 'govuk-components';
@@ -17,20 +18,8 @@ export const ReviewAssessmentDateFormProvider: Provider = {
     return fb.group({
       reviewAssessmentDate: [
         reviewAssessmentDate ? (new Date(reviewAssessmentDate) as any) : null,
-        [GovukValidators.required('Select a date'), pastDateValidator()],
+        [GovukValidators.required('Select a date'), dateAfterDecSixValidator()],
       ],
     });
   },
 };
-
-function pastDateValidator(): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: string } | null => {
-    const dateAndTime = new Date();
-    const today = new Date(dateAndTime.toDateString());
-    if (control?.value && control?.value instanceof Date) {
-      const inputDate = new Date(control?.value.toDateString());
-      return inputDate >= today ? { invalidDate: `The date must be in the past` } : null;
-    }
-    return null;
-  };
-}

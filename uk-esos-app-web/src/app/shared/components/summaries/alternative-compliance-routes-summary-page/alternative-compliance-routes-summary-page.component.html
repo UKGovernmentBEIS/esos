@@ -1,4 +1,5 @@
-<ng-container *ngIf="data?.totalEnergyConsumptionReduction">
+<!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+<ng-container *ngIf="data?.totalEnergyConsumptionReduction != null">
   <h2 class="govuk-heading-m">{{ alternativeComplianceRoutesMap.totalEnergyConsumptionReduction.title }}</h2>
   <esos-total-energy-consumption-reduction-summary-template
     [totalEnergyConsumptionReduction]="data.totalEnergyConsumptionReduction"
@@ -8,28 +9,31 @@
   ></esos-total-energy-consumption-reduction-summary-template>
 </ng-container>
 
-<ng-container *ngIf="data?.energyConsumptionReduction">
+<ng-container *ngIf="data?.energyConsumptionReduction as energyConsumption">
   <h2 class="govuk-heading-m">{{ alternativeComplianceRoutesMap.energyConsumptionReduction.title }}</h2>
-  <esos-energy-consumption-details-summary-template
+
+  <esos-energy-consumption-details-with-cost-summary-template
     [energyConsumption]="data.energyConsumptionReduction"
     [isEditable]="isEditable"
     [queryParams]="queryParams"
     [changeLink]="changeLink?.ENERGY_CONSUMPTION_REDUCTION"
-  ></esos-energy-consumption-details-summary-template>
+  ></esos-energy-consumption-details-with-cost-summary-template>
 </ng-container>
 
 <ng-container *ngIf="data?.energyConsumptionReductionCategories">
   <h2 class="govuk-heading-m">{{ alternativeComplianceRoutesMap.energyConsumptionReductionCategories.title }}</h2>
-  <esos-energy-saving-categories-details-summary-template
+
+  <esos-energy-savings-categories-details-with-cost-summary-template
     [energySavingsCategories]="data.energyConsumptionReductionCategories"
     [isEditable]="isEditable"
     [queryParams]="queryParams"
     [changeLink]="changeLink?.ENERGY_CONSUMPTION_REDUCTION_CATEGORIES"
-  ></esos-energy-saving-categories-details-summary-template>
+  ></esos-energy-savings-categories-details-with-cost-summary-template>
 </ng-container>
 
 <ng-container *ngIf="data?.assets">
   <h2 class="govuk-heading-m">{{ alternativeComplianceRoutesMap.assets.title }}</h2>
+
   <esos-assets-summary-template
     [assets]="data.assets"
     [isEditable]="isEditable"
@@ -40,6 +44,7 @@
 
 <ng-container *ngIf="data?.iso50001CertificateDetails">
   <h2 class="govuk-heading-m">{{ alternativeComplianceRoutesMap.iso50001CertificateDetails.title }}</h2>
+
   <esos-certificate-details-summary-template
     [certificateDetails]="data.iso50001CertificateDetails"
     [isEditable]="isEditable"
@@ -48,22 +53,49 @@
   ></esos-certificate-details-summary-template>
 </ng-container>
 
-<ng-container *ngIf="data?.decCertificatesDetails?.certificateDetails">
-  <h2 class="govuk-heading-m">{{ alternativeComplianceRoutesMap.decCertificatesDetails.title }}</h2>
-  <esos-certificate-details-list-summary-template
-    [certificatesDetails]="data.decCertificatesDetails.certificateDetails"
-    [isEditable]="isEditable"
-    [queryParams]="queryParams"
-    [changeLink]="changeLink?.DEC_CERTIFICATES_DETAILS"
-  ></esos-certificate-details-list-summary-template>
-</ng-container>
+<div class="govuk-!-margin-bottom-9">
+  <ng-container *ngIf="data?.decCertificatesDetails?.certificateDetails">
+    <h2 class="govuk-heading-m">{{ alternativeComplianceRoutesMap.decCertificatesDetails.title }}</h2>
+
+    <esos-certificate-details-list-summary-template
+      [certificatesDetails]="data.decCertificatesDetails.certificateDetails"
+      [isEditable]="isEditable"
+      [queryParams]="queryParams"
+      [changeLink]="changeLink?.DEC_CERTIFICATES_DETAILS"
+      [columns]="decColumns"
+    ></esos-certificate-details-list-summary-template>
+
+    <a
+      govukSecondaryButton
+      *ngIf="isEditable"
+      class="govuk-!-margin-bottom-0"
+      [routerLink]="['./', changeLink?.DEC_CERTIFICATES_DETAILS]"
+      [queryParams]="queryParams"
+    >
+      Add another certificate
+    </a>
+  </ng-container>
+</div>
 
 <ng-container *ngIf="data?.gdaCertificatesDetails?.certificateDetails">
   <h2 class="govuk-heading-m">{{ alternativeComplianceRoutesMap.gdaCertificatesDetails.title }}</h2>
+
   <esos-certificate-details-list-summary-template
     [certificatesDetails]="data.gdaCertificatesDetails.certificateDetails"
     [isEditable]="isEditable"
     [queryParams]="queryParams"
     [changeLink]="changeLink?.GDA_CERTIFICATES_DETAILS"
+    [columns]="gdaColumns"
   ></esos-certificate-details-list-summary-template>
+
+  <a
+    govukSecondaryButton
+    *ngIf="isEditable"
+    class="govuk-!-margin-bottom-9"
+    [routerLink]="['./', changeLink?.GDA_CERTIFICATES_DETAILS]"
+    [queryParams]="queryParams"
+  >
+    Add another certificate
+  </a>
+  <br />
 </ng-container>

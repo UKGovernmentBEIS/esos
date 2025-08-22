@@ -1,0 +1,24 @@
+<dl govuk-summary-list [hasBorders]="true">
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ reviewContentMap.legend }}</dt>
+    <dd govukSummaryListRowValue>
+      <ul class="govuk-!-margin-0">
+        @for (confirmation of sortedData(); track $index) {
+          <li>{{ confirmation | puReview }}</li>
+        }
+      </ul>
+    </dd>
+
+    @if (isEditable()) {
+      <dd govukSummaryListRowActions>
+        <a
+          govukLink
+          class="govuk-link--no-visited-state"
+          [routerLink]="[stepUrls.REVIEW]"
+          [queryParams]="{ change: true }"
+          >Change</a
+        >
+      </dd>
+    }
+  </div>
+</dl>

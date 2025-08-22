@@ -1,7 +1,0 @@
-@use 'sass:map';
-@import 'settings/all';
-
-.app-related-items {
-  padding-top: govuk-spacing(2);
-  border-top: $govuk-border-width-form-element solid map.get($govuk-colours, 'blue');
-}

@@ -11,9 +11,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.util.CollectionUtils;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestTaskPayloadType;
+import uk.gov.esos.api.workflow.request.flow.esos.accountclosure.domain.AccountClosureApplicationRequestTaskPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.accountorganisationopening.review.domain.OrganisationAccountOpeningApplicationRequestTaskPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.actionplan.phase3.submit.domain.ActionPlanP3ApplicationSubmitRequestTaskPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.edit.domain.NotificationOfComplianceP3ApplicationEditRequestTaskPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.submit.domain.NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.progressupdate1.phase3.submit.domain.ProgressUpdate1P3ApplicationSubmitRequestTaskPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.progressupdate2.phase3.submit.domain.ProgressUpdate2P3ApplicationSubmitRequestTaskPayload;
 import uk.gov.esos.api.workflow.request.flow.payment.domain.PaymentConfirmRequestTaskPayload;
 import uk.gov.esos.api.workflow.request.flow.payment.domain.PaymentMakeRequestTaskPayload;
 import uk.gov.esos.api.workflow.request.flow.payment.domain.PaymentTrackRequestTaskPayload;
@@ -42,6 +46,14 @@ import java.util.UUID;
                 @DiscriminatorMapping(schema = PaymentMakeRequestTaskPayload.class, value = "PAYMENT_MAKE_PAYLOAD"),
                 @DiscriminatorMapping(schema = PaymentTrackRequestTaskPayload.class, value = "PAYMENT_TRACK_PAYLOAD"),
                 @DiscriminatorMapping(schema = PaymentConfirmRequestTaskPayload.class, value = "PAYMENT_CONFIRM_PAYLOAD"),
+
+                @DiscriminatorMapping(schema = ActionPlanP3ApplicationSubmitRequestTaskPayload.class, value = "ACTION_PLAN_P3_APPLICATION_SUBMIT_PAYLOAD"),
+
+                @DiscriminatorMapping(schema = AccountClosureApplicationRequestTaskPayload.class, value = "ACCOUNT_CLOSURE_APPLICATION_SUBMIT_PAYLOAD"),
+
+                @DiscriminatorMapping(schema = ProgressUpdate1P3ApplicationSubmitRequestTaskPayload.class, value = "PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT_PAYLOAD"),
+                @DiscriminatorMapping(schema = ProgressUpdate2P3ApplicationSubmitRequestTaskPayload.class, value = "PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT_PAYLOAD")
+
         },
         discriminatorProperty = "payloadType"
 )
@@ -60,6 +72,14 @@ import java.util.UUID;
     @JsonSubTypes.Type(value = PaymentMakeRequestTaskPayload.class, name = "PAYMENT_MAKE_PAYLOAD"),
     @JsonSubTypes.Type(value = PaymentTrackRequestTaskPayload.class, name = "PAYMENT_TRACK_PAYLOAD"),
     @JsonSubTypes.Type(value = PaymentConfirmRequestTaskPayload.class, name = "PAYMENT_CONFIRM_PAYLOAD"),
+
+    @JsonSubTypes.Type(value = ActionPlanP3ApplicationSubmitRequestTaskPayload.class, name = "ACTION_PLAN_P3_APPLICATION_SUBMIT_PAYLOAD"),
+
+    @JsonSubTypes.Type(value = AccountClosureApplicationRequestTaskPayload.class, name = "ACCOUNT_CLOSURE_APPLICATION_SUBMIT_PAYLOAD"),
+
+    @JsonSubTypes.Type(value = ProgressUpdate1P3ApplicationSubmitRequestTaskPayload.class, name = "PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT_PAYLOAD"),
+    @JsonSubTypes.Type(value = ProgressUpdate2P3ApplicationSubmitRequestTaskPayload.class, name = "PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT_PAYLOAD"),
+
 })
 @Data
 @SuperBuilder

@@ -34,9 +34,11 @@ export class AuthService {
       leaf = leaf.firstChild;
     }
 
+    const redirectUri = (options?.redirectUri && !leaf.data?.blockSignInRedirect) ? options.redirectUri : location.origin;
+
     return this.keycloakService.login({
       ...options,
-      ...(leaf.data?.blockSignInRedirect ? { redirectUri: location.origin } : null),
+      redirectUri,
     });
   }
 
@@ -75,7 +77,7 @@ export class AuthService {
     return this.termsAndConditionsService.getLatestTerms().pipe(tap((terms) => this.store.setTerms(terms)));
   }
 
-  loadIsLoggedIn(): Observable<boolean> {
-    return from(this.keycloakService.isLoggedIn()).pipe(tap((isLoggedIn) => this.store.setIsLoggedIn(isLoggedIn)));
+  private loadIsLoggedIn(): Observable<boolean> {
+    return from([this.keycloakService.isLoggedIn()]).pipe(tap((isLoggedIn) => this.store.setIsLoggedIn(isLoggedIn)));
   }
 }

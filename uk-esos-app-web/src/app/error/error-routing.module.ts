@@ -8,7 +8,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 const routes: Routes = [
   {
     path: '500',
-    data: { pageTitle: 'Sorry, there is a problem with the service' },
+    title: 'Sorry, there is a problem with the service',
     component: InternalServerErrorComponent,
   },
   {
@@ -17,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: '404',
-    data: { pageTitle: 'Page not found' },
+    title: 'Page not found',
     component: PageNotFoundComponent,
   },
 ];

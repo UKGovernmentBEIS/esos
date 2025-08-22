@@ -89,10 +89,10 @@ public class RegulatorAuthorityController {
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-@AuthorizedRole(roleType = RoleType.REGULATOR)
-public ResponseEntity<RegulatorUsersAuthoritiesInfoDTO> getCaRegulators(@Parameter(hidden = true) AppUser pmrvUser) {
-
-        return new ResponseEntity<>(regulatorUserAuthorityQueryOrchestrator.getCaUsersAuthoritiesInfo(pmrvUser),
-        HttpStatus.OK);
-        }
-        }
+	@AuthorizedRole(roleType = RoleType.REGULATOR)
+	public ResponseEntity<RegulatorUsersAuthoritiesInfoDTO> getCaRegulators(
+			@Parameter(hidden = true) AppUser pmrvUser) {
+		return new ResponseEntity<>(regulatorUserAuthorityQueryOrchestrator.getCaUsersAuthoritiesInfo(pmrvUser),
+				HttpStatus.OK);
+	}
+}

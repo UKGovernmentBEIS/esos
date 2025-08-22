@@ -5,42 +5,61 @@ import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { OrganisationStructureSummaryPageComponent } from '@shared/components/summaries';
 import { BasePage } from '@testing';
 
+import { OrganisationDetails, OrganisationStructure } from 'esos-api';
+
 describe('OrganisationStructureSummaryPageComponent', () => {
   let component: OrganisationStructureSummaryPageComponent;
   let fixture: ComponentFixture<OrganisationStructureSummaryPageComponent>;
   let page: Page;
 
   const organisationStructure = {
-    hasCeasedToBePartOfGroup: false,
-    isPartOfArrangement: true,
-    isPartOfFranchise: false,
-    isTrust: true,
+    isHighestParent: true,
+    isNonComplyingUndertakingsIncluded: false,
     organisationsAssociatedWithRU: [
       {
+        registrationNumberExist: true,
+        registrationNumber: '00000000',
         hasCeasedToBePartOfGroup: true,
-        isCoveredByThisNotification: true,
+        classificationCodesDetails: {
+          areSameAsRU: false,
+          codes: {
+            type: 'SIC',
+            codes: ['111111'],
+          },
+        },
         isParentOfResponsibleUndertaking: true,
         isPartOfArrangement: true,
         isPartOfFranchise: false,
         isSubsidiaryOfResponsibleUndertaking: true,
-        isTrust: false,
         organisationName: 'Organisation name',
       },
     ],
-  };
+    isGroupStructureChartProvided: true,
+  } as OrganisationStructure;
 
   const route = new ActivatedRoute();
   route.snapshot = new ActivatedRouteSnapshot();
   route.snapshot.queryParams = { page: 1 };
 
   class Page extends BasePage<OrganisationStructureSummaryPageComponent> {
+    get heading() {
+      return this.queryAll<HTMLHeadElement>('h2').map((el) => el?.textContent?.trim());
+    }
+
     get summaryListValues() {
       return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
         .map((row) => [row.querySelector('dt'), row.querySelectorAll('dd')[0]])
         .map((pair) => pair.map((element) => element?.textContent?.trim()));
     }
+
+    get summaryListColumnValues() {
+      return this.queryAll<HTMLDivElement>('.govuk-summary-list__column')
+        .map((row) => [row.querySelectorAll('dd')[0]])
+        .map((pair) => pair.map((element) => element?.textContent?.trim()));
+    }
+
     get table() {
-      return this.query('.govuk-table');
+      return this.queryAll('.govuk-table');
     }
   }
 
@@ -61,7 +80,7 @@ describe('OrganisationStructureSummaryPageComponent', () => {
         line2: 'Line 2',
         name: 'Ru Org Name',
         postcode: 'Postcode',
-      },
+      } as OrganisationDetails,
     };
     component.organisationStructure = signal(organisationStructure);
     page = new Page(fixture);
@@ -72,20 +91,24 @@ describe('OrganisationStructureSummaryPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should display the titles', () => {
+    expect(page.heading).toEqual([
+      'Is the responsible undertaking a highest parent which has agreed to aggregate with one or more other highest parents to comply as one participant?',
+      'Did the responsible undertaking’s group include any undertakings on 31 December 2022 which either disaggregated from, or ceased to be part of the participant before 5 June 2024 and which are not complying as if they were still a member of the participant?',
+      "Add information on the organisations complying as one participant in the responsible undertaking's notification for its corporate group",
+    ]);
+  });
+
   it('should display summary details and list', () => {
     expect(page.summaryListValues).toEqual([
       [
-        'Is the responsible undertaking part of an arrangement where 2 or more highest UK parent groups are complying as 1 participant?',
+        'Do you also wish to provide a corporate group structure chart or other information setting out the relationship between the RU and relevant undertakings complying with the scheme as one participant?',
         'Yes',
-      ],
-      ['Is the responsible undertaking part of a franchise group?', 'No'],
-      ['Is the responsible undertaking a trust?', 'Yes'],
-      [
-        'Has the responsible undertaking ceased to be a part of the corporate group between 31 December 2022 and 5 June 2024?',
-        'No',
       ],
     ]);
 
-    expect(page.table).toBeTruthy();
+    expect(page.summaryListColumnValues).toEqual([['Yes'], ['No']]);
+
+    expect(page.table.length).toEqual(1);
   });
 });

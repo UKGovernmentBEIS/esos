@@ -4,7 +4,7 @@ import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { AccordionComponent, AccordionItemComponent, AccordionItemSummaryDirective } from './accordion';
+import { AccordionComponent, AccordionItemComponent } from './accordion';
 import { BackLinkComponent } from './back-link';
 import { BreadcrumbsComponent } from './breadcrumbs';
 import { CheckboxComponent, CheckboxesComponent } from './checkboxes';
@@ -28,6 +28,7 @@ import { FooterComponent, FooterNavListComponent, MetaInfoComponent } from './fo
 import { FormBuilderService } from './form/form-builder.service';
 import { HeaderActionsListComponent, HeaderComponent, HeaderNavListComponent } from './header';
 import { NotificationBannerComponent } from './notification-banner';
+import { PaginationBlockComponent, PaginationComponent } from './pagination';
 import { PanelComponent } from './panel';
 import { PhaseBannerComponent } from './phase-banner';
 import { RadioComponent, RadioOptionComponent } from './radio';
@@ -55,7 +56,6 @@ import { WarningTextComponent } from './warning-text';
   imports: [
     AccordionComponent,
     AccordionItemComponent,
-    AccordionItemSummaryDirective,
     BackLinkComponent,
     BreadcrumbsComponent,
     ButtonDirective,
@@ -85,6 +85,8 @@ import { WarningTextComponent } from './warning-text';
     LinkDirective,
     MetaInfoComponent,
     NotificationBannerComponent,
+    PaginationBlockComponent,
+    PaginationComponent,
     PanelComponent,
     PhaseBannerComponent,
     RadioComponent,
@@ -114,7 +116,6 @@ import { WarningTextComponent } from './warning-text';
   exports: [
     AccordionComponent,
     AccordionItemComponent,
-    AccordionItemSummaryDirective,
     BackLinkComponent,
     BreadcrumbsComponent,
     ButtonDirective,
@@ -142,6 +143,8 @@ import { WarningTextComponent } from './warning-text';
     LinkDirective,
     MetaInfoComponent,
     NotificationBannerComponent,
+    PaginationBlockComponent,
+    PaginationComponent,
     PanelComponent,
     PhaseBannerComponent,
     RadioComponent,

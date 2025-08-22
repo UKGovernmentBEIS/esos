@@ -15,6 +15,7 @@ public final class EmailNotificationTemplateConstants {
     public static final String USER_ACCOUNT_CREATED_USER_EMAIL = "userEmail";
     public static final String ACCOUNT_APPLICATION_REJECTED_REASON = "reason";
     public static final String ACCOUNT_NAME = "accountName";
+    public static final String ACCOUNT_ID = "accountId";
     public static final String ACCOUNT_PRIMARY_CONTACT = "accountPrimaryContact";
     public static final String EMITTER_ID = "emitterId";
 
@@ -55,6 +56,8 @@ public final class EmailNotificationTemplateConstants {
     public static final String USER_FEEDBACK_TASKS_RATE = "tasksRate";
     public static final String USER_FEEDBACK_TASKS_RATE_REASON = "tasksRateReason";
     public static final String USER_FEEDBACK_IMPROVEMENT_SUGGESTION = "improvementSuggestion";
+
+    public static final String ACCOUNT_CLOSURE_JUSTIFICATION = "justification";
 
     public static final String DOMAIN_URL = "domainUrl";
 

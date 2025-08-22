@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.esos.api.account.service.AccountQueryService;
 import uk.gov.esos.api.authorization.AuthorityConstants;
 import uk.gov.esos.api.authorization.core.domain.dto.RoleDTO;
 import uk.gov.esos.api.authorization.core.service.RoleService;
@@ -34,7 +33,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -52,9 +50,6 @@ class OperatorUserNotificationGatewayTest {
 
     @Mock
     private RoleService roleService;
-
-    @Mock
-    private AccountQueryService accountQueryService;
 
     @Mock
     private NotificationEmailService notificationEmailService;
@@ -246,21 +241,14 @@ class OperatorUserNotificationGatewayTest {
 
     @Test
     void notifyUsersUpdateStatus() {
-        Long accountId = 1L;
-        String installationName = "installationName";
         String roleName = "roleName";
         RoleDTO roleDTO = RoleDTO.builder().code(AuthorityConstants.OPERATOR_ROLE_CODE).name(roleName).build();
 
         NewUserActivated operator1 = NewUserActivated.builder().userId("operator1").roleCode(AuthorityConstants.OPERATOR_ROLE_CODE).build();
         NewUserActivated operator2 = NewUserActivated.builder().userId("operator2").roleCode(AuthorityConstants.OPERATOR_ROLE_CODE).build();
-        NewUserActivated emitter1 = NewUserActivated.builder().userId("emitter1").accountId(accountId)
-                .roleCode(AuthorityConstants.EMITTER_CONTACT).build();
-        NewUserActivated emitter2 = NewUserActivated.builder().userId("emitter2").accountId(accountId)
-                .roleCode(AuthorityConstants.EMITTER_CONTACT).build();
 
-        List<NewUserActivated> activatedOperators = List.of(operator1, operator2, emitter1, emitter2);
+        List<NewUserActivated> activatedOperators = List.of(operator1, operator2);
 
-        when(accountQueryService.getAccountName(accountId)).thenReturn(installationName);
         when(roleService.getRoleByCode(AuthorityConstants.OPERATOR_ROLE_CODE)).thenReturn(roleDTO);
 
         // Invoke
@@ -268,51 +256,11 @@ class OperatorUserNotificationGatewayTest {
 
         // Verify
         verify(userNotificationService, times(1))
-                .notifyEmitterContactAccountActivation(emitter1.getUserId(), installationName);
-        verify(userNotificationService, times(1))
-                .notifyEmitterContactAccountActivation(emitter2.getUserId(), installationName);
-        verify(userNotificationService, times(1))
                 .notifyUserAccountActivation(operator1.getUserId(), roleDTO.getName());
         verify(userNotificationService, times(1))
                 .notifyUserAccountActivation(operator2.getUserId(), roleDTO.getName());
         verify(roleService, times(2)).getRoleByCode(roleDTO.getCode());
-        verify(accountQueryService, times(2))
-                .getAccountName(accountId);
-        verifyNoMoreInteractions(userNotificationService, accountQueryService);
-    }
-
-    @Test
-    void notifyUsersUpdateStatus_with_exception() {
-        Long accountId = 1L;
-        String installationName = "installationName";
-        String roleName = "roleName";
-        RoleDTO roleDTO = RoleDTO.builder().code(AuthorityConstants.OPERATOR_ROLE_CODE).name(roleName).build();
-
-        NewUserActivated operator1 = NewUserActivated.builder().userId("operator1").roleCode(AuthorityConstants.OPERATOR_ROLE_CODE).build();
-        NewUserActivated operator2 = NewUserActivated.builder().userId("operator2").roleCode(AuthorityConstants.OPERATOR_ROLE_CODE).build();
-        NewUserActivated emitter1 = NewUserActivated.builder().userId("emitter1").accountId(accountId)
-                .roleCode(AuthorityConstants.EMITTER_CONTACT).build();
-
-        List<NewUserActivated> activatedOperators = List.of(emitter1, operator1, operator2);
-
-        when(accountQueryService.getAccountName(accountId))
-                .thenThrow(NullPointerException.class);
-        when(roleService.getRoleByCode(AuthorityConstants.OPERATOR_ROLE_CODE)).thenReturn(roleDTO);
-
-        // Invoke
-        operatorUserNotificationGateway.notifyUsersUpdateStatus(activatedOperators);
-
-        // Verify
-        verify(userNotificationService, never())
-                .notifyEmitterContactAccountActivation(emitter1.getUserId(), installationName);
-        verify(userNotificationService, times(1))
-                .notifyUserAccountActivation(operator1.getUserId(), roleDTO.getName());
-        verify(userNotificationService, times(1))
-                .notifyUserAccountActivation(operator2.getUserId(), roleDTO.getName());
-        verify(roleService, times(2)).getRoleByCode(roleDTO.getCode());
-        verify(accountQueryService, times(1))
-                .getAccountName(accountId);
-        verifyNoMoreInteractions(userNotificationService, accountQueryService);
+        verifyNoMoreInteractions(userNotificationService);
     }
 
     private UserNotificationWithRedirectionLinkInfo.TokenParams expectedInvitationLinkTokenParams(JwtTokenActionEnum jwtTokenAction,

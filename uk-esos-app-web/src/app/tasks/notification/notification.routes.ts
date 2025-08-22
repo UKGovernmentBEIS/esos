@@ -84,7 +84,7 @@ export const NOTIFICATION_ROUTES: Routes = [
       },
       {
         path: 'submit',
-        loadChildren: () => import('./submit').then((r) => r.SUBMIT_ROUTES),
+        loadChildren: () => import('./submit').then((r) => r.NOTIFICATION_SUBMIT_ROUTES),
       },
       {
         path: 'send-for-review',

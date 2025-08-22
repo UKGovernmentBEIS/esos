@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -25,7 +26,7 @@ import { COMPLIANCE_PERIOD_SUB_TASK, CompliancePeriod, CompliancePeriodSubtask }
   templateUrl: './explanation-of-changes-to-total-energy-consumption.component.html',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RadioOptionComponent, WizardStepComponent, RadioComponent, SharedModule],
+  imports: [ReactiveFormsModule, RadioOptionComponent, WizardStepComponent, RadioComponent, SharedModule, NgIf],
   providers: [explanationOfChangesToTotalEnergyConsumptionFormProvider],
 })
 export class ExplanationOfChangesToTotalEnergyConsumptionComponent implements OnInit {

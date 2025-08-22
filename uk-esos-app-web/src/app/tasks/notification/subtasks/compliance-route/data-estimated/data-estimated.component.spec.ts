@@ -1,24 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
-import { of } from 'rxjs';
-
+import { TaskService } from '@common/forms/services/task.service';
 import { SideEffectsHandler } from '@common/forms/side-effects';
 import { RequestTaskStore } from '@common/request-task/+state';
-import {
-  provideNotificationSideEffects,
-  provideNotificationStepFlowManagers,
-  provideNotificationTaskServices,
-} from '@tasks/notification/notification.providers';
-import {
-  mockComplianceRoute,
-  mockNotificationRequestTask,
-  mockStateBuild,
-} from '@tasks/notification/testing/mock-data';
-import { TaskItemStatus } from '@tasks/task-item-status';
+import { NotificationTaskPayload } from '@tasks/notification/notification.types';
+import { NotificationService } from '@tasks/notification/services/notification.service';
+import { mockComplianceRoute, mockNotificationRequestTask } from '@tasks/notification/testing/mock-data';
 import { ActivatedRouteStub, BasePage, MockType } from '@testing';
-
-import { RequestTaskActionPayload, TasksService } from 'esos-api';
 
 import { DataEstimatedComponent } from './data-estimated.component';
 
@@ -26,27 +15,24 @@ describe('DataEstimatedComponent', () => {
   let component: DataEstimatedComponent;
   let fixture: ComponentFixture<DataEstimatedComponent>;
   let store: RequestTaskStore;
-  let router: Router;
   let page: Page;
 
   const route = new ActivatedRouteStub();
 
-  const tasksService: MockType<TasksService> = {
-    processRequestTaskAction: jest.fn().mockReturnValue(of(null)),
-  };
-
-  const setState = (areDataEstimated?: boolean) => {
-    store.setState(
-      mockStateBuild(
-        { complianceRoute: { ...mockComplianceRoute, areDataEstimated } },
-        { complianceRoute: TaskItemStatus.IN_PROGRESS },
-      ),
-    );
+  const taskService: MockType<NotificationService> = {
+    saveSubtask: jest.fn().mockImplementation(),
+    get payload(): NotificationTaskPayload {
+      return {
+        noc: {
+          complianceRoute: mockComplianceRoute,
+        } as any,
+      };
+    },
   };
 
   class Page extends BasePage<DataEstimatedComponent> {
-    get areDataEstimatedRadios() {
-      return this.queryAll<HTMLInputElement>('input[name$="areDataEstimated"]');
+    get estimatedCalculationTypesCheckboxes() {
+      return this.queryAll<HTMLInputElement>('input[name$="estimatedCalculationTypes"]');
     }
     get submitButton() {
       return this.query<HTMLButtonElement>('button[type="submit"]');
@@ -62,23 +48,19 @@ describe('DataEstimatedComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideNotificationTaskServices(),
-        provideNotificationSideEffects(),
-        provideNotificationStepFlowManagers(),
         RequestTaskStore,
         SideEffectsHandler,
         { provide: ActivatedRoute, useValue: route },
-        { provide: TasksService, useValue: tasksService },
+        { provide: TaskService, useValue: taskService },
       ],
     });
 
     store = TestBed.inject(RequestTaskStore);
-    setState();
+    store.setState(mockNotificationRequestTask);
 
     fixture = TestBed.createComponent(DataEstimatedComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);
-    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -87,39 +69,51 @@ describe('DataEstimatedComponent', () => {
   });
 
   it('should show errors', () => {
+    const taskServiceSpy = jest.spyOn(taskService, 'saveSubtask');
     page.submitButton.click();
     fixture.detectChanges();
 
     expect(page.errorSummary).toBeTruthy();
     expect(page.errors.map((error) => error.textContent.trim())).toEqual(['Select an option']);
-    expect(tasksService.processRequestTaskAction).not.toHaveBeenCalled();
+    expect(taskServiceSpy).not.toHaveBeenCalled();
   });
 
-  it('should submit and navigate to next page', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-
-    page.areDataEstimatedRadios[0].click();
+  it('should show error if None of the above is selected along with another option', () => {
+    page.estimatedCalculationTypesCheckboxes[0].click();
+    page.estimatedCalculationTypesCheckboxes[4].click();
     page.submitButton.click();
-    setState(true);
-    delete mockComplianceRoute.twelveMonthsVerifiableDataUsed;
     fixture.detectChanges();
 
-    expect(tasksService.processRequestTaskAction).toHaveBeenCalledWith({
-      requestTaskActionType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT',
-      requestTaskId: 2,
-      requestTaskActionPayload: {
-        payloadType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD',
-        noc: {
-          ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.noc,
-          complianceRoute: { ...mockComplianceRoute, areDataEstimated: true },
-        },
-        nocSectionsCompleted: {
-          ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.nocSectionsCompleted,
-          complianceRoute: 'IN_PROGRESS',
-        },
-      } as RequestTaskActionPayload,
-    });
+    expect(page.errorSummary).toBeTruthy();
+    expect(page.errors.map((error) => error.textContent.trim())).toEqual([
+      'Select the calculations for which you used estimates, or select ‘None of the above’',
+    ]);
+  });
 
-    expect(navigateSpy).toHaveBeenCalledWith(['../estimation-methods-recorded'], { relativeTo: route });
+  it('should select the first two options and navigate to next page', () => {
+    const taskServiceSpy = jest.spyOn(taskService, 'saveSubtask');
+
+    page.estimatedCalculationTypesCheckboxes[0].click();
+    page.estimatedCalculationTypesCheckboxes[1].click();
+    page.submitButton.click();
+    fixture.detectChanges();
+
+    expect(page.errorSummary).toBeFalsy();
+    expect(taskServiceSpy).toHaveBeenCalledWith({
+      subtask: 'complianceRoute',
+      currentStep: 'dataEstimated',
+      route: route,
+      payload: {
+        noc: {
+          complianceRoute: {
+            ...mockComplianceRoute,
+            estimatedCalculationTypes: [
+              'TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION',
+              'CONVERSION_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION',
+            ],
+          },
+        },
+      },
+    });
   });
 });

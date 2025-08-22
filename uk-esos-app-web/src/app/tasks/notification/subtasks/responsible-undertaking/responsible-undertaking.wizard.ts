@@ -5,15 +5,17 @@ export const isWizardCompleted = (responsibleUndertaking?: ResponsibleUndertakin
     organisationDetails,
     tradingDetails,
     organisationContactDetails,
+    isBehalfOfTrust,
     hasOverseasParentDetails,
     overseasParentDetails,
   } = responsibleUndertaking ?? {};
+
+  const isRegistationNumberCompleted = organisationDetails?.registrationNumberExist != null;
 
   const isOrganisationDetailsCompleted =
     !!organisationDetails?.name &&
     !!organisationDetails?.line1 &&
     !!organisationDetails?.city &&
-    !!organisationDetails?.county &&
     !!organisationDetails?.postcode;
 
   const isTradingDetailsCompleted =
@@ -22,12 +24,16 @@ export const isWizardCompleted = (responsibleUndertaking?: ResponsibleUndertakin
   const isOrganisationContactDetailsCompleted =
     !!organisationContactDetails?.email && !!organisationContactDetails?.phoneNumber;
 
+  const isNotificationCompleted = isBehalfOfTrust != null;
+
   const isOverseasParentDetailsCompleted = !!overseasParentDetails?.name;
 
   return (
+    isRegistationNumberCompleted &&
     isOrganisationDetailsCompleted &&
     isTradingDetailsCompleted &&
     isOrganisationContactDetailsCompleted &&
+    isNotificationCompleted &&
     (hasOverseasParentDetails
       ? hasOverseasParentDetails && isOverseasParentDetailsCompleted
       : hasOverseasParentDetails !== undefined)

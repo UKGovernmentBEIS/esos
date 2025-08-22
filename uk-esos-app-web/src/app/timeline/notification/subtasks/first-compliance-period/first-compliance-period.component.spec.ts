@@ -59,23 +59,22 @@ describe('FirstCompliancePeriodComponent', () => {
       ['Buildings', '4000 kWh'],
       ['Transport', '2500 kWh'],
       ['Industrial processes', '1500 kWh'],
-      ['Other processes', '800 kWh'],
+      ['Other energy uses', '800 kWh'],
       ['Total', '8800 kWh'],
       ['Buildings', '5000 kWh'],
       ['Transport', '3000 kWh'],
       ['Industrial processes', '2000 kWh'],
-      ['Other processes', '1000 kWh'],
+      ['Other energy uses', '1000 kWh'],
       ['Total', '11000 kWh  (25% of total energy consumption)'],
-      ['Explanation for changes in total consumption'],
       ['Buildings', '4000 kWh'],
       ['Transport', '2500 kWh'],
       ['Industrial processes', '1500 kWh'],
-      ['Other processes', '800 kWh'],
+      ['Other energy uses', '800 kWh'],
       ['Total', '8800 kWh'],
     ]);
   });
 
   it('should show summary column values', () => {
-    expect(page.summaryColumnValues).toEqual([['Yes'], ['Yes'], ['Yes']]);
+    expect(page.summaryColumnValues).toEqual([['Yes'], ['0'], ['Explanation for changes in total consumption']]);
   });
 });

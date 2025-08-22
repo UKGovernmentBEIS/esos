@@ -10,22 +10,8 @@ import { filter, map } from 'rxjs';
   standalone: true,
   imports: [RouterLink, AsyncPipe],
   template: `
-    <div>
-      <a class="govuk-skip-link" [routerLink]="routerLink | async" queryParamsHandling="preserve" [fragment]="anchor">
-        Skip to main content
-      </a>
-    </div>
+    <a class="govuk-skip-link" [routerLink]="routerLink | async" [fragment]="anchor"> Skip to main content </a>
   `,
-  styles: [
-    `
-      div {
-        float: left;
-        margin: 0.3em 0 0 0.3em;
-        z-index: 1;
-        position: absolute;
-      }
-    `,
-  ],
 })
 export class SkipLinkComponent {
   @Input() anchor = 'main-content';

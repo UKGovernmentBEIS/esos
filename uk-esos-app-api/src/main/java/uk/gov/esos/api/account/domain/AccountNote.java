@@ -6,12 +6,14 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import uk.gov.esos.api.common.note.Note;
 
 @Entity
 @SequenceGenerator(name = "default_note_id_generator", sequenceName = "account_note_seq", allocationSize = 1)
+@Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

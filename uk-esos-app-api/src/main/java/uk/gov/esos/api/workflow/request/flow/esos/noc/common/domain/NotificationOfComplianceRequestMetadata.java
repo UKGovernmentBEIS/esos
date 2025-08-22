@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 import uk.gov.esos.api.workflow.request.core.domain.RequestMetadata;
 
 @Data

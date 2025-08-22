@@ -1,12 +1,43 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="Have you used significant energy consumption?"
+  heading="Significant energy consumption"
   caption="Energy consumption"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <div formControlName="significantEnergyConsumptionExists" govuk-radio>
+  <div class="govuk-body">
+    <p>
+      Your organisation may choose to carry out an energy audit or use an alternative compliance route for areas of
+      significant energy consumption. This means those assets and activities which together account for not less than
+      95% of the participant's total energy consumption.
+    </p>
+
+    <p>
+      The de minimis is a maximum of 5% of total energy consumption which may be excluded from the energy audit or
+      alternative compliance route. The percentage figure for your organisation must be entered as 'Energy use not
+      covered by any compliance route’ and be a whole number. You may round up a decimal to 5% where that is the nearest
+      whole number, but you may not round down to 5%.
+    </p>
+
+    <p>Energy can be excluded on the basis of one or a combination of these factors:</p>
+
+    <ul>
+      <li>site</li>
+      <li>group</li>
+      <li>asset</li>
+      <li>activity</li>
+      <li>fuel used</li>
+    </ul>
+  </div>
+
+  <div
+    formControlName="significantEnergyConsumptionExists"
+    govuk-radio
+    legend="Have you used significant energy consumption?"
+    legendSize="medium"
+  >
     <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>
     <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
   </div>

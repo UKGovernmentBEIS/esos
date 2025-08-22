@@ -1,13 +1,15 @@
 export const ENERGY_SAVINGS_OPPORTUNITIES_SUB_TASK = 'energySavingsOpportunities';
 
-export enum CurrentStep {
-  STEP1 = 'energySavingsOpportunity',
-  STEP2 = 'energySavingsOpportunityCategories',
+export enum EnergySavingsOpportunitiesCurrentStep {
+  STEP1 = 'energySavingsOpportunityImplementationReduction',
+  STEP2 = 'energySavingsOpportunityConsumption',
+  STEP3 = 'energySavingsOpportunityCategories',
   SUMMARY = 'summary',
 }
 
-export enum WizardStep {
-  STEP1 = 'energy-savings-opportunity',
-  STEP2 = 'energy-savings-opportunity-categories',
+export enum EnergySavingsOpportunitiesWizardStep {
+  STEP1 = 'energy-savings-opportunity-implementation-reduction',
+  STEP2 = 'energy-savings-opportunity-consumption',
+  STEP3 = 'energy-savings-opportunity-categories',
   SUMMARY = '../',
 }

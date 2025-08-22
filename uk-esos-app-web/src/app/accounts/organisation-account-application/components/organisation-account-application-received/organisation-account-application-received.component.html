@@ -1,8 +1,16 @@
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <govuk-panel>We have received your organisation account application.</govuk-panel>
-    <h3 class="govuk-heading-m">What happens next</h3>
-    <p class="govuk-body">Your regulator will review your application for an organisation account.</p>
-    <p class="govuk-body">You will receive an email whether your request has been approved.</p>
-  </div>
+  <ng-container *ngIf="isChangedUserState | async; else noVerifiedUser">
+    <div class="govuk-grid-column-two-thirds">
+      <govuk-panel>Your application to set up an organisation account has been approved.</govuk-panel>
+      <p class="govuk-body">You are currently the Admin user on your organisation account.</p>
+    </div>
+  </ng-container>
+  <ng-template #noVerifiedUser>
+    <div class="govuk-grid-column-two-thirds">
+      <govuk-panel>We have received your organisation account application.</govuk-panel>
+      <h3 class="govuk-heading-m">What happens next</h3>
+      <p class="govuk-body">Your regulator will review your application for an organisation account.</p>
+      <p class="govuk-body">You'll receive an email to confirm whether your request has been approved.</p>
+    </div>
+  </ng-template>
 </div>

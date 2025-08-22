@@ -24,6 +24,8 @@ import uk.gov.esos.api.user.core.service.UserSignatureService;
 import uk.gov.esos.api.web.constants.SwaggerApiInfo;
 import uk.gov.esos.api.web.controller.exception.ErrorResponse;
 
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping(path = "/v1.0/user-signatures")
 @Tag(name = "User signatures")
@@ -45,7 +47,7 @@ public class UserSignatureController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        ContentDisposition.builder("signature").filename(file.getFileName()).build().toString())
+                        ContentDisposition.builder("signature").filename(file.getFileName(), StandardCharsets.UTF_8).build().toString())
                 .contentType(MediaType.parseMediaType(file.getFileType()))
                 .body(new ByteArrayResource(file.getFileContent()));
     }

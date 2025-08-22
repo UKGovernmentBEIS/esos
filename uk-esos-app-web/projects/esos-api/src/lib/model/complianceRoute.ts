@@ -12,11 +12,19 @@
 import { EnergyAudit } from './energyAudit';
 
 export interface ComplianceRoute {
-  areDataEstimated: boolean;
-  areEstimationMethodsRecordedInEvidencePack?: boolean;
-  twelveMonthsVerifiableDataUsed?: 'YES' | 'NO' | 'NOT_APPLICABLE';
+  estimatedCalculationTypes: Array<
+    | 'TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'
+    | 'CONVERSION_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'
+    | 'AMOUNT_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'
+    | 'ENERGY_CONSUMPTION_OVER_TWELVE_MONTHS'
+    | 'NONE_OF_THE_ABOVE'
+  >;
+  areTwelveMonthsVerifiableDataUsed?: boolean;
+  twelveMonthsVerifiableDataUsedReason?: string;
+  areEstimationMethodsRecorded: 'YES' | 'NO' | 'SKIP_QUESTION';
   energyConsumptionProfilingUsed?: 'YES' | 'NO' | 'NOT_APPLICABLE';
-  areEnergyConsumptionProfilingMethodsRecorded?: boolean;
+  areEnergyConsumptionProfilingMethodsRecorded?: 'YES' | 'NO' | 'SKIP_QUESTION';
+  isEnergyConsumptionProfilingNotUsedRecorded?: 'YES' | 'NO' | 'SKIP_QUESTION';
   energyAudits?: Array<EnergyAudit>;
   partsProhibitedFromDisclosingExist: boolean;
   partsProhibitedFromDisclosing?: string;

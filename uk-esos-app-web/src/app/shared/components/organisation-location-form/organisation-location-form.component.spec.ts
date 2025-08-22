@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { mockCreateOrganisationAccountStateProvider } from '@accounts/organisation-account-application/testing/mock-create-organisation-account.state.provider';
-import { mockOrganisationAccountStore } from '@accounts/organisation-account-application/testing/mock-organisation-account.store';
+import { mockCreateOrganisationAccountStateProvider } from '@accounts/testing/mock-create-organisation-account.state.provider';
+import { mockCreateOrganisationAccountStore } from '@accounts/testing/mock-create-organisation-account.store';
 import { ORGANISATION_ACCOUNT_STATE_PROVIDER } from '@shared/providers/organisation-account.state.provider';
 
 import { OrganisationAccountStore } from '../../../accounts/organisation-account-application/+state';
@@ -17,7 +17,7 @@ describe('OrganisationLocationFormComponent', () => {
     await TestBed.configureTestingModule({
       imports: [OrganisationLocationFormComponent],
       providers: [
-        { provide: OrganisationAccountStore, useValue: mockOrganisationAccountStore },
+        { provide: OrganisationAccountStore, useValue: mockCreateOrganisationAccountStore },
         { provide: ActivatedRoute, useValue: { snapshot: {} } },
         { provide: ORGANISATION_ACCOUNT_STATE_PROVIDER, useValue: mockCreateOrganisationAccountStateProvider },
       ],

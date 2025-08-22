@@ -73,7 +73,7 @@ describe('EnergyConsumptionProfilingMethodsRecordedComponent', () => {
     expect(page.errorSummary).toBeFalsy();
     expect(page.heading).toBeTruthy();
     expect(page.heading.textContent.trim()).toEqual(
-      'Are the methods used for energy consumption profiling recorded in the evidence pack? (optional)',
+      'Are the methods used for energy consumption profiling recorded in the evidence pack?',
     );
     expect(page.submitButton).toBeTruthy();
   });
@@ -103,7 +103,7 @@ describe('EnergyConsumptionProfilingMethodsRecordedComponent', () => {
         noc: {
           complianceRoute: {
             ...mockComplianceRoute,
-            areEnergyConsumptionProfilingMethodsRecorded: true,
+            areEnergyConsumptionProfilingMethodsRecorded: 'YES',
           },
         },
       },

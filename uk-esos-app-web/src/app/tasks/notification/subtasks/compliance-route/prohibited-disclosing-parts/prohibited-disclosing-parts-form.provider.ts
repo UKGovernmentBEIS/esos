@@ -19,7 +19,7 @@ export const prohibitedDisclosingPartsFormProvider: Provider = {
         partsProhibitedFromDisclosing,
         [
           GovukValidators.required(
-            'Enter the parts of the ESOS report (or supporting information) that the responsible undertaking is prohibited from disclosing to the group undertaking',
+            'Enter the information that the responsible undertaking is prohibited from disclosing',
           ),
           GovukValidators.maxLength(10000, 'Enter up to 10000 characters'),
         ],

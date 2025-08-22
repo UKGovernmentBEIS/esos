@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_workFlowValidPeriod.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_CREATE_TABLE_workflow_valid_period" author="pmpountas@unisystems.gr" context="migrate">
+        <createSequence sequenceName="workflow_valid_period_seq" />
+        <createTable tableName="workflow_valid_period" remarks="Defines the period a work flow can start/submitted">
+
+            <column name="id" type="varchar(20)" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="workflow_valid_period_pk" nullable="false"/>
+            </column>
+
+            <column name="type" type="varchar(255)" remarks="The request type">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="initiate_start_date" type="timestamp" remarks="initiate start date">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="initiate_end_date" type="timestamp" remarks="initiate end date">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="submit_start_date" type="timestamp" remarks="submit start date">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="submit_end_date" type="timestamp" remarks="submit end date">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS workflow_valid_period;
+                DROP SEQUENCE IF EXISTS workflow_valid_period_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_values_for_action_plan_p3" author="pmpountas">
+        <sql>
+            INSERT INTO workflow_valid_period (id, type, initiate_start_date, initiate_end_date, submit_start_date, submit_end_date)
+            VALUES (nextval('workflow_valid_period_seq'), 'ACTION_PLAN_P3', '2023-12-06 00:00:00', '2026-01-05 23:59:59', '2023-12-06 00:00:00', '2026-01-05 23:59:59');
+
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from workflow_valid_period
+                where type = 'ACTION_PLAN_P3';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_values_for_PROGRESS_UPDATE_1_P3" author="pmpountas">
+        <sql>
+            INSERT INTO workflow_valid_period (id, type, initiate_start_date, initiate_end_date, submit_start_date, submit_end_date)
+            VALUES (nextval('workflow_valid_period_seq'), 'PROGRESS_UPDATE_1_P3', '2024-12-06 00:00:00', '2026-12-05 00:00:00', '2024-12-06 00:00:00', '2026-12-05 00:00:00');
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from workflow_valid_period
+                where type = 'PROGRESS_UPDATE_1_P3';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_values_for_PROGRESS_UPDATE_2_P3" author="pmpountas">
+        <sql>
+            INSERT INTO workflow_valid_period (id, type, initiate_start_date, initiate_end_date, submit_start_date, submit_end_date)
+            VALUES (nextval('workflow_valid_period_seq'), 'PROGRESS_UPDATE_2_P3', '2025-12-06 00:00:00', '2026-12-05 00:00:00', '2025-12-06 00:00:00', '2027-03-05 00:00:00');
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from workflow_valid_period
+                where type = 'PROGRESS_UPDATE_2_P3';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_values_for_NOC_P3" author="pmpountas">
+        <sql>
+            INSERT INTO workflow_valid_period (id, type, initiate_start_date, initiate_end_date, submit_start_date, submit_end_date)
+            VALUES (nextval('workflow_valid_period_seq'), 'NOTIFICATION_OF_COMPLIANCE_P3', '2022-12-06 00:00:00', '2026-12-06 00:00:00', '2022-12-06 00:00:00', '2026-12-06 00:00:00');
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from workflow_valid_period
+                where type = 'NOTIFICATION_OF_COMPLIANCE_P3';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_dates" author="bountasp@unisystems.gr">
+        <sql>
+            UPDATE workflow_valid_period
+            SET initiate_start_date  = '2024-12-06 00:00:00.000',
+            initiate_end_date  = '2026-12-06 00:00:00.000',
+            submit_start_date ='2024-12-06 00:00:00.000',
+            submit_end_date ='2026-12-06 00:00:00.000'
+            WHERE "type" = 'PROGRESS_UPDATE_1_P3';
+
+            UPDATE workflow_valid_period
+            SET initiate_start_date  = '2025-12-06 00:00:00.000',
+            initiate_end_date  = '2027-03-06 00:00:00.000',
+            submit_start_date ='2025-12-06 00:00:00.000',
+            submit_end_date ='2027-03-06 00:00:00.000'
+            WHERE "type" = 'PROGRESS_UPDATE_2_P3';
+
+            UPDATE workflow_valid_period
+            SET initiate_start_date  = '2023-12-06 00:00:00.000',
+            initiate_end_date  = '2026-12-06 00:00:00.000',
+            submit_start_date ='2023-12-06 00:00:00.000',
+            submit_end_date ='2026-12-06 00:00:00.000'
+            WHERE "type" = 'ACTION_PLAN_P3';
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_workflow_valid_dates" author="bountasp@unisystems.gr">
+        <sql>
+            UPDATE workflow_valid_period
+            SET initiate_start_date  = '2025-07-01 00:00:00.000',
+            initiate_end_date  = '2026-12-06 00:00:00.000',
+            submit_start_date ='2025-07-01 00:00:00.000',
+            submit_end_date ='2026-12-06 00:00:00.000'
+            WHERE "type" = 'PROGRESS_UPDATE_1_P3';
+
+            UPDATE workflow_valid_period
+            SET initiate_start_date  = '2025-12-06 00:00:00.000',
+            initiate_end_date  = '2027-03-06 00:00:00.000',
+            submit_start_date ='2025-12-06 00:00:00.000',
+            submit_end_date ='2027-03-06 00:00:00.000'
+            WHERE "type" = 'PROGRESS_UPDATE_2_P3';
+
+            UPDATE workflow_valid_period
+            SET initiate_start_date  = '2023-12-06 00:00:00.000',
+            initiate_end_date  = '2026-12-06 00:00:00.000',
+            submit_start_date ='2023-12-06 00:00:00.000',
+            submit_end_date ='2026-12-06 00:00:00.000'
+            WHERE "type" = 'ACTION_PLAN_P3';
+
+            UPDATE workflow_valid_period
+            SET initiate_start_date  = '2022-12-06 00:00:00.000',
+            initiate_end_date  = '2026-12-06 00:00:00.000',
+            submit_start_date ='2022-12-06 00:00:00.000',
+            submit_end_date ='2026-12-06 00:00:00.000'
+            WHERE "type" = 'NOTIFICATION_OF_COMPLIANCE_P3';
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>

@@ -23,6 +23,7 @@ export class CheckboxComponent<T> implements ControlValueAccessor {
   @Input() value: T;
   @Input() label: string;
   @Input() hint?: string;
+  @Input() divider?: boolean;
   @ContentChild(ConditionalContentDirective) readonly conditional: ConditionalContentDirective;
   @ViewChild('conditionalTemplate', { static: true }) conditionalTemplate: TemplateRef<any>;
   @ViewChild('checkboxTemplate', { static: true }) optionTemplate: TemplateRef<any>;

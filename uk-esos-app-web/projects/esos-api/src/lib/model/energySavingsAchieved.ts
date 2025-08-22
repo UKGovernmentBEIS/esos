@@ -15,10 +15,10 @@ import { EnergySavingsRecommendations } from './energySavingsRecommendations';
 
 export interface EnergySavingsAchieved {
   energySavingsEstimation?: EnergyConsumption;
-  energySavingCategoriesExist?: boolean;
+  energySavingCategoriesExist?: 'YES' | 'NO' | 'SKIP_QUESTION';
   energySavingsCategories?: EnergySavingsCategories;
   totalEnergySavingsEstimation?: number;
-  energySavingsRecommendationsExist: boolean;
+  energySavingsRecommendationsExist: 'YES' | 'NO' | 'SKIP_QUESTION';
   energySavingsRecommendations?: EnergySavingsRecommendations;
   details?: string;
 }

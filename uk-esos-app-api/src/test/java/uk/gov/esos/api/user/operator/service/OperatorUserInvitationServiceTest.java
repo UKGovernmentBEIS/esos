@@ -53,7 +53,7 @@ class OperatorUserInvitationServiceTest {
 
         verify(authUserService, times(1)).getUserByEmail(email);
         verify(operatorUserRegistrationService, times(1))
-            .registerUserToAccountWithStatusPending(operatorUserInvitationDTO, accountId, currentUser);
+            .createUserToAccountWithStatusPending(operatorUserInvitationDTO, accountId, currentUser);
         verify(existingOperatorUserInvitationService, never()).addExistingUserToAccount(any(), anyLong(), anyString(), any(), any());
     }
 
@@ -74,7 +74,7 @@ class OperatorUserInvitationServiceTest {
         service.inviteUserToAccount(accountId, operatorUserInvitationDTO, currentUser);
 
         verify(authUserService, times(1)).getUserByEmail(email);
-        verify(operatorUserRegistrationService, never()).registerUserToAccountWithStatusPending(any(), anyLong(), any());
+        verify(operatorUserRegistrationService, never()).createUserToAccountWithStatusPending(any(), anyLong(), any());
         verify(existingOperatorUserInvitationService, times(1))
             .addExistingUserToAccount(operatorUserInvitationDTO, accountId, operatorUserId, AuthenticationStatus.REGISTERED, currentUser);
     }

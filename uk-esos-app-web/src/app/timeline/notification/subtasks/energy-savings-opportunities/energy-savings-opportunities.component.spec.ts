@@ -12,13 +12,8 @@ describe('EnergySavingsOpportunitiesComponent', () => {
   let page: Page;
 
   class Page extends BasePage<EnergySavingsOpportunitiesComponent> {
-    get summaryListValues() {
-      return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
-        .map((row) => [
-          ...(Array.from(row.querySelectorAll('dt')) ?? []),
-          ...(Array.from(row.querySelectorAll('dd')) ?? []),
-        ])
-        .map((pair) => pair.map((element) => element?.textContent?.trim()));
+    get tableCells() {
+      return this.queryAll('tr > th, tr > td').map((el) => el.textContent.trim());
     }
   }
 
@@ -43,20 +38,63 @@ describe('EnergySavingsOpportunitiesComponent', () => {
   });
 
   it('should show summary values', () => {
-    expect(page.summaryListValues).toEqual([
-      ['Buildings', '2 kWh'],
-      ['Transport', '4 kWh'],
-      ['Industrial processes', '9 kWh'],
-      ['Other processes', '13 kWh'],
-      ['Total', '28 kWh'],
-      ['Energy management practices', '1 kWh'],
-      ['Behaviour change interventions', '2 kWh'],
-      ['Training', '3 kWh'],
-      ['Controls improvements', '4 kWh'],
-      ['Short term capital investments (with a payback period of less than 3 years)', '5 kWh'],
-      ['Long term capital investments (with a payback period of less than 3 years)', '6 kWh'],
-      ['Other measures not covered by one of the above', '7 kWh'],
-      ['Total', '28 kWh', ''],
+    expect(page.tableCells).toEqual([
+      '',
+      'kWh',
+      '£',
+      '',
+      'Buildings',
+      '2',
+      '0.00',
+      '',
+      'Transport',
+      '4',
+      '2.00',
+      '',
+      'Industrial processes',
+      '9',
+      '4.45',
+      '',
+      'Other energy uses',
+      '13',
+      '110.60',
+      '',
+      'Total',
+      '28',
+      '117.05',
+      '',
+      '',
+      'kWh',
+      '£',
+      '',
+      'Energy management practices',
+      '1',
+      '1.00',
+      '',
+      'Behaviour change interventions',
+      '2',
+      '2.20',
+      '',
+      'Training',
+      '3',
+      '3.03',
+      '',
+      'Controls improvements',
+      '4',
+      '0.00',
+      '',
+      'Capital investments',
+      '6',
+      '0.00',
+      '',
+      'Other measures not covered by one of the above',
+      '7',
+      '0.00',
+      '',
+      'Total',
+      '28',
+      '6.23',
+      '',
     ]);
   });
 });

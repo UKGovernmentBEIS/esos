@@ -1,18 +1,31 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { BehaviorSubject, combineLatest, distinctUntilChanged, map, switchMap } from 'rxjs';
+
+import { MoreLessComponent } from '@shared/more-less/more-less.component';
+import { GovukDatePipe } from '@shared/pipes/govuk-date.pipe';
+import { SharedModule } from '@shared/shared.module';
+
+import { PaginationComponent } from 'govuk-components';
 
 import { AccountNoteDto, AccountNotesService } from 'esos-api';
 
 @Component({
   selector: 'esos-account-notes',
   templateUrl: './account-notes.component.html',
+  styles: [
+    `
+      :host ::ng-deep .note-line-width {
+        max-width: 610px !important;
+      }
+    `,
+  ],
+  standalone: true,
+  imports: [GovukDatePipe, MoreLessComponent, PaginationComponent, RouterLink, SharedModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountNotesComponent {
-  @Input() currentTab: string;
-
   readonly pageSize = 10;
   page$ = new BehaviorSubject<number>(1);
   accountNotes$ = combineLatest([

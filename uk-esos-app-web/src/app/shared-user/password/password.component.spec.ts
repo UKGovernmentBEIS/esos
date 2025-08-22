@@ -3,13 +3,12 @@ import { Component, Inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { BasePage, changeInputValue } from '@testing';
-import { PasswordStrengthMeterModule } from 'angular-password-strength-meter';
-import { DEFAULT_PSM_OPTIONS } from 'angular-password-strength-meter/zxcvbn';
+import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { GovukComponentsModule } from 'govuk-components';
 
@@ -65,12 +64,11 @@ describe('PasswordComponent', () => {
         HttpClientTestingModule,
         ReactiveFormsModule,
         GovukComponentsModule,
-        PasswordStrengthMeterModule.forRoot(DEFAULT_PSM_OPTIONS),
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         SharedUserModule,
       ],
       declarations: [PasswordComponent, TestComponent],
-      providers: [PasswordService],
+      providers: [provideZxvbnServiceForPSM(), PasswordService],
     }).compileComponents();
   });
 

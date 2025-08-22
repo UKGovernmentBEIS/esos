@@ -1,6 +1,8 @@
 package uk.gov.esos.api.workflow.request.application.taskview;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -26,7 +28,6 @@ import uk.gov.esos.api.user.regulator.domain.RegulatorUserDTO;
 import uk.gov.esos.api.workflow.request.core.domain.Request;
 import uk.gov.esos.api.workflow.request.core.domain.RequestTask;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestStatus;
-import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestTaskActionType;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestTaskType;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestType;
 import uk.gov.esos.api.workflow.request.core.service.RequestTaskService;
@@ -68,6 +69,8 @@ class RequestTaskViewServiceTest {
         when(userService.getUserById(requestTask.getAssignee())).thenReturn(requestTaskAssigneeUser);
         when(requestTaskAuthorizationResourceService.hasUserAssignScopeOnRequestTasks(appUser, resourceCriteria))
             .thenReturn(true);
+        when(requestTaskAuthorizationResourceService.hasUserExecuteScopeOnRequestTaskType(appUser, requestTaskType.name(), resourceCriteria))
+                .thenReturn(true);
 
         //invoke
         RequestTaskItemDTO result = service.getTaskItemInfo(requestTaskId, appUser);
@@ -83,11 +86,13 @@ class RequestTaskViewServiceTest {
         verify(userService, times(1)).getUserById(requestTask.getAssignee());
         verify(requestTaskAuthorizationResourceService, times(1))
             .hasUserAssignScopeOnRequestTasks(appUser, resourceCriteria);
+        verify(requestTaskAuthorizationResourceService, times(1))
+                .hasUserExecuteScopeOnRequestTaskType(appUser, requestTaskType.name(), resourceCriteria);
         verifyNoMoreInteractions(requestTaskAuthorizationResourceService);
     }
 
     @Test
-    void getTaskItemInfo__user_has_not_assign_scope_on_request_tasks() {
+    void getTaskItemInfo_assignee_user_has_not_execute_scope_on_request_tasks() {
         final String user = "user";
         final Long accountId = 1L;
         final CompetentAuthorityEnum ca = CompetentAuthorityEnum.ENGLAND;
@@ -97,7 +102,7 @@ class RequestTaskViewServiceTest {
         final RequestTaskType requestTaskType = RequestTaskType.ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW;
 
         final Request request = createRequest("1", ca, accountId, requestType);
-        final RequestTask requestTask = createRequestTask(requestTaskId, request, "another_user",
+        final RequestTask requestTask = createRequestTask(requestTaskId, request, user,
             "proceTaskId", requestTaskType);
 
         final ApplicationUserDTO requestTaskAssigneeUser = RegulatorUserDTO.builder().firstName("fn").lastName("ln").build();
@@ -150,8 +155,6 @@ class RequestTaskViewServiceTest {
         when(userService.getUserById(requestTask.getAssignee())).thenReturn(requestTaskAssigneeUser);
         when(requestTaskAuthorizationResourceService.hasUserAssignScopeOnRequestTasks(appUser, resourceCriteria))
             .thenReturn(true);
-        when(requestTaskAuthorizationResourceService.hasUserExecuteScopeOnRequestTaskType(appUser, requestTaskType.name(), resourceCriteria))
-            .thenReturn(false);
 
         //invoke
         RequestTaskItemDTO result = service.getTaskItemInfo(requestTaskId, appUser);
@@ -166,8 +169,8 @@ class RequestTaskViewServiceTest {
         verify(userService, times(1)).getUserById(requestTask.getAssignee());
         verify(requestTaskAuthorizationResourceService, times(1))
             .hasUserAssignScopeOnRequestTasks(appUser, resourceCriteria);
-        verify(requestTaskAuthorizationResourceService, times(1))
-            .hasUserExecuteScopeOnRequestTaskType(appUser, requestTaskType.name(), resourceCriteria);
+        verify(requestTaskAuthorizationResourceService, never())
+            .hasUserExecuteScopeOnRequestTaskType(any(), anyString(), any());
     }
 
     @Test

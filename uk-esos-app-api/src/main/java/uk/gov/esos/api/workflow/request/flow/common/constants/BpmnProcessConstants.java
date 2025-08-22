@@ -30,7 +30,7 @@ public class BpmnProcessConstants {
 
     // account opening
     public static final String APPLICATION_APPROVED = "applicationApproved";
-    public static final String APPLICATION_TYPE_IS_TRANSFER = "applicationTypeIsTransfer";
+    public static final String EXISTS_VERIFIED_REGISTRATION_NUMBER = "existsVerifiedRegistrationNumber";
     
     // application review
     public static final String APPLICATION_REVIEW_EXPIRATION_DATE = RequestExpirationType.APPLICATION_REVIEW.getCode() + _EXPIRATION_DATE;
@@ -66,4 +66,14 @@ public class BpmnProcessConstants {
 
     // NOC
     public static final String NOC_OUTCOME= "nocOutcome";
+
+    // ACTION PLAN
+    public static final String ACTION_PLAN_OUTCOME= "apOutcome";
+
+    // PROGRESS UPDATE 1
+    public static final String PROGRESS_UPDATE_1_OUTCOME= "pu1Outcome";
+
+    // PROGRESS UPDATE 2
+    public static final String PROGRESS_UPDATE_2_OUTCOME= "pu2Outcome";
+
 }

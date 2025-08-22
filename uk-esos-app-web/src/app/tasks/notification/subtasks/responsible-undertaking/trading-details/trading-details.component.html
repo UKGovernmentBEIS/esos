@@ -5,11 +5,17 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
   <div formControlName="exist" govuk-radio>
     <govuk-radio-option [value]="true" label="Yes">
       <ng-container govukConditionalContent>
-        <div formControlName="tradingName" govuk-text-input label="Trading name or other name" widthClass="govuk-!-width-two-thirds"></div>
+        <div
+          formControlName="tradingName"
+          govuk-text-input
+          label="Trading name or other name"
+          widthClass="govuk-!-width-two-thirds"
+        ></div>
       </ng-container>
     </govuk-radio-option>
     <govuk-radio-option [value]="false" label="No"></govuk-radio-option>

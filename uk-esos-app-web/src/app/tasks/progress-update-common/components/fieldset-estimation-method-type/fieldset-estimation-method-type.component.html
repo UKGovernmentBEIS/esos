@@ -1,0 +1,29 @@
+<div
+  class="govuk-!-margin-bottom-7"
+  govuk-radio
+  [formControlName]="controlName"
+  [legend]="title"
+  legendSize="small"
+  [hint]="subtitle"
+>
+  @for (option of options; track $index) {
+    <govuk-radio-option
+      [value]="option"
+      [label]="option | estimationMethodType"
+      [divider]="option === 'NO_METHOD_USED'"
+    >
+      <ng-container govukConditionalContent>
+        @if (option === 'OTHER_METHOD') {
+          <div
+            class="govuk-!-margin-bottom-4"
+            formControlName="estimationMethodDescription"
+            govuk-textarea
+            [label]="otherMethodLabel"
+            labelSize="normal"
+          ></div>
+          <esos-other-estimation-method-help />
+        }
+      </ng-container>
+    </govuk-radio-option>
+  }
+</div>

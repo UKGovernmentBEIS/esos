@@ -8,4 +8,5 @@ export class HttpStatuses {
   static Forbidden = 403;
   static NotFound = 404;
   static InternalServerError = 500;
+  static ServiceUnavailable = 503;
 }

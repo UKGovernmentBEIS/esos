@@ -1,3 +1,9 @@
-<ng-container *ngIf="currentTab === 'details'">
-  <esos-organisation-account-summary [organisation]="account$ | async"></esos-organisation-account-summary>
+<ng-container *ngIf="account$ | async as account">
+  <esos-organisation-account-summary
+    [organisation]="account"
+    [isEditable]="account.editable"
+    linkPrefix="update"
+    [canChangeRN]="false"
+    [canChangeCA]="false"
+  ></esos-organisation-account-summary>
 </ng-container>

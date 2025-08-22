@@ -1,6 +1,6 @@
 <esos-cookies-container *ngIf="(showCookiesBanner$ | async) === true"></esos-cookies-container>
+<govuk-skip-link></govuk-skip-link>
 <govuk-header title="Manage your ESOS reporting">
-  <govuk-skip-link></govuk-skip-link>
   <govuk-header-actions-list>
     <a *ngIf="isLoggedIn$ | async" class="govuk-header__link" routerLink="." (click)="authService.logout()">
       Sign out
@@ -26,26 +26,31 @@
       Accounts
     </a>
     <a govukLink="header" *ngIf="permissions.showRegulators" [routerLink]="['/user/regulators']"> Regulator users </a>
-    <a govukLink="header" *ngIf="permissions.showRegulators" [routerLink]="['/templates']"> Templates </a>
     <a govukLink="header" *ngIf="permissions.showRegulators" [routerLink]="['/mi-reports']"> MI Reports </a>
   </govuk-header-nav-list>
 </govuk-header>
 
-<main class="govuk-width-container" id="main-content" role="main">
-  <esos-phase-bar></esos-phase-bar>
+<div class="govuk-width-container">
+  <esos-phase-bar *ngIf="isLoggedIn$ | async"></esos-phase-bar>
   <esos-breadcrumbs></esos-breadcrumbs>
-  <esos-identity-bar></esos-identity-bar>
   <esos-back-link></esos-back-link>
-  <div class="govuk-main-wrapper">
+  <main class="govuk-main-wrapper" id="main-content" role="main">
     <router-outlet esosSkipLinkFocus></router-outlet>
-  </div>
-</main>
+  </main>
+</div>
 <govuk-footer>
   <govuk-footer-meta-info>
-    <a govukLink="meta" routerLink="/privacy-notice"> Privacy Νotice </a>
+    <a govukLink="meta" routerLink="/privacy-notice"> Privacy Notice </a>
     <a govukLink="meta" routerLink="/contact-us"> Contact us </a>
     <a govukLink="meta" routerLink="/accessibility"> Accessibility Statement </a>
-    <a govukLink="meta" routerLink="/legislation"> UK ETS legislation </a>
+    <a
+      govukLink="meta"
+      href="https://www.gov.uk/government/publications/comply-with-the-energy-savings-opportunity-scheme-esos/complying-with-the-energy-savings-opportunity-scheme-esos"
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      ESOS Guidance
+    </a>
   </govuk-footer-meta-info>
 </govuk-footer>
 <esos-timeout-banner></esos-timeout-banner>

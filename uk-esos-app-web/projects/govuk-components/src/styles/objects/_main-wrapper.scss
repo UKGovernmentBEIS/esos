@@ -1,4 +1,4 @@
-@import "../base";
+@import '../base';
 
 ////
 /// @group objects/layout
@@ -21,7 +21,7 @@
 //   </div>
 // </div>
 
-@include govuk-exports("govuk/objects/main-wrapper") {
+@include govuk-exports('govuk/objects/main-wrapper') {
   .govuk-main-wrapper {
     // In IE11 the `main` element can be used, but is not recognized  –
     // meaning it's not defined in IE's default style sheet,
@@ -48,6 +48,8 @@
   // `govuk-main-wrapper--l` modifier instead.
   .govuk-main-wrapper--auto-spacing:first-child,
   .govuk-main-wrapper--l {
-    @include govuk-responsive-padding(8, "top");
+    @include govuk-responsive-padding(8, 'top');
   }
 }
+
+/*# sourceMappingURL=_main-wrapper.scss.map */

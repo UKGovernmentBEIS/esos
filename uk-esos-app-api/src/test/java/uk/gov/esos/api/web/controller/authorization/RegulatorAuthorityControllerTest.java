@@ -245,7 +245,7 @@ class RegulatorAuthorityControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(authUser, new RoleType[] {RoleType.REGULATOR});
+            .evaluate(authUser, new RoleType[] {RoleType.REGULATOR}, true);
 
         //invoke
         mockMvc.perform(

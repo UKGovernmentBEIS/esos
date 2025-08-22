@@ -134,16 +134,52 @@ describe('TotalEnergyComponent', () => {
         requestTaskActionPayload: {
           payloadType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD',
           noc: {
-            ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.noc,
+            assessmentPersonnel: {},
+            confirmations: {},
+            contactPersons: {},
             energyConsumptionDetails: {
-              ...mockEnergyConsumptionDetails,
+              additionalInformation: 'Additional info',
+              additionalInformationExists: true,
+              energyIntensityRatioData: {
+                buildings: {
+                  additionalInformation: 'Buildings additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '50',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+                industrialProcesses: {
+                  additionalInformation: 'Industrial processes additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '70',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+              },
+              significantEnergyConsumption: {
+                buildings: 100,
+                industrialProcesses: 45,
+                otherProcesses: 0,
+                significantEnergyConsumptionPct: 145,
+                total: 145,
+                transport: 0,
+              },
+              significantEnergyConsumptionExists: true,
               totalEnergyConsumption: {
                 buildings: 10,
-                transport: 20,
                 industrialProcesses: 30,
                 otherProcesses: 40,
                 total: 100,
+                transport: 20,
               },
+            },
+            organisationStructure: {},
+            reportingObligation: {
+              qualificationType: 'QUALIFY',
             },
           },
           nocSectionsCompleted: {

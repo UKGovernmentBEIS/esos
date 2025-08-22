@@ -1,19 +1,18 @@
 <ul class="govuk-list">
   <li *ngFor="let account of accounts" class="search-results-list_item">
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-three-quarters">
-        <a routerLink="." (click)="clickAccount($event, account)" govukLink>{{ account.name }}</a>
-        <div>{{ account.emitterId }}</div>
+      <div class="govuk-grid-column-one-half">
+        <a govukLink routerLink="." (click)="clickAccount($event, account)" [attr.aria-label]="'View ' + account.name">
+          {{ account.name }}
+        </a>
+
+        <div>{{ account.organisationId }}</div>
       </div>
-      <div class="govuk-grid-column-one-quarter">
-        <span
-          [class]="
-            'status-tag govuk-tag govuk-!-margin-left-6 ' +
-            (account.status === 'LIVE' ? 'govuk-tag--green' : 'govuk-tag--red')
-          "
-        >
-          <strong>{{ account.status | accountStatus }}</strong>
-        </span>
+
+      <div class="govuk-grid-column-one-half govuk-!-text-align-right">
+        <govuk-tag [color]="account.status | accountStatusTagColor">
+          {{ account.status | accountStatus | uppercase }}
+        </govuk-tag>
       </div>
     </div>
   </li>

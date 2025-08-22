@@ -1,0 +1,15 @@
+<h2 esos-summary-header class="govuk-heading-m">Details</h2>
+<dl govuk-summary-list class="govuk-!-margin-bottom-9">
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Reason</dt>
+    <dd govukSummaryListRowValue>{{ reason() }}</dd>
+  </div>
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Closed by</dt>
+    <dd govukSummaryListRowValue>{{ submitter() }}</dd>
+  </div>
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Date</dt>
+    <dd govukSummaryListRowValue>{{ submissionDate() | govukDate: 'datetime' }}</dd>
+  </div>
+</dl>

@@ -11,12 +11,13 @@
  */
 
 export interface OrganisationAccountOpeningAmendApplicationRequestTaskActionPayloadAllOf {
-  registrationNumber?: string;
   name?: string;
-  competentAuthority?: 'ENGLAND' | 'NORTHERN_IRELAND' | 'OPRED' | 'SCOTLAND' | 'WALES';
   line1?: string;
   line2?: string;
   city?: string;
   county?: string;
   postcode?: string;
+  type?: 'SIC' | 'OTHER';
+  otherTypeName?: string;
+  codes?: Array<string>;
 }

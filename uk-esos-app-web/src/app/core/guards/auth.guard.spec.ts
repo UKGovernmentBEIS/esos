@@ -39,12 +39,9 @@ describe('AuthGuard', () => {
     authStore.setIsLoggedIn(true);
     authStore.setUserState({ status: 'DISABLED' });
     authStore.setTerms({ version: 2, url: 'asd' });
-    authStore.setUser({ termsVersion: 1 } as any);
-    let res = await lastValueFrom(guard.canActivate());
-    expect(res).toEqual(router.parseUrl('terms'));
 
-    authStore.setUser({ termsVersion: 2 } as any);
-    res = await lastValueFrom(guard.canActivate());
+    let res = await lastValueFrom(guard.canActivate());
+
     expect(res).toEqual(router.parseUrl('landing'));
 
     authStore.setUserState({ status: 'ENABLED' });

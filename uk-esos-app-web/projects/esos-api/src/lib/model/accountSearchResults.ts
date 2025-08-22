@@ -9,8 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { OrganisationAccountSearchResultsInfoDTO } from './organisationAccountSearchResultsInfoDTO';
 
 export interface AccountSearchResults {
-  accounts?: Array<object>;
+  accounts?: Array<OrganisationAccountSearchResultsInfoDTO>;
   total?: number;
 }

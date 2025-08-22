@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import uk.gov.esos.api.common.domain.dto.CountyAddressDTO;
 import uk.gov.esos.api.common.domain.dto.PhoneNumberDTO;
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 import uk.gov.esos.api.reporting.noc.phase3.domain.ContactPerson;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3Container;

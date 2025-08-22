@@ -11,8 +11,8 @@
  */
 
 export interface EnergySavingsRecommendations {
-  energyAudits: number;
-  alternativeComplianceRoutes: number;
-  other: number;
-  total: number;
+  energyAudits?: number;
+  alternativeComplianceRoutes?: number;
+  other?: number;
+  total?: number;
 }

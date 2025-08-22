@@ -5,13 +5,25 @@
   caption="Organisation structure"
   submitText="Save and continue"
   [hideSubmit]="!isEditable"
+  [showReturnLink]="true"
 >
   <div
-    formControlName="registrationNumber"
-    govuk-text-input
-    label="Registration number (optional)"
-    widthClass="govuk-!-width-three-quarters"
-  ></div>
+    formControlName="registrationNumberExist"
+    govuk-radio
+    legend="Does this organisation have a registration number?"
+  >
+    <govuk-radio-option [value]="true" label="Yes">
+      <ng-container govukConditionalContent>
+        <div
+          formControlName="registrationNumber"
+          govuk-text-input
+          label="Registration number"
+          widthClass="govuk-!-width-one-third"
+        ></div>
+      </ng-container>
+    </govuk-radio-option>
+    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+  </div>
 
   <div
     formControlName="organisationName"
@@ -20,20 +32,18 @@
     widthClass="govuk-!-width-three-quarters"
   ></div>
 
-  <div
-    formControlName="taxReferenceNumber"
-    govuk-text-input
-    label="Tax reference number (optional)"
-    widthClass="govuk-!-width-three-quarters"
-  ></div>
-
-  <div class="govuk-body">
-    <p>Is this organisation covered in this notification?</p>
+  <p class="govuk-body">
+    What are the organisation's activity codes? (optional if the organisation is not covered in this notification)
+  </p>
+  <div govuk-checkboxes formControlName="areSameAsRU">
+    <govuk-checkbox [value]="true" label="They are the same as the RU's"></govuk-checkbox>
   </div>
-  <esos-boolean-radio-group controlName="isCoveredByThisNotification"></esos-boolean-radio-group>
-  <esos-organisation-structure-help-content
-    field="isCoveredByThisNotification"
-  ></esos-organisation-structure-help-content>
+
+  <p class="govuk-body">or</p>
+  <p class="govuk-body">Enter the organisation's activity codes</p>
+  <esos-activity-codes-input [disabled]="isChecked()"></esos-activity-codes-input>
+
+  <esos-activity-codes-guidance-template></esos-activity-codes-guidance-template>
 
   <div class="govuk-body">
     <p>
@@ -45,35 +55,23 @@
   <esos-organisation-structure-help-content field="isPartOfArrangement"></esos-organisation-structure-help-content>
 
   <div class="govuk-body">
-    <p>Is this organisation a parent of the responsible undertaking?</p>
+    <p>Has this organisation ceased to be part of the highest parent group or participant since the qualification date but agreed to comply as if it were still a member?</p>
   </div>
-  <esos-boolean-radio-group controlName="isParentOfResponsibleUndertaking"></esos-boolean-radio-group>
-  <esos-organisation-structure-help-content
-    field="isParentOfResponsibleUndertaking"
-  ></esos-organisation-structure-help-content>
+  <esos-boolean-radio-group controlName="hasCeasedToBePartOfGroup"></esos-boolean-radio-group>
 
   <div class="govuk-body">
-    <p>Is this organisation a subsidiary of the responsible undertaking?</p>
-  </div>
-  <esos-boolean-radio-group controlName="isSubsidiaryOfResponsibleUndertaking"></esos-boolean-radio-group>
-  <esos-organisation-structure-help-content
-    field="isSubsidiaryOfResponsibleUndertaking"
-  ></esos-organisation-structure-help-content>
-
-  <div class="govuk-body">
-    <p>Is this organisation part of a franchise group?</p>
+    <p>Is this organisation a franchisee?</p>
   </div>
   <esos-boolean-radio-group controlName="isPartOfFranchise"></esos-boolean-radio-group>
   <esos-organisation-structure-help-content field="isPartOfFranchise"></esos-organisation-structure-help-content>
 
   <div class="govuk-body">
-    <p>Is this organisation a trust?</p>
+    <p>Is this organisation a parent of the responsible undertaking?</p>
   </div>
-  <esos-boolean-radio-group controlName="isTrust"></esos-boolean-radio-group>
-  <esos-organisation-structure-help-content field="isTrust"></esos-organisation-structure-help-content>
+  <esos-boolean-radio-group controlName="isParentOfResponsibleUndertaking"></esos-boolean-radio-group>
 
   <div class="govuk-body">
-    <p>Has this organisation ceased to be a part of the corporate group between 31 December 2022 and 5 June 2024?</p>
+    <p>Is this organisation a subsidiary of the responsible undertaking?</p>
   </div>
-  <esos-boolean-radio-group controlName="hasCeasedToBePartOfGroup"></esos-boolean-radio-group>
+  <esos-boolean-radio-group controlName="isSubsidiaryOfResponsibleUndertaking"></esos-boolean-radio-group>
 </esos-wizard-step>

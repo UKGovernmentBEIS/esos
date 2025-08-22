@@ -5,4 +5,5 @@ export enum TaskItemStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
+  TERMINATED = 'TERMINATED',
 }

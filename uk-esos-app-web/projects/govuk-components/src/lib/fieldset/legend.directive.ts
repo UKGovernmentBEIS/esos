@@ -7,7 +7,10 @@ import { LegendSizeType } from './legend-size.type';
 export class LegendDirective implements AfterContentInit {
   @Input() size: LegendSizeType;
 
-  constructor(private readonly fieldset: FieldsetDirective, private readonly elementRef: ElementRef) {}
+  constructor(
+    private readonly fieldset: FieldsetDirective,
+    private readonly elementRef: ElementRef,
+  ) {}
 
   @HostBinding('class') get sizeClass() {
     switch (this.size) {
@@ -16,6 +19,8 @@ export class LegendDirective implements AfterContentInit {
         return 'govuk-fieldset__legend govuk-fieldset__legend--l';
       case 'normal':
         return 'govuk-fieldset__legend';
+      case 'small':
+        return 'govuk-fieldset__legend govuk-fieldset__legend--s';
       default:
         return 'govuk-fieldset__legend govuk-fieldset__legend--m';
     }

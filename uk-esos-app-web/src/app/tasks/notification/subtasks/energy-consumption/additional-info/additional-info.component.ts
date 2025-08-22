@@ -8,8 +8,8 @@ import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import { additionalInfoFormProvider } from '@tasks/notification/subtasks/energy-consumption/additional-info/additional-info-form.provider';
 import {
-  CurrentStep,
   ENERGY_CONSUMPTION_SUB_TASK,
+  EnergyConsumptionCurrentStep,
 } from '@tasks/notification/subtasks/energy-consumption/energy-consumption.helper';
 import { TASK_FORM } from '@tasks/task-form.token';
 import produce from 'immer';
@@ -32,7 +32,7 @@ export class AdditionalInfoComponent {
   submit() {
     this.service.saveSubtask({
       subtask: ENERGY_CONSUMPTION_SUB_TASK,
-      currentStep: CurrentStep.ADDITIONAL_INFO,
+      currentStep: EnergyConsumptionCurrentStep.ADDITIONAL_INFO,
       route: this.route,
       payload: produce(this.service.payload, (payload) => {
         payload.noc.energyConsumptionDetails = {

@@ -11,6 +11,7 @@ describe('ItemTypePipe', () => {
 
   it('should map request types to item types', () => {
     expect(pipe.transform('ORGANISATION_ACCOUNT_OPENING')).toEqual('Organisation account');
+    expect(pipe.transform('ACCOUNT_CLOSURE')).toEqual('Close account');
     expect(pipe.transform(null)).toBeNull();
   });
 });

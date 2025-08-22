@@ -2,6 +2,7 @@ import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
+import { ClassificationTypePipe } from '@shared/pipes/classification-type.pipe';
 import { CompetentAuthorityLocationPipe } from '@shared/pipes/competent-authority-location.pipe';
 import { SummaryHeaderComponent } from '@shared/summary-header/summary-header.component';
 
@@ -14,7 +15,14 @@ import { OrganisationAccountPayload } from 'esos-api';
   templateUrl: './organisation-account-summary.component.html',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, GovukComponentsModule, RouterLink, SummaryHeaderComponent, CompetentAuthorityLocationPipe],
+  imports: [
+    NgIf,
+    GovukComponentsModule,
+    RouterLink,
+    SummaryHeaderComponent,
+    CompetentAuthorityLocationPipe,
+    ClassificationTypePipe,
+  ],
 })
 export class OrganisationAccountSummaryComponent {
   constructor(readonly route: ActivatedRoute) {}
@@ -23,4 +31,5 @@ export class OrganisationAccountSummaryComponent {
   @Input() organisation: OrganisationAccountPayload;
   @Input() isEditable = false;
   @Input() canChangeCA = true;
+  @Input() canChangeRN = true;
 }

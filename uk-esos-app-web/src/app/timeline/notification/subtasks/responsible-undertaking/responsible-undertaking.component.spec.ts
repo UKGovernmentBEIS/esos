@@ -44,19 +44,24 @@ describe('ResponsibleUndertakingComponent', () => {
 
   it('should show summary values', () => {
     expect(page.summaryListValues).toEqual([
+      ['Does this organisation have a registration number?', 'Yes'],
+      ['Registration number', 'AB123456'],
       ['Organisation name', 'Corporate Legal Entity Account 2'],
-      ['Registration number', '111111'],
-      ['Address line 1', 'Some address 1'],
-      ['Address line 2', 'Some address 2'],
+      [
+        'Activity codes',
+        `Classification type: Other  Classification name: some classification name  Codes: CodeA, CodeB, CodeC`,
+      ],
+      ['Address', 'Some address 1  Some address 2'],
       ['Town or city', 'London'],
       ['County', 'London'],
       ['Postcode', '511111'],
-      ['Yes  Trading name', ''],
       ['Email address', '1@o.com'],
       ['Telephone number', '44 02071234567'],
-      ['Yes', ''],
-      ['Parent company name', 'Parent company name'],
-      ['Parent company trading name', 'Parent company trading name'],
+      ['Overseas parent company name', 'Parent company name'],
+      [
+        'The trading or other name of the group of undertakings to which the above company is the overseas parent (optional)',
+        'Parent company trading name',
+      ],
     ]);
   });
 });

@@ -14,21 +14,24 @@ export const organisationContactDetailsFormProvider = {
     const state = store.select(notificationQuery.selectResponsibleUndertaking);
     const organisationContactDetails = state()?.organisationContactDetails;
 
-    return fb.group({
-      email: [
-        organisationContactDetails?.email ?? null,
-        [
-          GovukValidators.required(`Enter the email address`),
-          GovukValidators.email('Enter an email address in the correct format, like name@example.com'),
+    return fb.group(
+      {
+        email: [
+          organisationContactDetails?.email ?? null,
+          [
+            GovukValidators.required(`Enter the email address`),
+            GovukValidators.email('Enter an email address in the correct format, like name@example.com'),
+          ],
         ],
-      ],
-      phoneNumber: [
-        {
-          countryCode: organisationContactDetails?.phoneNumber?.countryCode ?? '44',
-          number: organisationContactDetails?.phoneNumber?.number ?? null,
-        },
-        phoneInputValidators,
-      ],
-    });
+        phoneNumber: [
+          {
+            countryCode: organisationContactDetails?.phoneNumber?.countryCode ?? '44',
+            number: organisationContactDetails?.phoneNumber?.number ?? null,
+          },
+          phoneInputValidators,
+        ],
+      },
+      { updateOn: 'change' },
+    );
   },
 };

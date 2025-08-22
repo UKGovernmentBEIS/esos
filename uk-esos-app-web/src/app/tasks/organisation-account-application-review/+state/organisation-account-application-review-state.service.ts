@@ -38,6 +38,33 @@ export class OrganisationAccountApplicationReviewStateService {
     );
   }
 
+  setType(type: OrganisationAccountDTO['type']) {
+    this.store.setState(
+      produce(this.store.state, (state) => {
+        const payload = state.requestTaskItem.requestTask.payload as any;
+        payload.account.type = type;
+      }),
+    );
+  }
+
+  setOtherTypeName(otherTypeName: OrganisationAccountDTO['otherTypeName']) {
+    this.store.setState(
+      produce(this.store.state, (state) => {
+        const payload = state.requestTaskItem.requestTask.payload as any;
+        payload.account.otherTypeName = otherTypeName;
+      }),
+    );
+  }
+
+  setCodes(codes: OrganisationAccountDTO['codes']) {
+    this.store.setState(
+      produce(this.store.state, (state) => {
+        const payload = state.requestTaskItem.requestTask.payload as any;
+        payload.account.codes = codes;
+      }),
+    );
+  }
+
   setAddress(address: CountyAddressDTO) {
     this.store.setState(
       produce(this.store.state, (state) => {

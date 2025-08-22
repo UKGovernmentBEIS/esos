@@ -1,10 +1,11 @@
 import { OrganisationStructure } from 'esos-api';
 
 export const isWizardCompleted = (organisationStructure: OrganisationStructure) => {
-  const { isPartOfArrangement, isPartOfFranchise, isTrust, hasCeasedToBePartOfGroup } = organisationStructure ?? {};
-
-  const isRuDetailsCompleted =
-    isPartOfArrangement != null && isPartOfFranchise != null && isTrust != null && hasCeasedToBePartOfGroup != null;
-
-  return isRuDetailsCompleted;
+  return (
+    organisationStructure?.isHighestParent != null &&
+    (organisationStructure?.isNonComplyingUndertakingsIncluded === false ||
+      (organisationStructure?.isNonComplyingUndertakingsIncluded === true &&
+        organisationStructure?.organisationUndertakingDetails?.length > 0)) &&
+    organisationStructure?.isGroupStructureChartProvided != null
+  );
 };

@@ -1,17 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 
 import { EnergyConsumptionSummaryPageComponent } from '@shared/components/summaries';
-import { BasePage } from '@testing';
+import { ActivatedRouteStub, BasePage } from '@testing';
 
 describe('EnergyConsumptionSummaryPageComponent', () => {
   let component: EnergyConsumptionSummaryPageComponent;
   let fixture: ComponentFixture<EnergyConsumptionSummaryPageComponent>;
   let page: Page;
 
+  const route = new ActivatedRouteStub();
+
   class Page extends BasePage<EnergyConsumptionSummaryPageComponent> {
     get headers() {
       return this.queryAll<HTMLHeadElement>('h2').map((el) => el?.textContent?.trim());
     }
+
     get summaryListValues() {
       return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
         .map((row) => [
@@ -25,6 +29,7 @@ describe('EnergyConsumptionSummaryPageComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [EnergyConsumptionSummaryPageComponent],
+      providers: [{ provide: ActivatedRoute, useValue: route }],
     });
 
     fixture = TestBed.createComponent(EnergyConsumptionSummaryPageComponent);
@@ -33,7 +38,7 @@ describe('EnergyConsumptionSummaryPageComponent', () => {
     component.changeLink = {
       TOTAL_ENERGY: 'link',
     };
-    component.data = {
+    component.energyConsumptionDetails = {
       totalEnergyConsumption: {
         buildings: 100,
         transport: 0,
@@ -51,33 +56,22 @@ describe('EnergyConsumptionSummaryPageComponent', () => {
         significantEnergyConsumptionPct: 97,
       },
       energyIntensityRatioData: {
-        buildingsIntensityRatio: {
-          ratio: '50',
-          unit: 'm2',
+        buildings: {
+          energyIntensityRatios: [{ ratio: '50', unit: 'm2' }],
           additionalInformation: 'Buildings additional information',
         },
-        freightsIntensityRatio: {
-          ratio: '60',
-          unit: 'freight miles',
+        transport: {
+          energyIntensityRatios: [{ ratio: '60', unit: 'm2' }],
+          additionalInformation: 'Transport additional information',
         },
-        passengersIntensityRatio: {
-          ratio: '70',
-          unit: 'passenger miles',
-          additionalInformation: null,
+        industrialProcesses: {
+          energyIntensityRatios: [{ ratio: '70', unit: 'm2' }],
+          additionalInformation: 'Industrial processes additional information',
         },
-        industrialProcessesIntensityRatio: {
-          ratio: '80',
-          unit: 'tonnes',
-          additionalInformation: null,
+        otherProcesses: {
+          energyIntensityRatios: [{ ratio: '80', unit: 'm2' }],
+          additionalInformation: 'Other processes additional information',
         },
-        otherProcessesIntensityRatios: [
-          {
-            name: 'custom',
-            ratio: '100',
-            unit: 'litres',
-            additionalInformation: null,
-          },
-        ],
       },
       additionalInformationExists: true,
       additionalInformation: 'Additional info',
@@ -96,39 +90,27 @@ describe('EnergyConsumptionSummaryPageComponent', () => {
       'What is the total energy consumption in kWh for the reference period?',
       'Have you used significant energy consumption?',
       'What is the significant energy consumption in kWh for the reference period?',
-      'What is the energy intensity ratio for each organisational purpose?',
+      'Energy intensity ratios for your significant energy consumption',
       'Buildings',
-      'Transport',
       'Industrial Processes',
-      'custom',
       'Do you want to add more information to give context to the energy intensity ratio?',
     ]);
   });
 
-  it('should display the table with added persons', () => {
+  it('should display the table with added data', () => {
     expect(page.summaryListValues).toEqual([
       ['Buildings', '100 kWh'],
       ['Transport', '0 kWh'],
       ['Industrial processes', '50 kWh'],
-      ['Other processes', '0 kWh'],
+      ['Other energy uses', '0 kWh'],
       ['Total', '150 kWh'],
-      ['Yes'],
       ['Buildings', '100 kWh'],
       ['Transport', '0 kWh'],
       ['Industrial processes', '45 kWh'],
-      ['Other processes', '0 kWh'],
+      ['Other energy uses', '0 kWh'],
       ['Total', '145 kWh  (97% of total energy consumption)'],
-      ['Intensity ratio', 'Unit'],
-      ['50', 'kWh/m2'],
       ['Additional Information', 'Buildings additional information'],
-      ['', 'Intensity ratio', 'Unit'],
-      ['Freights', '60', 'kWh/freight miles'],
-      ['Passengers', '70', 'kWh/passenger miles'],
-      ['Intensity ratio', 'Unit'],
-      ['80', 'kWh/tonnes'],
-      ['Intensity ratio', 'Unit'],
-      ['100', 'kWh/litres'],
-      ['Yes Additional info'],
+      ['Additional Information', 'Industrial processes additional information'],
     ]);
   });
 });

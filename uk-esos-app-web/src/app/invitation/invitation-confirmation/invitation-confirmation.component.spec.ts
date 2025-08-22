@@ -3,8 +3,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { GovukComponentsModule } from 'govuk-components';
 
-import { mockClass } from '../../../testing';
-import { AuthService } from '../../core/services/auth.service';
 import { InvitationConfirmationComponent } from './invitation-confirmation.component';
 
 describe('InvitationConfirmationComponent', () => {
@@ -15,7 +13,6 @@ describe('InvitationConfirmationComponent', () => {
     await TestBed.configureTestingModule({
       imports: [GovukComponentsModule, RouterTestingModule],
       declarations: [InvitationConfirmationComponent],
-      providers: [{ provide: AuthService, useValue: mockClass(AuthService) }],
     }).compileComponents();
   });
 

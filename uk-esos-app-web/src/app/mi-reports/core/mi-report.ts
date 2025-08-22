@@ -1,61 +1,34 @@
-import { utils, writeFileXLSX } from 'xlsx';
-
 import { GovukTableColumn } from 'govuk-components';
 
-import { MiReportResult, MiReportSearchResult } from 'esos-api';
-
-import { ExtendedMiReportResult } from './mi-interfaces';
+import { MiReportResult } from 'esos-api';
 
 export const pageSize = 20;
 
-export const miReportTypeDescriptionMap: Record<MiReportSearchResult['miReportType'], string> = {
+export const miReportTypeDescriptionMap: Partial<Record<MiReportResult['reportType'], string>> = {
   LIST_OF_ACCOUNTS_USERS_CONTACTS: 'List of Accounts, Users and Contacts',
-  COMPLETED_WORK: 'Completed work',
-  REGULATOR_OUTSTANDING_REQUEST_TASKS: 'Regulator outstanding request tasks',
-  LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS: 'List of Accounts, Assigned Regulators and Site Contacts',
-  LIST_OF_VERIFICATION_BODY_USERS: 'List of Verification bodies and Users',
-  CUSTOM: 'Custom sql report',
+  CUSTOM: 'Custom SQL report',
+  NOC_SUBMITTED_DATA_P3: 'NOC Submitted Data - Phase 3',
+  ACTION_PLAN_SUBMITTED_DATA_P3: 'Action Plan Published Data - Phase 3',
+  PROGRESS_UPDATE_1_SUBMITTED_DATA_P3: 'Progress Update 1 Published Data - Phase 3',
+  PROGRESS_UPDATE_2_SUBMITTED_DATA_P3: 'Progress Update 2 Published Data - Phase 3',
 };
 
 export const miReportTypeLinkMap: Partial<Record<MiReportResult['reportType'], string[]>> = {
   LIST_OF_ACCOUNTS_USERS_CONTACTS: ['./', 'accounts-users-contacts'],
-  COMPLETED_WORK: ['./', 'completed-work'],
-  REGULATOR_OUTSTANDING_REQUEST_TASKS: ['./', 'regulator-outstanding-request-tasks'],
-  LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS: ['./', 'accounts-regulators-sites-contacts'],
-  LIST_OF_VERIFICATION_BODY_USERS: ['./', 'verification-bodies-users'],
   CUSTOM: ['./', 'custom'],
+  NOC_SUBMITTED_DATA_P3: ['./', 'submitted-nocs'],
+  ACTION_PLAN_SUBMITTED_DATA_P3: ['./', 'action-plan-published-data'],
+  PROGRESS_UPDATE_1_SUBMITTED_DATA_P3: ['./', 'progress-update-1-published-data'],
+  PROGRESS_UPDATE_2_SUBMITTED_DATA_P3: ['./', 'progress-update-2-published-data'],
 };
 
 export const createTablePage = (currentPage: number, pageSize: number, data: any[]): any[] => {
   const firstIndex = (currentPage - 1) * pageSize;
   const lastIndex = Math.min(firstIndex + pageSize, data?.length);
+
   return data?.length > firstIndex ? data.slice(firstIndex, lastIndex) : [];
 };
 
 export const createTableColumns = (columns: string[]): GovukTableColumn<any>[] => {
   return columns.map((column) => ({ field: column, header: column }));
-};
-
-export const manipulateResultsAndExportToExcel = (
-  miReportResult: ExtendedMiReportResult,
-  filename: string,
-  manipulateResultsFn?: (
-    parameter: {
-      [x: string]: any;
-    }[],
-  ) => {
-    [x: string]: any;
-  }[],
-) => {
-  const removedColumnsResults = miReportResult.results.map((result) =>
-    miReportResult.columnNames
-      .map((columnName) => ({ [columnName]: result[columnName] }))
-      .reduce((prev, cur) => ({ ...prev, ...cur }), {}),
-  );
-  const results = manipulateResultsFn ? manipulateResultsFn(removedColumnsResults) : removedColumnsResults;
-
-  const ws = utils.json_to_sheet(results);
-  const wb = utils.book_new();
-  utils.book_append_sheet(wb, ws, 'Data');
-  writeFileXLSX(wb, `${filename}.xlsx`);
 };

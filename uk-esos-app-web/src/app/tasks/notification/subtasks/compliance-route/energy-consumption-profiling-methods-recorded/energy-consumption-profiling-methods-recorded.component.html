@@ -1,10 +1,11 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="Are the methods used for energy consumption profiling recorded in the evidence pack? (optional)"
+  heading="Are the methods used for energy consumption profiling recorded in the evidence pack?"
   caption="Compliance route"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
   <p class="govuk-body govuk-!-font-weight-bold">The evidence pack needs to contain:</p>
   <ul class="govuk-list govuk-list--bullet">
@@ -12,13 +13,18 @@
     <li>The reasons why the energy audit does not include an analysis based on energy consumption profiles.</li>
   </ul>
   <p class="govuk-body">
-    This would have been carried out by the Lead Assessor, who may be part of your organisation or external.
+    This would have been carried out by the lead assessor, who may be part of your organisation or external.
   </p>
-  <p class="govuk-body">If you are unsure if this information is in the evidence pack, speak to your Lead Assessor.</p>
+  <p class="govuk-body">If you are unsure if this information is in the evidence pack, speak to your lead assessor.</p>
 
   <div formControlName="areEnergyConsumptionProfilingMethodsRecorded" govuk-radio>
-    <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>
-    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+    <govuk-radio-option [value]="'YES'" [label]="'YES' | skipQuestion"></govuk-radio-option>
+    <govuk-radio-option [value]="'NO'" [label]="'NO' | skipQuestion"></govuk-radio-option>
+    <govuk-radio-option
+      [value]="'SKIP_QUESTION'"
+      [label]="'SKIP_QUESTION' | skipQuestion"
+      [divider]="true"
+    ></govuk-radio-option>
   </div>
 
   <govuk-details summary="Help me answer this question">

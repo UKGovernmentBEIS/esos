@@ -1,0 +1,30 @@
+<div class="govuk-!-width-two-thirds">
+  <esos-wizard-step
+    [formGroup]="form"
+    [heading]="heading"
+    [caption]="caption"
+    (formSubmit)="onSubmit()"
+    submitText="Save and continue"
+    [hideSubmit]="false"
+    [showReturnLink]="true"
+  >
+    <p class="govuk-body">
+      The relevant compliance period ends on 5 December 2027 for ESOS participants who submitted a notification of
+      compliance in the third compliance period.
+    </p>
+
+    <div formControlName="haveEnergyEfficiencyMeasures" govuk-radio [legend]="heading" [isLegendHidden]="true">
+      <govuk-radio-option [value]="true" label="Yes" />
+      <govuk-radio-option [value]="false" label="No">
+        <ng-container govukConditionalContent>
+          <div
+            formControlName="noMeasureContext"
+            govuk-textarea
+            [label]="noMeasureContextLabel"
+            labelSize="normal"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+    </div>
+  </esos-wizard-step>
+</div>

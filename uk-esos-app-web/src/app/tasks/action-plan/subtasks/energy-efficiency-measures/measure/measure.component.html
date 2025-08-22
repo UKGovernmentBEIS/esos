@@ -1,0 +1,126 @@
+<div class="govuk-!-width-two-thirds">
+  <esos-wizard-step
+    [formGroup]="form"
+    [heading]="title()"
+    [caption]="caption"
+    (formSubmit)="onSubmit()"
+    submitText="Save and continue"
+    [hideSubmit]="false"
+    [showReturnLink]="true"
+  >
+    <p class="govuk-body govuk-!-margin-top-7 govuk-!-margin-bottom-7">
+      You are required to add any measures that have implementation dates in the future (after the date you submit the
+      action plan). Optionally, you can also add any measures you have already implemented (before the date you submit
+      the action plan).
+    </p>
+
+    <div
+      class="govuk-!-margin-bottom-8"
+      formControlName="measureName"
+      govuk-text-input
+      [label]="contentMap.measureName.title"
+      labelSize="medium"
+    ></div>
+
+    <div
+      class="govuk-!-margin-bottom-8"
+      formControlName="isEnergySavingsOpportunityReportedInAudit"
+      govuk-radio
+      [legend]="contentMap.isEnergySavingsOpportunityReportedInAudit.title"
+      legendSize="medium"
+    >
+      <govuk-radio-option [value]="true" label="Yes" />
+      <govuk-radio-option [value]="false" label="No" />
+    </div>
+
+    <div
+      class="govuk-!-margin-bottom-8"
+      govuk-checkboxes
+      formControlName="measureScheme"
+      [legend]="contentMap.measureScheme.title"
+      legendSize="medium"
+      [hint]="contentMap.measureScheme.subtitle"
+    >
+      @for (option of contentMap.measureScheme.options; track $index) {
+        <govuk-checkbox [value]="option" [label]="option | measureScheme">
+          @if (option === 'OTHER') {
+            <ng-container govukConditionalContent>
+              <div
+                formControlName="otherMeasureSchemeName"
+                govuk-text-input
+                [label]="contentMap.otherMeasureSchemeName.title"
+                labelSize="normal"
+              ></div>
+            </ng-container>
+          }
+        </govuk-checkbox>
+      }
+    </div>
+
+    <div
+      class="govuk-!-margin-bottom-8"
+      formControlName="implementationDateForMeasure"
+      esos-year-month-select
+      [minDate]="minDate"
+      [maxDate]="maxDate"
+      [legend]="contentMap.implementationDateForMeasure.title"
+      [hint]="contentMap.implementationDateForMeasure.subtitle"
+    ></div>
+
+    <div
+      class="govuk-form-group govuk-!-margin-bottom-8"
+      [class.govuk-form-group--error]="
+        totalEnergySavingsExpectedFormGroup.touched && totalEnergySavingsExpectedFormGroup.invalid
+      "
+      [class.total-energy-savings-group--error-invalid-total]="totalEnergySavingsExpectedFormGroup.errors?.invalidTotal"
+    >
+      <fieldset govukFieldset formGroupName="totalEnergySavingsExpected">
+        <legend govukLegend size="medium">{{ contentMap.totalEnergySavingsExpected.title }}</legend>
+        <p class="govuk-hint govuk-!-margin-bottom-6">{{ contentMap.totalEnergySavingsExpected.subtitle }}</p>
+
+        @if (totalEnergySavingsExpectedFormGroup.touched && totalEnergySavingsExpectedFormGroup.invalid) {
+          <govuk-error-message [errors]="totalEnergySavingsExpectedFormGroup.errors"></govuk-error-message>
+        }
+        <esos-energy-consumption-input />
+
+        <h2 class="govuk-heading-s govuk-!-margin-top-7 govuk-!-margin-bottom-2">Total estimated energy savings</h2>
+        <p class="govuk-body govuk-!-margin-bottom-0">
+          <span id="total-kWh">{{ totalkWh() }}</span> kWh
+        </p>
+      </fieldset>
+    </div>
+
+    <div
+      class="govuk-!-margin-bottom-8"
+      govuk-radio
+      formControlName="energySavingsEstimateCalculatedType"
+      [legend]="contentMap.energySavingsEstimateCalculatedType.title"
+      legendSize="medium"
+    >
+      @for (option of contentMap.energySavingsEstimateCalculatedType.options; track $index) {
+        <govuk-radio-option [value]="option" [label]="option | estimationMethodType">
+          <ng-container govukConditionalContent>
+            @if (option === 'OTHER_REASONABLE_ESTIMATION_METHOD') {
+              <div
+                class="govuk-!-margin-bottom-4"
+                formControlName="estimationMethodDescription"
+                govuk-textarea
+                [label]="contentMap.estimationMethodDescription.title"
+                labelSize="normal"
+              ></div>
+              <esos-other-estimation-method-help />
+            }
+          </ng-container>
+        </govuk-radio-option>
+      }
+    </div>
+
+    <div
+      formControlName="measureContext"
+      govuk-textarea
+      [label]="contentMap.measureContext.title"
+      labelSize="medium"
+      [maxLength]="10000"
+    ></div>
+  </esos-wizard-step>
+</div>

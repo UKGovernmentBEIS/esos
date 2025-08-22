@@ -21,7 +21,7 @@ public class JwtProperties {
         @NotEmpty
         private String audience;
 
-        private long userInvitationExpIntervalMinutes = 4320L;
+        private long userInvitationExpIntervalMinutes = 30L;
 
         private long change2faExpIntervalMinutes = 5L;
         

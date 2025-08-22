@@ -1,8 +1,0 @@
-@use "sass:map";
-@use "base" as govuk;
-@import 'settings/all';
-
-.app-related-items {
-  padding-top: govuk.govuk-spacing(1);
-  border-top: $govuk-border-width solid map.get($govuk-colours, 'blue');
-}

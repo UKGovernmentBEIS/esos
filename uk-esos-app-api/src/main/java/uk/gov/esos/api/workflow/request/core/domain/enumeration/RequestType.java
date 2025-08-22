@@ -18,8 +18,15 @@ public enum RequestType {
 
     ORGANISATION_ACCOUNT_OPENING("PROCESS_ORGANISATION_ACCOUNT_OPENING", "Organisation Account creation", RequestHistoryCategory.PERMIT, AccountType.ORGANISATION, false, true),
 
-    NOTIFICATION_OF_COMPLIANCE_P3("PROCESS_NOTIFICATION_OF_COMPLIANCE_P3", "P3 Notification of compliance", RequestHistoryCategory.REPORTING, AccountType.ORGANISATION, true, true)
-    ;
+    NOTIFICATION_OF_COMPLIANCE_P3("PROCESS_NOTIFICATION_OF_COMPLIANCE_P3", "P3 Notification of compliance", RequestHistoryCategory.REPORTING, AccountType.ORGANISATION, true, true),
+
+    ACTION_PLAN_P3("PROCESS_ACTION_PLAN_P3", "P3 Action plan", RequestHistoryCategory.REPORTING, AccountType.ORGANISATION, true, true),
+
+    ACCOUNT_CLOSURE("PROCESS_ACCOUNT_CLOSURE", "Account closure", RequestHistoryCategory.PERMIT, AccountType.ORGANISATION, true, true),
+
+    PROGRESS_UPDATE_1_P3("PROCESS_PROGRESS_UPDATE_1_P3", "P3 Progress update 1", RequestHistoryCategory.REPORTING, AccountType.ORGANISATION, true, true),
+
+    PROGRESS_UPDATE_2_P3("PROCESS_PROGRESS_UPDATE_2_P3", "P3 Progress update 2", RequestHistoryCategory.REPORTING, AccountType.ORGANISATION, true, true);
 
     /**
      * The id of the bpmn process that will be instantiated for this request type.
@@ -68,9 +75,18 @@ public enum RequestType {
     }
 
     public static Set<RequestType> getAvailableForAccountCreateRequestTypes(@NotNull AccountType accountType) {
-        Set<RequestType> requestTypes = Set.of(NOTIFICATION_OF_COMPLIANCE_P3);
+        Set<RequestType> requestTypes = getAvailableForReportingCreateRequestTypes(accountType);
+        requestTypes.add(ACCOUNT_CLOSURE);
+        return requestTypes;
+    }
+
+    public static Set<RequestType> getAvailableForReportingCreateRequestTypes(@NotNull AccountType accountType) {
+        Set<RequestType> requestTypes = Set.of(NOTIFICATION_OF_COMPLIANCE_P3, ACTION_PLAN_P3,PROGRESS_UPDATE_1_P3,PROGRESS_UPDATE_2_P3);
+
+
         return requestTypes.stream()
                 .filter(requestType -> accountType.equals(requestType.getAccountType()))
                 .collect(Collectors.toSet());
     }
+    
 }

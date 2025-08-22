@@ -119,18 +119,31 @@ describe('Iso50001CertificateDetailsComponent', () => {
       expect(page.submitButton).toBeTruthy();
     });
 
+    it('should display an error if the valid until date is before 2023-12-05', () => {
+      page.validFrom = mockValidFrom;
+      page.validUntil = new Date('2023-12-04');
+      page.certificateNumber = 'iso5001-1';
+      page.submitButton.click();
+      fixture.detectChanges();
+      expect(page.errorSummary).toBeTruthy();
+      expect(page.errorSummaryListContents).toEqual(['Valid until date must be the same as or after 5 December 2023']);
+    });
+
+    it('should display an error if the valid from date is after 2024-06-05', () => {
+      page.validFrom = new Date('2024-06-06');
+      page.validUntil = new Date('2024-08-21');
+      page.certificateNumber = 'iso5001-1';
+      page.submitButton.click();
+      fixture.detectChanges();
+      expect(page.errorSummary).toBeTruthy();
+      expect(page.errorSummaryListContents).toContain('Valid from date must be the same as or before 5 June 2024');
+    });
+
     it('should submit a valid form and navigate to nextRoute', () => {
       const taskServiceSpy = jest.spyOn(taskService, 'saveSubtask');
 
       page.submitButton.click();
       fixture.detectChanges();
-
-      expect(page.errorSummaryListContents).toEqual([
-        'Valid until date must be later than valid from date',
-        'Enter an ISO 50001 Certificate number',
-        'Enter a date',
-        'Enter a date',
-      ]);
 
       page.certificateNumber = 'iso1';
       page.validFrom = mockValidFrom;
@@ -157,6 +170,30 @@ describe('Iso50001CertificateDetailsComponent', () => {
           },
         },
       });
+    });
+
+    it('should show errors when not all fields are filled', () => {
+      page.validFrom = mockValidFrom;
+
+      fixture.detectChanges();
+      page.submitButton.click();
+      fixture.detectChanges();
+
+      expect(page.errorSummary).toBeTruthy();
+
+      expect(page.errorSummaryListContents).toEqual(['', 'Enter an ISO 50001 Certificate number', 'Enter a date']);
+    });
+
+    it('should not show errors when all fields are filled or all fields are empty', () => {
+      page.certificateNumber = 'dec1';
+      page.validFrom = mockValidFrom;
+      page.validUntil = mockValidUntil;
+
+      fixture.detectChanges();
+      page.submitButton.click();
+      fixture.detectChanges();
+
+      expect(page.errorSummary).toBeFalsy();
     });
   });
 

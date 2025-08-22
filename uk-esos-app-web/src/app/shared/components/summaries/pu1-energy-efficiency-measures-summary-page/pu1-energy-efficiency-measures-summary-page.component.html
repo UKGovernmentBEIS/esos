@@ -1,0 +1,74 @@
+@if (measuresForUpdate?.length) {
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-7">Progress update for action plan measures</h2>
+}
+
+@for (measure of measuresForUpdate; track measureIndex; let measureIndex = $index) {
+  <div class="govuk-summary-card govuk-summary-card--update">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">{{ measure.actionPlanEnergyEfficiencyMeasure.measureName }}</h2>
+    </div>
+
+    <div class="govuk-summary-card__content">
+      <govuk-details summary="Information from the action plan" [bottomSpacing]="4">
+        <esos-energy-efficiency-measure-summary-list-template
+          class="govuk-!-display-block govuk-!-margin-right-5 govuk-section-break--visible"
+          [data]="measure.actionPlanEnergyEfficiencyMeasure"
+        />
+      </govuk-details>
+
+      <esos-pu1-update-for-measure-summary-template
+        [updateForMeasure]="measure.progressUpdate1P3EnergyEfficiencyMeasure"
+        [isEditable]="isEditable"
+        [measureIndex]="measureIndex"
+      />
+    </div>
+  </div>
+}
+
+<div class="govuk-!-margin-bottom-7">
+  @if (isDisaggregateUndertaking) {
+    <h2 class="govuk-heading-m">Measures</h2>
+    @if (!addedMeasures?.length) {
+      <p class="govuk-body">
+        {{ isEditable ? 'No measures have been added so far.' : 'No measures have been added.' }}
+      </p>
+    }
+  } @else {
+    <h2 class="govuk-heading-m">New measures</h2>
+    @if (!isEditable && !addedMeasures?.length) {
+      <p class="govuk-body">No new measures have been added.</p>
+    }
+  }
+</div>
+
+@for (measure of addedMeasures; track measureIndex; let measureIndex = $index) {
+  <div class="govuk-summary-card govuk-summary-card--added">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">{{ measure.measureName }}</h2>
+      @if (isEditable) {
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            <a
+              govukLink
+              class="govuk-link--no-visited-state"
+              [routerLink]="[measureIndex + '/' + stepUrls.EDIT_NEW_MEASURE]"
+              >Edit</a
+            >
+          </li>
+          <li class="govuk-summary-card__action">
+            <a
+              govukLink
+              class="govuk-link--no-visited-state"
+              [routerLink]="[measureIndex + '/' + stepUrls.REMOVE_NEW_MEASURE]"
+              >Remove</a
+            >
+          </li>
+        </ul>
+      }
+    </div>
+
+    <div class="govuk-summary-card__content">
+      <esos-pu1-added-measure-summary-template [measure]="measure" />
+    </div>
+  </div>
+}

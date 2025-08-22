@@ -1,6 +1,6 @@
-<h3 class="govuk-heading-m">Persons added</h3>
+<h3 class="govuk-heading-m">Add the assessment personnel (optional)</h3>
 
-<ng-container *ngIf="personnel.length > 0; else noPersonnel">
+<ng-container *ngIf="personnel?.length > 0; else noPersonnel">
   <govuk-table [columns]="columns" [data]="personnel">
     <ng-template let-column="column" let-index="index" let-row="row">
       <div [ngSwitch]="column.field">
@@ -8,16 +8,10 @@
           <div>{{ row['firstName'] }} {{ row['lastName'] }}</div>
         </ng-container>
 
-        <ng-container *ngIf="row[column.field] === 'INTERNAL'">
-          <div>Internal</div>
-        </ng-container>
-
-        <ng-container *ngIf="row[column.field] === 'EXTERNAL'">
-          <div>External</div>
-        </ng-container>
+        <div>{{ row[column.field] | internalExternal }}</div>
 
         <ng-container *ngSwitchCase="'actions'">
-          <div *ngIf="isEditable" class="actions">
+          <div *ngIf="isEditable" class="govuk-!-text-align-right">
             <a govukLink [routerLink]="prefix + index + '/personnel-form'" [queryParams]="queryParams"> Change </a>
 
             <a class="govuk-!-padding-left-3" govukLink [routerLink]="prefix + index + '/remove'"> Remove </a>
@@ -29,5 +23,5 @@
 </ng-container>
 
 <ng-template #noPersonnel>
-  <p>No persons have been added</p>
+  <p class="govuk-body">No persons have been added</p>
 </ng-template>

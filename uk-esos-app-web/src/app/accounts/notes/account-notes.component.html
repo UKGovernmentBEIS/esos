@@ -1,40 +1,36 @@
-<ng-container *ngIf="currentTab === 'notes'">
-  <ng-container *ngIf="accountNotes$ | async as result">
-    <ul class="govuk-list">
-      <li>
-        <dl govuk-summary-list>
-          <div govukSummaryListRow>
-            <dd govukSummaryListRowValue>
-              <div><a govukSecondaryButton routerLink="./notes/add" type="button">Add a note</a></div>
-            </dd>
-          </div>
-        </dl>
-      </li>
-      <li *ngFor="let note of result.accountNotes">
-        <dl govuk-summary-list>
-          <div govukSummaryListRow>
-            <dd govukSummaryListRowValue>
-              <div class="pre-wrap">{{ note.payload.note }}</div>
-              <div>
-                <esos-summary-download-files [files]="getDownloadUrlFiles(note)"> </esos-summary-download-files>
-              </div>
-              <div>
-                <p class="govuk-caption-m">{{ note.submitter }}, {{ note.lastUpdatedOn | govukDate: 'datetime' }}</p>
-              </div>
-            </dd>
-            <dd govukSummaryListRowActions>
-              <a routerLink="./notes/{{ note.id }}/edit" govukLink> Edit </a> &nbsp;
-              <a routerLink="./notes/{{ note.id }}/delete" govukLink> Delete </a>
-            </dd>
-          </div>
-        </dl>
-      </li>
-    </ul>
-    <esos-pagination
-      *ngIf="result.totalItems > pageSize"
-      [count]="result.totalItems"
-      (currentPageChange)="page$.next($event)"
-      [pageSize]="pageSize"
-    ></esos-pagination>
-  </ng-container>
+<ng-container *ngIf="accountNotes$ | async as result">
+  <h2 class="govuk-heading-m">Notes</h2>
+  <a govukSecondaryButton routerLink="./notes/add" type="button" *ngIf="result.hasUserEditPermission">Add a note</a>
+  <ul class="govuk-list">
+    <li *ngFor="let note of result.accountNotes; index as i">
+      <dl govuk-summary-list>
+        <div govukSummaryListRow>
+          <dd govukSummaryListRowValue>
+            <esos-more-less-text
+              [text]="note.payload.note"
+              [index]="i"
+              [lines]="5"
+              widthClass="note-line-width"
+            ></esos-more-less-text>
+            <div class="govuk-!-margin-top-6">
+              <esos-summary-download-files [files]="getDownloadUrlFiles(note)"></esos-summary-download-files>
+            </div>
+            <div>
+              <p class="govuk-caption-m">{{ note.submitter }}, {{ note.lastUpdatedOn | govukDate : 'datetime' }}</p>
+            </div>
+          </dd>
+          <dd govukSummaryListRowActions *ngIf="note.editable">
+            <a routerLink="./notes/{{ note.id }}/edit" govukLink> Edit </a> &nbsp;
+            <a routerLink="./notes/{{ note.id }}/delete" govukLink> Delete </a>
+          </dd>
+        </div>
+      </dl>
+    </li>
+  </ul>
+  <govuk-pagination
+    *ngIf="result.totalItems > pageSize"
+    [count]="result.totalItems"
+    (currentPageChange)="page$.next($event)"
+    [pageSize]="pageSize"
+  ></govuk-pagination>
 </ng-container>

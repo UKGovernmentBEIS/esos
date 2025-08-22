@@ -47,4 +47,124 @@
 
         </sql>
     </changeSet>
+
+    <changeSet id="0_1_0_DELETE_ALL_MI_REPORTS_EXCEPT_CUSTOM_SQL_REPORT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            delete from mi_report
+            where type in ('COMPLETED_WORK', 'LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'REGULATOR_OUTSTANDING_REQUEST_TASKS');
+        </sql>
+        <rollback>
+            <sql>
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'OPRED', 'COMPLETED_WORK', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'WALES', 'COMPLETED_WORK', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'ENGLAND', 'COMPLETED_WORK', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'SCOTLAND', 'COMPLETED_WORK', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'NORTHERN_IRELAND', 'COMPLETED_WORK', 'ORGANISATION');
+
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'ENGLAND', 'LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'WALES', 'LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'SCOTLAND', 'LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'OPRED', 'LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'NORTHERN_IRELAND', 'LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS', 'ORGANISATION');
+
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'ENGLAND', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'NORTHERN_IRELAND', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'OPRED', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'SCOTLAND', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'WALES', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'WALES', 'REGULATOR_OUTSTANDING_REQUEST_TASKS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'SCOTLAND', 'REGULATOR_OUTSTANDING_REQUEST_TASKS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'OPRED', 'REGULATOR_OUTSTANDING_REQUEST_TASKS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'NORTHERN_IRELAND', 'REGULATOR_OUTSTANDING_REQUEST_TASKS', 'ORGANISATION');
+                INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'ENGLAND', 'REGULATOR_OUTSTANDING_REQUEST_TASKS', 'ORGANISATION');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ENABLE_LIST_OF_ACCOUNTS_USERS_CONTACTS_MI_REPORT" author="pafilisa@unisystems.gr">
+        <sql>
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'OPRED', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'WALES', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'ENGLAND', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'SCOTLAND', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'NORTHERN_IRELAND', 'LIST_OF_ACCOUNTS_USERS_CONTACTS', 'ORGANISATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE
+                  FROM mi_report
+                  WHERE type = 'LIST_OF_ACCOUNTS_USERS_CONTACTS';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ENABLE_NOC_SUBMITTED_DATA_P3_MI_REPORT" author="P70383">
+        <sql>
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'OPRED', 'NOC_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'WALES', 'NOC_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'ENGLAND', 'NOC_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'SCOTLAND', 'NOC_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'NORTHERN_IRELAND', 'NOC_SUBMITTED_DATA_P3', 'ORGANISATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE
+                FROM mi_report
+                WHERE type = 'NOC_SUBMITTED_DATA_P3';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ENABLE_ACTION_PLAN_SUBMITTED_DATA_P3_MI_REPORT" author="P70383">
+        <sql>
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'OPRED', 'ACTION_PLAN_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'WALES', 'ACTION_PLAN_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'ENGLAND', 'ACTION_PLAN_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'SCOTLAND', 'ACTION_PLAN_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'NORTHERN_IRELAND', 'ACTION_PLAN_SUBMITTED_DATA_P3', 'ORGANISATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE
+                FROM mi_report
+                WHERE type = 'ACTION_PLAN_SUBMITTED_DATA_P3';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ENABLE_PROGRESS_UPDATE_1_SUBMITTED_DATA_P3_MI_REPORT" author="bountasp@unisystems.gr">
+        <sql>
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'OPRED', 'PROGRESS_UPDATE_1_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'WALES', 'PROGRESS_UPDATE_1_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'ENGLAND', 'PROGRESS_UPDATE_1_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'SCOTLAND', 'PROGRESS_UPDATE_1_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'NORTHERN_IRELAND', 'PROGRESS_UPDATE_1_SUBMITTED_DATA_P3', 'ORGANISATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE
+                FROM mi_report
+                WHERE type = 'PROGRESS_UPDATE_1_SUBMITTED_DATA_P3';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ENABLE_PROGRESS_UPDATE_2_SUBMITTED_DATA_P3_MI_REPORT" author="bountasp@unisystems.gr">
+        <sql>
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'OPRED', 'PROGRESS_UPDATE_2_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'WALES', 'PROGRESS_UPDATE_2_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'ENGLAND', 'PROGRESS_UPDATE_2_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'SCOTLAND', 'PROGRESS_UPDATE_2_SUBMITTED_DATA_P3', 'ORGANISATION');
+            INSERT INTO mi_report (id, competent_authority, type, account_type) VALUES ((SELECT MAX(id) + 1 FROM mi_report), 'NORTHERN_IRELAND', 'PROGRESS_UPDATE_2_SUBMITTED_DATA_P3', 'ORGANISATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE
+                FROM mi_report
+                WHERE type = 'PROGRESS_UPDATE_2_SUBMITTED_DATA_P3';
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

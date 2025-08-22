@@ -12,5 +12,7 @@ public enum RequestStatus {
     REJECTED,
     CLOSED,
 
-    EXEMPT
+    EXEMPT,
+
+    TERMINATED
 }

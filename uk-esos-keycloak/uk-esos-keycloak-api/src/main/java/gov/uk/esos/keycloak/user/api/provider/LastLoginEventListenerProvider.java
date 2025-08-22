@@ -5,6 +5,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import lombok.extern.jbosslog.JBossLog;
 import org.keycloak.connections.jpa.JpaConnectionProvider;
@@ -54,7 +55,7 @@ public class LastLoginEventListenerProvider implements EventListenerProvider {
         // Use current server time for login event
         OffsetDateTime loginTime = OffsetDateTime.now(ZoneOffset.UTC);
         String loginTimeS = DateTimeFormatter.ISO_DATE_TIME.format(loginTime);
-        UserEntity userEntity = entityManager.find(UserEntity.class, event.getUserId());
+        UserEntity userEntity = entityManager.find(UserEntity.class, event.getUserId(), LockModeType.PESSIMISTIC_WRITE);
         UserAttributeEntity attribute = createLastLoginAttribute(userEntity, loginTimeS);
         entityManager.merge(attribute);
     }

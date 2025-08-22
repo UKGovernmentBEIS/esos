@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import uk.gov.esos.api.authorization.core.domain.AppUser;
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 import uk.gov.esos.api.workflow.request.StartProcessRequestService;
 import uk.gov.esos.api.workflow.request.core.domain.Request;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestCreateActionType;

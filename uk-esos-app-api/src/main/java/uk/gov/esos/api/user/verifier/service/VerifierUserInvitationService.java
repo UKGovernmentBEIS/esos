@@ -77,7 +77,7 @@ public class VerifierUserInvitationService {
 
     private void inviteVerifierUser(AppUser pmrvUser, VerifierUserInvitationDTO verifierUserInvitation,
                                     Long verificationBodyId) {
-        String userId = verifierUserAuthService.registerInvitedVerifierUser(verifierUserInvitation);
+        String userId = verifierUserAuthService.saveInvitedUser(verifierUserInvitation);
 
         String authorityUuid = verifierAuthorityService.createPendingAuthority(verificationBodyId,
             verifierUserInvitation.getRoleCode(), userId, pmrvUser);

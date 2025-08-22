@@ -28,13 +28,12 @@ describe('NotesComponent', () => {
     get notesContent() {
       return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
         .map((row) => [row.querySelectorAll('dd')[0]])
-        .map((pair) => pair.map((element) => element.textContent));
+        .map((pair) => pair.map((element) => element.textContent.trim()));
     }
   }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AccountNotesComponent],
       imports: [GovukDatePipe, RouterTestingModule, SharedModule, SharedUserModule],
       providers: [
         { provide: AccountNotesService, useValue: accountNotesService },
@@ -44,7 +43,6 @@ describe('NotesComponent', () => {
 
     fixture = TestBed.createComponent(AccountNotesComponent);
     component = fixture.componentInstance;
-    component.currentTab = 'notes';
     page = new Page(fixture);
     jest.clearAllMocks();
     fixture.detectChanges();
@@ -60,18 +58,13 @@ describe('NotesComponent', () => {
     expect(accountNotesService.getNotesByAccountId).toHaveBeenLastCalledWith(1, 0, 10);
 
     expect(page.notesContent).toEqual([
-      ['Add a note'],
       [
-        `The note 1file 1Submitter 1, ${govukDatePipe.transform(
-          mockAccountNotesResults.accountNotes[0].lastUpdatedOn,
-          'datetime',
-        )}`,
+        `The note 1
+file 1Submitter 1, ${govukDatePipe.transform(mockAccountNotesResults.accountNotes[0].lastUpdatedOn, 'datetime')}`,
       ],
       [
-        `The note 2Submitter 2, ${govukDatePipe.transform(
-          mockAccountNotesResults.accountNotes[1].lastUpdatedOn,
-          'datetime',
-        )}`,
+        `The note 2
+Submitter 2, ${govukDatePipe.transform(mockAccountNotesResults.accountNotes[1].lastUpdatedOn, 'datetime')}`,
       ],
     ]);
   });

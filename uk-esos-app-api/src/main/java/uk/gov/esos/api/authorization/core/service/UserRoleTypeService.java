@@ -10,6 +10,8 @@ import uk.gov.esos.api.common.domain.enumeration.RoleType;
 
 import static uk.gov.esos.api.common.domain.enumeration.RoleType.OPERATOR;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserRoleTypeService {
@@ -28,6 +30,10 @@ public class UserRoleTypeService {
             .orElse(UserRoleType.builder().userId(userId).roleType(OPERATOR).build());
         return userRoleTypeMapper.toUserRoleTypeDTO(userRoleType);
     }
+    
+    public Optional<UserRoleTypeDTO> getUserRoleTypeByUserIdOpt(String userId) {
+		return userRoleTypeRepository.findById(userId).map(userRoleTypeMapper::toUserRoleTypeDTO);
+	}
 
     /**
      * Checks if the role of the provided user is {@link RoleType#OPERATOR}.

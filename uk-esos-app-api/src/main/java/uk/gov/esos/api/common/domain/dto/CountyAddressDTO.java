@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.esos.api.referencedata.service.County;
 
 @Data
 @NoArgsConstructor
@@ -25,8 +24,7 @@ public class CountyAddressDTO {
     @Size(max = 255, message = "{address.city.typeMismatch}")
     private String city;
 
-    @NotBlank(message = "{address.county.notEmpty}")
-    @County(message = "{address.county.typeMismatch}")
+    @Size(max = 255, message = "{address.county.typeMismatch}")
     private String county;
 
     @NotBlank(message = "{address.postcode.notEmpty}")

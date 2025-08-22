@@ -2,9 +2,9 @@
 /// @group helpers/typography
 ////
 
-@use "sass:math";
+@use 'sass:math';
 
-@import "../tools/px-to-rem";
+@import '../tools/px-to-rem';
 
 /// 'Common typography' helper
 ///
@@ -21,10 +21,6 @@
 
   // If the user is using the default GDS Transport font we need to include
   // the font-face declarations.
-  //
-  // We do not need to include the GDS Transport font-face declarations if
-  // alphagov/govuk_template is being used since nta will already be included by
-  // default.
   @if $govuk-include-default-font-face {
     @include _govuk-font-face-gds-transport;
   }
@@ -68,6 +64,23 @@
   font-weight: $govuk-font-weight-bold if($important, !important, null);
 }
 
+/// Tabular number helper
+///
+/// Switches numerical glyphs (0–9) to use alternative forms with a
+/// monospaced bounding box. This ensures that columns of numbers, such
+/// as those in tables, remain horizontally aligned with one another.
+/// This also has the useful side effect of making numbers more legible
+/// in some situations, such as reference codes, as the numbers are more
+/// distinct and visually separated from one another.
+///
+/// @param {Boolean} $important [false] - Whether to mark declarations as
+///   `!important`. Generally Used to create override classes.
+/// @access public
+
+@mixin govuk-font-tabular-numbers($important: false) {
+  font-variant-numeric: tabular-nums if($important, !important, null);
+}
+
 /// Convert line-heights specified in pixels into a relative value, unless
 /// they are already unit-less (and thus already treated as relative values)
 /// or the units do not match the units used for the font size.
@@ -86,7 +99,31 @@
   @return $line-height;
 }
 
-/// Responsive typography helper
+/// Font size and line height helper
+///
+/// @param {Number} $size - Point from the type scale (the size as it would
+///   appear on tablet and above)
+/// @param {Number} $override-line-height [false] - Non responsive custom line
+///   height. Omit to use the line height from the font map.
+/// @param {Boolean} $important [false] - Whether to mark declarations as
+///   `!important`.
+///
+/// @throw if `$size` is not a valid point from the type scale
+///
+/// @access public
+///
+/// @alias govuk-font-size
+/// @deprecated Use `govuk-font-size` instead
+
+@mixin govuk-typography-responsive($size, $override-line-height: false, $important: false) {
+  @include _warning(
+    'govuk-typography-responsive',
+    'govuk-typography-responsive is deprecated. Use govuk-font-size instead.'
+  );
+  @include govuk-font-size($size, $override-line-height, $important);
+}
+
+/// Font size and line height helper
 ///
 /// Takes a point from the responsive 'font map' as an argument (the size as it
 /// would appear on tablet and above), and uses it to create font-size and
@@ -94,6 +131,7 @@
 ///
 /// Example font map:
 ///
+/// ```scss
 /// 19: (
 ///   null: (
 ///     font-size: 16px,
@@ -108,37 +146,72 @@
 ///     line-height: 1.15
 ///   )
 /// );
+/// ```
 ///
-/// @param {Number} $size - Point from the spacing scale (the size as it would
-///   appear on tablet and above)
-/// @param {Number} $override-line-height [false] - Non responsive custom line
+/// @param {Number | String} $size - Point from the type scale (the size as
+///   it would appear on tablet and above)
+/// @param {Number} $line-height [false] - Non responsive custom line
 ///   height. Omit to use the line height from the font map.
 /// @param {Boolean} $important [false] - Whether to mark declarations as
 ///   `!important`.
 ///
-/// @throw if `$size` is not a valid point from the spacing scale
+/// @throw if `$size` is not a valid point from the type scale
 ///
 /// @access public
 
-@mixin govuk-typography-responsive($size, $override-line-height: false, $important: false) {
+@mixin govuk-font-size($size, $line-height: false, $important: false) {
+  // Flag font sizes that start with underscores so we can suppress warnings on
+  // deprecated sizes used internally, for example `govuk-font($size: "_14")`
+  $size-internal-use-only: str-slice(#{$size}, 1, 1) == '_';
 
-  @if not map-has-key($govuk-typography-scale, $size) {
-    @error "Unknown font size `#{$size}` - expected a point from the typography scale.";
+  // Remove underscore from font sizes flagged for internal use
+  @if $size-internal-use-only {
+    $size: str-slice(#{$size}, 2);
   }
 
+  // Check for a font map exactly matching the given size
   $font-map: map-get($govuk-typography-scale, $size);
 
+  // No match? Try with string type (e.g. $size: "16" not 16)
+  @if not $font-map {
+    @each $font-size in map-keys($govuk-typography-scale) {
+      @if not $font-map and #{$font-size} == #{$size} {
+        $font-map: map-get($govuk-typography-scale, $font-size);
+      }
+    }
+  }
+
+  // Still no match? Throw error
+  @if not $font-map {
+    @error "Unknown font size `#{$size}` - expected a point from the type scale.";
+  }
+
+  // Check for a deprecation within the type scale
+  $deprecation: map-get($font-map, 'deprecation');
+
+  @if $deprecation {
+    // Warn on deprecated font sizes unless flagged for internal use
+    @if not $size-internal-use-only {
+      @include _warning(map-get($deprecation, 'key'), map-get($deprecation, 'message'));
+    }
+
+    // remove the deprecation map keys so they do not break the breakpoint loop
+    $font-map: map-remove($font-map, 'deprecation');
+  }
+
   @each $breakpoint, $breakpoint-map in $font-map {
-    $font-size: map-get($breakpoint-map, "font-size");
+    $font-size: map-get($breakpoint-map, 'font-size');
     $font-size-rem: govuk-px-to-rem($font-size);
 
-    $line-height: _govuk-line-height(
-      $line-height: if(
-        $override-line-height,
-        $override-line-height,
-        map-get($breakpoint-map, "line-height")
-      ),
-      $font-size: $font-size
+    // $calculated-line-height is a separate variable from $line-height,
+    // as otherwise the value would get redefined with each loop and
+    // eventually break _govuk-line-height.
+    //
+    // We continue to call the param $line-height to stay consistent with the
+    // naming with govuk-font.
+    $calculated-line-height: _govuk-line-height(
+      $line-height: if($line-height, $line-height, map-get($breakpoint-map, 'line-height')),
+      $font-size: $font-size,
     );
 
     // Mark rules as !important if $important is true - this will result in
@@ -146,26 +219,20 @@
     // are used in calculations
     $font-size: $font-size if($important, !important, null);
     $font-size-rem: $font-size-rem if($important, !important, null);
-    $line-height: $line-height if($important, !important, null);
+    $calculated-line-height: $calculated-line-height if($important, !important, null);
 
     @if not $breakpoint {
-      font-size: $font-size;
-      @if $govuk-typography-use-rem {
-        font-size: $font-size-rem;
-      }
-      line-height: $line-height;
-    } @else if $breakpoint == "print" {
+      font-size: $font-size-rem;
+      line-height: $calculated-line-height;
+    } @else if $breakpoint == 'print' {
       @include govuk-media-query($media-type: print) {
         font-size: $font-size;
-        line-height: $line-height;
+        line-height: $calculated-line-height;
       }
     } @else {
       @include govuk-media-query($from: $breakpoint) {
-        font-size: $font-size;
-        @if $govuk-typography-use-rem {
-          font-size: $font-size-rem;
-        }
-        line-height: $line-height;
+        font-size: $font-size-rem;
+        line-height: $calculated-line-height;
       }
     }
   }
@@ -173,35 +240,23 @@
 
 /// Font helper
 ///
-/// @param {Number | Boolean} $size Point from the spacing scale (the size as it
-///   would appear on tablet and above). Use `false` to avoid setting a size.
+/// @param {Number | Boolean | String} $size Point from the type scale (the
+///   size as it would appear on tablet and above). Use `false` to avoid setting
+///   a size.
 /// @param {String} $weight [regular] - Weight: `bold` or `regular`
 /// @param {Boolean} $tabular [false] - Whether to use tabular numbers or not
 /// @param {Number} $line-height [false] - Line-height, if overriding the
 ///   default
 ///
-/// @throw if `$size` is not a valid point from the spacing scale (or false)
+/// @throw if `$size` is not a valid point from the type scale (or false)
 ///
 /// @access public
 
 @mixin govuk-font($size, $weight: regular, $tabular: false, $line-height: false) {
-  @if $tabular {
-    // if govuk-font-family-tabular is set use $govuk-font-family-tabular
-    @if $govuk-font-family-tabular {
-      @include govuk-typography-common($font-family: $govuk-font-family-tabular);
-    } @else {
-      @include govuk-typography-common;
-      -webkit-font-feature-settings: "tnum" 1;
-              font-feature-settings: "tnum" 1;
+  @include govuk-typography-common;
 
-      @supports (font-variant-numeric: tabular-nums) {
-        -webkit-font-feature-settings: normal;
-                font-feature-settings: normal;
-        font-variant-numeric: tabular-nums;
-      }
-    }
-  } @else {
-    @include govuk-typography-common;
+  @if $tabular {
+    @include govuk-font-tabular-numbers;
   }
 
   @if $weight == regular {
@@ -211,6 +266,8 @@
   }
 
   @if $size {
-    @include govuk-typography-responsive($size, $override-line-height: $line-height);
+    @include govuk-font-size($size, $line-height);
   }
 }
+
+/*# sourceMappingURL=_typography.scss.map */

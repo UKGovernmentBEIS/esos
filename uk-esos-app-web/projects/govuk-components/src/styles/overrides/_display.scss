@@ -1,5 +1,5 @@
 // stylelint-disable declaration-no-important
-@include govuk-exports("govuk/overrides/display") {
+@include govuk-exports('govuk/overrides/display') {
   .govuk-\!-display-inline {
     display: inline !important;
   }
@@ -22,3 +22,5 @@
     }
   }
 }
+
+/*# sourceMappingURL=_display.scss.map */

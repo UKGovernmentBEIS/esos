@@ -1,13 +1,11 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { map, Observable } from 'rxjs';
+import { first, map } from 'rxjs';
 
-import { DestroySubject } from '@core/services/destroy-subject.service';
 import { OrganisationAccountSummaryComponent } from '@shared/components/organisation-account-summary';
 
-import { OrganisationAccountPayload } from 'esos-api';
+import { AccountsStore } from '..';
 
 @Component({
   selector: 'esos-account-details',
@@ -15,16 +13,12 @@ import { OrganisationAccountPayload } from 'esos-api';
   standalone: true,
   imports: [NgIf, OrganisationAccountSummaryComponent, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DestroySubject],
 })
 export class DetailsComponent {
-  @Input() currentTab: string;
+  account$ = this.accountsStore.pipe(
+    first(),
+    map((accounts) => accounts.selectedAccount),
+  );
 
-  account$ = (
-    this.route.data as Observable<{
-      data: OrganisationAccountPayload;
-    }>
-  ).pipe(map((account) => account.data));
-
-  constructor(private readonly route: ActivatedRoute) {}
+  constructor(private readonly accountsStore: AccountsStore) {}
 }

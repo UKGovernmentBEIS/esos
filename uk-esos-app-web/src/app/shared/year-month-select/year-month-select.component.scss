@@ -1,0 +1,7 @@
+@import 'base';
+
+.year-month-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: govuk-spacing(4);
+}

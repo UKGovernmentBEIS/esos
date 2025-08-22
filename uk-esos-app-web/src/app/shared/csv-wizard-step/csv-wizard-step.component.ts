@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 
 import { BehaviorSubject, filter, startWith, take } from 'rxjs';
 
+import { ReturnToTaskOrActionPageComponent } from '@common/shared/components/return-to-link';
 import { CsvErrorSummaryComponent } from '@shared/csv-error-summary/csv-error-summary.component';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
 import { PendingButtonDirective } from '@shared/pending-button.directive';
@@ -24,6 +25,7 @@ import { ButtonDirective, LinkDirective } from 'govuk-components';
     ReactiveFormsModule,
     LinkDirective,
     CsvErrorSummaryComponent,
+    ReturnToTaskOrActionPageComponent,
   ],
   templateUrl: './csv-wizard-step.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +37,7 @@ export class CsvWizardStepComponent {
   @Input() caption: string;
   @Input() submitText = 'Continue';
   @Input() hideSubmit: boolean;
+  @Input() showReturnLink = false;
   @Input() showCancelLink: boolean = false;
   @Input() cancelLinkPath: string;
   @Output() readonly formSubmit = new EventEmitter<UntypedFormGroup>();

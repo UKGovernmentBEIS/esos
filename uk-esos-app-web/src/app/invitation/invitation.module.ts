@@ -8,16 +8,10 @@ import { SharedUserModule } from '../shared-user/shared-user.module';
 import { InvalidLinkComponent } from './invalid-link/invalid-link.component';
 import { InvitationConfirmationComponent } from './invitation-confirmation/invitation-confirmation.component';
 import { InvitationRouting } from './invitation-routing.module';
-import { RegulatorInvitationComponent } from './regulator-invitation/regulator-invitation.component';
 import { VerifierInvitationComponent } from './verifier-invitation/verifier-invitation.component';
 
 @NgModule({
-  declarations: [
-    InvalidLinkComponent,
-    InvitationConfirmationComponent,
-    RegulatorInvitationComponent,
-    VerifierInvitationComponent,
-  ],
+  declarations: [InvalidLinkComponent, InvitationConfirmationComponent, VerifierInvitationComponent],
   imports: [InvitationRouting, PageHeadingComponent, PendingButtonDirective, SharedModule, SharedUserModule],
 })
 export class InvitationModule {}

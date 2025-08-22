@@ -40,63 +40,57 @@ describe('EnergyConsumptionReductionCategoriesComponent', () => {
     }
 
     get energyManagementPractices(): number {
-      return +this.getInputValue('#energyManagementPractices');
+      return +this.getInputValue('#energyManagementPractices.energyConsumption');
     }
 
     set energyManagementPractices(value: number) {
-      this.setInputValue('#energyManagementPractices', value);
+      this.setInputValue('#energyManagementPractices.energyConsumption', value);
     }
 
     get behaviourChangeInterventions(): number {
-      return +this.getInputValue('#behaviourChangeInterventions');
+      return +this.getInputValue('#behaviourChangeInterventions.energyConsumption');
     }
 
     set behaviourChangeInterventions(value: number) {
-      this.setInputValue('#behaviourChangeInterventions', value);
+      this.setInputValue('#behaviourChangeInterventions.energyConsumption', value);
     }
 
     get training(): number {
-      return +this.getInputValue('#training');
+      return +this.getInputValue('#training.energyConsumption');
     }
 
     set training(value: number) {
-      this.setInputValue('#training', value);
+      this.setInputValue('#training.energyConsumption', value);
     }
 
     get controlsImprovements(): number {
-      return +this.getInputValue('#controlsImprovements');
+      return +this.getInputValue('#controlsImprovements.energyConsumption');
     }
 
     set controlsImprovements(value: number) {
-      this.setInputValue('#controlsImprovements', value);
+      this.setInputValue('#controlsImprovements.energyConsumption', value);
     }
 
-    get shortTermCapitalInvestments(): number {
-      return +this.getInputValue('#shortTermCapitalInvestments');
+    get capitalInvestments(): number {
+      return +this.getInputValue('#capitalInvestments.energyConsumption');
     }
 
-    set shortTermCapitalInvestments(value: number) {
-      this.setInputValue('#shortTermCapitalInvestments', value);
-    }
-
-    get longTermCapitalInvestments(): number {
-      return +this.getInputValue('#longTermCapitalInvestments');
-    }
-
-    set longTermCapitalInvestments(value: number) {
-      this.setInputValue('#longTermCapitalInvestments', value);
+    set capitalInvestments(value: number) {
+      this.setInputValue('#capitalInvestments.energyConsumption', value);
     }
 
     get otherMeasures(): number {
-      return +this.getInputValue('#otherMeasures');
+      return +this.getInputValue('#otherMeasures.energyConsumption');
     }
 
     set otherMeasures(value: number) {
-      this.setInputValue('#otherMeasures', value);
+      this.setInputValue('#otherMeasures.energyConsumption', value);
     }
 
-    get total() {
-      return this.query<HTMLParagraphElement>('p.govuk-body').textContent.trim();
+    get totalConsumption() {
+      return this.query<HTMLParagraphElement>(
+        '.govuk-heading-m + .govuk-grid-row .govuk-grid-column-one-third:nth-child(1)',
+      ).textContent.trim();
     }
 
     get errorSummaryListContents(): string[] {
@@ -139,9 +133,9 @@ describe('EnergyConsumptionReductionCategoriesComponent', () => {
           {
             reportingObligation: {
               qualificationType: 'QUALIFY',
-              noQualificationReason: 'sfgsfdsfdgsd',
+              noQualificationReason: 'no reason',
               reportingObligationDetails: {
-                qualificationReasonTypes: ['TURNOVER_MORE_THAN_44M', 'STAFF_MEMBERS_MORE_THAN_250'],
+                qualificationReasonType: 'TURNOVER_MORE_THAN_44M',
                 energyResponsibilityType: 'RESPONSIBLE',
                 complianceRouteDistribution: {
                   iso50001Pct: 100,
@@ -155,7 +149,7 @@ describe('EnergyConsumptionReductionCategoriesComponent', () => {
             },
             alternativeComplianceRoutes: {
               ...mockAlternativeComplianceRoutes,
-              totalEnergyConsumptionReduction: 28,
+              totalEnergyConsumptionReduction: { energyConsumption: 28, energyCost: '0' },
             },
           },
           { alternativeComplianceRoutes: TaskItemStatus.IN_PROGRESS },
@@ -182,26 +176,10 @@ describe('EnergyConsumptionReductionCategoriesComponent', () => {
 
       page.energyManagementPractices = 1;
       page.behaviourChangeInterventions = 2;
-      page.training = 3;
-      page.controlsImprovements = 4;
-      page.shortTermCapitalInvestments = 5;
-      page.longTermCapitalInvestments = 6;
-      page.otherMeasures = 0;
-
-      page.submitButton.click();
-      fixture.detectChanges();
-
-      expect(page.errorSummaryListContents).toEqual([
-        'The total annual reduction in energy consumption in kWh from alternative compliance routes across buildings, transport, industrial processes and other processes must equal the total annual reduction in energy consumption in kWh across the categories listed below.',
-      ]);
-
-      page.energyManagementPractices = 1;
-      page.behaviourChangeInterventions = 2;
-      page.training = 3;
-      page.controlsImprovements = 4;
-      page.shortTermCapitalInvestments = 2;
-      page.longTermCapitalInvestments = 0;
-      page.otherMeasures = 0;
+      page.training = 1;
+      page.controlsImprovements = 2;
+      page.capitalInvestments = 2;
+      page.otherMeasures = 1;
 
       page.submitButton.click();
       fixture.detectChanges();
@@ -216,14 +194,14 @@ describe('EnergyConsumptionReductionCategoriesComponent', () => {
             alternativeComplianceRoutes: {
               ...mockAlternativeComplianceRoutes,
               energyConsumptionReductionCategories: {
-                energyManagementPractices: 1,
-                behaviourChangeInterventions: 2,
-                training: 3,
-                controlsImprovements: 4,
-                shortTermCapitalInvestments: 2,
-                longTermCapitalInvestments: 0,
-                otherMeasures: 0,
-                total: 12,
+                energyManagementPractices: { energyConsumption: 1, energyCost: '0.00' },
+                behaviourChangeInterventions: { energyConsumption: 2, energyCost: '0.00' },
+                training: { energyConsumption: 1, energyCost: '0.00' },
+                controlsImprovements: { energyConsumption: 2, energyCost: '0.00' },
+                capitalInvestments: { energyConsumption: 2, energyCost: '0.00' },
+                otherMeasures: { energyConsumption: 1, energyCost: '0.00' },
+                energyConsumptionTotal: 9,
+                energyCostTotal: '0.00',
               },
             },
           },
@@ -254,7 +232,7 @@ describe('EnergyConsumptionReductionCategoriesComponent', () => {
       expect(page.heading1.textContent.trim()).toEqual(
         alternativeComplianceRoutesMap.energyConsumptionReductionCategories.title,
       );
-      expect(page.total).toEqual('12 kWh');
+      expect(page.totalConsumption).toEqual('9 kWh');
       expect(page.submitButton).toBeTruthy();
     });
 

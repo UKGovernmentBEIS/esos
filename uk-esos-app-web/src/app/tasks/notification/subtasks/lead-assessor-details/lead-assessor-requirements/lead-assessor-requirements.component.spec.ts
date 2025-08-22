@@ -63,7 +63,7 @@ describe('LeadAssessorRequirementsComponent', () => {
 
   it('should display correct form labels', () => {
     expect(
-      screen.getByText('Has the Lead Assessor reviewed and confirmed that the assessment meets the ESOS requirements?'),
+      screen.getByText('Has the lead assessor reviewed and confirmed that the assessment meets the ESOS requirements?'),
     ).toBeInTheDocument();
   });
 

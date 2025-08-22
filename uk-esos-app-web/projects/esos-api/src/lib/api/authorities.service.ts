@@ -200,9 +200,7 @@ export class AuthoritiesService {
     }
 
     return this.httpClient.get<Array<RoleDTO>>(
-      `${this.configuration.basePath}/v1.0/authorities/account/${encodeURIComponent(
-        String(accountId),
-      )}/operator-role-codes`,
+      `${this.configuration.basePath}/v1.0/authorities/account/${encodeURIComponent(String(accountId))}/operator-role-codes`,
       {
         responseType: <any>responseType_,
         withCredentials: this.configuration.withCredentials,

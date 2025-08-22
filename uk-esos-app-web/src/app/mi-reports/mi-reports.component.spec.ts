@@ -16,8 +16,7 @@ describe('MiReportsComponent', () => {
 
   const miReports = [
     { id: 1, miReportType: 'LIST_OF_ACCOUNTS_USERS_CONTACTS' },
-    { id: 2, miReportType: 'COMPLETED_WORK' },
-    { id: 3, miReportType: 'REGULATOR_OUTSTANDING_REQUEST_TASKS' },
+    { id: 2, miReportType: 'CUSTOM' },
   ];
 
   class Page extends BasePage<MiReportsComponent> {
@@ -51,7 +50,7 @@ describe('MiReportsComponent', () => {
 
   it('should create table with expected content', () => {
     const cells = page.cells;
-    expect(cells.length).toEqual(3);
+    expect(cells.length).toEqual(2);
     const reportDescriptions = cells.map((c) => c.textContent);
     const expectedDescriptions = miReports
       .map((r) => miReportTypeDescriptionMap[r.miReportType])

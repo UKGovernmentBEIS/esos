@@ -1,1 +1,1 @@
-export type LegendSizeType = 'normal' | 'medium' | 'large' | 'heading';
+export type LegendSizeType = 'normal' | 'small' | 'medium' | 'large' | 'heading';

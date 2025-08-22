@@ -16,12 +16,10 @@ import { Observable } from 'rxjs';
 
 import { Configuration } from '../configuration';
 import { CustomHttpParameterCodec } from '../encoder';
-import { EmailDTO } from '../model/emailDTO';
-import { InvitedUserEnableDTO } from '../model/invitedUserEnableDTO';
 import { OperatorInvitedUserInfoDTO } from '../model/operatorInvitedUserInfoDTO';
 import { OperatorUserDTO } from '../model/operatorUserDTO';
+import { OperatorUserInviteAndRegisterDTO } from '../model/operatorUserInviteAndRegisterDTO';
 import { OperatorUserRegistrationDTO } from '../model/operatorUserRegistrationDTO';
-import { OperatorUserRegistrationWithCredentialsDTO } from '../model/operatorUserRegistrationWithCredentialsDTO';
 import { TokenDTO } from '../model/tokenDTO';
 import { BASE_PATH } from '../variables';
 
@@ -160,39 +158,41 @@ export class OperatorUsersRegistrationService {
   }
 
   /**
-   * Enables a new operator user from invitation
-   * @param invitedUserEnableDTO
+   * Accept invitation and register for operator user
+   * @param operatorUserInviteAndRegisterDTO
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public enableOperatorInvitedUser(invitedUserEnableDTO: InvitedUserEnableDTO): Observable<OperatorUserDTO>;
-  public enableOperatorInvitedUser(
-    invitedUserEnableDTO: InvitedUserEnableDTO,
+  public acceptOperatorInvitationAndRegister(
+    operatorUserInviteAndRegisterDTO: OperatorUserInviteAndRegisterDTO,
+  ): Observable<OperatorInvitedUserInfoDTO>;
+  public acceptOperatorInvitationAndRegister(
+    operatorUserInviteAndRegisterDTO: OperatorUserInviteAndRegisterDTO,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<OperatorUserDTO>>;
-  public enableOperatorInvitedUser(
-    invitedUserEnableDTO: InvitedUserEnableDTO,
+  ): Observable<HttpResponse<OperatorInvitedUserInfoDTO>>;
+  public acceptOperatorInvitationAndRegister(
+    operatorUserInviteAndRegisterDTO: OperatorUserInviteAndRegisterDTO,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<OperatorUserDTO>>;
-  public enableOperatorInvitedUser(
-    invitedUserEnableDTO: InvitedUserEnableDTO,
+  ): Observable<HttpEvent<OperatorInvitedUserInfoDTO>>;
+  public acceptOperatorInvitationAndRegister(
+    operatorUserInviteAndRegisterDTO: OperatorUserInviteAndRegisterDTO,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<OperatorUserDTO>;
-  public enableOperatorInvitedUser(
-    invitedUserEnableDTO: InvitedUserEnableDTO,
+  ): Observable<OperatorInvitedUserInfoDTO>;
+  public acceptOperatorInvitationAndRegister(
+    operatorUserInviteAndRegisterDTO: OperatorUserInviteAndRegisterDTO,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
-    if (invitedUserEnableDTO === null || invitedUserEnableDTO === undefined) {
+    if (operatorUserInviteAndRegisterDTO === null || operatorUserInviteAndRegisterDTO === undefined) {
       throw new Error(
-        'Required parameter invitedUserEnableDTO was null or undefined when calling enableOperatorInvitedUser.',
+        'Required parameter operatorUserInviteAndRegisterDTO was null or undefined when calling acceptOperatorInvitationAndRegister.',
       );
     }
 
@@ -220,164 +220,9 @@ export class OperatorUsersRegistrationService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.put<OperatorUserDTO>(
-      `${this.configuration.basePath}/v1.0/operator-users/registration/enable-from-invitation`,
-      invitedUserEnableDTO,
-      {
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
-  }
-
-  /**
-   * Registers a new operator user from invitation token without credentials
-   * @param operatorUserRegistrationDTO
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public registerNewUserFromInvitation(
-    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
-  ): Observable<OperatorUserDTO>;
-  public registerNewUserFromInvitation(
-    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
-    observe: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<OperatorUserDTO>>;
-  public registerNewUserFromInvitation(
-    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
-    observe: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<OperatorUserDTO>>;
-  public registerNewUserFromInvitation(
-    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
-    observe: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<OperatorUserDTO>;
-  public registerNewUserFromInvitation(
-    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
-    observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any> {
-    if (operatorUserRegistrationDTO === null || operatorUserRegistrationDTO === undefined) {
-      throw new Error(
-        'Required parameter operatorUserRegistrationDTO was null or undefined when calling registerNewUserFromInvitation.',
-      );
-    }
-
-    let headers = this.defaultHeaders;
-
-    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (httpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = ['application/json'];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected !== undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    let responseType_: 'text' | 'json' = 'json';
-    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-      responseType_ = 'text';
-    }
-
-    return this.httpClient.put<OperatorUserDTO>(
-      `${this.configuration.basePath}/v1.0/operator-users/registration/register-from-invitation-no-credentials`,
-      operatorUserRegistrationDTO,
-      {
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
-  }
-
-  /**
-   * Registers a new operator user from invitation token
-   * @param operatorUserRegistrationWithCredentialsDTO
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public registerNewUserFromInvitationWithCredentials(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
-  ): Observable<OperatorUserDTO>;
-  public registerNewUserFromInvitationWithCredentials(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
-    observe: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<OperatorUserDTO>>;
-  public registerNewUserFromInvitationWithCredentials(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
-    observe: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<OperatorUserDTO>>;
-  public registerNewUserFromInvitationWithCredentials(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
-    observe: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<OperatorUserDTO>;
-  public registerNewUserFromInvitationWithCredentials(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
-    observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any> {
-    if (
-      operatorUserRegistrationWithCredentialsDTO === null ||
-      operatorUserRegistrationWithCredentialsDTO === undefined
-    ) {
-      throw new Error(
-        'Required parameter operatorUserRegistrationWithCredentialsDTO was null or undefined when calling registerNewUserFromInvitationWithCredentials.',
-      );
-    }
-
-    let headers = this.defaultHeaders;
-
-    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (httpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = ['application/json'];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected !== undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    let responseType_: 'text' | 'json' = 'json';
-    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-      responseType_ = 'text';
-    }
-
-    return this.httpClient.put<OperatorUserDTO>(
-      `${this.configuration.basePath}/v1.0/operator-users/registration/register-from-invitation`,
-      operatorUserRegistrationWithCredentialsDTO,
+    return this.httpClient.post<OperatorInvitedUserInfoDTO>(
+      `${this.configuration.basePath}/v1.0/operator-users/registration/accept-invitation-and-register`,
+      operatorUserInviteAndRegisterDTO,
       {
         responseType: <any>responseType_,
         withCredentials: this.configuration.withCredentials,
@@ -390,43 +235,40 @@ export class OperatorUsersRegistrationService {
 
   /**
    * Register a new operator user
-   * @param operatorUserRegistrationWithCredentialsDTO
+   * @param operatorUserRegistrationDTO
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public registerUser(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
+  public registerCurrentOperatorUser(
+    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
   ): Observable<OperatorUserDTO>;
-  public registerUser(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
+  public registerCurrentOperatorUser(
+    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<OperatorUserDTO>>;
-  public registerUser(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
+  public registerCurrentOperatorUser(
+    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<OperatorUserDTO>>;
-  public registerUser(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
+  public registerCurrentOperatorUser(
+    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<OperatorUserDTO>;
-  public registerUser(
-    operatorUserRegistrationWithCredentialsDTO: OperatorUserRegistrationWithCredentialsDTO,
+  public registerCurrentOperatorUser(
+    operatorUserRegistrationDTO: OperatorUserRegistrationDTO,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
-    if (
-      operatorUserRegistrationWithCredentialsDTO === null ||
-      operatorUserRegistrationWithCredentialsDTO === undefined
-    ) {
+    if (operatorUserRegistrationDTO === null || operatorUserRegistrationDTO === undefined) {
       throw new Error(
-        'Required parameter operatorUserRegistrationWithCredentialsDTO was null or undefined when calling registerUser.',
+        'Required parameter operatorUserRegistrationDTO was null or undefined when calling registerCurrentOperatorUser.',
       );
     }
 
@@ -456,151 +298,7 @@ export class OperatorUsersRegistrationService {
 
     return this.httpClient.post<OperatorUserDTO>(
       `${this.configuration.basePath}/v1.0/operator-users/registration/register`,
-      operatorUserRegistrationWithCredentialsDTO,
-      {
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
-  }
-
-  /**
-   * Sends a verification email
-   * @param emailDTO
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public sendVerificationEmail(emailDTO: EmailDTO): Observable<any>;
-  public sendVerificationEmail(
-    emailDTO: EmailDTO,
-    observe: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<any>>;
-  public sendVerificationEmail(
-    emailDTO: EmailDTO,
-    observe: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<any>>;
-  public sendVerificationEmail(
-    emailDTO: EmailDTO,
-    observe: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any>;
-  public sendVerificationEmail(
-    emailDTO: EmailDTO,
-    observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any> {
-    if (emailDTO === null || emailDTO === undefined) {
-      throw new Error('Required parameter emailDTO was null or undefined when calling sendVerificationEmail.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (httpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = ['application/json'];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected !== undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    let responseType_: 'text' | 'json' = 'json';
-    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-      responseType_ = 'text';
-    }
-
-    return this.httpClient.post<any>(
-      `${this.configuration.basePath}/v1.0/operator-users/registration/verification-email`,
-      emailDTO,
-      {
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
-  }
-
-  /**
-   * Verifies the JWT token provided in the email
-   * @param tokenDTO
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public verifyUserRegistrationToken(tokenDTO: TokenDTO): Observable<EmailDTO>;
-  public verifyUserRegistrationToken(
-    tokenDTO: TokenDTO,
-    observe: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<EmailDTO>>;
-  public verifyUserRegistrationToken(
-    tokenDTO: TokenDTO,
-    observe: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<EmailDTO>>;
-  public verifyUserRegistrationToken(
-    tokenDTO: TokenDTO,
-    observe: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<EmailDTO>;
-  public verifyUserRegistrationToken(
-    tokenDTO: TokenDTO,
-    observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any> {
-    if (tokenDTO === null || tokenDTO === undefined) {
-      throw new Error('Required parameter tokenDTO was null or undefined when calling verifyUserRegistrationToken.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (httpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = ['application/json'];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected !== undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    let responseType_: 'text' | 'json' = 'json';
-    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-      responseType_ = 'text';
-    }
-
-    return this.httpClient.post<EmailDTO>(
-      `${this.configuration.basePath}/v1.0/operator-users/registration/token-verification`,
-      tokenDTO,
+      operatorUserRegistrationDTO,
       {
         responseType: <any>responseType_,
         withCredentials: this.configuration.withCredentials,

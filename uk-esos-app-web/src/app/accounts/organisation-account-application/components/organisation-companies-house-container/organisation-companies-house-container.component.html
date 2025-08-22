@@ -1,0 +1,12 @@
+<esos-wizard-step
+  (formSubmit)="submit()"
+  [formGroup]="form"
+  heading="Is the UK organisation registered at Companies House?"
+  caption="Organisation details"
+  submitText="Save and continue"
+  [showBackLink]="true"
+  [showCancelLink]="true"
+  [cancelLinkPath]="'cancel'"
+>
+  <esos-organisation-companies-house-form></esos-organisation-companies-house-form>
+</esos-wizard-step>

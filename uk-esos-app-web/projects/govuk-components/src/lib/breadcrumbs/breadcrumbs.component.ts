@@ -4,11 +4,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'govuk-breadcrumbs',
   standalone: true,
   template: `
-    <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
-      <ol class="govuk-breadcrumbs__list">
-        <ng-content></ng-content>
-      </ol>
-    </div>
+    <nav aria-label="Breadcrumb" class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+        <ol class="govuk-breadcrumbs__list">
+          <ng-content></ng-content>
+        </ol>
+    </nav>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -8,9 +8,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <p class="govuk-body">Try again later.</p>
 
     <p class="govuk-body">
-      <a href="mailto:esos@environment-agency.gov.uk" govukLink class="govuk-!-font-weight-bold">
-        Contact the ESOS helpdesk</a
-      >
+      <a href="mailto:esos-it@environment-agency.gov.uk" govukLink class="govuk-!-font-weight-bold">
+        Contact the ESOS helpdesk
+      </a>
       if you have any questions.
     </p>
   `,

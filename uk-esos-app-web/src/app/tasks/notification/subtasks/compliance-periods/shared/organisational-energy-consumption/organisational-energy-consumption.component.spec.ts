@@ -15,12 +15,13 @@ import {
   COMPLIANCE_PERIOD_SUB_TASK,
   CompliancePeriodSubtask,
 } from '@tasks/notification/subtasks/compliance-periods/compliance-period.token';
-import { OrganisationalEnergyConsumptionComponent } from '@tasks/notification/subtasks/compliance-periods/shared/organisational-energy-consumption/organisational-energy-consumption.component';
 import { mockFirstCompliancePeriod, mockStateBuild } from '@tasks/notification/testing/mock-data';
 import { TaskItemStatus } from '@tasks/task-item-status';
 import { ActivatedRouteStub, BasePage, MockType } from '@testing';
 
 import { TasksService } from 'esos-api';
+
+import { OrganisationalEnergyConsumptionComponent } from './organisational-energy-consumption.component';
 
 describe('OrganisationalEnergyConsumptionComponent', () => {
   let component: OrganisationalEnergyConsumptionComponent;
@@ -35,7 +36,7 @@ describe('OrganisationalEnergyConsumptionComponent', () => {
     processRequestTaskAction: jest.fn().mockReturnValue(of(null)),
   };
 
-  const seState = () => {
+  const setState = () => {
     store.setState(
       mockStateBuild(
         { firstCompliancePeriod: { ...mockFirstCompliancePeriod } },
@@ -45,6 +46,10 @@ describe('OrganisationalEnergyConsumptionComponent', () => {
   };
 
   class Page extends BasePage<OrganisationalEnergyConsumptionComponent> {
+    get caption() {
+      return this.query<HTMLSpanElement>('span[class^="govuk-caption-"]');
+    }
+
     get submitButton() {
       return this.query<HTMLButtonElement>('button[type="submit"]');
     }
@@ -67,9 +72,8 @@ describe('OrganisationalEnergyConsumptionComponent', () => {
         { provide: COMPLIANCE_PERIOD_SUB_TASK, useValue: CompliancePeriodSubtask.FIRST },
       ],
     });
-
     store = TestBed.inject(RequestTaskStore);
-    seState();
+    setState();
 
     fixture = TestBed.createComponent(OrganisationalEnergyConsumptionComponent);
     component = fixture.componentInstance;
@@ -93,17 +97,14 @@ describe('OrganisationalEnergyConsumptionComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(navigateSpy).toHaveBeenCalledWith(['../significant-energy-consumption-exists'], expect.anything());
+    expect(navigateSpy).toHaveBeenCalledWith(['../organisational-energy-consumption-breakdown'], expect.anything());
   });
 
-  it('should display the correct heading and total', () => {
+  it('should display the correct heading and caption', () => {
     component.isFirstCompliancePeriod = true;
     fixture.detectChanges();
-
     const compiled = fixture.nativeElement;
-
     expect(compiled.textContent).toContain(WIZARD_STEP_HEADINGS['organisational-energy-consumption'](true));
-
-    expect(compiled.querySelector('h2.govuk-heading-m').textContent).toContain('Total');
+    expect(page.caption.textContent.trim()).toEqual('First compliance period');
   });
 });

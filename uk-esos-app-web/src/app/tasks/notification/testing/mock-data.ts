@@ -85,7 +85,7 @@ export const mockNotificationTaskPayload: NotificationTaskPayload = {
     reportingObligation: {
       qualificationType: 'QUALIFY',
       reportingObligationDetails: {
-        qualificationReasonTypes: [],
+        qualificationReasonType: null,
         energyResponsibilityType: 'RESPONSIBLE',
       },
     },
@@ -108,34 +108,43 @@ export const mockAssessmentPersonnel: AssessmentPersonnel = {
 };
 
 export const mockEnergySavingOpportunities: EnergySavingsOpportunities = {
+  implementationEnergyConsumption: {
+    energyConsumption: 100,
+    energyCost: '2.00',
+  },
   energyConsumption: {
-    buildings: 2,
-    transport: 4,
-    industrialProcesses: 9,
-    otherProcesses: 13,
-    total: 28,
+    buildings: { energyConsumption: 2, energyCost: '2.00' },
+    transport: { energyConsumption: 4, energyCost: '2.00' },
+    industrialProcesses: { energyConsumption: 9, energyCost: '4.45' },
+    otherProcesses: { energyConsumption: 13, energyCost: '110.60' },
+    energyConsumptionTotal: 28,
+    energyCostTotal: '117.05',
   },
   energySavingsCategories: {
-    energyManagementPractices: 1,
-    behaviourChangeInterventions: 2,
-    training: 3,
-    controlsImprovements: 4,
-    shortTermCapitalInvestments: 5,
-    longTermCapitalInvestments: 6,
-    otherMeasures: 7,
-    total: 28,
+    energyManagementPractices: { energyConsumption: 1, energyCost: '1.00' },
+    behaviourChangeInterventions: { energyConsumption: 2, energyCost: '2.20' },
+    training: { energyConsumption: 3, energyCost: '3.03' },
+    controlsImprovements: { energyConsumption: 4, energyCost: '4.00' },
+    capitalInvestments: { energyConsumption: 6, energyCost: '4.00' },
+    otherMeasures: { energyConsumption: 7, energyCost: '4.00' },
+    energyConsumptionTotal: 28,
+    energyCostTotal: '6.23',
   },
 };
 
 export const mockResponsibleUndertaking: ResponsibleUndertaking = {
   organisationDetails: {
+    registrationNumberExist: true,
+    registrationNumber: 'AB123456',
     name: 'Corporate Legal Entity Account 2',
-    registrationNumber: '111111',
     line1: 'Some address 1',
     line2: 'Some address 2',
     city: 'London',
     county: 'London',
     postcode: '511111',
+    type: 'OTHER',
+    otherTypeName: 'some classification name',
+    codes: ['CodeA', 'CodeB', 'CodeC'],
   },
   tradingDetails: {
     exist: true,
@@ -148,41 +157,59 @@ export const mockResponsibleUndertaking: ResponsibleUndertaking = {
       number: '02071234567',
     },
   },
+  isBehalfOfTrust: true,
+  trustName: 'Trust name',
   hasOverseasParentDetails: true,
   overseasParentDetails: {
     name: 'Parent company name',
     tradingName: 'Parent company trading name',
   },
 };
+
 export const mockOrganisationStructure: OrganisationStructure = {
-  hasCeasedToBePartOfGroup: false,
-  isPartOfArrangement: true,
-  isPartOfFranchise: false,
-  isTrust: true,
+  isHighestParent: true,
+  isNonComplyingUndertakingsIncluded: true,
+  organisationUndertakingDetails: [
+    {
+      organisationName: 'First undertaking',
+      registrationNumber: '11111111',
+    },
+    {
+      organisationName: 'Second undertaking',
+      registrationNumber: '2222222',
+    },
+  ],
   organisationsAssociatedWithRU: [
     {
+      registrationNumberExist: true,
+      registrationNumber: '00000000',
       hasCeasedToBePartOfGroup: true,
-      isCoveredByThisNotification: true,
+      classificationCodesDetails: {
+        areSameAsRU: false,
+        codes: {
+          type: 'SIC',
+          codes: ['111111'],
+        },
+      },
       isParentOfResponsibleUndertaking: true,
       isPartOfArrangement: true,
       isPartOfFranchise: false,
-      isSubsidiaryOfResponsibleUndertaking: true,
-      isTrust: false,
+      isSubsidiaryOfResponsibleUndertaking: false,
       organisationName: 'Organisation name',
     },
   ],
+  isGroupStructureChartProvided: true,
 };
 
 export const mockEnergySavingsAchieved: EnergySavingsAchieved = {
   details: 'lorem ipsum',
-  energySavingCategoriesExist: true,
+  energySavingCategoriesExist: 'YES',
   energySavingsCategories: {
     energyManagementPractices: 0,
     behaviourChangeInterventions: 0,
     training: 0,
     controlsImprovements: 0,
-    shortTermCapitalInvestments: 0,
-    longTermCapitalInvestments: 0,
+    capitalInvestments: 0,
     otherMeasures: 0,
     total: 0,
   },
@@ -193,7 +220,7 @@ export const mockEnergySavingsAchieved: EnergySavingsAchieved = {
     otherProcesses: 0,
     total: 0,
   },
-  energySavingsRecommendationsExist: true,
+  energySavingsRecommendationsExist: 'YES',
   energySavingsRecommendations: {
     energyAudits: 0,
     alternativeComplianceRoutes: 0,
@@ -204,7 +231,7 @@ export const mockEnergySavingsAchieved: EnergySavingsAchieved = {
 
 export const mockEnergySavingsAchievedWithTotalEstimate: EnergySavingsAchieved = {
   details: 'lorem ipsum',
-  energySavingsRecommendationsExist: true,
+  energySavingsRecommendationsExist: 'YES',
   energySavingsRecommendations: {
     energyAudits: 0,
     alternativeComplianceRoutes: 0,
@@ -241,45 +268,37 @@ export const mockEnergyConsumptionDetails: EnergyConsumptionDetails = {
     industrialProcesses: 45,
     otherProcesses: 0,
     total: 145,
-    significantEnergyConsumptionPct: 97,
+    significantEnergyConsumptionPct: 96,
   },
   energyIntensityRatioData: {
-    buildingsIntensityRatio: {
-      ratio: '50',
-      unit: 'm2',
+    buildings: {
+      energyIntensityRatios: [{ ratio: '50', unit: 'm2' }],
       additionalInformation: 'Buildings additional information',
     },
-    freightsIntensityRatio: {
-      ratio: '60',
-      unit: 'freight miles',
+    transport: {
+      energyIntensityRatios: [{ ratio: '60', unit: 'm2' }],
+      additionalInformation: 'Transport additional information',
     },
-    passengersIntensityRatio: {
-      ratio: '70',
-      unit: 'passenger miles',
-      additionalInformation: null,
+    industrialProcesses: {
+      energyIntensityRatios: [{ ratio: '70', unit: 'm2' }],
+      additionalInformation: 'Industrial processes additional information',
     },
-    industrialProcessesIntensityRatio: {
-      ratio: '80',
-      unit: 'tonnes',
-      additionalInformation: null,
+    otherProcesses: {
+      energyIntensityRatios: [{ ratio: '80', unit: 'm2' }],
+      additionalInformation: 'Other processes additional information',
     },
-    otherProcessesIntensityRatios: [
-      {
-        name: 'custom',
-        ratio: '100',
-        unit: 'litres',
-        additionalInformation: null,
-      },
-    ],
   },
   additionalInformationExists: true,
   additionalInformation: 'Additional info',
 };
 
 export const mockComplianceRoute: ComplianceRoute = {
-  areDataEstimated: false,
-  twelveMonthsVerifiableDataUsed: 'YES',
-  energyConsumptionProfilingUsed: 'NOT_APPLICABLE',
+  estimatedCalculationTypes: ['TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'],
+  areTwelveMonthsVerifiableDataUsed: false,
+  twelveMonthsVerifiableDataUsedReason: 'reason1',
+  areEstimationMethodsRecorded: 'YES',
+  energyConsumptionProfilingUsed: 'NO',
+  isEnergyConsumptionProfilingNotUsedRecorded: 'SKIP_QUESTION',
   energyAudits: [
     {
       description: 'desc1',
@@ -289,14 +308,13 @@ export const mockComplianceRoute: ComplianceRoute = {
     },
     {
       description: 'desc2',
-      numberOfSitesCovered: 999,
       numberOfSitesVisited: 999,
       reason: 'reason2',
     },
   ],
   partsProhibitedFromDisclosingExist: true,
   partsProhibitedFromDisclosing: 'parts',
-  partsProhibitedFromDisclosingReason: 'reason',
+  partsProhibitedFromDisclosingReason: 'reason2',
 };
 
 export const mockSignificantEnergyConsumption: SignificantEnergyConsumption = {
@@ -308,7 +326,7 @@ export const mockSignificantEnergyConsumption: SignificantEnergyConsumption = {
   significantEnergyConsumptionPct: 25,
 };
 
-export const mockEnergyConsumption: EnergyConsumption = {
+export const mockEnergyConsumptionBreakdown: EnergyConsumption = {
   buildings: 4000,
   transport: 2500,
   industrialProcesses: 1500,
@@ -317,29 +335,26 @@ export const mockEnergyConsumption: EnergyConsumption = {
 };
 
 export const mockFirstCompliancePeriodDetails: FirstCompliancePeriodDetails = {
-  organisationalEnergyConsumption: mockEnergyConsumption,
-  significantEnergyConsumptionExists: true,
+  organisationalEnergyConsumption: 0,
+  organisationalEnergyConsumptionBreakdown: mockEnergyConsumptionBreakdown,
   significantEnergyConsumption: mockSignificantEnergyConsumption,
   explanation: 'Explanation for changes in total consumption',
-  potentialReductionExists: true,
-  potentialReduction: mockEnergyConsumption,
+  potentialReduction: mockEnergyConsumptionBreakdown,
 };
 
 export const mockFirstCompliancePeriod: FirstCompliancePeriod = {
-  informationExists: true,
+  informationExists: 'YES',
   firstCompliancePeriodDetails: mockFirstCompliancePeriodDetails,
 };
 
 export const mockSecondCompliancePeriod: SecondCompliancePeriod = {
-  informationExists: true,
-  reductionAchievedExists: true,
-  reductionAchieved: mockEnergyConsumptionDetails.totalEnergyConsumption,
+  informationExists: 'YES',
+  reductionAchieved: mockEnergyConsumptionBreakdown,
   firstCompliancePeriodDetails: mockFirstCompliancePeriodDetails,
 };
 
 export const mockConfirmations: Confirmations = {
   responsibilityAssessmentTypes: [
-    'REVIEWED_THE_RECOMMENDATIONS',
     'SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME',
     'SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME',
     'SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON',
@@ -348,6 +363,7 @@ export const mockConfirmations: Confirmations = {
   noEnergyResponsibilityAssessmentTypes: [
     'SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME',
     'SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME',
+    'SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON',
     'SATISFIED_WITH_INFORMATION_PROVIDED',
   ],
 
@@ -366,7 +382,6 @@ export const mockConfirmations: Confirmations = {
   },
   reviewAssessmentDate: '2022-02-02',
   secondResponsibleOfficerEnergyTypes: [
-    'REVIEWED_THE_RECOMMENDATIONS',
     'SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME',
     'SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME',
     'SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON',
@@ -389,23 +404,24 @@ export const mockConfirmations: Confirmations = {
 };
 
 export const mockAlternativeComplianceRoutes: AlternativeComplianceRoutes = {
-  totalEnergyConsumptionReduction: 12,
+  totalEnergyConsumptionReduction: { energyConsumption: 12, energyCost: '0.00' },
   energyConsumptionReduction: {
-    buildings: 1,
-    transport: 5,
-    industrialProcesses: 4,
-    otherProcesses: 2,
-    total: 12,
+    buildings: { energyConsumption: 1, energyCost: '0.00' },
+    transport: { energyConsumption: 2, energyCost: '0.00' },
+    industrialProcesses: { energyConsumption: 4, energyCost: '0.00' },
+    otherProcesses: { energyConsumption: 2, energyCost: '0.00' },
+    energyConsumptionTotal: 9,
+    energyCostTotal: '0.00',
   },
   energyConsumptionReductionCategories: {
-    energyManagementPractices: 1,
-    behaviourChangeInterventions: 2,
-    training: 3,
-    controlsImprovements: 4,
-    shortTermCapitalInvestments: 1,
-    longTermCapitalInvestments: 0,
-    otherMeasures: 1,
-    total: 12,
+    energyManagementPractices: { energyConsumption: 1, energyCost: '0.00' },
+    behaviourChangeInterventions: { energyConsumption: 1, energyCost: '0.00' },
+    training: { energyConsumption: 3, energyCost: '0.00' },
+    controlsImprovements: { energyConsumption: 2, energyCost: '0.00' },
+    capitalInvestments: { energyConsumption: 1, energyCost: '0.00' },
+    otherMeasures: { energyConsumption: 1, energyCost: '0.00' },
+    energyConsumptionTotal: 9,
+    energyCostTotal: '0.00',
   },
   assets: {
     iso50001: 'iso1',
@@ -427,7 +443,7 @@ export const mockAlternativeComplianceRoutes: AlternativeComplianceRoutes = {
       {
         certificateNumber: 'dec2',
         validFrom: '2020-01-01T00:00:00.000Z',
-        validUntil: '2021-01-01T00:00:00.000Z',
+        validUntil: '2023-12-15T00:00:00.000Z',
       },
     ],
   },
@@ -441,7 +457,7 @@ export const mockAlternativeComplianceRoutes: AlternativeComplianceRoutes = {
       {
         certificateNumber: 'gda2',
         validFrom: '2020-01-01T00:00:00.000Z',
-        validUntil: '2021-01-01T00:00:00.000Z',
+        validUntil: '2023-12-05T00:02:00.000Z',
       },
     ],
   },
@@ -474,11 +490,14 @@ export const mockNotificationRequestTask = {
             postcode: 'Postcode second',
           },
           organisationDetails: {
+            name: 'Ru Org Name',
+            registrationNumber: '11112222',
+            type: 'SIC',
+            codes: ['2222'],
             city: 'City',
             county: 'Powys',
             line1: 'Line 1',
             line2: 'Line 2',
-            name: 'Ru Org Name',
             postcode: 'Postcode',
           },
         },
@@ -488,7 +507,7 @@ export const mockNotificationRequestTask = {
           energySavingsAchieved: 'IN_PROGRESS',
           confirmations: 'IN_PROGRESS',
         },
-      } as NotificationTaskPayload,
+      } as unknown as NotificationTaskPayload,
     },
   },
 };

@@ -88,15 +88,15 @@ describe('EnergyResponsibilityComponent', () => {
   });
 
   function yesRadio() {
-    return screen.getByRole('radio', { name: /the organisation is responsible for energy$/ });
+    return screen.getByRole('radio', { name: /and at least 40,000 kWh of energy was used in the reference period$/ });
   }
 
   function noRadio() {
-    return screen.getByRole('radio', { name: /the organisation has no energy responsibility/ });
+    return screen.getByRole('radio', { name: /there is no energy responsibility/ });
   }
 
   function lessThan40kRadio() {
-    return screen.getByRole('radio', { name: /but used less than 40,000 kWh/ });
+    return screen.getByRole('radio', { name: /but less than 40,000 kWh of energy was used in the reference period/ });
   }
 
   function submitBtn() {

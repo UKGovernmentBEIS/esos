@@ -37,9 +37,14 @@ describe('TimelineItemLinkPipe', () => {
     });
   });
 
-  it('should return link for organisation account', () => {
+  it('should return link for organisation account submitted', () => {
     requestAction.type = 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED';
-    expect(pipe.transform(requestAction)).toEqual(['/installation-account', 'summary', requestAction.id]);
+    expect(pipe.transform(requestAction)).toEqual(['/timeline', requestAction.id]);
+  });
+
+  it('should return link for organisation account created', () => {
+    requestAction.type = 'ORGANISATION_ACCOUNT_OPENING_CREATED';
+    expect(pipe.transform(requestAction)).toEqual(['/timeline', requestAction.id]);
   });
 
   it('should return link for payment', () => {
@@ -96,5 +101,60 @@ describe('TimelineItemLinkPipe', () => {
       requestAction.id,
       'rde-manual-approval-submitted',
     ]);
+  });
+
+  it('should return link for noc', () => {
+    requestAction.type = 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SENT_TO_EDIT';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RETURNED_TO_SUBMIT';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RE_INITIATED';
+    expect(pipe.transform(requestAction, true)).toEqual(null);
+  });
+
+  it('should return link for Action Plan', () => {
+    requestAction.type = 'ACTION_PLAN_P3_APPLICATION_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'ACTION_PLAN_P3_APPLICATION_RE_INITIATED';
+    expect(pipe.transform(requestAction, true)).toEqual(null);
+
+    requestAction.type = 'ACTION_PLAN_APPLICATION_CANCELLED';
+    expect(pipe.transform(requestAction, true)).toEqual(null);
+  });
+
+  it('should return link for Account closure', () => {
+    requestAction.type = 'ACCOUNT_CLOSURE_APPLICATION_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'ACCOUNT_CLOSURE_APPLICATION_CANCELLED';
+    expect(pipe.transform(requestAction, true)).toEqual(null);
+  });
+
+  it('should return link for Progress Update 1', () => {
+    requestAction.type = 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'PROGRESS_UPDATE_1_P3_APPLICATION_RE_INITIATED';
+    expect(pipe.transform(requestAction, true)).toEqual(null);
+
+    requestAction.type = 'PROGRESS_UPDATE_1_APPLICATION_CANCELLED';
+    expect(pipe.transform(requestAction, true)).toEqual(null);
+  });
+
+  it('should return link for Progress Update 2', () => {
+    requestAction.type = 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'PROGRESS_UPDATE_2_P3_APPLICATION_RE_INITIATED';
+    expect(pipe.transform(requestAction, true)).toEqual(null);
+
+    requestAction.type = 'PROGRESS_UPDATE_2_APPLICATION_CANCELLED';
+    expect(pipe.transform(requestAction, true)).toEqual(null);
   });
 });

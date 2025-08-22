@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 
-import { OperatorsComponent, WorkflowsComponent } from '@accounts/index';
+import { AccountNotesComponent, AccountsStore, OperatorsComponent, WorkflowsComponent } from '@accounts/index';
 import { AuthService } from '@core/services/auth.service';
 import { DestroySubject } from '@core/services/destroy-subject.service';
 import { AuthStore } from '@core/store/auth';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
+import { AccountStatusTagColorPipe } from '@shared/pipes/account-status-tag-color.pipe';
 import { GovukDatePipe } from '@shared/pipes/govuk-date.pipe';
 import { SharedModule } from '@shared/shared.module';
-import { ActivatedRouteStub, BasePage } from '@testing';
+import { BasePage } from '@testing';
 
 import { SharedUserModule } from '../shared-user/shared-user.module';
 import { AccountComponent } from './account.component';
@@ -20,12 +20,9 @@ describe('AccountComponent', () => {
   let component: AccountComponent;
   let fixture: ComponentFixture<AccountComponent>;
   let authStore: AuthStore;
+  let accountsStore: AccountsStore;
   let page: Page;
   let authService: Partial<jest.Mocked<AuthService>>;
-
-  const activatedRouteStub = new ActivatedRouteStub(undefined, undefined, {
-    data: mockedOrganisationAccount,
-  });
 
   class Page extends BasePage<AccountComponent> {
     get heading() {
@@ -33,7 +30,11 @@ describe('AccountComponent', () => {
     }
 
     get status() {
-      return this.heading.querySelector<HTMLSpanElement>('span.status');
+      return this.heading.querySelector<HTMLSpanElement>('govuk-tag');
+    }
+
+    get newTaskButton() {
+      return this.query<HTMLButtonElement>('button[type="button"][routerLink="process-actions"]');
     }
 
     get tabs() {
@@ -49,19 +50,20 @@ describe('AccountComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [AccountComponent, WorkflowsComponent, OperatorsComponent],
       imports: [
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         SharedModule,
         SharedUserModule,
         GovukDatePipe,
         PageHeadingComponent,
         DetailsComponent,
+        AccountNotesComponent,
+        AccountStatusTagColorPipe,
       ],
-      providers: [
-        DestroySubject,
-        { provide: ActivatedRoute, useValue: activatedRouteStub },
-        { provide: AuthService, useValue: authService },
-      ],
+      providers: [AccountsStore, DestroySubject, { provide: AuthService, useValue: authService }],
     }).compileComponents();
+
+    accountsStore = TestBed.inject(AccountsStore);
+    accountsStore.setState({ ...accountsStore.getState(), selectedAccount: mockedOrganisationAccount });
 
     authStore = TestBed.inject(AuthStore);
     authStore.setUserState({
@@ -89,7 +91,7 @@ describe('AccountComponent', () => {
   });
 
   it('should render the status', () => {
-    expect(page.status.textContent.trim()).toEqual('Live');
+    expect(page.status.textContent.trim()).toEqual('LIVE');
   });
 
   describe('for operators', () => {
@@ -102,12 +104,17 @@ describe('AccountComponent', () => {
       fixture.detectChanges();
     });
 
+    it('should render a button to start a new task', () => {
+      expect(page.newTaskButton).toBeTruthy();
+    });
+
     it('should render all tabs', () => {
       expect(page.tabs.map((tab) => tab.textContent.trim())).toEqual([
         'Details',
         'Phases',
         'Users and contacts',
         'Workflow history',
+        'Notes',
       ]);
     });
   });
@@ -120,6 +127,20 @@ describe('AccountComponent', () => {
         userId: 'opTestId',
       });
       fixture.detectChanges();
+    });
+
+    it('should not render a button to start a new task', () => {
+      expect(page.newTaskButton).toBeFalsy();
+    });
+
+    it('should render a button to start a new task if appropriate permissions are found', () => {
+      authStore.setRegulatorPermissions({
+        ...authStore.getState().regulatorPermissions,
+        ACCOUNT_CLOSURE: 'EXECUTE',
+      });
+      fixture.detectChanges();
+
+      expect(page.newTaskButton).toBeTruthy();
     });
 
     it('should render all tabs', () => {

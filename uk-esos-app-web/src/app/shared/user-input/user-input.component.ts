@@ -11,4 +11,5 @@ import { existingControlContainer } from '../providers/control-container.factory
 export class UserInputComponent {
   @Input() phoneType: 'full' | 'national';
   @Input() isNotification = false;
+  @Input() isJobTitleOptional = true;
 }

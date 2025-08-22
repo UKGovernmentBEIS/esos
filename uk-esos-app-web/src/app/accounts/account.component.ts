@@ -2,12 +2,16 @@ import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, first, map } from 'rxjs';
 
-import { selectUserRoleType } from '@core/store/auth/auth.selectors';
+import {
+  selectHasRegulatorPermission,
+  selectRegulatorPermissions,
+  selectUserRoleType,
+} from '@core/store/auth/auth.selectors';
 import { AuthStore } from '@core/store/auth/auth.store';
 
-import { OrganisationAccountDTO } from 'esos-api';
+import { AccountsStore } from './store';
 
 @Component({
   selector: 'esos-account',
@@ -15,19 +19,38 @@ import { OrganisationAccountDTO } from 'esos-api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountComponent {
-  accountDetails$ = (
-    this.route.data as Observable<{
-      data: OrganisationAccountDTO;
-    }>
-  ).pipe(map((account) => account.data));
-  userRoleType$ = this.store.pipe(selectUserRoleType);
+  accountDetails$ = this.accountsStore.pipe(
+    first(),
+    map((accounts) => accounts.selectedAccount),
+  );
+
+  userRoleType$ = this.authStore.pipe(selectUserRoleType);
+
   currentTab$ = new BehaviorSubject<string>(null);
+
+  private hasAccountClosurePermission$ = this.authStore.pipe(
+    selectHasRegulatorPermission('ACCOUNT_CLOSURE', 'EXECUTE'),
+  );
+  private regulatorPermissions$ = this.authStore.pipe(selectRegulatorPermissions);
+
+  showStartTask$ = combineLatest([
+    this.userRoleType$,
+    this.hasAccountClosurePermission$,
+    this.accountDetails$,
+    this.regulatorPermissions$,
+  ]).pipe(
+    map(
+      ([role, hasAccountClosurePermission, accountDetails]) =>
+        accountDetails.status !== 'CLOSED' && (role !== 'REGULATOR' || hasAccountClosurePermission),
+    ),
+  );
 
   constructor(
     private readonly route: ActivatedRoute,
     private router: Router,
     readonly location: Location,
-    readonly store: AuthStore,
+    readonly authStore: AuthStore,
+    private readonly accountsStore: AccountsStore,
   ) {}
 
   selectedTab(selected: string) {

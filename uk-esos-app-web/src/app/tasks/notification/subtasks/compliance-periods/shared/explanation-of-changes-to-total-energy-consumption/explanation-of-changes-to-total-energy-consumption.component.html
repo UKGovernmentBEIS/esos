@@ -6,6 +6,20 @@
   [hideSubmit]="false"
   submitText="Save and continue"
   [showBackLink]="true"
+  [showReturnLink]="true"
 >
+  <ng-container *ngIf="isFirstCompliancePeriod; else second">
+    <p class="govuk-hint">The first compliance period lasted from 17 July 2014 to 5 December 2015.</p>
+    <p class="govuk-hint govuk-!-margin-bottom-6">
+      The second compliance period lasted from 6 December 2015 to 5 December 2019.
+    </p>
+  </ng-container>
+  <ng-template #second>
+    <p class="govuk-hint">The second compliance period lasted from 6 December 2015 to 5 December 2019.</p>
+    <p class="govuk-hint govuk-!-margin-bottom-6">
+      The third compliance period lasted from 6 December 2019 to 5 December 2023.
+    </p>
+  </ng-template>
+
   <div formControlName="explanation" govuk-textarea [rows]="'5'" [maxLength]="10000"></div>
 </esos-wizard-step>

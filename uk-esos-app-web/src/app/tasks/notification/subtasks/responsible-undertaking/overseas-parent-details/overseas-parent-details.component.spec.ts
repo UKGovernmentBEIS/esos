@@ -100,7 +100,7 @@ describe('OverseasParentDetailsComponent', () => {
     it('should display all HTMLElements and form with 0 errors', () => {
       expect(page.errorSummary).toBeFalsy();
       expect(page.heading1).toBeTruthy();
-      expect(page.heading1.textContent.trim()).toEqual('Enter the parent company details');
+      expect(page.heading1.textContent.trim()).toEqual('Enter the name of the overseas parent company');
       expect(page.submitButton).toBeTruthy();
     });
 
@@ -160,7 +160,7 @@ describe('OverseasParentDetailsComponent', () => {
     it('should display all HTMLElements and form with 0 errors', () => {
       expect(page.errorSummary).toBeFalsy();
       expect(page.heading1).toBeTruthy();
-      expect(page.heading1.textContent.trim()).toEqual('Enter the parent company details');
+      expect(page.heading1.textContent.trim()).toEqual('Enter the name of the overseas parent company');
       expect(page.name).toEqual('Parent company name');
       expect(page.tradingName).toEqual('Parent company trading name');
       expect(page.submitButton).toBeTruthy();

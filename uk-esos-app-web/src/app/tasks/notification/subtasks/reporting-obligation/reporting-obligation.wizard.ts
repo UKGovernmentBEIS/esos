@@ -18,7 +18,7 @@ export function isWizardCompleted(): boolean {
   return (
     (qualificationType(reportingObligation) === 'NOT_QUALIFY' && !!noQualificationReason(reportingObligation)) ||
     (qualificationType(reportingObligation) === 'QUALIFY' &&
-      qualificationReasons(details)?.length > 0 &&
+      qualificationReasons(details) != null &&
       !!energyResponsibility(details) &&
       ((energyResponsibility(details) !== 'NOT_RESPONSIBLE' && totalPct(distribution) === 100) ||
         energyResponsibility(details) === 'NOT_RESPONSIBLE'))
@@ -37,8 +37,8 @@ export function noQualificationReason(
 
 export function qualificationReasons(
   details: ReportingObligationDetails,
-): ReportingObligationDetails['qualificationReasonTypes'] {
-  return details?.qualificationReasonTypes;
+): ReportingObligationDetails['qualificationReasonType'] {
+  return details?.qualificationReasonType;
 }
 
 export function energyResponsibility(

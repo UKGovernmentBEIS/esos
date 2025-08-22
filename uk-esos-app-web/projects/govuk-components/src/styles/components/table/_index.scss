@@ -1,12 +1,22 @@
-@include govuk-exports("govuk/component/table") {
+@include govuk-exports('govuk/component/table') {
   .govuk-table {
     @include govuk-font($size: 19);
     @include govuk-text-colour;
     width: 100%;
-    @include govuk-responsive-margin(6, "bottom");
+    @include govuk-responsive-margin(6, 'bottom');
 
     border-spacing: 0;
     border-collapse: collapse;
+  }
+
+  @if $govuk-new-typography-scale {
+    // Modifier for tables with a lot of data. Tables with lots of data benefit
+    // from a smaller font size on small screens.
+    .govuk-table--small-text-until-tablet {
+      @include govuk-media-query($until: tablet) {
+        @include govuk-font-size($size: 16);
+      }
+    }
   }
 
   .govuk-table__header {
@@ -19,16 +29,10 @@
     border-bottom: 1px solid $govuk-border-colour;
     text-align: left;
     vertical-align: top;
-    // GOV.UK Elements sets the font-size and line-height for all headers and cells
-    // in tables.
-    @include _govuk-compatibility(govuk_elements) {
-      font-size: inherit;
-      line-height: inherit;
-    }
   }
 
   .govuk-table__cell--numeric {
-    @include govuk-font($size: false, $tabular: true);
+    @include govuk-font-tabular-numbers;
   }
 
   .govuk-table__header--numeric,
@@ -49,23 +53,23 @@
   }
 
   // Modifiers that make captions look more like their equivalent headings
+  .govuk-table__caption--xl,
+  .govuk-table__caption--l,
+  .govuk-table__caption--m {
+    margin-bottom: govuk-spacing(3);
+  }
 
   .govuk-table__caption--xl {
-    @include govuk-font($size: 48, $weight: bold);
-    margin-bottom: govuk-spacing(3);
+    @include govuk-font-size($size: 48);
   }
 
   .govuk-table__caption--l {
-    @include govuk-font($size: 36, $weight: bold);
-    margin-bottom: govuk-spacing(3);
+    @include govuk-font-size($size: 36);
   }
 
   .govuk-table__caption--m {
-    @include govuk-font($size: 24, $weight: bold);
-    margin-bottom: govuk-spacing(3);
-  }
-
-  .govuk-table__caption--s {
-    @include govuk-font($size: 19, $weight: bold);
+    @include govuk-font-size($size: 24);
   }
 }
+
+/*# sourceMappingURL=_index.scss.map */

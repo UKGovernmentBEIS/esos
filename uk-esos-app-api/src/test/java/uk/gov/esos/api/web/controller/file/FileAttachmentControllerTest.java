@@ -26,6 +26,8 @@ import uk.gov.esos.api.files.common.domain.dto.FileDTO;
 import uk.gov.esos.api.files.attachments.service.FileAttachmentTokenService;
 import uk.gov.esos.api.web.controller.exception.ExceptionControllerAdvice;
 
+import java.nio.charset.StandardCharsets;
+
 @ExtendWith(MockitoExtension.class)
 class FileAttachmentControllerTest {
 
@@ -73,7 +75,7 @@ class FileAttachmentControllerTest {
         assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_PDF.toString());
         assertThat(response.getContentAsByteArray()).isEqualTo(fileContent);
         assertThat(response.getHeader(HttpHeaders.CONTENT_DISPOSITION)).isEqualTo(
-                ContentDisposition.builder("attachment").filename(file.getFileName()).build().toString());
+                ContentDisposition.builder("attachment").filename(file.getFileName(), StandardCharsets.UTF_8).build().toString());
         
         verify(fileAttachmentTokenService, times(1)).getFileDTOByToken(token);
     }

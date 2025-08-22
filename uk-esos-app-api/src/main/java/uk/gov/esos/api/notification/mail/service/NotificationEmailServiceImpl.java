@@ -1,6 +1,5 @@
 package uk.gov.esos.api.notification.mail.service;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import uk.gov.esos.api.notification.mail.config.property.NotificationProperties;
@@ -17,7 +16,6 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Service implementation for generating and sending email notifications
  */
-@Log4j2
 @Service
 @ConditionalOnProperty(name = "env.isProd", havingValue = "true")
 public class NotificationEmailServiceImpl implements NotificationEmailService {

@@ -1,0 +1,25 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    @if (isReinitiated()) {
+      <govuk-panel>
+        <strong>You've successfully returned the {{ taskLabel }}</strong>
+      </govuk-panel>
+
+      <h3 class="govuk-heading-m govuk-!-margin-top-4">What happens next</h3>
+      <p class="govuk-body govuk-!-margin-bottom-7">
+        A task has been created and has been assigned to the account's Primary contact.<br />
+        {{ taskLabel | capitalizeFirst }} will be re-submitted once the user has completed his work.
+      </p>
+      <a govukLink routerLink="/dashboard">Go to my dashboard</a>
+    } @else {
+      <esos-page-heading size="l" caption="Return {{ taskLabel }} to participant">
+        Are you sure you want to return this {{ taskLabel }} to the participant for changes?
+      </esos-page-heading>
+
+      <div class="govuk-button-group">
+        <button type="button" (click)="onReinitiate()" esosPendingButton govukButton>Yes, re-initiate</button>
+        <a govukLink routerLink="../..">Cancel</a>
+      </div>
+    }
+  </div>
+</div>

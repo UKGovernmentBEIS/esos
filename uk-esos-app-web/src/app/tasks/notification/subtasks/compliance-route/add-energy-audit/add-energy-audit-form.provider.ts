@@ -33,11 +33,15 @@ export const addEnergyAuditFormProvider: Provider = {
       ],
       numberOfSitesCovered: [
         editEnergyAudit?.numberOfSitesCovered ?? null,
-        [GovukValidators.required('Enter the number of sites covered'), GovukValidators.integerNumber()],
+        [GovukValidators.integerNumber(), GovukValidators.maxIntegersValidator()],
       ],
       numberOfSitesVisited: [
         editEnergyAudit?.numberOfSitesVisited ?? null,
-        [GovukValidators.required('Enter the number of sites visited'), GovukValidators.integerNumber()],
+        [
+          GovukValidators.required('Enter the number of sites visited'),
+          GovukValidators.integerNumber(),
+          GovukValidators.maxIntegersValidator(),
+        ],
       ],
       reason: [
         editEnergyAudit?.reason ?? null,

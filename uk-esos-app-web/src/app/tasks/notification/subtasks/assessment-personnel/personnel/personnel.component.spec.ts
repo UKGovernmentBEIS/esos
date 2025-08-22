@@ -23,7 +23,7 @@ describe('PersonnelComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: { personIndex: 0, has } },
+            snapshot: { paramMap: { personIndex: 0, has }, pathFromRoot: [] },
           },
         },
       ],
@@ -41,6 +41,6 @@ describe('PersonnelComponent', () => {
   it('should display correct form labels', () => {
     expect(screen.getByText('First name')).toBeInTheDocument();
     expect(screen.getByText('Last name')).toBeInTheDocument();
-    expect(screen.getByText('Is this person internal or external to your organisation?')).toBeInTheDocument();
+    expect(screen.getByText('Is this person internal or external to your corporate group?')).toBeInTheDocument();
   });
 });

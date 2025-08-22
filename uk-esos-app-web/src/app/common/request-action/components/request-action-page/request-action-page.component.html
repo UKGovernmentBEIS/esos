@@ -1,7 +1,7 @@
 <div class="govuk-grid-row" *ngIf="vm() as vm">
-  <div class="govuk-grid-column-full">
+  <div [class]="vm.hasReport ? 'govuk-grid-column-two-thirds' : 'govuk-grid-column-full'">
     <esos-page-heading size="l">{{ vm.header }}</esos-page-heading>
-    <p class="govuk-caption-m govuk-!-margin-bottom-8">{{ vm.requestAction.creationDate | govukDate : 'datetime' }}</p>
+    <p class="govuk-caption-m govuk-!-margin-bottom-8">{{ vm.headerDate | govukDate: 'datetime' }}</p>
 
     <ng-container *ngIf="vm.component as component; else sectionsTpl">
       <ng-container *ngComponentOutlet="component"></ng-container>
@@ -10,5 +10,9 @@
     <ng-template #sectionsTpl>
       <esos-task-list [sections]="vm.sections"></esos-task-list>
     </ng-template>
+  </div>
+
+  <div *ngIf="vm.hasReport" class="govuk-grid-column-one-third">
+    <esos-related-reports [dataComponent]="vm.dataComponent"></esos-related-reports>
   </div>
 </div>

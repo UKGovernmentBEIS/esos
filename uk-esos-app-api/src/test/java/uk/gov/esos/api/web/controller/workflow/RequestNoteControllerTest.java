@@ -117,7 +117,7 @@ class RequestNoteControllerTest {
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(requestNoteService.getRequestNotesByRequestId(requestId, 0, 2)).thenReturn(response);
+        when(requestNoteService.getRequestNotesByRequestId(user, requestId, 0, 2)).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.get(REQUEST_NOTE_CONTROLLER_PATH + "?requestId=requestId&page=0&size=2")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -129,7 +129,7 @@ class RequestNoteControllerTest {
             .andExpect(jsonPath("$.requestNotes[1].payload.note").value("note 2"));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(requestNoteService, times(1)).getRequestNotesByRequestId(requestId, 0, 2);
+        verify(requestNoteService, times(1)).getRequestNotesByRequestId(user, requestId, 0, 2);
     }
 
     @Test
@@ -142,7 +142,7 @@ class RequestNoteControllerTest {
             requestNoteDto = RequestNoteDto.builder().requestId("reqId").payload(NotePayload.builder().note("the note").build()).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(requestNoteService.getNote(noteId)).thenReturn(requestNoteDto);
+        when(requestNoteService.getNote(user, noteId)).thenReturn(requestNoteDto);
 
         mockMvc.perform(MockMvcRequestBuilders.get(REQUEST_NOTE_CONTROLLER_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -152,7 +152,7 @@ class RequestNoteControllerTest {
             .andExpect(jsonPath("$.payload.note").value("the note"));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(requestNoteService, times(1)).getNote(noteId);
+        verify(requestNoteService, times(1)).getNote(user, noteId);
     }
 
     @Test

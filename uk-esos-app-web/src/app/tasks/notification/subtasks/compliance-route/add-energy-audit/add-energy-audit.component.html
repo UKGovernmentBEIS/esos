@@ -5,6 +5,7 @@
   caption="Compliance route"
   submitText="Save and continue"
   [hideSubmit]="!isEditable"
+  [showReturnLink]="true"
 >
   <div class="govuk-body">
     <div
@@ -18,7 +19,7 @@
       formControlName="numberOfSitesCovered"
       govuk-text-input
       [inputType]="'number'"
-      label="Number of sites covered by the audit"
+      label="Number of sites covered by the audit (optional)"
       widthClass="govuk-!-width-one-third"
     ></div>
 
@@ -33,7 +34,7 @@
     <div
       formControlName="reason"
       govuk-textarea
-      label="Reason why are the sites visited for the energy audit considered to be representative of how energy is used by the assets and activities covered by the energy audit during the period covered by the audit"
+      label="Reasons why the sites visited for the energy audit are considered to be representative of how energy is used by assets and activities during the 12-month period covered by the energy audit."
       [maxLength]="10000"
     ></div>
   </div>

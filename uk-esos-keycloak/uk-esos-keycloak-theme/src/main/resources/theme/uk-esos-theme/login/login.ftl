@@ -1,14 +1,20 @@
 <#import "template.ftl" as layout>
 
-<@layout.registrationLayout displayInfo=social.displayInfo displayWide=(realm.password && social.providers??); section>
+<@layout.registrationLayout displayInfo=social.displayInfo displayResetLinks=true displayWide=(realm.password && social.providers??); section>
+    <#if section = "headerCaption">
+        ${msg("loginAccountTitleCaption")}
+    </#if>
     <#if section = "header">
         ${msg("loginAccountTitle")}
 	<#elseif section = "info" >
-		<#if realm.password && realm.registrationAllowed && !registrationDisabled??>
-			<div id="kc-registration" class="govuk-body">
-				<span>${msg("youMust")} <a class="govuk-link" href="${properties.registrationUrl}">${msg("doCreateSignIn")}</a> ${msg("useService")}</span>
-			</div>
-		</#if>
+        <p class="govuk-body">
+            Enter the email address and password you used when you last signed in to ESOS.
+        </p>
+<#--		<#if realm.password && realm.registrationAllowed && !registrationDisabled??>-->
+<#--			<div id="kc-registration" class="govuk-body">-->
+<#--				<span>${msg("youMust")} <a class="govuk-link" href="${properties.registrationUrl}">${msg("doCreateSignIn")}</a> ${msg("useService")}</span>-->
+<#--			</div>-->
+<#--		</#if>-->
     <#elseif section = "form">
     <div id="kc-form" <#if realm.password && social.providers??>class="${properties.kcContentWrapperClass!}"</#if>>
       <div id="kc-form-wrapper" <#if realm.password && social.providers??>class="${properties.kcFormSocialAccountContentClass!} ${properties.kcFormSocialAccountClass!}"</#if>>
@@ -47,8 +53,9 @@
                         </div>
                   </div>
 
-                  <div id="kc-form-buttons" class="govuk-form-group">
-                    <input class="govuk-button" data-module="govuk-button" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
+                  <div id="kc-form-buttons" class="govuk-button-group">
+                      <input class="govuk-button" data-module="govuk-button" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
+                      <a class="govuk-link" role="button" name="cancel" href="${url.loginAction}&formAction=cancel">${msg("btnCancelTxt")}</a>
                   </div>
             </form>
         </#if>

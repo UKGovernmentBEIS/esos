@@ -8,6 +8,8 @@ export class ItemTypePipe implements PipeTransform {
     switch (value) {
       case 'ORGANISATION_ACCOUNT_OPENING':
         return 'Organisation account';
+      case 'ACCOUNT_CLOSURE':
+        return 'Close account';
       default:
         return null;
     }

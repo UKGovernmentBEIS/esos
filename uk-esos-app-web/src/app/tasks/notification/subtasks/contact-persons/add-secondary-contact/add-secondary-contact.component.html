@@ -5,6 +5,7 @@
   caption="Contact persons"
   submitText="Save and continue"
   [hideSubmit]="!isEditable()"
+  [showReturnLink]="true"
 >
   <div formControlName="hasSecondaryContact" govuk-radio>
     <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>

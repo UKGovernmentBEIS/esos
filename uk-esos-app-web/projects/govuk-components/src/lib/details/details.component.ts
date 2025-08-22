@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
+import { GovukSpacingUnit } from '../types';
+
 @Component({
   selector: 'govuk-details',
   standalone: true,
@@ -8,4 +10,5 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 })
 export class DetailsComponent {
   @Input() summary: string;
+  @Input() bottomSpacing: GovukSpacingUnit = 6;
 }

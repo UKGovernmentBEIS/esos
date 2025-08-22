@@ -68,7 +68,7 @@ public class RequestTaskViewService {
     }
 
     private boolean isUserCapableToExecuteRequestTask(AppUser user, RequestTask requestTask) {
-        return user.getUserId().equals(requestTask.getAssignee()) || hasUserExecuteScopeOnRequestTask(user, requestTask);
+        return user.getUserId().equals(requestTask.getAssignee()) && hasUserExecuteScopeOnRequestTask(user, requestTask);
     }
 
     private boolean isUserCapableToAssignRequestTask(AppUser user, RequestTask requestTask) {

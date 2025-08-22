@@ -62,7 +62,7 @@ describe('SecondResponsibleOfficerEnergyTypesComponent', () => {
   });
 
   it('should display correct form labels', () => {
-    expect(screen.getByText('Confirm that a 2nd responsible officer...')).toBeInTheDocument();
+    expect(screen.getByText('Second responsible officer review')).toBeInTheDocument();
   });
 
   it(`should submit a valid form and navigate to nextRoute`, () => {

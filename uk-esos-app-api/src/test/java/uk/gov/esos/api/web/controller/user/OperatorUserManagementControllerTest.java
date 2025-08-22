@@ -22,7 +22,9 @@ import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.common.exception.BusinessException;
 import uk.gov.esos.api.common.exception.ErrorCode;
 import uk.gov.esos.api.user.operator.domain.OperatorUserDTO;
+import uk.gov.esos.api.user.operator.service.OperatorUserAcceptInvitationService;
 import uk.gov.esos.api.user.operator.service.OperatorUserManagementService;
+import uk.gov.esos.api.user.operator.service.OperatorUserRegistrationService;
 import uk.gov.esos.api.web.config.AppUserArgumentResolver;
 import uk.gov.esos.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.esos.api.web.security.AuthorizationAspectUserResolver;
@@ -56,7 +58,13 @@ class OperatorUserManagementControllerTest {
 
     @Mock
     private OperatorUserManagementService operatorUserManagementService;
+    
+    @Mock
+    private OperatorUserRegistrationService operatorUserRegistrationService;
 
+    @Mock
+    private OperatorUserAcceptInvitationService operatorUserAcceptInvitationService;
+    
     @Mock
     private AppUserAuthorizationService appUserAuthorizationService;
 
@@ -171,7 +179,7 @@ class OperatorUserManagementControllerTest {
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
 		doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(user, new RoleType[] {RoleType.OPERATOR});
+            .evaluate(user, new RoleType[] {RoleType.OPERATOR}, true);
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.patch(BASE_PATH + "/operator")
@@ -265,5 +273,5 @@ class OperatorUserManagementControllerTest {
 
 		verify(operatorUserManagementService, never()).resetOperator2Fa( anyLong(), anyString());
 	}
-
+	
 }

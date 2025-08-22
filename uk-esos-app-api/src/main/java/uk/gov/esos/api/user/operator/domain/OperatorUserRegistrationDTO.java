@@ -21,9 +21,6 @@ import uk.gov.esos.api.common.domain.dto.validation.PhoneNumberValidity;
 @Data
 public class OperatorUserRegistrationDTO {
 
-    @NotBlank(message = "{jwt.token.notEmpty}")
-    private String emailToken;
-
     @NotBlank(message = "{userAccount.firstName.notEmpty}")
     @Size(max = 255, message = "{userAccount.firstName.typeMismatch}")
     private String firstName;
@@ -32,7 +29,6 @@ public class OperatorUserRegistrationDTO {
     @Size(max = 255, message = "{userAccount.lastName.typeMismatch}")
     private String lastName;
 
-    @NotBlank(message = "{userAccount.jobTitle.notEmpty}")
     @Size(max = 255, message = "{userAccount.jobTitle.typeMismatch}")
     private String jobTitle;
 

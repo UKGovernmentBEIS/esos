@@ -35,9 +35,9 @@ describe('AssetsComponent', () => {
   };
   const mockReportingObligation = {
     qualificationType: 'QUALIFY',
-    noQualificationReason: 'sfgsfdsfdgsd',
+    noQualificationReason: 'no reason',
     reportingObligationDetails: {
-      qualificationReasonTypes: ['TURNOVER_MORE_THAN_44M', 'STAFF_MEMBERS_MORE_THAN_250'],
+      qualificationReasonType: 'TURNOVER_MORE_THAN_44M',
       energyResponsibilityType: 'RESPONSIBLE',
       complianceRouteDistribution: {
         iso50001Pct: 50,
@@ -143,9 +143,9 @@ describe('AssetsComponent', () => {
       fixture.detectChanges();
 
       expect(page.errorSummaryListContents).toEqual([
-        'List your assets and activities that fall under each certified energy management system',
-        'List your assets and activities that fall under each certified energy management system',
-        'List your assets and activities that fall under each certified energy management system',
+        'List the assets and activities',
+        'List the assets and activities',
+        'List the assets and activities',
       ]);
 
       page.iso50001 = 'iso2';
@@ -188,12 +188,6 @@ describe('AssetsComponent', () => {
           { alternativeComplianceRoutes: TaskItemStatus.IN_PROGRESS },
         ),
       );
-      // store.setState(
-      //   mockStateBuild(
-      //     { alternativeComplianceRoutes: mockAlternativeComplianceRoutes },
-      //     { alternativeComplianceRoutes: TaskItemStatus.IN_PROGRESS },
-      //   ),
-      // );
       createComponent();
     });
 

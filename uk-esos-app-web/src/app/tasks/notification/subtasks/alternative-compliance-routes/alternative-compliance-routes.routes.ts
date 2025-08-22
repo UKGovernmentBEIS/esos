@@ -11,9 +11,9 @@ import { alternativeComplianceRoutesBacklinkResolver } from '@tasks/notification
 export const ALTERNATIVE_COMPLIANCE_ROUTES_ROUTES: Routes = [
   {
     path: '',
-    title: `${alternativeComplianceRoutesMap.title}`,
+    title: alternativeComplianceRoutesMap.title,
     data: {
-      breadcrumb: `${alternativeComplianceRoutesMap.title}`,
+      breadcrumb: alternativeComplianceRoutesMap.title,
     },
     canActivate: [canActivateAlternativeComplianceRoutesSummary],
     loadComponent: () =>
@@ -31,6 +31,9 @@ export const ALTERNATIVE_COMPLIANCE_ROUTES_ROUTES: Routes = [
   {
     path: WizardStep.ENERGY_CONSUMPTION_REDUCTION,
     title: alternativeComplianceRoutesMap.energyConsumptionReduction.title,
+    resolve: {
+      backlink: alternativeComplianceRoutesBacklinkResolver(WizardStep.ENERGY_CONSUMPTION_REDUCTION),
+    },
     canActivate: [canActivateAlternativeComplianceRoutes],
     loadComponent: () =>
       import('@tasks/notification/subtasks/alternative-compliance-routes/energy-consumption-reduction').then(

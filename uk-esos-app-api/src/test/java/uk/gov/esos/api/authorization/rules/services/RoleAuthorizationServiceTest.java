@@ -25,7 +25,16 @@ class RoleAuthorizationServiceTest {
         );
         operatorUser.setAuthorities(authorities);
 
-        assertDoesNotThrow(() -> roleAuthorizationService.evaluate(operatorUser, new RoleType[] {RoleType.OPERATOR}));
+        assertDoesNotThrow(() -> roleAuthorizationService.evaluate(operatorUser, new RoleType[] {RoleType.OPERATOR}, true));
+    }
+    
+    @Test
+    void evaluate_if_user_has_no_authorities_and_Authorities_not_required() {
+        AppUser operatorUser = AppUser.builder().userId("userId").roleType(RoleType.OPERATOR).build();
+        List<AppAuthority> authorities = List.of();
+        operatorUser.setAuthorities(authorities);
+
+        assertDoesNotThrow(() -> roleAuthorizationService.evaluate(operatorUser, new RoleType[] {RoleType.OPERATOR}, false));
     }
 
     @Test
@@ -33,17 +42,17 @@ class RoleAuthorizationServiceTest {
         AppUser operatorUser = AppUser.builder().userId("userId").roleType(RoleType.OPERATOR).build();
 
         BusinessException businessException = assertThrows(BusinessException.class,
-            () -> roleAuthorizationService.evaluate(operatorUser, new RoleType[] {RoleType.REGULATOR}));
+            () -> roleAuthorizationService.evaluate(operatorUser, new RoleType[] {RoleType.REGULATOR}, true));
 
         assertEquals(ErrorCode.FORBIDDEN, businessException.getErrorCode());
     }
 
     @Test
-    void evaluate_throws_business_exception_if_user_has_no_authorities() {
+    void evaluate_throws_business_exception_if_user_has_no_authorities_and_Authorities_required() {
         AppUser operatorUser = AppUser.builder().userId("userId").roleType(RoleType.REGULATOR).build();
 
         BusinessException businessException = assertThrows(BusinessException.class,
-            () -> roleAuthorizationService.evaluate(operatorUser, new RoleType[] {RoleType.REGULATOR}));
+            () -> roleAuthorizationService.evaluate(operatorUser, new RoleType[] {RoleType.REGULATOR}, true));
 
         assertEquals(ErrorCode.FORBIDDEN, businessException.getErrorCode());
     }
@@ -53,7 +62,7 @@ class RoleAuthorizationServiceTest {
         AppUser operatorUser = AppUser.builder().userId("userId").roleType(RoleType.REGULATOR).build();
 
         BusinessException businessException = assertThrows(BusinessException.class,
-            () -> roleAuthorizationService.evaluate(operatorUser, new RoleType[] {}));
+            () -> roleAuthorizationService.evaluate(operatorUser, new RoleType[] {}, true));
 
         assertEquals(ErrorCode.FORBIDDEN, businessException.getErrorCode());
     }

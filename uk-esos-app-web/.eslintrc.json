@@ -48,6 +48,8 @@
         ],
         "@angular-eslint/use-injectable-provided-in": "off",
         "@angular-eslint/no-forward-ref": "off",
+        "@angular-eslint/consistent-component-styles": "off",
+        "@angular-eslint/prefer-standalone": "off",
         "@angular-eslint/prefer-standalone-component": "off",
         "@typescript-eslint/no-inferrable-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
@@ -92,6 +94,7 @@
             "maxComplexity": 8
           }
         ],
+        "@angular-eslint/template/prefer-control-flow": "off",
         "@angular-eslint/template/i18n": "off",
         "@angular-eslint/template/cyclomatic-complexity": "off",
         "@angular-eslint/template/no-call-expression": "off",

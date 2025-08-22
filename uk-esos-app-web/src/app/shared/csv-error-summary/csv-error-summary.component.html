@@ -16,7 +16,8 @@
             <govuk-details *ngIf="errorItem?.columns && errorItem?.rows" summary="View details">
               <p class="govuk-body">
                 <span
-                >Check the data in column '{{ errorItem?.columns }}' on rows
+                >Check the data in {{ errorItem?.columns?.length | i18nPlural: columnsPluralMapping }}
+                  '{{ errorItem?.columns.join('\', \'') }}' on rows
                   {{ getRowIndexes(errorItem?.rows).join(', ') }}
                 </span>
               </p>

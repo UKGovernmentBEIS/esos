@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 import uk.gov.esos.api.reporting.noc.common.domain.NocSubmitParams;
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
 import uk.gov.esos.api.reporting.noc.common.service.NocService;
 import uk.gov.esos.api.workflow.request.core.domain.Request;
 import uk.gov.esos.api.workflow.request.core.domain.RequestTask;
@@ -31,6 +31,7 @@ public class NotificationOfComplianceP3SubmitService {
         requestPayload.setNoc(applicationSubmitRequestTaskPayload.getNoc());
         requestPayload.setNocSectionsCompleted(applicationSubmitRequestTaskPayload.getNocSectionsCompleted());
         requestPayload.setNocAttachments(applicationSubmitRequestTaskPayload.getNocAttachments());
+        requestPayload.setAccountOriginatedData(applicationSubmitRequestTaskPayload.getAccountOriginatedData());
 
         // Submit NOC
         submitNoc(requestPayload, request.getAccountId());

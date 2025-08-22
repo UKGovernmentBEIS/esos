@@ -1,6 +1,8 @@
 package uk.gov.esos.api.authorization.rules.services.authorityinfo.providers;
 
+import uk.gov.esos.api.authorization.rules.services.authorityinfo.dto.AccountNoteAuthorityInfoDTO;
+
 public interface AccountNoteAuthorityInfoProvider {
 
-    Long getAccountIdById(Long id);
+    AccountNoteAuthorityInfoDTO getAccountNoteAuthorityInfo(Long id);
 }

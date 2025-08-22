@@ -6,8 +6,10 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.user.core.service.auth.AuthService;
-import uk.gov.esos.api.user.core.service.auth.UserRegistrationService;
+import uk.gov.esos.api.user.core.service.auth.UserInvitationService;
 import uk.gov.esos.api.user.verifier.domain.VerifierUserDTO;
 import uk.gov.esos.api.user.verifier.domain.VerifierUserInvitationDTO;
 import uk.gov.esos.api.user.verifier.transform.VerifierUserMapper;
@@ -29,7 +31,7 @@ class VerifierUserAuthServiceTest {
     private AuthService authService;
 
     @Mock
-    private UserRegistrationService userRegistrationService;
+    private UserInvitationService userRegistrationService;
 
     @Mock
     private VerifierUserMapper verifierUserMapper;
@@ -72,25 +74,25 @@ class VerifierUserAuthServiceTest {
         verify(authService, times(1)).getUserRepresentationById(userId);
         verify(verifierUserMapper, times(1)).toUserRepresentation(verifierUserDTO, userId,
                 userRepresentation.getUsername(), verifierUserDTO.getEmail(), userRepresentation.getAttributes());
-        verify(authService, times(1)).updateUser(userRepresentationUpdated);
+        verify(authService, times(1)).saveUser(userRepresentationUpdated);
     }
 
     @Test
-    void registerInvitedVerifierUser() {
+    void saveInvitedUser() {
         final String userId = "user";
         VerifierUserInvitationDTO verifierUserInvitation = VerifierUserInvitationDTO.builder().email("email").build();
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setId(userId);
 
         when(verifierUserMapper.toUserRepresentation(verifierUserInvitation)).thenReturn(userRepresentation);
-        when(userRegistrationService.registerInvitedUser(userRepresentation)).thenReturn(userId);
+        when(userRegistrationService.saveInvitedUser(userRepresentation, RoleType.VERIFIER)).thenReturn(userId);
 
-        String actualUserId = service.registerInvitedVerifierUser(verifierUserInvitation);
+        String actualUserId = service.saveInvitedUser(verifierUserInvitation);
 
         assertThat(actualUserId).isEqualTo(userId);
 
         verify(verifierUserMapper, times(1)).toUserRepresentation(verifierUserInvitation);
-        verify(userRegistrationService, times(1)).registerInvitedUser(userRepresentation);
+        verify(userRegistrationService, times(1)).saveInvitedUser(userRepresentation, RoleType.VERIFIER);
     }
 
     private UserRepresentation createUserRepresentation(String id, String email) {

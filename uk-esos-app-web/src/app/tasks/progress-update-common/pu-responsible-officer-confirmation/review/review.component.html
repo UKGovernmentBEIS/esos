@@ -1,0 +1,39 @@
+<div class="govuk-!-width-two-thirds">
+  <esos-wizard-step
+    [formGroup]="form"
+    [heading]="heading"
+    [caption]="caption"
+    (formSubmit)="onSubmit()"
+    submitText="Save and continue"
+    [hideSubmit]="false"
+    [showReturnLink]="true"
+  >
+    <p class="govuk-body">
+      A responsible officer is an individual from one of the organisations covered by the action plan who is either:
+    </p>
+    <ul class="govuk-body">
+      <li>a director who has been nominated for the purpose of ensuring ESOS compliance</li>
+      <li>an individual who has management control, in the absence of a director</li>
+    </ul>
+    <p class="govuk-body">
+      You must confirm that all of these statements are true before you can submit your progress update.
+    </p>
+
+    <div
+      class="review-checkboxes"
+      formControlName="responsibleOfficerConfirmation"
+      govuk-checkboxes
+      [legend]="legend"
+      legendSize="small"
+    >
+      <govuk-checkbox
+        value="ESOS_ACTION_PLAN_COMPLIANCE"
+        [label]="'ESOS_ACTION_PLAN_COMPLIANCE' | puReview"
+        [hint]="regulationHint"
+      />
+      @if (isSecondConfirmationRequired) {
+        <govuk-checkbox value="ESTIMATION_METHOD_DOCUMENTED" [label]="'ESTIMATION_METHOD_DOCUMENTED' | puReview" />
+      }
+    </div>
+  </esos-wizard-step>
+</div>

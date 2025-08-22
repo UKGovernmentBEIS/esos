@@ -1,7 +1,7 @@
 package uk.gov.esos.api.reporting.noc.common.util;
 
 import lombok.experimental.UtilityClass;
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 
 @UtilityClass
 public class NocIdentifierGenerator {

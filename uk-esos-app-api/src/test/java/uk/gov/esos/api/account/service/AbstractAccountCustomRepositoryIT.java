@@ -1,8 +1,5 @@
 package uk.gov.esos.api.account.service;
 
-import lombok.extern.log4j.Log4j2;
-import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.TaskService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,14 +35,13 @@ import static org.assertj.core.api.Assertions.assertThat;
         "camunda.bpm.enabled=false"
     }
 )
-@Log4j2
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractAccountCustomRepositoryIT extends AbstractContainerBaseTest {
 
     public static final long TEST_ACCOUNT_ID = 1L;
     public static final String TEST_ACCOUNT_NAME = "accountName";
 
-    public abstract Account buildAccount(Long id, String accountName, CompetentAuthorityEnum ca);
+    public abstract Account buildAccount(Long id, String accountName, CompetentAuthorityEnum ca, CompetentAuthorityEnum location);
 
     @Autowired
     private AccountRepository repository;
@@ -66,7 +62,7 @@ public abstract class AbstractAccountCustomRepositoryIT extends AbstractContaine
     @BeforeTransaction // without this annotation, the test does not see the db entry
     public void setUp() {
         String initialAccountName = "initialAccountName";
-        Account account = buildAccount(TEST_ACCOUNT_ID, initialAccountName, CompetentAuthorityEnum.WALES);
+        Account account = buildAccount(TEST_ACCOUNT_ID, initialAccountName, CompetentAuthorityEnum.WALES, CompetentAuthorityEnum.WALES);
         repository.save(account);
     }
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
 import { requestTaskQuery, RequestTaskStore } from '@common/request-task/+state';
@@ -8,7 +8,7 @@ import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { TASK_FORM } from '@tasks/task-form.token';
 import produce from 'immer';
 
-import { TextareaComponent } from 'govuk-components';
+import { DetailsComponent, LinkDirective, TextareaComponent } from 'govuk-components';
 
 import { NotificationTaskPayload } from '../../../notification.types';
 import {
@@ -25,12 +25,13 @@ import {
   selector: 'esos-no-qualification-reason',
   standalone: true,
   templateUrl: './no-qualification-reason.component.html',
-  imports: [WizardStepComponent, ReactiveFormsModule, TextareaComponent],
+  imports: [WizardStepComponent, ReactiveFormsModule, TextareaComponent, DetailsComponent, LinkDirective, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [noQualificationReasonFormProvider],
 })
 export class NoQualificationReasonComponent {
   protected isEditable = this.store.select(requestTaskQuery.selectIsEditable);
+  protected accountId = this.store.select(requestTaskQuery.selectRequestInfo)()?.accountId;
   protected contentMap = REPORTING_OBLIGATION_CONTENT_MAP;
 
   constructor(

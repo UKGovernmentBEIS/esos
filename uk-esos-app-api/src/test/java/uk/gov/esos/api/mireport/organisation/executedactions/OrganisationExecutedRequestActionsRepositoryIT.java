@@ -238,6 +238,7 @@ class OrganisationExecutedRequestActionsRepositoryIT extends AbstractContainerBa
                 .county("Essex")
                 .postcode("42901")
                 .build())
+            .location(competentAuthority)
             .build();
 
         entityManager.persist(account);

@@ -23,7 +23,7 @@ public class NocP3LeadAssessorContextValidatorService extends NocP3SectionValida
     }
 
     @Override
-    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories() {
+    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories(NocP3Container nocContainer) {
         return Set.of(
                 ReportingObligationCategory.ESOS_ENERGY_ASSESSMENTS_95_TO_100,
                 ReportingObligationCategory.PARTIAL_ENERGY_ASSESSMENTS,

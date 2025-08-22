@@ -1,0 +1,30 @@
+<esos-wizard-step
+  [formGroup]="form"
+  [heading]="energySavingsOpportunityMap.implementationEnergyConsumption.title"
+  [caption]="energySavingsOpportunityMap.title"
+  (formSubmit)="onSubmit()"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <p class="govuk-body">
+    Where reasonably practicable, calculate the sum of all the estimates of annual reductions in energy consumption and
+    energy spend which would be achieved as a result of implementing the energy saving opportunities identified by your
+    energy audits.
+  </p>
+
+  <div class="row-flex" formGroupName="implementationEnergyConsumption">
+    <div class="govuk-grid-column-one-third align-self-end">
+      <div
+        govuk-text-input
+        suffix="kWh"
+        label="Potential reduction in energy consumption"
+        formControlName="energyConsumption"
+      ></div>
+    </div>
+
+    <div class="govuk-grid-column-one-third align-self-end">
+      <div govuk-text-input prefix="£" label="Potential reduction in energy spend" formControlName="energyCost"></div>
+    </div>
+  </div>
+</esos-wizard-step>

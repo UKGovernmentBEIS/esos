@@ -9,11 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AccountClosureSaveApplicationRequestTaskActionPayload } from './accountClosureSaveApplicationRequestTaskActionPayload';
+import { ActionPlanP3SaveApplicationRequestTaskActionPayload } from './actionPlanP3SaveApplicationRequestTaskActionPayload';
 import { NotificationOfComplianceP3SaveApplicationRequestTaskActionPayload } from './notificationOfComplianceP3SaveApplicationRequestTaskActionPayload';
 import { OrganisationAccountOpeningAmendApplicationRequestTaskActionPayload } from './organisationAccountOpeningAmendApplicationRequestTaskActionPayload';
 import { OrganisationAccountOpeningSubmitDecisionRequestTaskActionPayload } from './organisationAccountOpeningSubmitDecisionRequestTaskActionPayload';
 import { PaymentCancelRequestTaskActionPayload } from './paymentCancelRequestTaskActionPayload';
 import { PaymentMarkAsReceivedRequestTaskActionPayload } from './paymentMarkAsReceivedRequestTaskActionPayload';
+import { ProgressUpdate1P3SaveApplicationRequestTaskActionPayload } from './progressUpdate1P3SaveApplicationRequestTaskActionPayload';
+import { ProgressUpdate2P3SaveApplicationRequestTaskActionPayload } from './progressUpdate2P3SaveApplicationRequestTaskActionPayload';
 import { RdeForceDecisionRequestTaskActionPayload } from './rdeForceDecisionRequestTaskActionPayload';
 import { RdeResponseSubmitRequestTaskActionPayload } from './rdeResponseSubmitRequestTaskActionPayload';
 import { RdeSubmitRequestTaskActionPayload } from './rdeSubmitRequestTaskActionPayload';
@@ -46,13 +50,29 @@ export interface RequestTaskActionProcessDTO {
     | 'PAYMENT_MARK_AS_PAID'
     | 'PAYMENT_MARK_AS_RECEIVED'
     | 'PAYMENT_PAY_BY_CARD'
-    | 'PAYMENT_CANCEL';
+    | 'PAYMENT_CANCEL'
+    | 'ACTION_PLAN_P3_SUBMIT_APPLICATION'
+    | 'ACTION_PLAN_P3_SAVE_APPLICATION_SUBMIT'
+    | 'ACTION_PLAN_CANCEL_APPLICATION'
+    | 'ACCOUNT_CLOSURE_SUBMIT_APPLICATION'
+    | 'ACCOUNT_CLOSURE_SAVE_APPLICATION_SUBMIT'
+    | 'ACCOUNT_CLOSURE_CANCEL_APPLICATION'
+    | 'PROGRESS_UPDATE_1_P3_SUBMIT_APPLICATION'
+    | 'PROGRESS_UPDATE_1_P3_SAVE_APPLICATION_SUBMIT'
+    | 'PROGRESS_UPDATE_1_CANCEL_APPLICATION'
+    | 'PROGRESS_UPDATE_2_P3_SUBMIT_APPLICATION'
+    | 'PROGRESS_UPDATE_2_P3_SAVE_APPLICATION_SUBMIT'
+    | 'PROGRESS_UPDATE_2_CANCEL_APPLICATION';
   requestTaskActionPayload:
+    | AccountClosureSaveApplicationRequestTaskActionPayload
+    | ActionPlanP3SaveApplicationRequestTaskActionPayload
     | NotificationOfComplianceP3SaveApplicationRequestTaskActionPayload
     | OrganisationAccountOpeningAmendApplicationRequestTaskActionPayload
     | OrganisationAccountOpeningSubmitDecisionRequestTaskActionPayload
     | PaymentCancelRequestTaskActionPayload
     | PaymentMarkAsReceivedRequestTaskActionPayload
+    | ProgressUpdate1P3SaveApplicationRequestTaskActionPayload
+    | ProgressUpdate2P3SaveApplicationRequestTaskActionPayload
     | RdeForceDecisionRequestTaskActionPayload
     | RdeResponseSubmitRequestTaskActionPayload
     | RdeSubmitRequestTaskActionPayload

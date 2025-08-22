@@ -40,7 +40,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
     void validate_ISO_50001_COVERING_ENERGY_USAGE_valid() {
         final Confirmations confirmations = Confirmations.builder()
             .responsibilityAssessmentTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -74,7 +73,7 @@ class NocP3ConfirmationsContextValidatorServiceTest {
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED
             ))
             .secondResponsibleOfficerEnergyTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
+
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -109,6 +108,7 @@ class NocP3ConfirmationsContextValidatorServiceTest {
             .noEnergyResponsibilityAssessmentTypes(Set.of(
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
+                NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED
             ))
             .responsibleOfficerDetails(ContactPerson.builder().firstName("FirstName").build())
@@ -133,7 +133,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
     void validate_ZERO_ENERGY_not_valid() {
         final Confirmations confirmations = Confirmations.builder()
             .responsibilityAssessmentTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -141,7 +140,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
             ))
             .reviewAssessmentDate(LocalDate.of(2022, 1, 1))
             .secondResponsibleOfficerEnergyTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -200,7 +198,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
     void validate_LESS_THAN_40000_KWH_PER_YEAR_valid() {
         final Confirmations confirmations = Confirmations.builder()
             .responsibilityAssessmentTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -209,7 +206,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
             .reviewAssessmentDate(LocalDate.of(2022, 1, 1))
             .responsibleOfficerDetails(ContactPerson.builder().firstName("FirstName").build())
             .secondResponsibleOfficerEnergyTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -239,6 +235,7 @@ class NocP3ConfirmationsContextValidatorServiceTest {
             .noEnergyResponsibilityAssessmentTypes(Set.of(
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
+                NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED
             ))
             .build();
@@ -269,7 +266,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
     void validate_LESS_THAN_40000_KWH_PER_YEAR_valid_not_all_types_checked() {
         final Confirmations confirmations = Confirmations.builder()
             .responsibilityAssessmentTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED
@@ -277,7 +273,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
             .reviewAssessmentDate(LocalDate.of(2022, 1, 1))
             .responsibleOfficerDetails(ContactPerson.builder().firstName("FirstName").build())
             .secondResponsibleOfficerEnergyTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -309,7 +304,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
     void validate_LESS_THAN_40000_KWH_PER_YEAR_valid_not_all_types_of_second_checked() {
         final Confirmations confirmations = Confirmations.builder()
             .responsibilityAssessmentTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -318,7 +312,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
             .reviewAssessmentDate(LocalDate.of(2022, 1, 1))
             .responsibleOfficerDetails(ContactPerson.builder().firstName("FirstName").build())
             .secondResponsibleOfficerEnergyTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED
@@ -349,7 +342,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
     void validate_ESOS_ENERGY_ASSESSMENTS_95_TO_100_valid_for_internal() {
         final Confirmations confirmations = Confirmations.builder()
             .responsibilityAssessmentTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -358,7 +350,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
             .reviewAssessmentDate(LocalDate.of(2022, 1, 1))
             .responsibleOfficerDetails(ContactPerson.builder().firstName("FirstName").build())
             .secondResponsibleOfficerEnergyTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -389,7 +380,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
     void validate_ESOS_ENERGY_ASSESSMENTS_95_TO_100_valid_for_external() {
         final Confirmations confirmations = Confirmations.builder()
             .responsibilityAssessmentTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -423,6 +413,7 @@ class NocP3ConfirmationsContextValidatorServiceTest {
             .noEnergyResponsibilityAssessmentTypes(Set.of(
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
+                NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
                 NoEnergyResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED
             ))
             .build();
@@ -454,7 +445,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
     void validate_ESOS_ENERGY_ASSESSMENTS_95_TO_100_invalid_lead_accessor_data() {
         final Confirmations confirmations = Confirmations.builder()
             .responsibilityAssessmentTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -463,7 +453,6 @@ class NocP3ConfirmationsContextValidatorServiceTest {
             .reviewAssessmentDate(LocalDate.of(2022, 1, 1))
             .responsibleOfficerDetails(ContactPerson.builder().firstName("FirstName").build())
             .secondResponsibleOfficerEnergyTypes(Set.of(
-                ResponsibilityAssessmentType.REVIEWED_THE_RECOMMENDATIONS,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME,
                 ResponsibilityAssessmentType.SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON,
@@ -493,7 +482,7 @@ class NocP3ConfirmationsContextValidatorServiceTest {
 
     @Test
     void getApplicableReportingObligationCategories() {
-        assertThat(contextValidator.getApplicableReportingObligationCategories()).containsExactlyInAnyOrder(
+        assertThat(contextValidator.getApplicableReportingObligationCategories(null)).containsExactlyInAnyOrder(
                 ReportingObligationCategory.ESOS_ENERGY_ASSESSMENTS_95_TO_100,
                 ReportingObligationCategory.ISO_50001_COVERING_ENERGY_USAGE,
                 ReportingObligationCategory.PARTIAL_ENERGY_ASSESSMENTS,

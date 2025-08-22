@@ -6,6 +6,7 @@ export interface GovukTableColumn<T = any> {
   widthClass?: GovukTextWidthClass | string;
   isSortable?: boolean;
   isHeader?: boolean;
+  isHidden?: boolean;
 }
 
 export interface SortEvent {

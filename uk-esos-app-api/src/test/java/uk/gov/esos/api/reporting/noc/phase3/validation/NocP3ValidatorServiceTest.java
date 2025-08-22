@@ -9,14 +9,16 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.esos.api.common.exception.BusinessException;
 import uk.gov.esos.api.common.exception.ErrorCode;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 import uk.gov.esos.api.reporting.noc.common.domain.NocValidationResult;
 import uk.gov.esos.api.reporting.noc.common.domain.NocViolation;
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3Container;
 import uk.gov.esos.api.reporting.noc.phase3.domain.ReportingObligationCategory;
 import uk.gov.esos.api.reporting.noc.phase3.domain.reportingobligation.ReportingObligation;
 import uk.gov.esos.api.reporting.noc.phase3.service.NocP3ReportingObligationCategoryDeterminationService;
+import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestType;
+import uk.gov.esos.api.workflowperiod.service.WorkFlowValidPeriodService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +45,13 @@ class NocP3ValidatorServiceTest {
     @Mock
     private TestNocP3SectionContextValidator testSectionContextValidator;
 
+    @Mock
+    private WorkFlowValidPeriodService workFlowValidPeriodService;
+
     @BeforeEach
     void setUp() {
         contextValidators.add(testSectionContextValidator);
-        nocP3ValidatorService = new NocP3ValidatorService(reportingObligationCategoryDeterminationService, contextValidators);
+        nocP3ValidatorService = new NocP3ValidatorService(reportingObligationCategoryDeterminationService, contextValidators,workFlowValidPeriodService);
     }
 
     @Test
@@ -62,6 +67,9 @@ class NocP3ValidatorServiceTest {
             .thenReturn(reportingObligationCategory);
         when(testSectionContextValidator.validate(nocP3Container, reportingObligationCategory))
             .thenReturn(NocValidationResult.validNoc());
+
+        when(workFlowValidPeriodService.isValidSubmitDate(RequestType.NOTIFICATION_OF_COMPLIANCE_P3)).thenReturn(true);
+
 
         nocP3ValidatorService.validate(nocP3Container);
 
@@ -86,12 +94,62 @@ class NocP3ValidatorServiceTest {
         when(testSectionContextValidator.validate(nocP3Container, reportingObligationCategory))
             .thenReturn(NocValidationResult.invalidNoc(List.of(nocViolation)));
 
+        when(workFlowValidPeriodService.isValidSubmitDate(RequestType.NOTIFICATION_OF_COMPLIANCE_P3)).thenReturn(true);
+
         BusinessException be = assertThrows(BusinessException.class, () -> nocP3ValidatorService.validate(nocP3Container));
 
         assertThat(be.getErrorCode()).isEqualTo(ErrorCode.INVALID_NOC);
 
         verify(reportingObligationCategoryDeterminationService, times(1))
             .determineReportingObligationCategory(reportingObligation);
+        verify(testSectionContextValidator, times(1)).validate(nocP3Container, reportingObligationCategory);
+    }
+
+    @Test
+    void validNocSbmDate(){
+        ReportingObligationCategory reportingObligationCategory = ReportingObligationCategory.ESOS_ENERGY_ASSESSMENTS_95_TO_100;
+        ReportingObligation reportingObligation = ReportingObligation.builder().build();
+        NocP3Container nocP3Container = NocP3Container.builder()
+                .phase(Phase.PHASE_3)
+                .noc(NocP3.builder().reportingObligation(reportingObligation).build())
+                .build();
+
+        when(reportingObligationCategoryDeterminationService.determineReportingObligationCategory(reportingObligation))
+                .thenReturn(reportingObligationCategory);
+        when(testSectionContextValidator.validate(nocP3Container, reportingObligationCategory))
+                .thenReturn(NocValidationResult.validNoc());
+
+        when(workFlowValidPeriodService.isValidSubmitDate(RequestType.NOTIFICATION_OF_COMPLIANCE_P3)).thenReturn(true);
+
+        nocP3ValidatorService.validate(nocP3Container);
+
+        verify(reportingObligationCategoryDeterminationService, times(1))
+                .determineReportingObligationCategory(reportingObligation);
+        verify(testSectionContextValidator, times(1)).validate(nocP3Container, reportingObligationCategory);
+    }
+
+    @Test
+    void validate_invalid_Sbm_Date() {
+        ReportingObligationCategory reportingObligationCategory = ReportingObligationCategory.ESOS_ENERGY_ASSESSMENTS_95_TO_100;
+        ReportingObligation reportingObligation = ReportingObligation.builder().build();
+        NocP3Container nocP3Container = NocP3Container.builder()
+                .phase(Phase.PHASE_3)
+                .noc(NocP3.builder().reportingObligation(reportingObligation).build())
+                .build();
+
+        when(reportingObligationCategoryDeterminationService.determineReportingObligationCategory(reportingObligation))
+                .thenReturn(reportingObligationCategory);
+        when(testSectionContextValidator.validate(nocP3Container, reportingObligationCategory))
+                .thenReturn(NocValidationResult.validNoc());
+
+        when(workFlowValidPeriodService.isValidSubmitDate(RequestType.NOTIFICATION_OF_COMPLIANCE_P3)).thenReturn(false);
+
+        BusinessException be = assertThrows(BusinessException.class, () -> nocP3ValidatorService.validate(nocP3Container));
+
+        assertThat(be.getErrorCode()).isEqualTo(ErrorCode.NOC_INVALID_SUBMIT_DATE);
+
+        verify(reportingObligationCategoryDeterminationService, times(1))
+                .determineReportingObligationCategory(reportingObligation);
         verify(testSectionContextValidator, times(1)).validate(nocP3Container, reportingObligationCategory);
     }
 

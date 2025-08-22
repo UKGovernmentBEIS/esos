@@ -2,20 +2,24 @@ import { computed, Injectable, Signal } from '@angular/core';
 
 import { catchError, Observable, throwError } from 'rxjs';
 
-import { TaskApiService } from '@common/forms/services/task-api.service';
+import { TaskApiServiceExtended } from '@common/forms/services/task-api.service';
 import { requestTaskQuery } from '@common/request-task/+state';
 import { PendingRequestService } from '@core/guards/pending-request.service';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { ErrorCode } from '@error/not-found-error';
+import { notificationValidationError } from '@shared/errors/notification-error';
+import {
+  organisationCompaniesHouseApiServiceUnavailableError,
+  organisationCompaniesHouseApiUnauthorizedError,
+  organisationCompaniesHouseNotExistsError,
+} from '@shared/errors/organisation-account-application-business-error';
 import { taskNotFoundError } from '@shared/errors/request-task-error';
 
-import {
-  NotificationOfComplianceP3ApplicationEditRequestTaskPayload,
-  RequestTaskActionPayload,
-  RequestTaskActionProcessDTO,
-} from 'esos-api';
+import { RequestTaskActionPayload, RequestTaskActionProcessDTO } from 'esos-api';
 
 import { NotificationTaskPayload } from '../notification.types';
+import { NotificationErrorData } from '../notification-errors/notification-errors.interfaces';
+import { NotificationErrorService } from '../notification-errors/notification-errors.service';
 
 type SaveActionTypes = {
   actionType: RequestTaskActionProcessDTO['requestTaskActionType'];
@@ -23,10 +27,11 @@ type SaveActionTypes = {
 };
 
 @Injectable()
-export class NotificationApiService extends TaskApiService<NotificationTaskPayload> {
+export class NotificationApiService extends TaskApiServiceExtended<NotificationTaskPayload> {
   constructor(
     private readonly pendingRequestService: PendingRequestService,
     private readonly businessErrorService: BusinessErrorService,
+    private readonly notificationErrorService: NotificationErrorService,
   ) {
     super();
   }
@@ -55,25 +60,48 @@ export class NotificationApiService extends TaskApiService<NotificationTaskPaylo
     );
   }
 
-  sendToRestricted(result: RequestTaskActionProcessDTO & NotificationOfComplianceP3ApplicationEditRequestTaskPayload) {
-    return this.service.processRequestTaskAction(result).pipe(
-      catchError((err) => {
-        if (err.code === ErrorCode.NOTFOUND1001) {
-          this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
-        }
-        return throwError(() => err);
-      }),
-      this.pendingRequestService.trackRequest(),
-    );
+  sendToRestricted(userId: string) {
+    return this.service
+      .processRequestTaskAction({
+        requestTaskActionType: 'NOTIFICATION_OF_COMPLIANCE_P3_SEND_TO_EDIT',
+        requestTaskActionPayload: {
+          payloadType: 'NOTIFICATION_OF_COMPLIANCE_P3_SEND_TO_EDIT_PAYLOAD',
+          supportingOperator: userId,
+        },
+        requestTaskId: this.store.select(requestTaskQuery.selectRequestTaskId)(),
+      })
+      .pipe(
+        catchError((err) => {
+          if (err.code === ErrorCode.NOTFOUND1001) {
+            this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
+          }
+          return throwError(() => err);
+        }),
+        this.pendingRequestService.trackRequest(),
+      );
   }
 
   submit(): Observable<void> {
     return this.service.processRequestTaskAction(this.createActionMap().submit).pipe(
       catchError((err) => {
-        if (err.code === ErrorCode.NOTFOUND1001) {
-          this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
+        switch (err.error.code) {
+          case ErrorCode.NOTFOUND1001:
+            return this.businessErrorService.showError(organisationCompaniesHouseNotExistsError);
+          case 'COMPANYINFO1001':
+          case 'COMPANYINFO1003':
+            return this.businessErrorService.showError(organisationCompaniesHouseApiServiceUnavailableError);
+          case 'COMPANYINFO1002':
+            return this.businessErrorService.showError(organisationCompaniesHouseApiUnauthorizedError);
+          case 'NOC1001':
+          case 'NOC1002':
+            return this.notificationErrorService.showError(
+              notificationValidationError,
+              err.error as NotificationErrorData,
+            );
+
+          default:
+            return throwError(() => err);
         }
-        return throwError(() => err);
       }),
       this.pendingRequestService.trackRequest(),
     );

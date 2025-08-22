@@ -3,6 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
+import { NotApplicablePipe } from '@shared/pipes/not-applicable.pipe';
 import { SharedModule } from '@shared/shared.module';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
@@ -15,7 +16,7 @@ import { energyConsumptionProfilingFormProvider } from './energy-consumption-pro
 @Component({
   selector: 'esos-energy-consumption-profiling',
   standalone: true,
-  imports: [SharedModule, WizardStepComponent],
+  imports: [SharedModule, WizardStepComponent, NotApplicablePipe],
   templateUrl: './energy-consumption-profiling.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [energyConsumptionProfilingFormProvider],

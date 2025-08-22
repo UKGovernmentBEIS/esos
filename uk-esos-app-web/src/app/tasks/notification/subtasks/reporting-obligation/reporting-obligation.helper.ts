@@ -26,12 +26,13 @@ export const REPORTING_OBLIGATION_CONTENT_MAP = {
     title: 'Explain why your organisation does not qualify for ESOS',
   },
   [ReportingObligationStep.QUALIFICATION_REASONS]: {
-    title: 'Select the reasons that your organisation qualifies for ESOS',
+    title:
+      'Select the reason that your organisation, or another organisation in its corporate group, qualifies for ESOS',
   },
   [ReportingObligationStep.ENERGY_RESPONSIBILITY]: {
     title: 'Are the organisations in this notification responsible for any energy under ESOS?',
   },
   [ReportingObligationStep.COMPLIANCE_ROUTE_DISTRIBUTION]: {
-    title: 'Enter the breakdown of compliance routes for the organisations in this notification',
+    title: 'Enter a breakdown of the total energy consumption covered by each compliance route in this notification',
   },
 };

@@ -35,11 +35,11 @@ describe('SummaryComponent', () => {
 
   class Page extends BasePage<SummaryComponent> {
     get energyConsumptionDetailsComponent() {
-      return this.query<HTMLElement>('esos-energy-consumption-details-summary-template');
+      return this.query<HTMLElement>('esos-energy-consumption-details-with-cost-summary-template');
     }
 
     get energySavingCategoriesComponent() {
-      return this.query<HTMLElement>('esos-energy-saving-categories-details-summary-template');
+      return this.query<HTMLElement>('esos-energy-savings-categories-details-with-cost-summary-template');
     }
 
     get assetsSummaryComponent() {

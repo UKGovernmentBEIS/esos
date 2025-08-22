@@ -9,10 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EnergyConsumption } from './energyConsumption';
-import { EnergySavingsCategories } from './energySavingsCategories';
+import { EnergyConsumptionPotentialReduction } from './energyConsumptionPotentialReduction';
+import { EnergySavingsCategoriesPotentialReduction } from './energySavingsCategoriesPotentialReduction';
+import { PotentialReductionPair } from './potentialReductionPair';
 
 export interface EnergySavingsOpportunities {
-  energyConsumption: EnergyConsumption;
-  energySavingsCategories: EnergySavingsCategories;
+  implementationEnergyConsumption?: PotentialReductionPair;
+  energyConsumption?: EnergyConsumptionPotentialReduction;
+  energySavingsCategories?: EnergySavingsCategoriesPotentialReduction;
 }

@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 
 import { accordionFactory } from '../accordion';
 import { AccordionComponent } from '../accordion.component';
-import { AccordionItemSummaryDirective } from '../directives/accordion-item-summary.directive';
 import { AccordionItemComponent } from './accordion-item.component';
 
 describe('AccordionItemComponent', () => {
@@ -18,11 +17,10 @@ describe('AccordionItemComponent', () => {
 
   @Component({
     standalone: true,
-    imports: [AccordionComponent, AccordionItemComponent, AccordionItemSummaryDirective],
+    imports: [AccordionComponent, AccordionItemComponent],
     template: `
       <govuk-accordion id="test-accordion" [openIndexes]="openIndexes">
-        <govuk-accordion-item header="First item">
-          <div govukAccordionItemSummary>First item summary</div>
+        <govuk-accordion-item header="First item" summary="First item summary">
           <p>Content</p>
         </govuk-accordion-item>
         <govuk-accordion-item header="Second item">

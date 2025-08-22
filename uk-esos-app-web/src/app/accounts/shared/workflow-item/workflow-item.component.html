@@ -6,13 +6,9 @@
   >
     <esos-page-heading size="xl" [caption]="requestInfo.id">
       {{ title$ | async }} {{ workflowDetailsTypesMap[requestInfo.requestType] }}
-      <span
-        class="search-results-list_item_status govuk-tag govuk-tag--{{
-          requestInfo.requestStatus | statusTagColor
-        }} float-right"
-      >
-        <strong>{{ requestInfo.requestStatus | i18nSelect : workflowStatusesTagMap }}</strong>
-      </span>
+      <govuk-tag [color]="requestInfo.requestStatus | statusTagColor" class="float-right"
+        >{{ requestInfo.requestStatus | i18nSelect : workflowStatusesTagMap }}
+      </govuk-tag>
     </esos-page-heading>
 
     <ng-container *ngIf="relatedTasks$ | async as relatedTasks">
@@ -30,18 +26,19 @@
             <esos-timeline-item
               *ngFor="let action of actions"
               [action]="action"
-              [link]="['timeline', action.id]"
+              [link]="action | timelineItemLink : true"
               [state]="navigationState"
             ></esos-timeline-item>
             <p class="govuk-body" *ngIf="actions?.length === 0">No timeline events</p>
           </esos-timeline>
         </div>
       </ng-template>
-      <ng-template govukTab id="notes" label="Notes" *ngIf="(userRoleType$ | async) === 'REGULATOR'">
+      <ng-template govukTab id="notes" label="Notes">
         <esos-request-notes [currentTab]="currentTab$ | async"></esos-request-notes>
       </ng-template>
     </govuk-tabs>
   </div>
+
   <div
     class="govuk-grid-column-one-third"
     *ngIf="(accountId$ | async) !== null && (validRequestCreateActionsTypes$ | async)?.length > 0"

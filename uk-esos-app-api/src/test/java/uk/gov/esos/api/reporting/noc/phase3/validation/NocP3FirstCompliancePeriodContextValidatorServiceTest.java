@@ -10,6 +10,7 @@ import uk.gov.esos.api.reporting.noc.common.domain.NocViolation;
 import uk.gov.esos.api.reporting.noc.common.validation.NocSectionConstraintValidatorService;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3Container;
+import uk.gov.esos.api.reporting.noc.phase3.domain.OptionalQuestion;
 import uk.gov.esos.api.reporting.noc.phase3.domain.ReportingObligationCategory;
 import uk.gov.esos.api.reporting.noc.phase3.domain.firstcomplianceperiod.FirstCompliancePeriod;
 
@@ -33,7 +34,7 @@ class NocP3FirstCompliancePeriodContextValidatorServiceTest {
     @Test
     void validate() {
         final FirstCompliancePeriod firstCompliancePeriod = FirstCompliancePeriod.builder()
-            .informationExists(Boolean.FALSE)
+            .informationExists(OptionalQuestion.NO)
             .build();
         final NocP3Container nocContainer = NocP3Container.builder()
                 .noc(NocP3.builder()
@@ -56,12 +57,12 @@ class NocP3FirstCompliancePeriodContextValidatorServiceTest {
     @Test
     void validate_not_valid_for_category() {
         final FirstCompliancePeriod firstCompliancePeriod = FirstCompliancePeriod.builder()
-            .informationExists(Boolean.FALSE)
+            .informationExists(OptionalQuestion.NO)
             .build();
         final NocP3Container nocContainer = NocP3Container.builder()
                 .noc(NocP3.builder()
                 		.firstCompliancePeriod(FirstCompliancePeriod.builder()
-                                .informationExists(Boolean.FALSE)
+                                .informationExists(OptionalQuestion.NO)
                                 .build())
                         .build())
                 .build();
@@ -83,7 +84,7 @@ class NocP3FirstCompliancePeriodContextValidatorServiceTest {
     @Test
     void validate_invalid_section_data() {
         final FirstCompliancePeriod firstCompliancePeriod = FirstCompliancePeriod.builder()
-                .informationExists(Boolean.TRUE)
+                .informationExists(OptionalQuestion.YES)
                 .build();
         final NocP3Container nocContainer = NocP3Container.builder()
                 .noc(NocP3.builder()
@@ -109,7 +110,7 @@ class NocP3FirstCompliancePeriodContextValidatorServiceTest {
 
     @Test
     void getApplicableReportingObligationCategories() {
-        assertThat(contextValidator.getApplicableReportingObligationCategories())
+        assertThat(contextValidator.getApplicableReportingObligationCategories(null))
         	.containsExactlyInAnyOrderElementsOf(ReportingObligationCategory.getQualifyCategories()
         );
     }

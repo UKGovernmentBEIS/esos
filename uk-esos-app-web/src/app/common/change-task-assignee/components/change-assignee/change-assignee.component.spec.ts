@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { Router, RouterModule } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -30,6 +30,9 @@ describe('ChangeAssigneeComponent', () => {
     ]),
   );
 
+  const mockPendingRequestService = mockClass(PendingRequestService);
+  mockPendingRequestService.trackRequest = jest.fn(() => () => of(null));
+
   class Page extends BasePage<ChangeAssigneeComponent> {
     get select(): HTMLSelectElement {
       return this.query('select');
@@ -56,24 +59,29 @@ describe('ChangeAssigneeComponent', () => {
     }
   }
 
-  const createComponent = () => {
+  const createComponent = async () => {
     fixture = TestBed.createComponent(ChangeAssigneeComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);
     fixture.detectChanges();
     jest.clearAllMocks();
+    await fixture.whenStable();
+    fixture.detectChanges();
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChangeAssigneeComponent, RouterTestingModule, SharedModule],
+      imports: [ChangeAssigneeComponent, RouterModule.forRoot([]), SharedModule],
       providers: [
         { provide: TasksAssignmentService, useValue: tasksAssignmentService },
         { provide: TasksReleaseService, useValue: mockClass(TasksReleaseService) },
-        { provide: PendingRequestService, useValue: mockClass(PendingRequestService) },
+        { provide: PendingRequestService, useValue: mockPendingRequestService },
         { provide: BusinessErrorService, useValue: mockClass(BusinessErrorService) },
       ],
     }).compileComponents();
+
+    const router = TestBed.inject(Router);
+    jest.spyOn(router, 'navigate').mockImplementation();
   });
 
   describe('for operator', () => {
@@ -82,20 +90,18 @@ describe('ChangeAssigneeComponent', () => {
       authStore.setUserState({ roleType: 'OPERATOR' });
       store = TestBed.inject(RequestTaskStore);
       store.setRequestTaskItem({ requestTask: { id: 856, assigneeUserId: '7b91199c-4770-4d4b-a0ed-d6d9667de157' } });
+      await createComponent();
     });
 
     it('should create', () => {
-      createComponent();
       expect(component).toBeTruthy();
     });
 
-    it('should populate the select with no currently selected and not release option', () => {
-      createComponent();
+    it('should populate the select with no currently selected and not release option', async () => {
       expect(page.options).toEqual(['Obi Wan']);
     });
 
     it('should display error if no assignee selected', () => {
-      createComponent();
       const submitSpy = jest.spyOn(component, 'submit');
 
       page.button.click();
@@ -109,7 +115,6 @@ describe('ChangeAssigneeComponent', () => {
     });
 
     it('should post assignment and emit submitted', () => {
-      createComponent();
       const submitSpy = jest.spyOn(component, 'submit');
 
       expect(tasksAssignmentService.assignTask).toHaveBeenCalledTimes(0);
@@ -134,20 +139,18 @@ describe('ChangeAssigneeComponent', () => {
       authStore.setUserState({ roleType: 'REGULATOR' });
       store = TestBed.inject(RequestTaskStore);
       store.setRequestTaskItem({ requestTask: { id: 856, assigneeUserId: '7b91199c-4770-4d4b-a0ed-d6d9667de157' } });
+      await createComponent();
     });
 
     it('should create', () => {
-      createComponent();
       expect(component).toBeTruthy();
     });
 
     it('should populate the select with no currently selected and with release option', () => {
-      createComponent();
       expect(page.options).toEqual(['Unassigned', 'Obi Wan']);
     });
 
     it('should post assignment and emit submitted', () => {
-      createComponent();
       const submitSpy = jest.spyOn(component, 'submit');
 
       expect(tasksAssignmentService.assignTask).toHaveBeenCalledTimes(0);

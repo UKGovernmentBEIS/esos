@@ -7,14 +7,20 @@ import { TASK_FORM } from '@tasks/task-form.token';
 
 import { GovukValidators } from 'govuk-components';
 
+import { exclusiveCheckedValidator } from '../compliance-route.validators';
+
 export const dataEstimatedFormProvider: Provider = {
   provide: TASK_FORM,
   deps: [UntypedFormBuilder, RequestTaskStore],
   useFactory: (fb: UntypedFormBuilder, store: RequestTaskStore) => {
-    const areDataEstimated = store.select(notificationQuery.selectComplianceRoute)()?.areDataEstimated;
+    const estimatedCalculationTypes = store.select(notificationQuery.selectComplianceRoute)()
+      ?.estimatedCalculationTypes;
 
     return fb.group({
-      areDataEstimated: [areDataEstimated, GovukValidators.required('Select an option')],
+      estimatedCalculationTypes: [
+        estimatedCalculationTypes ?? null,
+        [GovukValidators.required('Select an option'), exclusiveCheckedValidator()],
+      ],
     });
   },
 };

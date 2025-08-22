@@ -3,10 +3,15 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { BooleanToTextPipe } from '@shared/pipes/boolean-to-text.pipe';
+import { ClassificationTypePipe } from '@shared/pipes/classification-type.pipe';
 import { SubTaskListMap } from '@shared/types/sub-task-list-map.type';
 
 import {
   LinkDirective,
+  SummaryListColumnActionsDirective,
+  SummaryListColumnDirective,
+  SummaryListColumnKeyDirective,
+  SummaryListColumnValueDirective,
   SummaryListComponent,
   SummaryListRowActionsDirective,
   SummaryListRowDirective,
@@ -26,9 +31,14 @@ import { ResponsibleUndertaking } from 'esos-api';
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,
     SummaryListRowActionsDirective,
+    SummaryListColumnDirective,
+    SummaryListColumnValueDirective,
+    SummaryListColumnActionsDirective,
     RouterLink,
     NgIf,
     BooleanToTextPipe,
+    ClassificationTypePipe,
+    SummaryListColumnKeyDirective,
   ],
   templateUrl: './responsible-undertaking-summary-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -8,6 +8,7 @@ type RequestTaskPageContent = {
   postContentComponent?: Type<unknown>;
   header: string;
   sections?: TaskSection[];
+  warningMessage?: string;
 };
 
 export type RequestTaskPageContentFactory = (injector: Injector) => RequestTaskPageContent;

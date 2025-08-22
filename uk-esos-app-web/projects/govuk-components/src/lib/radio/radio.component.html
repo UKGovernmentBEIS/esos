@@ -1,6 +1,6 @@
 <div [class.govuk-form-group--error]="shouldDisplayErrors" class="govuk-form-group">
   <fieldset [id]="identifier" govukFieldset>
-    <legend [size]="legendSize" govukLegend>
+    <legend [size]="legendSize" govukLegend [class.govuk-visually-hidden]="isLegendHidden">
       <ng-container *ngIf="legend; else customLegend">{{ legend }}</ng-container>
       <ng-template #customLegend>
         <ng-content select="[govukLegend]"></ng-content>

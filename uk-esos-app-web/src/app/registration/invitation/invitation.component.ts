@@ -3,34 +3,34 @@ import { ActivatedRoute } from '@angular/router';
 
 import { map } from 'rxjs';
 
-import { UserRegistrationStore } from '../store/user-registration.store';
-
 @Component({
   selector: 'esos-invitation',
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <govuk-panel
-          title="You have been added as a user to the account of {{ (account$ | async)?.accountInstallationName }}"
+          title="You have been added as a user to the account of {{
+            (operatorInvitedUserInfoDTO$ | async)?.accountName
+          }}"
         ></govuk-panel>
-
-        <h2 class="govuk-heading-m">What happens next</h2>
+        <p class="govuk-body">Your GOV.UK One Login is connected to ESOS account. You won't need to do this again.</p>
+        <h3 class="govuk-heading-m">What happens next</h3>
         <p class="govuk-body">
-          All system alerts, notices and official communications will be sent to your registered email.
+          Use your GOV.UK One Login whenever you sign in to the Energy Savings Opportunity Scheme.
         </p>
-
-        <p class="govuk-body">
-          <a routerLink="/dashboard" govukLink>Go to my dashboard</a>
-        </p>
+        <p class="govuk-body">We'll keep sending ESOS emails to the address already linked to your ESOS account.</p>
+        <button type="button" (click)="goToLanding()" govukButton>Continue to your ESOS service</button>
       </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvitationComponent {
-  account$ = this.activatedRoute.data.pipe(map((data) => data?.account));
+  operatorInvitedUserInfoDTO$ = this.activatedRoute.data.pipe(map((data) => data?.operatorInvitedUserInfoDTO));
 
-  constructor(private readonly activatedRoute: ActivatedRoute, private readonly store: UserRegistrationStore) {
-    store.reset();
+  constructor(private readonly activatedRoute: ActivatedRoute) {}
+
+  goToLanding(): void {
+    window.location.href = '/';
   }
 }

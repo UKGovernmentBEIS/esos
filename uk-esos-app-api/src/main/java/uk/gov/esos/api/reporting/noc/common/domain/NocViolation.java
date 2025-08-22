@@ -35,16 +35,17 @@ public class NocViolation {
         INVALID_SECOND_RESPONSIBLE_OFFICER_DETAILS("Second responsible officer details and category are not mutually valid"),
         INVALID_REVIEW_ASSESSMENT_DATE("Second responsible officer details and category are not mutually valid"),
         INVALID_ENERGY_CONSUMPTION_DATA("Energy consumption data and category are not mutually valid"),
-        INVALID_TWELVE_MONTHS_VERIFIABLE_DATA("Are data estimated and twelve months verifiable data used are not mutually valid"),
-        INVALID_ENERGY_SAVINGS_OPPORTUNITIES_TOTAL("Energy savings opportunities energy consumption total and energy savings opportunities categories total are not equal"),
         INVALID_TOTAL_ENERGY_SAVINGS_ESTIMATION("Total energy savings estimation and category are not mutually valid"),
         INVALID_ENERGY_SAVINGS_CONSUMPTION("Energy savings consumption and category are not mutually valid"),
         INVALID_ENERGY_SAVINGS_CATEGORIES("Energy savings categories and category are not mutually valid"),
-        INVALID_ENERGY_SAVINGS_CONSUMPTION_ENERGY_SAVINGS_CATEGORIES_TOTAL("Energy savings consumption total and energy savings categories total are not equal"),
+        INVALID_ENERGY_SAVINGS_CATEGORIES_COST("Energy savings categories reduction cost sum is not valid"),
         INVALID_ENERGY_CONSUMPTION_REDUCTION("Energy consumption reduction and category are not mutually valid"),
+        INVALID_ENERGY_CONSUMPTION_REDUCTION_COST("Energy consumption reduction cost sum is not valid"),
         INVALID_ISO50001_DETAILS("Iso50001 details and compliance routes distribution are not mutually valid"),
         INVALID_DEC_DETAILS("DEC details and compliance routes distribution are not mutually valid"),
         INVALID_GDA_DETAILS("GDA details and compliance routes distribution are not mutually valid"),
+        INVALID_REGISTRATION_NUMBER("Responsible undertaking organisation registration number is not valid"),
+        INVALID_SIGNIFICANT_ENERGY_CONSUMPTION_EXISTS_ENERGY_NOT_AUDITED("Significant energy consumption cannot be false when energy not audited is bigger than 0"),
         ;
 
         private final String message;

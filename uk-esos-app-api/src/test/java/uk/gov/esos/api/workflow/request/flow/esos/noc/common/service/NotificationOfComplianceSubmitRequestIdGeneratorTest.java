@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestMetadataType;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestType;
 import uk.gov.esos.api.workflow.request.flow.common.domain.dto.RequestParams;

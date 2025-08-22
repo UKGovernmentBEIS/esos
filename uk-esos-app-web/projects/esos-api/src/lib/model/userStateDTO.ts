@@ -13,5 +13,5 @@
 export interface UserStateDTO {
   userId?: string;
   roleType?: 'OPERATOR' | 'VERIFIER' | 'REGULATOR';
-  status?: 'ENABLED' | 'DISABLED' | 'ACCEPTED' | 'TEMP_DISABLED' | 'DELETED' | 'NO_AUTHORITY';
+  status?: 'ENABLED' | 'DISABLED' | 'ACCEPTED' | 'NO_AUTHORITY';
 }

@@ -1,13 +1,25 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { TaskService } from '@common/forms/services/task.service';
+import { of } from 'rxjs';
+
+import { SideEffectsHandler } from '@common/forms/side-effects';
 import { RequestTaskStore } from '@common/request-task/+state';
-import { NotificationTaskPayload } from '@tasks/notification/notification.types';
-import { NotificationService } from '@tasks/notification/services/notification.service';
-import { mockOrganisationStructure, mockStateBuild } from '@tasks/notification/testing/mock-data';
+import {
+  provideNotificationSideEffects,
+  provideNotificationStepFlowManagers,
+  provideNotificationTaskServices,
+} from '@tasks/notification/notification.providers';
+import {
+  mockNotificationRequestTask,
+  mockOrganisationStructure,
+  mockStateBuild,
+} from '@tasks/notification/testing/mock-data';
 import { TaskItemStatus } from '@tasks/task-item-status';
-import { BasePage, MockType } from '@testing';
+import { ActivatedRouteStub, BasePage, MockType } from '@testing';
+
+import { RequestTaskActionPayload, TasksService } from 'esos-api';
 
 import { OrganisationStructureListComponent } from './list.component';
 
@@ -18,34 +30,38 @@ describe('ListComponent', () => {
   let router: Router;
   let page: Page;
 
-  const route = new ActivatedRoute();
-  route.snapshot = new ActivatedRouteSnapshot();
-  route.snapshot.queryParams = { page: 1 };
-
-  const taskService: MockType<NotificationService> = {
-    saveSubtask: jest.fn().mockImplementation(),
-    get payload(): NotificationTaskPayload {
-      return {
-        noc: {
-          organisationStructure: mockOrganisationStructure,
-        } as any,
-        nocSectionsCompleted: { organisationStructure: TaskItemStatus.IN_PROGRESS },
-      };
-    },
+  const tasksService: MockType<TasksService> = {
+    processRequestTaskAction: jest.fn().mockReturnValue(of(null)),
   };
+
+  const route = new ActivatedRouteStub(null, { page: 1 });
 
   class Page extends BasePage<OrganisationStructureListComponent> {
     get buttons() {
       return this.queryAll<HTMLButtonElement>('a[type="button"]');
+    }
+
+    get submitButton() {
+      return this.query<HTMLButtonElement>('button[type="submit"]');
+    }
+
+    get errorSummary() {
+      return this.query<HTMLDivElement>('govuk-error-summary');
     }
   }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        provideNotificationTaskServices(),
+        provideNotificationSideEffects(),
+        provideNotificationStepFlowManagers(),
+        SideEffectsHandler,
         RequestTaskStore,
+        HttpClient,
+        HttpHandler,
         { provide: ActivatedRoute, useValue: route },
-        { provide: TaskService, useValue: taskService },
+        { provide: TasksService, useValue: tasksService },
       ],
     });
 
@@ -75,10 +91,37 @@ describe('ListComponent', () => {
     expect(navigateSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should navigate to summary page', () => {
+  it('should navigate to upload csv', () => {
     const navigateSpy = jest.spyOn(router, 'navigateByUrl');
     page.buttons[1].click();
 
     expect(navigateSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should submit and navigate to summary', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+
+    page.submitButton.click();
+    fixture.detectChanges();
+
+    expect(page.errorSummary).toBeFalsy();
+
+    expect(tasksService.processRequestTaskAction).toHaveBeenCalledWith({
+      requestTaskActionType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT',
+      requestTaskId: 2,
+      requestTaskActionPayload: {
+        payloadType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD',
+        noc: {
+          ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.noc,
+          organisationStructure: mockOrganisationStructure,
+        },
+        nocSectionsCompleted: {
+          ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.nocSectionsCompleted,
+          organisationStructure: TaskItemStatus.IN_PROGRESS,
+        },
+      } as RequestTaskActionPayload,
+    });
+
+    expect(navigateSpy).toHaveBeenCalledWith(['../'], { relativeTo: route });
   });
 });

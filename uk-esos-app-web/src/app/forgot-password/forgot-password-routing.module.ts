@@ -9,22 +9,26 @@ import { SubmitOtpComponent } from './submit-otp/submit-otp.component';
 export const routes: Routes = [
   {
     path: '',
-    data: { pageTitle: 'Forgot password', breadcrumb: true },
+    title: 'Forgot password',
+    data: { breadcrumb: true },
     component: SubmitEmailComponent,
   },
   {
     path: 'invalid-link',
-    data: { pageTitle: 'This link is invalid', breadcrumb: true },
+    title: 'This link is invalid',
+    data: { breadcrumb: true },
     component: EmailLinkInvalidComponent,
   },
   {
     path: 'reset-password',
-    data: { pageTitle: 'Reset password', breadcrumb: true },
+    title: 'Reset password',
+    data: { breadcrumb: true },
     component: ResetPasswordComponent,
   },
   {
     path: 'otp',
-    data: { pageTitle: 'Submit otp', breadcrumb: true },
+    title: 'Submit otp',
+    data: { breadcrumb: true },
     component: SubmitOtpComponent,
   },
 ];

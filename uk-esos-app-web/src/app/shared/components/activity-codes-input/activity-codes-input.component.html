@@ -1,0 +1,42 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-third">
+    <div
+      formControlName="type"
+      govuk-select
+      label="Classification type"
+      [options]="accountTypeOptions"
+      widthClass="govuk-!-width-full"
+    ></div>
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    <div
+      *ngIf="form.get('type').value === 'OTHER'"
+      formControlName="otherTypeName"
+      govuk-text-input
+      label="Classification name"
+    ></div>
+  </div>
+</div>
+<ng-container formArrayName="codes">
+  <div *ngFor="let question of codeFormArray.controls; index as i; last as isLast; first as isFirst" class="row-flex">
+    <div class="govuk-grid-column-one-third">
+      <div [formControlName]="i" govuk-text-input label="Code" class="govuk-!-width-full"></div>
+    </div>
+    <div class="govuk-grid-column-one-third align-self-center">
+      <!--eslint-disable-next-line @angular-eslint/template/click-events-have-key-events-->
+      <a
+        govukLink
+        (click)="removeCode(i)"
+        role="button"
+        tabindex="0"
+        *ngIf="!isFirst && !disabled"
+        class="govuk-!-width-two-thirds"
+        >Remove</a
+      >
+    </div>
+  </div>
+</ng-container>
+<div *ngIf="codeFormArray.length < 4" class="govuk-button-group">
+  <button [disabled]="disabled" (click)="addCode()" govukSecondaryButton type="button">Add code</button>
+</div>

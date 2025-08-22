@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
 import { RequestTaskStore } from '@common/request-task/+state';
+import { InternalExternalPipe } from '@shared/pipes/internal-external.pipe';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
@@ -25,7 +26,7 @@ import { PersonFormFormProvider } from './personnel-form.provider';
   selector: 'esos-personnel',
   templateUrl: './personnel.component.html',
   standalone: true,
-  imports: [GovukComponentsModule, ReactiveFormsModule, WizardStepComponent],
+  imports: [GovukComponentsModule, InternalExternalPipe, ReactiveFormsModule, WizardStepComponent],
   providers: [PersonFormFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

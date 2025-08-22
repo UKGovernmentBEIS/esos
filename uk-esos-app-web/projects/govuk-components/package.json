@@ -1,17 +1,17 @@
 {
-  "name": "govuk",
-  "version": "4.7.0",
+  "name": "govuk-components",
+  "version": "5.2.0",
   "scripts": {
     "clean:static-files": "rimraf src/assets src/styles",
-    "copy:govuk:assets": "copyfiles -u 3 -a 'node_modules/govuk-frontend/govuk/assets/**' 'src'",
-    "copy:govuk:scss": "copyfiles -u 3 -a 'node_modules/govuk-frontend/govuk/**/*.scss' 'src/styles'",
+    "copy:govuk:assets": "copyfiles -u 5 -a 'node_modules/govuk-frontend/dist/govuk/assets/**/*.{woff,woff2,ico,svg,png}' 'src/assets'",
+    "copy:govuk:scss": "copyfiles -u 4 -a 'node_modules/govuk-frontend/dist/govuk/**/*.scss' 'src/styles'",
     "fix:govuk:scss": "sass-migrator division 'src/styles/**/*.scss'",
     "add:version-control": "git add src/styles/* src/assets/*",
     "build:static-files": "yarn clean:static-files && yarn copy:govuk:assets && yarn copy:govuk:scss && yarn fix:govuk:scss && yarn add:version-control"
   },
   "peerDependencies": {
-    "@angular/common": "^16.1.0",
-    "@angular/core": "^16.1.0"
+    "@angular/common": "^18.2.13",
+    "@angular/core": "^18.2.13"
   },
   "dependencies": {
     "tslib": "^2.4.0"
@@ -24,7 +24,7 @@
   "sideEffects": false,
   "devDependencies": {
     "copyfiles": "^2.4.1",
-    "govuk-frontend": "4.7.0",
+    "govuk-frontend": "5.2.0",
     "rimraf": "^5.0.5",
     "sass-migrator": "^1.8.1"
   }

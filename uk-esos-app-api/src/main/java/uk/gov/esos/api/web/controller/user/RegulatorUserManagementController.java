@@ -78,7 +78,7 @@ public class RegulatorUserManagementController {
             @Parameter(hidden = true) AppUser currentUser,
             @PathVariable("userId") @Parameter(description = "The regulator user id to update") String userId,
             @RequestPart @Valid @Parameter(description = "The regulator user to update", required = true) RegulatorUserUpdateDTO regulatorUserUpdateDTO,
-            @RequestPart(name = "signature", required = false) @Valid @Parameter(description = "The signature file", required = false) MultipartFile signature
+            @RequestPart(name = "signature", required = false) @Parameter(description = "The signature file", required = false) MultipartFile signature
     ) throws IOException {
         FileDTO signatureDTO = fileDtoMapper.toFileDTO(signature);
         regulatorUserAuthorityUpdateOrchestrator.updateRegulatorUserByUserId(currentUser, userId, regulatorUserUpdateDTO, signatureDTO);
@@ -94,7 +94,7 @@ public class RegulatorUserManagementController {
     public ResponseEntity<RegulatorUserUpdateDTO> updateCurrentRegulatorUser(
             @Parameter(hidden = true) AppUser currentUser,
             @RequestPart @Valid @Parameter(description = "The regulator user to update", required = true) RegulatorUserUpdateDTO regulatorUserUpdateDTO,
-            @RequestPart(name = "signature", required = false) @Valid @Parameter(description = "The signature file", required = false) MultipartFile signature
+            @RequestPart(name = "signature", required = false) @Parameter(description = "The signature file", required = false) MultipartFile signature
     ) throws IOException {
         FileDTO signatureDTO = fileDtoMapper.toFileDTO(signature);
         regulatorUserAuthorityUpdateOrchestrator
@@ -130,4 +130,5 @@ public class RegulatorUserManagementController {
     	regulatorUserManagementService.resetRegulator2Fa(currentUser, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    
 }

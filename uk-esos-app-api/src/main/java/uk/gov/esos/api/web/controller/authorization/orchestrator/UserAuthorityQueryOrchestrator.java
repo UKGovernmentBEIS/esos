@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.esos.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.esos.api.authorization.core.domain.dto.AuthorityDTO;
 import uk.gov.esos.api.authorization.core.service.AuthorityService;
-import uk.gov.esos.api.user.core.domain.enumeration.AuthenticationStatus;
-import uk.gov.esos.api.user.core.service.auth.UserAuthService;
 import uk.gov.esos.api.web.controller.authorization.orchestrator.dto.LoginStatus;
 
 import java.util.List;
@@ -17,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserAuthorityQueryOrchestrator {
 
-    private final UserAuthService userAuthService;
+//    private final UserAuthService userAuthService;
     private final AuthorityService authorityService;
 
     public LoginStatus getUserLoginStatusInfo(String userId) {
@@ -41,16 +39,11 @@ public class UserAuthorityQueryOrchestrator {
                     return LoginStatus.ACCEPTED;
                 }
 
-                return userAuthorities.stream().anyMatch(ua -> ua.getStatus().equals(AuthorityStatus.TEMP_DISABLED))
-                        ? LoginStatus.TEMP_DISABLED
-                        : LoginStatus.DISABLED;
+                return LoginStatus.DISABLED;
             }
+        } else {
+        	return LoginStatus.NO_AUTHORITY;
         }
-
-        // If user has no authorities at all
-        return userAuthService.getUserByUserId(userId).getStatus().equals(AuthenticationStatus.DELETED)
-                ? LoginStatus.DELETED
-                : LoginStatus.NO_AUTHORITY;
     }
 
     private List<AuthorityDTO> getActiveUserAuthorities(List<AuthorityDTO> userAuthorities) {

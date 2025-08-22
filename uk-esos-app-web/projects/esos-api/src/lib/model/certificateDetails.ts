@@ -11,7 +11,7 @@
  */
 
 export interface CertificateDetails {
-  certificateNumber: string;
-  validFrom: string;
-  validUntil: string;
+  certificateNumber?: string;
+  validFrom?: string;
+  validUntil?: string;
 }

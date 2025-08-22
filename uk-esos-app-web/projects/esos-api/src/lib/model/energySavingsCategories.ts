@@ -11,12 +11,11 @@
  */
 
 export interface EnergySavingsCategories {
-  energyManagementPractices: number;
-  behaviourChangeInterventions: number;
-  training: number;
-  controlsImprovements: number;
-  shortTermCapitalInvestments: number;
-  longTermCapitalInvestments: number;
-  otherMeasures: number;
-  total: number;
+  energyManagementPractices?: number;
+  behaviourChangeInterventions?: number;
+  training?: number;
+  controlsImprovements?: number;
+  capitalInvestments?: number;
+  otherMeasures?: number;
+  total?: number;
 }

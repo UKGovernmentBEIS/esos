@@ -8,19 +8,23 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
     reportingObligation: {
       qualificationType: 'QUALIFY',
       reportingObligationDetails: {
-        qualificationReasonTypes: [],
+        qualificationReasonType: null,
         energyResponsibilityType: 'RESPONSIBLE',
       },
     },
     responsibleUndertaking: {
       organisationDetails: {
+        registrationNumberExist: true,
+        registrationNumber: 'AB123456',
         name: 'Corporate Legal Entity Account 2',
-        registrationNumber: '111111',
         line1: 'Some address 1',
         line2: 'Some address 2',
         city: 'London',
         county: 'London',
         postcode: '511111',
+        type: 'OTHER',
+        otherTypeName: 'some classification name',
+        codes: ['CodeA', 'CodeB', 'CodeC'],
       },
       tradingDetails: {
         exist: true,
@@ -38,13 +42,14 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
         name: 'Parent company name',
         tradingName: 'Parent company trading name',
       },
+      isBehalfOfTrust: false,
     },
     contactPersons: {
       primaryContact: {
         firstName: 'John',
         lastName: 'Doe',
         jobTitle: 'Job title',
-        email: null,
+        email: 'primary@email',
         phoneNumber: { countryCode: '44', number: '1234567890' },
         mobileNumber: { countryCode: undefined, number: undefined },
         line1: 'Line',
@@ -69,28 +74,45 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
       },
     },
     organisationStructure: {
-      hasCeasedToBePartOfGroup: false,
-      isPartOfArrangement: true,
-      isPartOfFranchise: false,
-      isTrust: true,
+      isHighestParent: true,
+      isNonComplyingUndertakingsIncluded: true,
+      organisationUndertakingDetails: [
+        {
+          organisationName: 'First undertaking',
+          registrationNumber: '11111111',
+        },
+        {
+          organisationName: 'Second undertaking',
+          registrationNumber: '2222222',
+        },
+      ],
       organisationsAssociatedWithRU: [
         {
+          registrationNumberExist: true,
+          registrationNumber: '00000000',
           hasCeasedToBePartOfGroup: true,
-          isCoveredByThisNotification: true,
+          classificationCodesDetails: {
+            areSameAsRU: false,
+            codes: {
+              type: 'SIC',
+              codes: ['111111'],
+            },
+          },
           isParentOfResponsibleUndertaking: true,
           isPartOfArrangement: true,
           isPartOfFranchise: false,
           isSubsidiaryOfResponsibleUndertaking: true,
-          isTrust: false,
           organisationName: 'Organisation name',
         },
       ],
+      isGroupStructureChartProvided: true,
     },
     complianceRoute: {
-      areDataEstimated: false,
-      twelveMonthsVerifiableDataUsed: 'YES',
+      estimatedCalculationTypes: ['TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'],
+      areTwelveMonthsVerifiableDataUsed: true,
+      areEstimationMethodsRecorded: 'NO',
       energyConsumptionProfilingUsed: 'YES',
-      areEnergyConsumptionProfilingMethodsRecorded: false,
+      areEnergyConsumptionProfilingMethodsRecorded: 'SKIP_QUESTION',
       partsProhibitedFromDisclosingExist: false,
     },
     energyConsumptionDetails: {
@@ -111,74 +133,67 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
         significantEnergyConsumptionPct: 97,
       },
       energyIntensityRatioData: {
-        buildingsIntensityRatio: {
-          ratio: '50',
-          unit: 'm2',
+        buildings: {
+          energyIntensityRatios: [{ ratio: 50, unit: 'm2' }],
           additionalInformation: 'Buildings additional information',
         },
-        freightsIntensityRatio: {
-          ratio: '60',
-          unit: 'freight miles',
+        transport: {
+          energyIntensityRatios: [{ ratio: 60, unit: 'm2' }],
+          additionalInformation: 'Transport additional information',
         },
-        passengersIntensityRatio: {
-          ratio: '70',
-          unit: 'passenger miles',
-          additionalInformation: null,
+        industrialProcesses: {
+          energyIntensityRatios: [{ ratio: 70, unit: 'm2' }],
+          additionalInformation: 'Industrial processes additional information',
         },
-        industrialProcessesIntensityRatio: {
-          ratio: '80',
-          unit: 'tonnes',
-          additionalInformation: null,
+        otherProcesses: {
+          energyIntensityRatios: [{ ratio: 80, unit: 'm2' }],
+          additionalInformation: 'Other processes additional information',
         },
-        otherProcessesIntensityRatios: [
-          {
-            name: 'custom',
-            ratio: '100',
-            unit: 'litres',
-            additionalInformation: null,
-          },
-        ],
       },
       additionalInformationExists: true,
       additionalInformation: 'Additional info',
     },
     energySavingsOpportunities: {
       energyConsumption: {
-        buildings: 2,
-        transport: 4,
-        industrialProcesses: 9,
-        otherProcesses: 13,
-        total: 28,
+        buildings: { energyConsumption: 2, energyCost: '0.00' },
+        transport: { energyConsumption: 4, energyCost: '2.00' },
+        industrialProcesses: { energyConsumption: 9, energyCost: '4.45' },
+        otherProcesses: { energyConsumption: 13, energyCost: '110.60' },
+        energyConsumptionTotal: 28,
+
+        energyCostTotal: '117.05',
       },
       energySavingsCategories: {
-        energyManagementPractices: 1,
-        behaviourChangeInterventions: 2,
-        training: 3,
-        controlsImprovements: 4,
-        shortTermCapitalInvestments: 5,
-        longTermCapitalInvestments: 6,
-        otherMeasures: 7,
-        total: 28,
+        energyManagementPractices: { energyConsumption: 1, energyCost: '1.00' },
+        behaviourChangeInterventions: { energyConsumption: 2, energyCost: '2.20' },
+        training: { energyConsumption: 3, energyCost: '3.03' },
+        controlsImprovements: { energyConsumption: 4, energyCost: '0.00' },
+        capitalInvestments: { energyConsumption: 6, energyCost: '0.00' },
+        otherMeasures: { energyConsumption: 7, energyCost: '0.00' },
+        energyConsumptionTotal: 28,
+
+        energyCostTotal: '6.23',
       },
     },
     alternativeComplianceRoutes: {
-      totalEnergyConsumptionReduction: 12,
+      totalEnergyConsumptionReduction: { energyConsumption: 12, energyCost: '0.00' },
       energyConsumptionReduction: {
-        buildings: 1,
-        transport: 5,
-        industrialProcesses: 4,
-        otherProcesses: 2,
-        total: 12,
+        buildings: { energyConsumption: 1, energyCost: '0.00' },
+        transport: { energyConsumption: 5, energyCost: '0.00' },
+        industrialProcesses: { energyConsumption: 4, energyCost: '0.00' },
+        otherProcesses: { energyConsumption: 2, energyCost: '0.00' },
+        energyConsumptionTotal: 12,
+        energyCostTotal: '0.00',
       },
       energyConsumptionReductionCategories: {
-        energyManagementPractices: 1,
-        behaviourChangeInterventions: 2,
-        training: 3,
-        controlsImprovements: 4,
-        shortTermCapitalInvestments: 1,
-        longTermCapitalInvestments: 0,
-        otherMeasures: 1,
-        total: 12,
+        energyManagementPractices: { energyConsumption: 1, energyCost: '0.00' },
+        behaviourChangeInterventions: { energyConsumption: 2, energyCost: '0.00' },
+        training: { energyConsumption: 3, energyCost: '0.00' },
+        controlsImprovements: { energyConsumption: 4, energyCost: '0.00' },
+        capitalInvestments: { energyConsumption: 0, energyCost: '0.00' },
+        otherMeasures: { energyConsumption: 1, energyCost: '0.00' },
+        energyConsumptionTotal: 12,
+        energyCostTotal: '0.00',
       },
       assets: {
         iso50001: 'iso1',
@@ -221,14 +236,13 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
     },
     energySavingsAchieved: {
       details: 'lorem ipsum',
-      energySavingCategoriesExist: true,
+      energySavingCategoriesExist: 'YES',
       energySavingsCategories: {
         energyManagementPractices: 0,
         behaviourChangeInterventions: 0,
         training: 0,
         controlsImprovements: 0,
-        shortTermCapitalInvestments: 0,
-        longTermCapitalInvestments: 0,
+        capitalInvestments: 0,
         otherMeasures: 0,
         total: 0,
       },
@@ -239,7 +253,7 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
         otherProcesses: 0,
         total: 0,
       },
-      energySavingsRecommendationsExist: true,
+      energySavingsRecommendationsExist: 'YES',
       energySavingsRecommendations: {
         energyAudits: 0,
         alternativeComplianceRoutes: 0,
@@ -273,16 +287,16 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
       ],
     },
     firstCompliancePeriod: {
-      informationExists: true,
+      informationExists: 'YES',
       firstCompliancePeriodDetails: {
-        organisationalEnergyConsumption: {
+        organisationalEnergyConsumption: 0,
+        organisationalEnergyConsumptionBreakdown: {
           buildings: 4000,
           transport: 2500,
           industrialProcesses: 1500,
           otherProcesses: 800,
           total: 8800,
         },
-        significantEnergyConsumptionExists: true,
         significantEnergyConsumption: {
           buildings: 5000,
           transport: 3000,
@@ -292,7 +306,6 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
           significantEnergyConsumptionPct: 25,
         },
         explanation: 'Explanation for changes in total consumption',
-        potentialReductionExists: true,
         potentialReduction: {
           buildings: 4000,
           transport: 2500,
@@ -303,11 +316,10 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
       },
     },
     secondCompliancePeriod: {
-      informationExists: false,
+      informationExists: 'NO',
     },
     confirmations: {
       responsibilityAssessmentTypes: [
-        'REVIEWED_THE_RECOMMENDATIONS',
         'SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME',
         'SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME',
         'SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON',
@@ -334,7 +346,6 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
       },
       reviewAssessmentDate: '2022-02-02',
       secondResponsibleOfficerEnergyTypes: [
-        'REVIEWED_THE_RECOMMENDATIONS',
         'SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME',
         'SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME',
         'SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON',
@@ -363,6 +374,9 @@ const mockNotificationPayload: NotificationOfComplianceP3ApplicationRequestActio
       line2: 'Line 2',
       name: 'Ru Org Name',
       postcode: 'Postcode',
+      type: 'OTHER',
+      otherTypeName: 'some classification name',
+      codes: ['CodeA', 'CodeB', 'CodeC'],
     },
   },
 };

@@ -1,0 +1,33 @@
+export const NotificationErrorUrlMapper = {
+  AlternativeComplianceRoutes: 'alternative-compliance-routes',
+  AssessmentPersonnel: 'assessment-personnel',
+  ComplianceRoute: 'compliance-route',
+  Confirmations: 'confirmation',
+  ContactPersons: 'contact-persons',
+  EnergyConsumptionDetails: 'energy-consumption',
+  EnergySavingsAchieved: 'energy-savings-achieved',
+  EnergySavingsOpportunities: 'energy-savings-opportunities',
+  FirstCompliancePeriod: 'first-compliance-period',
+  LeadAssessor: 'lead-assessor-details',
+  OrganisationStructure: 'organisation-structure',
+  ReportingObligation: 'reporting-obligation',
+  ResponsibleUndertaking: 'responsible-undertaking',
+  SecondCompliancePeriod: 'second-compliance-period',
+};
+
+export const NotificationErrorSubtaskNameMapper = {
+  AlternativeComplianceRoutes: 'alternative routes to compliance',
+  AssessmentPersonnel: 'assessment personnel',
+  ComplianceRoute: 'compliance route',
+  Confirmations: 'responsible officer confirmation',
+  ContactPersons: 'contact persons',
+  EnergyConsumptionDetails: 'energy consumption',
+  EnergySavingsAchieved: 'energy savings achieved',
+  EnergySavingsOpportunities: 'energy savings opportunities',
+  FirstCompliancePeriod: 'first compliance period',
+  LeadAssessor: 'lead assessor details',
+  OrganisationStructure: 'organisation structure',
+  ReportingObligation: 'reporting obligation',
+  ResponsibleUndertaking: 'responsible undertaking',
+  SecondCompliancePeriod: 'second compliance period',
+};

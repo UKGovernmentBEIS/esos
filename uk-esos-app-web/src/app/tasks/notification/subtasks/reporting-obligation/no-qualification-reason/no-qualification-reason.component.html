@@ -5,6 +5,79 @@
   (formSubmit)="submit()"
   submitText="Save and continue"
   [hideSubmit]="!isEditable"
+  [showReturnLink]="true"
 >
+  <p class="govuk-body">
+    You must refer to the full guidance in section 1.2 of the guidance on complying with ESOS and the Energy Savings
+    Opportunity Scheme Regulations 2014 (as amended) (which, in the event of any difference from the guidance or this
+    helptext, shall prevail). In the event of doubt, you may wish to seek legal advice as to whether an undertaking
+    qualifies for ESOS; this wording is intended as guidance only.
+  </p>
+  <p class="govuk-body">If your undertaking, or any other undertaking in its corporate group, is defined as a large
+    undertaking on the basis of the qualification thresholds relating to the number of employees and/or annual turnover
+    and balance sheet totals, all the undertakings in the corporate group must comply with ESOS.</p>
+  <p class="govuk-body">If you consider that the qualification conditions are not met for any undertaking within the
+    group to which this notification relates please enter your explanation, referring to the reasons below. You may also
+    upload supporting evidence in the
+    <a govukLink [routerLink]="['/accounts', accountId]" fragment="notes" target="_blank">Notes area of the Account
+      section (opens in a new tab)</a></p>
+
+  <govuk-details summary="When are the qualification conditions not met">
+    <p class="govuk-body"><strong>Neither of the following qualification thresholds are met for any undertaking in the
+      group:</strong></p>
+
+    <p class="govuk-body"><strong>EITHER</strong></p>
+    <p class="govuk-body">1. number of employees</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>The undertaking has employed an average of 250 or more employees per year on a monthly basis for at least 2
+        consecutive 12-month accounting periods.
+      </li>
+      <li>An ‘employee’ is a person employed under a contract of service or employment contract. Their contracted hours
+        and status (full-time or part-time) are irrelevant to their classification as an employee.
+      </li>
+      <li>Direct employees of UK undertakings who are based overseas must be counted.</li>
+      <li>Overseas companies with a UK establishment must count UK employees who are eligible to pay income tax in the
+        UK.
+      </li>
+      <li>Agency workers are not usually counted but you should check their contracts with a legal adviser to confirm
+        this.
+      </li>
+    </ul>
+
+    <p class="govuk-body"><strong>OR</strong></p>
+    <p class="govuk-body">2. annual turnover and balance sheets total</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>The undertaking has had an annual turnover or annual balance sheet total exceeding £44 million and £38 million
+        respectively for at least 2 consecutive 12-month accounting periods.
+      </li>
+      <li>Turnover is the amount derived from provision on goods and services after deducting trade discounts, value
+        added tax and other taxes based on the amount.
+      </li>
+      <li>The balance sheet total is the aggregate of amounts shown as assets in the company’s balance sheet, before
+        deducting current and long-term liabilities ie the gross figure.
+      </li>
+    </ul>
+
+    <p class="govuk-body"><strong>The definition of undertaking in the Companies Act 2006 is not met for that
+      undertaking:</strong></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Participation in ESOS is dependent on meeting the definition of an undertaking in section 1161 of the
+        Companies Act 2006, meaning either i) a body corporate or partnership, or ii) an unincorporated association
+        carrying on a trade or business, with or without a view to profit.
+      </li>
+      <li>Undertakings that meet the definition of public body in regulation 2(1) of the Public Contracts Regulations
+        2015 are not required to participate in ESOS.
+      </li>
+    </ul>
+
+    <p class="govuk-body"><strong>The undertaking is subject to an insolvency procedure:</strong></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Participation in ESOS is not required for any undertaking that is subject to insolvency procedure in the
+        circumstances described by paragraph 120(7) of Schedule 6 to the Finance Act 2000.
+      </li>
+    </ul>
+
+  </govuk-details>
+
   <div govuk-textarea formControlName="noQualificationReason" [maxLength]="10000"></div>
 </esos-wizard-step>

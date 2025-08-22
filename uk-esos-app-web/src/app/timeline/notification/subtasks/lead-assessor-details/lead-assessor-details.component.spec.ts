@@ -53,7 +53,7 @@ describe('LeadAssessorDetailsComponent', () => {
       'Association of Energy Engineers',
       'Membership name',
       '13',
-      'Yes',
+      'Yes, the lead assessor reviewed and confirmed that the assessment meets the ESOS requirements',
     ]);
   });
 });

@@ -21,6 +21,7 @@ import uk.gov.esos.api.account.organisation.service.OrganisationAccountQueryServ
 import uk.gov.esos.api.authorization.core.domain.AppUser;
 import uk.gov.esos.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.esos.api.common.domain.dto.CountyAddressDTO;
+import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.common.exception.BusinessException;
 import uk.gov.esos.api.common.exception.ErrorCode;
 import uk.gov.esos.api.competentauthority.CompetentAuthorityEnum;
@@ -83,6 +84,7 @@ class OrganisationAccountViewControllerTest {
     @Test
     void getOrganisationAccountById() throws Exception {
         final long accountId = 1L;
+        final AppUser user = AppUser.builder().userId("userId").roleType(RoleType.REGULATOR).build();
         final OrganisationAccountDTO organisationAccountDTO = OrganisationAccountDTO.builder()
                 .id(accountId)
                 .registrationNumber("registrationNbr")
@@ -97,9 +99,11 @@ class OrganisationAccountViewControllerTest {
                 .competentAuthority(CompetentAuthorityEnum.WALES)
                 .organisationId(String.valueOf(accountId))
                 .status(OrganisationAccountStatus.LIVE)
+                .editable(false)
                 .build();
 
-        when(organisationAccountQueryService.getOrganisationAccountById(accountId)).thenReturn(organisationAccountDTO);
+        when(organisationAccountQueryService.getOrganisationAccount(user, accountId)).thenReturn(organisationAccountDTO);
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.get(ACCOUNT_CONTROLLER_PATH + "/" + accountId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -114,9 +118,10 @@ class OrganisationAccountViewControllerTest {
                 .andExpect(jsonPath("$.postcode").value("postcode"))
                 .andExpect(jsonPath("$.competentAuthority").value(CompetentAuthorityEnum.WALES.name()))
                 .andExpect(jsonPath("$.organisationId").value(String.valueOf(accountId)))
-                .andExpect(jsonPath("$.status").value(OrganisationAccountStatus.LIVE.name()));
+                .andExpect(jsonPath("$.status").value(OrganisationAccountStatus.LIVE.name()))
+                .andExpect(jsonPath("$.editable").value(false));
 
-        verify(organisationAccountQueryService, times(1)).getOrganisationAccountById(accountId);
+        verify(organisationAccountQueryService, times(1)).getOrganisationAccount(user, accountId);
     }
 
     @Test

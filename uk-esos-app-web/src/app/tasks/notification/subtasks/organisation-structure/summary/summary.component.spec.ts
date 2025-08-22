@@ -22,6 +22,7 @@ describe('SummaryComponent', () => {
 
   const taskService: MockType<NotificationService> = {
     submitSubtask: jest.fn().mockImplementation(),
+    saveSubtask: jest.fn().mockImplementation(),
     get payload(): NotificationTaskPayload {
       return {
         noc: {
@@ -34,7 +35,10 @@ describe('SummaryComponent', () => {
 
   class Page extends BasePage<OrganisationStructureSummaryComponent> {
     get submitButton() {
-      return this.query<HTMLButtonElement>('button[type="button"]');
+      return this.query<HTMLButtonElement>('button[type="submit"]');
+    }
+    get removeButtons() {
+      return this.queryAll<HTMLLinkElement>('.govuk-link').filter((el) => el.textContent.trim() === 'Remove');
     }
   }
 
@@ -63,6 +67,55 @@ describe('SummaryComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should remove organisation', () => {
+    const taskServiceSpy = jest.spyOn(taskService, 'saveSubtask');
+
+    page.removeButtons[2].click();
+    fixture.detectChanges();
+
+    expect(taskServiceSpy).toHaveBeenCalledWith({
+      subtask: 'organisationStructure',
+      currentStep: 'list-remove',
+      route,
+      payload: {
+        noc: {
+          organisationStructure: {
+            ...mockOrganisationStructure,
+            organisationsAssociatedWithRU: [],
+          },
+        },
+        nocSectionsCompleted: { organisationStructure: 'COMPLETED' },
+      },
+    });
+  });
+
+  it('should remove organisation undertaking', () => {
+    const taskServiceSpy = jest.spyOn(taskService, 'saveSubtask');
+
+    page.removeButtons[0].click();
+    fixture.detectChanges();
+
+    expect(taskServiceSpy).toHaveBeenCalledWith({
+      subtask: 'organisationStructure',
+      currentStep: 'list-remove',
+      route,
+      payload: {
+        noc: {
+          organisationStructure: {
+            ...mockOrganisationStructure,
+            organisationUndertakingDetails: [
+              {
+                organisationName: 'Second undertaking',
+                registrationNumber: '2222222',
+              },
+            ],
+          },
+        },
+        nocSectionsCompleted: { organisationStructure: 'COMPLETED' },
+      },
+    });
   });
 
   it('should submit and navigate to list page', () => {

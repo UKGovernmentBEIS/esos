@@ -9,4 +9,5 @@ export const statusesTagMap: Record<RequestDetailsDTO['requestStatus'], string> 
   REJECTED: 'REJECTED',
   CLOSED: 'CLOSED',
   EXEMPT: 'EXEMPT',
+  TERMINATED: 'TERMINATED',
 };

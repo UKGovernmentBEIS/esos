@@ -109,9 +109,36 @@ describe('UseSignificantEnergyComponent', () => {
           noc: {
             ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.noc,
             energyConsumptionDetails: {
-              ...mockEnergyConsumptionDetails,
-              significantEnergyConsumption: undefined,
+              additionalInformation: 'Additional info',
+              additionalInformationExists: true,
+              energyIntensityRatioData: {
+                buildings: {
+                  additionalInformation: 'Buildings additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '50',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+                industrialProcesses: {
+                  additionalInformation: 'Industrial processes additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '70',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+              },
               significantEnergyConsumptionExists: false,
+              totalEnergyConsumption: {
+                buildings: 100,
+                industrialProcesses: 50,
+                otherProcesses: 0,
+                total: 150,
+                transport: 0,
+              },
             },
           },
           nocSectionsCompleted: {

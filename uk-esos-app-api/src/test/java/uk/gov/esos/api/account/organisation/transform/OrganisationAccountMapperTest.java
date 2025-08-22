@@ -30,6 +30,7 @@ class OrganisationAccountMapperTest {
                 .county("county")
                 .postcode("postcode")
                 .build())
+            .location(CompetentAuthorityEnum.WALES)
             .build();
 
         //invoke
@@ -37,7 +38,7 @@ class OrganisationAccountMapperTest {
 
         //verify
         assertEquals(source.getName(), target.getName());
-        assertEquals(source.getCompetentAuthority(), target.getCompetentAuthority());
+        assertEquals(source.getLocation(), target.getCompetentAuthority());
         assertEquals(source.getStatus(), target.getStatus());
         assertEquals(source.getRegistrationNumber(), target.getRegistrationNumber());
         assertEquals(source.getOrganisationId(), target.getOrganisationId());
@@ -56,7 +57,7 @@ class OrganisationAccountMapperTest {
         OrganisationAccountDTO source = OrganisationAccountDTO.builder()
                 .registrationNumber("number")
                 .name("name")
-                .competentAuthority(CompetentAuthorityEnum.ENGLAND)
+                .competentAuthority(CompetentAuthorityEnum.WALES)
                 .address(CountyAddressDTO.builder()
                         .line1("line1")
                         .city("city")
@@ -64,7 +65,7 @@ class OrganisationAccountMapperTest {
                         .postcode("postcode")
                         .build())
                 .organisationId("random")
-                .status(OrganisationAccountStatus.UNAPPROVED)
+                .status(OrganisationAccountStatus.AWAITING_APPROVAL)
                 .build();
 
         //invoke
@@ -74,7 +75,8 @@ class OrganisationAccountMapperTest {
         //verify
         assertEquals(id, target.getId());
         assertEquals(source.getName(), target.getName());
-        assertEquals(source.getCompetentAuthority(), target.getCompetentAuthority());
+        assertEquals(source.getCompetentAuthority(), target.getLocation());
+        assertEquals(CompetentAuthorityEnum.ENGLAND, target.getCompetentAuthority());
         assertEquals(source.getRegistrationNumber(), target.getRegistrationNumber());
         assertEquals(OrganisationAccountStatus.LIVE, target.getStatus());
         assertEquals(AccountType.ORGANISATION, target.getAccountType());

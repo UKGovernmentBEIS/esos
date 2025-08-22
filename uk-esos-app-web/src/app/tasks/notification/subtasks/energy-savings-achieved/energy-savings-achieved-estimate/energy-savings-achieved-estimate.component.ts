@@ -4,7 +4,7 @@ import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
-import { getTotalSum } from '@shared/components/energy-consumption-input/energy-consumption-input';
+import { getEnergyConsumptionTotalSum } from '@shared/components/energy-consumption-input/energy-consumption-input';
 import { EnergyConsumptionInputComponent } from '@shared/components/energy-consumption-input/energy-consumption-input.component';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
@@ -29,7 +29,7 @@ import { energySavingsAchievedEstimateFormProvider } from './energy-savings-achi
 export default class EnergySavingsAchievedEstimateComponent {
   private formData: Signal<EnergyConsumption> = toSignal(this.form.valueChanges, { initialValue: this.form.value });
 
-  totalkWh: Signal<number> = computed(() => getTotalSum(this.formData()));
+  totalkWh: Signal<number> = computed(() => getEnergyConsumptionTotalSum(this.formData()));
 
   constructor(
     @Inject(TASK_FORM) readonly form: UntypedFormGroup,

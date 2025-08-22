@@ -41,17 +41,18 @@ export const ASSESSMENT_PERSONNEL_ROUTES: Routes = [
         canActivate: [canActivateAssessmentPersonnel, canAlterAssessmentPersonnel],
         title: 'Edit personnel',
         resolve: {
-          backlink: backlinkResolver(`../${AssessmentPersonnelWizardStep.SUMMARY}`, `../${AssessmentPersonnelWizardStep.STEP_LIST}`),
+          backlink: backlinkResolver(
+            `../${AssessmentPersonnelWizardStep.SUMMARY}`,
+            `../${AssessmentPersonnelWizardStep.STEP_LIST}`,
+          ),
         },
         loadComponent: () => import('./personnel/personnel.component'),
       },
       {
         path: `:personIndex/${AssessmentPersonnelWizardStep.STEP_REMOVE}`,
         canActivate: [canActivateAssessmentPersonnel, canAlterAssessmentPersonnel],
-        title: 'Remove personnel',
-        resolve: {
-          backlink: backlinkResolver(`../${AssessmentPersonnelWizardStep.SUMMARY}`, `../${AssessmentPersonnelWizardStep.STEP_LIST}`),
-        },
+        title: 'Delete personnel',
+        data: { breadcrumb: 'Delete personnel' },
         loadComponent: () => import('./personnel-remove/personnel-remove.component'),
       },
     ],

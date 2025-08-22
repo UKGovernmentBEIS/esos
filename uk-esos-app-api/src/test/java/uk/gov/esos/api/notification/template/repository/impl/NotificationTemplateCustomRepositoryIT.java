@@ -86,7 +86,7 @@ class NotificationTemplateCustomRepositoryIT extends AbstractContainerBaseTest {
         CompetentAuthorityEnum competentAuthority = CompetentAuthorityEnum.ENGLAND;
         AccountType accountType = AccountType.ORGANISATION;
 
-        createNotificationTemplate(NotificationTemplateName.INVITATION_TO_EMITTER_CONTACT, competentAuthority, permitWorkflow,
+        createNotificationTemplate(NotificationTemplateName.INVITATION_TO_OPERATOR_ACCOUNT, competentAuthority, permitWorkflow,
             RoleType.OPERATOR, accountType, true);
         NotificationTemplate notificationTemplate2 = createNotificationTemplate(NotificationTemplateName.USER_ACCOUNT_CREATED,
             competentAuthority, accountOpeningWorkflow, RoleType.REGULATOR, accountType, true);

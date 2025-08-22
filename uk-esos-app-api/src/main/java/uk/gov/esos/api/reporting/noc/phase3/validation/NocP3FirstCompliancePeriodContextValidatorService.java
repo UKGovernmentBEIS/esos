@@ -23,7 +23,7 @@ public class NocP3FirstCompliancePeriodContextValidatorService extends NocP3Sect
     }
 
     @Override
-    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories() {
+    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories(NocP3Container nocContainer) {
         return ReportingObligationCategory.getQualifyCategories();
     }
 

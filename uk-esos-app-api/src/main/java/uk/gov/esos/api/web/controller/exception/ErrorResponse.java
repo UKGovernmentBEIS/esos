@@ -1,6 +1,5 @@
 package uk.gov.esos.api.web.controller.exception;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,7 +17,6 @@ public class ErrorResponse {
     private String message;
 
     /** Whether the error is security related */
-    @JsonIgnore
     private Boolean security;
 
     /** The error message */

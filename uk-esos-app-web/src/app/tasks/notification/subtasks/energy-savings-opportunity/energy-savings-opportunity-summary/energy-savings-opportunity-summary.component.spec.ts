@@ -16,7 +16,7 @@ import { ActivatedRouteStub, BasePage, MockType } from '@testing';
 
 import { TasksService } from 'esos-api';
 
-import { EnergySavingsOpportunitySummaryComponent } from './energy-savings-opportunity-summary.component';
+import EnergySavingsOpportunitySummaryComponent from './energy-savings-opportunity-summary.component';
 
 describe('EnergySavingsOpportunitySummaryComponent', () => {
   let component: EnergySavingsOpportunitySummaryComponent;
@@ -41,10 +41,8 @@ describe('EnergySavingsOpportunitySummaryComponent', () => {
   };
 
   class Page extends BasePage<EnergySavingsOpportunitySummaryComponent> {
-    get summaryListValues() {
-      return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
-        .map((row) => [row.querySelector('dt'), row.querySelectorAll('dd')[0], row.querySelectorAll('dd')[1]])
-        .map((pair) => pair.map((element) => element?.textContent?.trim()));
+    get tableCells() {
+      return this.queryAll('tr > th, tr > td').map((el) => el.textContent.trim());
     }
   }
 
@@ -75,21 +73,71 @@ describe('EnergySavingsOpportunitySummaryComponent', () => {
   });
 
   it('should display the summary details', () => {
-    expect(page.summaryListValues).toEqual([
-      ['Buildings', '2 kWh', 'Change'],
-      ['Transport', '4 kWh', 'Change'],
-      ['Industrial processes', '9 kWh', 'Change'],
-      ['Other processes', '13 kWh', 'Change'],
-      ['Total', '28 kWh'],
-
-      ['Energy management practices', '1 kWh', 'Change'],
-      ['Behaviour change interventions', '2 kWh', 'Change'],
-      ['Training', '3 kWh', 'Change'],
-      ['Controls improvements', '4 kWh', 'Change'],
-      ['Short term capital investments (with a payback period of less than 3 years)', '5 kWh', 'Change'],
-      ['Long term capital investments (with a payback period of less than 3 years)', '6 kWh', 'Change'],
-      ['Other measures not covered by one of the above', '7 kWh', 'Change'],
-      ['Total', '28 kWh', ''],
+    expect(page.tableCells).toEqual([
+      '',
+      'kWh',
+      '£',
+      '',
+      'Total annual reduction',
+      '100',
+      '2.00',
+      'Change',
+      '',
+      'kWh',
+      '£',
+      '',
+      'Buildings',
+      '2',
+      '2.00',
+      'Change',
+      'Transport',
+      '4',
+      '2.00',
+      'Change',
+      'Industrial processes',
+      '9',
+      '4.45',
+      'Change',
+      'Other energy uses',
+      '13',
+      '110.60',
+      'Change',
+      'Total',
+      '28',
+      '117.05',
+      '',
+      '',
+      'kWh',
+      '£',
+      '',
+      'Energy management practices',
+      '1',
+      '1.00',
+      'Change',
+      'Behaviour change interventions',
+      '2',
+      '2.20',
+      'Change',
+      'Training',
+      '3',
+      '3.03',
+      'Change',
+      'Controls improvements',
+      '4',
+      '4.00',
+      'Change',
+      'Capital investments',
+      '6',
+      '4.00',
+      'Change',
+      'Other measures not covered by one of the above',
+      '7',
+      '4.00',
+      'Change',
+      'Total',
+      '28',
+      '6.23',
+      '',
     ]);
   });
 });

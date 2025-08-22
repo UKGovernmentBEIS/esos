@@ -86,14 +86,8 @@ public class OperatorAuthorityUpdateService {
         // Add notification message for enable user from accepted invitation
         if(previousStatus.equals(AuthorityStatus.ACCEPTED)
                 && operatorUserUpdate.getAuthorityStatus().equals(AuthorityStatus.ACTIVE)){
-            if(operatorUserUpdate.getRoleCode().equals(AuthorityConstants.EMITTER_CONTACT)){
-                return NewUserActivated.builder().userId(operatorUserUpdate.getUserId())
-                        .accountId(accountId).roleCode(AuthorityConstants.EMITTER_CONTACT).build();
-            }
-            else{
-                return NewUserActivated.builder().userId(operatorUserUpdate.getUserId())
-                        .roleCode(AuthorityConstants.OPERATOR_ROLE_CODE).build();
-            }
+            return NewUserActivated.builder().userId(operatorUserUpdate.getUserId())
+                    .roleCode(AuthorityConstants.OPERATOR_ROLE_CODE).build();
         }
         return null;
     }

@@ -11,7 +11,7 @@ import uk.gov.esos.api.competentauthority.CompetentAuthorityEnum;
 
 public class AccountRepositoryIT extends AbstractAccountRepositoryIT {
     @Override
-    public Account buildAccount(Long id, String accountName, CompetentAuthorityEnum ca, Long verificationBodyId, EmissionTradingScheme emissionTradingScheme) {
+    public Account buildAccount(Long id, String accountName, CompetentAuthorityEnum ca, Long verificationBodyId, EmissionTradingScheme emissionTradingScheme, CompetentAuthorityEnum location) {
         return OrganisationAccount.builder()
             .id(id)
             .name(accountName)
@@ -27,6 +27,7 @@ public class AccountRepositoryIT extends AbstractAccountRepositoryIT {
                 .build())
             .verificationBodyId(verificationBodyId)
             .emissionTradingScheme(emissionTradingScheme)
+            .location(location)
             .build();
     }
 

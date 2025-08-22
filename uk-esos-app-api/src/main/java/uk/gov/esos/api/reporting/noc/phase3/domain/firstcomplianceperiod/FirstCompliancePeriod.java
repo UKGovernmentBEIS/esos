@@ -8,17 +8,18 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import uk.gov.esos.api.common.domain.dto.validation.SpELExpression;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3Section;
+import uk.gov.esos.api.reporting.noc.phase3.domain.OptionalQuestion;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@SpELExpression(expression = "{T(java.lang.Boolean).TRUE.equals(#informationExists) == (#firstCompliancePeriodDetails != null)}",
+@SpELExpression(expression = "{(#informationExists eq 'YES') == (#firstCompliancePeriodDetails != null)}",
 	message = "noc.complianceperiod.energyconsumption.details")
 public class FirstCompliancePeriod implements NocP3Section {
 
 	@NotNull
-	private Boolean informationExists;
+	private OptionalQuestion informationExists;
 	
 	@Valid
 	private FirstCompliancePeriodDetails firstCompliancePeriodDetails;

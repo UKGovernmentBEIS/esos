@@ -13,8 +13,7 @@ import { EnergyConsumption } from './energyConsumption';
 import { FirstCompliancePeriodDetails } from './firstCompliancePeriodDetails';
 
 export interface SecondCompliancePeriod {
-  informationExists: boolean;
+  informationExists: 'YES' | 'NO' | 'SKIP_QUESTION';
   firstCompliancePeriodDetails?: FirstCompliancePeriodDetails;
-  reductionAchievedExists?: boolean;
   reductionAchieved?: EnergyConsumption;
 }

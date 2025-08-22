@@ -52,10 +52,6 @@ public class NocP3EnergySavingsAchievedContextValidatorService extends NocP3Sect
                 if (ObjectUtils.isEmpty(nocSection.getEnergySavingCategoriesExist())) {
                     nocViolations.add(new NocViolation(this.getSectionName(), NocViolation.NocViolationMessage.INVALID_ENERGY_SAVINGS_CATEGORIES));
                 }
-                if (Boolean.TRUE.equals(nocSection.getEnergySavingCategoriesExist()) &&
-                        (nocSection.getEnergySavingsEstimation().getTotal().compareTo(nocSection.getEnergySavingsCategories().getTotal()) != 0)) {
-                    nocViolations.add(new NocViolation(this.getSectionName(), NocViolation.NocViolationMessage.INVALID_ENERGY_SAVINGS_CONSUMPTION_ENERGY_SAVINGS_CATEGORIES_TOTAL));
-                }
                 yield nocViolations;
             }
             default -> nocViolations;
@@ -63,7 +59,7 @@ public class NocP3EnergySavingsAchievedContextValidatorService extends NocP3Sect
     }
 
     @Override
-    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories() {
+    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories(NocP3Container nocContainer) {
         return Set.of(
                 ReportingObligationCategory.ESOS_ENERGY_ASSESSMENTS_95_TO_100,
                 ReportingObligationCategory.ISO_50001_COVERING_ENERGY_USAGE,

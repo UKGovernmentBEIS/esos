@@ -12,5 +12,5 @@
 import { PersonnelDetails } from './personnelDetails';
 
 export interface AssessmentPersonnel {
-  personnel: Array<PersonnelDetails>;
+  personnel?: Array<PersonnelDetails>;
 }

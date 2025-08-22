@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
 import { RequestTaskStore } from '@common/request-task/+state';
@@ -20,9 +20,7 @@ describe('AddEnergyAuditComponent', () => {
   let store: RequestTaskStore;
   let page: Page;
 
-  const route = new ActivatedRoute();
-  route.snapshot = new ActivatedRouteSnapshot();
-  route.snapshot.params = { taskId: 1 };
+  const route: any = { snapshot: { params: { taskId: 1 }, pathFromRoot: [] } };
 
   const taskService: MockType<NotificationService> = {
     saveSubtask: jest.fn().mockImplementation(),
@@ -116,7 +114,6 @@ describe('AddEnergyAuditComponent', () => {
     expect(page.errorSummary).toBeTruthy();
     expect(page.errors.map((error) => error.textContent.trim())).toEqual([
       'Enter the description',
-      'Enter the number of sites covered',
       'Enter the number of sites visited',
       'Enter the reason',
     ]);
@@ -149,7 +146,6 @@ describe('AddEnergyAuditComponent', () => {
               },
               {
                 description: 'desc2',
-                numberOfSitesCovered: 999,
                 numberOfSitesVisited: 999,
                 reason: 'reason2',
               },
@@ -197,7 +193,6 @@ describe('AddEnergyAuditComponent', () => {
               },
               {
                 description: 'desc2',
-                numberOfSitesCovered: 999,
                 numberOfSitesVisited: 999,
                 reason: 'reason2',
               },

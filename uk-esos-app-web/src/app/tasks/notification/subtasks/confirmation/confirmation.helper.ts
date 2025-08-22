@@ -1,3 +1,5 @@
+import { ReportingObligationCategory } from '@requests/common/reporting-obligation-category.types';
+
 import { ContactPerson } from 'esos-api';
 
 import { ContactPersonNew } from './contact-persons.type';
@@ -51,3 +53,12 @@ export const removeAddressProperty = (contactPerson: ContactPersonNew): ContactP
     postcode: address.postcode,
   };
 };
+
+export const reviewAssessmentCannotBeBefore = new Date('2019-12-05');
+
+export const reportingObligationTypesForDisplaySecondResponsibleOfficer: Array<ReportingObligationCategory> = [
+  'ESOS_ENERGY_ASSESSMENTS_95_TO_100',
+  'PARTIAL_ENERGY_ASSESSMENTS',
+  'LESS_THAN_40000_KWH_PER_YEAR',
+  'ALTERNATIVE_ENERGY_ASSESSMENTS_95_TO_100',
+];

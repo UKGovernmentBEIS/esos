@@ -8,9 +8,7 @@ import { CONTACT_PERSONS_SUB_TASK } from './contact-persons.helper';
 export class ContactPersonsSideEffect extends SideEffect {
   override subtask = CONTACT_PERSONS_SUB_TASK;
 
-  override apply(
-    currentPayload: NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload,
-  ): NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload {
+  apply<T extends NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload>(currentPayload: T): T {
     return produce(currentPayload, (payload) => {
       const hasSecondaryContact = payload?.noc?.contactPersons?.hasSecondaryContact;
 

@@ -49,7 +49,7 @@ describe('AddUserGuard', () => {
   it('should not be activated', async () => {
     const unapprovedAccount: OrganisationAccountDTO = {
       ...mockedOrganisationAccount,
-      status: 'UNAPPROVED',
+      status: 'AWAITING_APPROVAL',
     };
     organisationAccountViewService.getOrganisationAccountById.mockReturnValue(
       asyncData<OrganisationAccountDTO>(unapprovedAccount),

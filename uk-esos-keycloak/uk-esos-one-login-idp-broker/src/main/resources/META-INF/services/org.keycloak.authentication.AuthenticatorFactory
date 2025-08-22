@@ -1,0 +1,10 @@
+gov.uk.esos.keycloak.onelogin.broker.authenticator.OneLoginIdpHandleExistingOrNewAuthenticatorFactory
+gov.uk.esos.keycloak.onelogin.broker.authenticator.OneLoginIdpEmailVerificationAuthenticatorFactory
+gov.uk.esos.keycloak.onelogin.broker.authenticator.OneLoginIdpNewUserInfoAuthenticatorFactory
+gov.uk.esos.keycloak.onelogin.broker.authenticator.OneLoginIdpEmailConfirmationSuccessAuthenticatorFactory
+gov.uk.esos.keycloak.onelogin.broker.authenticator.OneLoginIdpUsernamePasswordAuthenticatorFactory
+gov.uk.esos.keycloak.onelogin.broker.authenticator.OneLoginIdpPasswordAuthenticatorFactory
+gov.uk.esos.keycloak.onelogin.broker.authenticator.OneLoginIdpOtpAuthenticatorFactory
+
+gov.uk.esos.keycloak.onelogin.broker.authenticator.conditional.OneLoginIdpExistingUserLoginHintConditionalAuthenticatorFactory
+gov.uk.esos.keycloak.onelogin.broker.authenticator.conditional.OneLoginIdpExistingUserConditionalAuthenticatorFactory

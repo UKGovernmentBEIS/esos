@@ -38,7 +38,7 @@ public abstract class AbstractAccountRepositoryIT extends AbstractContainerBaseT
     private EntityManager entityManager;
 
     public abstract Account buildAccount(Long id, String accountName, CompetentAuthorityEnum ca, Long verificationBodyId,
-                                         EmissionTradingScheme emissionTradingScheme);
+                                         EmissionTradingScheme emissionTradingScheme, CompetentAuthorityEnum location);
 
     public abstract AccountType getAccounTtype();
 
@@ -144,7 +144,7 @@ public abstract class AbstractAccountRepositoryIT extends AbstractContainerBaseT
 
     private Account createAccount(Long id, String accountName, CompetentAuthorityEnum ca, Long vbId,
                                   EmissionTradingScheme emissionTradingScheme) {
-        Account account = buildAccount(id, accountName, ca, vbId, emissionTradingScheme);
+        Account account = buildAccount(id, accountName, ca, vbId, emissionTradingScheme, ca);
         entityManager.persist(account);
         return account;
     }

@@ -1,0 +1,42 @@
+<govuk-table [columns]="columns" [data]="energyIntensityRatioDetails?.energyIntensityRatios">
+  <ng-template let-column="column" let-row="row" let-index="index">
+    <ng-container [ngSwitch]="column.field">
+      <ng-container *ngSwitchCase="'ratio'">
+        <div class="govuk-!-text-align-left">
+          {{ row[column.field] }}
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'unit'"> kWh per {{ row[column.field] }} </ng-container>
+
+      <ng-container *ngSwitchDefault>
+        <div class="govuk-!-text-align-right" *ngIf="isEditable">
+          <a
+            govukLink
+            [routerLink]="[changeLink]"
+            [queryParams]="queryParams"
+            aria-label="change energy intensity ratio"
+          >
+            Change
+          </a>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+</govuk-table>
+
+<dl govuk-summary-list class="additional-info-bottom-margin">
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Additional Information</dt>
+    <dd govukSummaryListRowValue class="pre-wrap">{{ energyIntensityRatioDetails?.additionalInformation }}</dd>
+    <dd govukSummaryListRowActions *ngIf="isEditable">
+      <a govukLink [routerLink]="[changeLink]" [queryParams]="queryParams" aria-label="change additional information">
+        Change
+      </a>
+    </dd>
+  </div>
+</dl>
+
+<a govukSecondaryButton *ngIf="isEditable" [routerLink]="[changeLink]" [queryParams]="queryParams">
+  Add another intensity ratio
+</a>

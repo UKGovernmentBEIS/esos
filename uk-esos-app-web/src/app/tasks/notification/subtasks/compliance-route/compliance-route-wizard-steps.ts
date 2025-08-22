@@ -1,35 +1,39 @@
 import { ComplianceRoute } from 'esos-api';
 
 import { ReportingObligationCategory } from '../../../../requests/common/reporting-obligation-category.types';
+import { showComplianceRouteQuestions } from './compliance-route.helper';
 
-export const isWizardCompleted = (complianceRoute: ComplianceRoute, category: ReportingObligationCategory) => {
-  const hasEnergyConsumptionProfilingUsedData = !!complianceRoute?.energyConsumptionProfilingUsed;
+export const isWizardCompleted = (
+  complianceRoute: ComplianceRoute,
+  category: ReportingObligationCategory,
+  energyAudits: number,
+) => {
+  const partsProhibitedFromDisclosingExist = complianceRoute?.partsProhibitedFromDisclosingExist;
 
   const isWizardCompletedRouteAOrRouteCOrRouteE =
-    complianceRoute?.areDataEstimated !== undefined &&
-    (complianceRoute?.areDataEstimated
-      ? complianceRoute?.areEstimationMethodsRecordedInEvidencePack !== undefined
-      : !!complianceRoute?.twelveMonthsVerifiableDataUsed) &&
-    hasEnergyConsumptionProfilingUsedData &&
-    (complianceRoute?.energyConsumptionProfilingUsed == 'YES'
-      ? complianceRoute?.areEnergyConsumptionProfilingMethodsRecorded !== undefined
-      : !!complianceRoute?.energyAudits) &&
-    complianceRoute?.partsProhibitedFromDisclosingExist !== undefined &&
-    (complianceRoute?.partsProhibitedFromDisclosingExist
-      ? !!complianceRoute?.partsProhibitedFromDisclosing && !!complianceRoute?.partsProhibitedFromDisclosingReason
-      : true);
+    !!complianceRoute?.estimatedCalculationTypes &&
+    ((complianceRoute?.areTwelveMonthsVerifiableDataUsed === false &&
+      !!complianceRoute?.twelveMonthsVerifiableDataUsedReason) ||
+      complianceRoute?.areTwelveMonthsVerifiableDataUsed === true) &&
+    !!complianceRoute?.areEstimationMethodsRecorded &&
+    !!complianceRoute?.energyConsumptionProfilingUsed &&
+    (complianceRoute?.energyConsumptionProfilingUsed === 'YES'
+      ? complianceRoute?.areEnergyConsumptionProfilingMethodsRecorded != null
+      : complianceRoute?.isEnergyConsumptionProfilingNotUsedRecorded != null) &&
+    complianceRoute?.energyAudits?.length > 0 &&
+    ((partsProhibitedFromDisclosingExist &&
+      !!complianceRoute?.partsProhibitedFromDisclosing &&
+      !!complianceRoute?.partsProhibitedFromDisclosingReason) ||
+      partsProhibitedFromDisclosingExist === false);
 
   const isWizardCompletedRouteBOrRouteF =
-    ['ISO_50001_COVERING_ENERGY_USAGE', 'ALTERNATIVE_ENERGY_ASSESSMENTS_95_TO_100'].includes(category) &&
-    complianceRoute?.areDataEstimated !== undefined &&
-    (complianceRoute?.areDataEstimated
-      ? complianceRoute?.areEstimationMethodsRecordedInEvidencePack !== undefined
-      : true) &&
-    complianceRoute?.partsProhibitedFromDisclosingExist !== undefined &&
-    (complianceRoute?.partsProhibitedFromDisclosingExist
-      ? !!complianceRoute?.partsProhibitedFromDisclosing && !!complianceRoute?.partsProhibitedFromDisclosingReason
-      : true) &&
-    !hasEnergyConsumptionProfilingUsedData;
+    !showComplianceRouteQuestions(category, energyAudits) &&
+    !!complianceRoute?.estimatedCalculationTypes &&
+    !!complianceRoute?.areEstimationMethodsRecorded &&
+    ((partsProhibitedFromDisclosingExist &&
+      !!complianceRoute?.partsProhibitedFromDisclosing &&
+      !!complianceRoute?.partsProhibitedFromDisclosingReason) ||
+      partsProhibitedFromDisclosingExist === false);
 
   return isWizardCompletedRouteAOrRouteCOrRouteE || isWizardCompletedRouteBOrRouteF;
 };

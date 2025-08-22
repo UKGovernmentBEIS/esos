@@ -15,7 +15,7 @@ export interface VerifierUserDTO {
   firstName: string;
   lastName: string;
   termsVersion?: number;
-  status?: 'REGISTERED' | 'PENDING' | 'DELETED';
+  status?: 'REGISTERED' | 'PENDING';
   phoneNumber: string;
   mobileNumber?: string;
 }

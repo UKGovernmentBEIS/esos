@@ -7,7 +7,7 @@ describe('PhasesPipe', () => {
     expect(pipe).toBeTruthy();
   });
 
-  it('should properly transform action types', () => {
+  it('should properly transform phases', () => {
     expect(pipe.transform('PHASE_3')).toEqual('Phase 3');
   });
 });

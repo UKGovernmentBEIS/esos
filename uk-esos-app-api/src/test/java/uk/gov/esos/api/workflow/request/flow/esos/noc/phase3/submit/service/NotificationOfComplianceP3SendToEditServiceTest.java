@@ -64,20 +64,16 @@ class NotificationOfComplianceP3SendToEditServiceTest {
                 .build();
 
         final OrganisationAssociatedWithRU organisationAssociatedWithRU = OrganisationAssociatedWithRU.builder()
+                .registrationNumberExist(Boolean.TRUE)
                 .registrationNumber("registration number")
-                .taxReferenceNumber("tax reference")
                 .organisationName("organisation name")
-                .isTrust(Boolean.TRUE)
-                .isCoveredByThisNotification(Boolean.FALSE)
                 .isPartOfFranchise(Boolean.TRUE)
                 .isParentOfResponsibleUndertaking(Boolean.FALSE)
                 .isSubsidiaryOfResponsibleUndertaking(Boolean.TRUE)
                 .build();
 
         final OrganisationStructure organisationStructure = OrganisationStructure.builder()
-                .isTrust(Boolean.TRUE)
-                .isPartOfArrangement(Boolean.FALSE)
-                .hasCeasedToBePartOfGroup(Boolean.FALSE)
+                .isHighestParent(Boolean.FALSE)
                 .organisationsAssociatedWithRU(Set.of(organisationAssociatedWithRU))
                 .build();
 

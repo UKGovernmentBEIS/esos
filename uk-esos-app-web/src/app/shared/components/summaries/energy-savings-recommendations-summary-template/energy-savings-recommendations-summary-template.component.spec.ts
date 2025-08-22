@@ -27,7 +27,7 @@ describe('EnergySavingsRecommendationsSummaryTemplateComponent', () => {
 
     component = fixture.componentInstance;
     component.isEditable = true;
-    component.energySavingsRecommendationsExist = true;
+    component.energySavingsRecommendationsExist = 'YES';
     component.energySavingsRecommendations = {
       energyAudits: 0,
       alternativeComplianceRoutes: 0,
@@ -48,16 +48,16 @@ describe('EnergySavingsRecommendationsSummaryTemplateComponent', () => {
       'Yes',
       'Change',
       'Energy audits',
-      '0 kWh',
+      '0 %',
       'Change',
       'Alternative compliance routes',
-      '0 kWh',
+      '0 %',
       'Change',
       'Other',
-      '0 kWh',
+      '0 %',
       'Change',
       'Total',
-      '0 kWh',
+      '0   %',
     ]);
   });
 });

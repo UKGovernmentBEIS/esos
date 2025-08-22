@@ -1,0 +1,9 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+
+<div [id]="'more-less-text-' + index" [class]="widthClass + ' ' + class()" [ngStyle]="{ '-webkit-line-clamp': lines }">
+  {{ text }}
+</div>
+<a class="govuk-link" (click)="moreLessClicked()" *ngIf="isTextOverflow()">
+  {{ this.moreIsClicked() ? 'less' : 'more' }}
+</a>

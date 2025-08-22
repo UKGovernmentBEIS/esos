@@ -43,7 +43,7 @@ export const notificationTaskContent: RequestTaskPageContentFactory = (injector:
 
 export const waitForEditTaskContent: RequestTaskPageContentFactory = () => {
   return {
-    header: 'Awaiting review of Phase 3 notification',
+    header: 'Awaiting external review of Phase 3 notification',
     contentComponent: NotificationWaitForEditComponent,
   };
 };
@@ -68,7 +68,12 @@ function getVisibleSections(payload: NotificationTaskPayload): TaskSection[] {
     return getAllSections(payload)
       .map((section) => ({
         ...section,
-        tasks: section.tasks.filter((task) => !HIDDEN_SUBTASKS_MAP[category].includes(task.name as keyof NocP3)),
+        tasks: section.tasks.filter((subtask) => {
+          return !HIDDEN_SUBTASKS_MAP[category]
+            .map((hs) => (typeof hs === 'string' ? hs : hs.isHidden(payload.noc) ? hs.subtask : null))
+            .filter((hs) => !!hs)
+            .includes(subtask.name as keyof NocP3);
+        }),
       }))
       .filter((section) => section.tasks.length > 0);
   }
@@ -118,7 +123,7 @@ function getAllSections(payload: NotificationTaskPayload): TaskSection[] {
           name: 'energySavingsOpportunities',
           status: payload?.nocSectionsCompleted?.energySavingsOpportunities ?? TaskItemStatus.NOT_STARTED,
           linkText: 'Energy savings opportunities',
-          link: `${routePrefix}/energy-savings-opportunities/energy-savings-opportunity`,
+          link: `${routePrefix}/energy-savings-opportunities`,
         },
         {
           name: 'alternativeComplianceRoutes',
@@ -174,7 +179,7 @@ function getAllSections(payload: NotificationTaskPayload): TaskSection[] {
         {
           name: 'confirmations',
           status: payload?.nocSectionsCompleted?.confirmations ?? TaskItemStatus.NOT_STARTED,
-          linkText: 'Confirmation',
+          linkText: 'Responsible officer confirmation',
           link: `${routePrefix}/confirmation`,
         },
       ],

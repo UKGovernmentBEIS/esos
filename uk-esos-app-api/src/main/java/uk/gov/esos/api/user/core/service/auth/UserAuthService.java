@@ -23,6 +23,10 @@ public class UserAuthService {
     public UserInfoDTO getUserByUserId(String userId) {
         return userMapper.toUserInfoDTO(authService.getUserRepresentationById(userId));
     }
+    
+	public Optional<UserInfoDTO> getUserByUserIdOpt(String userId) {
+		return Optional.ofNullable(userMapper.toUserInfoDTO(authService.getUserRepresentationById(userId)));
+	}
 
     public Optional<UserInfoDTO> getUserByEmail(String email) {
         return authService

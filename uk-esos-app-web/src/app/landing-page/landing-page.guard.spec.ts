@@ -28,8 +28,8 @@ describe('LandingPageGuard', () => {
     authStore = TestBed.inject(AuthStore);
     authStore.setIsLoggedIn(true);
     authStore.setUserState({ status: 'ENABLED' });
-    authStore.setTerms({ version: 1, url: 'asd' });
     authStore.setUser({ email: 'asd@asd.com', firstName: 'Darth', lastName: 'Vader', termsVersion: 1 });
+    authStore.setUserProfile({ attributes: { status: ['REGISTERED'] } });
     guard = TestBed.inject(LandingPageGuard);
     router = TestBed.inject(Router);
   });
@@ -43,7 +43,7 @@ describe('LandingPageGuard', () => {
     return expect(lastValueFrom(guard.canActivate())).resolves.toEqual(true);
   });
 
-  it('should allow if user is logged in and terms match and status is not ENABLED', () => {
+  it('should allow if user is logged in and status is not ENABLED', () => {
     authStore.setUserState({ status: 'DISABLED' });
     return expect(lastValueFrom(guard.canActivate())).resolves.toEqual(true);
   });
@@ -76,18 +76,14 @@ describe('LandingPageGuard', () => {
     await expect(lastValueFrom(guard.canActivate())).resolves.toEqual(true);
   });
 
-  it(`should allow when user has login 'DISABLED' or 'TEMP_DISABLED'`, async () => {
+  it(`should redirect to register if authentication status is not REGISTERED`, async () => {
     authStore.setUserState({
-      roleType: 'VERIFIER',
-      status: 'TEMP_DISABLED',
-    });
-
-    await expect(lastValueFrom(guard.canActivate())).resolves.toEqual(true);
-
-    authStore.setUserState({
-      ...authStore.getState().userState,
       roleType: 'OPERATOR',
     });
-    await expect(lastValueFrom(guard.canActivate())).resolves.toEqual(true);
+    authStore.setUserProfile({ attributes: { status: ['PENDING'] } });
+    await expect(lastValueFrom(guard.canActivate())).resolves.toEqual(router.parseUrl('registration/register'));
+
+    authStore.setUserProfile({ attributes: {} });
+    await expect(lastValueFrom(guard.canActivate())).resolves.toEqual(router.parseUrl('registration/register'));
   });
 });

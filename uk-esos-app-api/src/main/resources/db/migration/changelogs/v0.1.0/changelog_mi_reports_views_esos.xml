@@ -17,6 +17,60 @@
             drop view if exists sch_report_niea.account_organisation cascade;
 
             drop view if exists sch_report_ea.account_organisation cascade;
+            
+            drop view if exists sch_report_sepa.account_organisation_onboarding_registry cascade;
+
+            drop view if exists sch_report_opred.account_organisation_onboarding_registry cascade;
+
+            drop view if exists sch_report_nrw.account_organisation_onboarding_registry cascade;
+
+            drop view if exists sch_report_niea.account_organisation_onboarding_registry cascade;
+
+            drop view if exists sch_report_ea.account_organisation_onboarding_registry cascade;
+            
+            drop view if exists sch_report_sepa.noc cascade;
+
+            drop view if exists sch_report_opred.noc cascade;
+
+            drop view if exists sch_report_nrw.noc cascade;
+
+            drop view if exists sch_report_niea.noc cascade;
+
+            drop view if exists sch_report_ea.noc cascade;
+
+
+            drop view if exists sch_report_sepa.action_plan cascade;
+
+            drop view if exists sch_report_opred.action_plan cascade;
+
+            drop view if exists sch_report_nrw.action_plan cascade;
+
+            drop view if exists sch_report_niea.action_plan cascade;
+
+            drop view if exists sch_report_ea.action_plan cascade;
+
+
+            drop view if exists sch_report_sepa.progress_update_1 cascade;
+
+            drop view if exists sch_report_opred.progress_update_1 cascade;
+
+            drop view if exists sch_report_nrw.progress_update_1 cascade;
+
+            drop view if exists sch_report_niea.progress_update_1 cascade;
+
+            drop view if exists sch_report_ea.progress_update_1 cascade;
+
+
+            drop view if exists sch_report_sepa.progress_update_2 cascade;
+
+            drop view if exists sch_report_opred.progress_update_2 cascade;
+
+            drop view if exists sch_report_nrw.progress_update_2 cascade;
+
+            drop view if exists sch_report_niea.progress_update_2 cascade;
+
+            drop view if exists sch_report_ea.progress_update_2 cascade;
+
         </sql>
         <rollback>
         </rollback>
@@ -33,7 +87,47 @@
 
             create or replace view sch_report_niea.account_organisation as select acc_org.* from account_organisation acc_org join account acc on acc.id=acc_org.id where acc.competent_authority = 'NORTHERN_IRELAND';
 
-            create or replace view sch_report_ea.account_organisation as select acc_org.* from account_organisation acc_org join account acc on acc.id=acc_org.id where acc.competent_authority = 'ENGLAND';
+            create or replace view sch_report_ea.account_organisation as select acc_org.* from account_organisation acc_org join account acc on acc.id=acc_org.id;
+            
+            
+            
+            create or replace view sch_report_sepa.account_organisation_onboarding_registry as select aoor.* from account_organisation_onboarding_registry aoor where aoor.competent_authority = 'SCOTLAND';
+
+            create or replace view sch_report_opred.account_organisation_onboarding_registry as select aoor.* from account_organisation_onboarding_registry aoor where aoor.competent_authority = 'OPRED';
+
+            create or replace view sch_report_nrw.account_organisation_onboarding_registry as select aoor.* from account_organisation_onboarding_registry aoor where aoor.competent_authority = 'WALES';
+
+            create or replace view sch_report_niea.account_organisation_onboarding_registry as select aoor.* from account_organisation_onboarding_registry aoor where aoor.competent_authority = 'NORTHERN_IRELAND';
+
+            create or replace view sch_report_ea.account_organisation_onboarding_registry as select aoor.* from account_organisation_onboarding_registry aoor;
+
+
+            create or replace view sch_report_ea.noc as select n.* from noc n where exists (select null from account a where a.id = n.account_id);
+            create or replace view sch_report_sepa.noc as select n.* from noc n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'SCOTLAND');
+            create or replace view sch_report_opred.noc as select n.* from noc n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'OPRED');
+            create or replace view sch_report_nrw.noc as select n.* from noc n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'WALES');
+            create or replace view sch_report_niea.noc as select n.* from noc n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'NORTHERN_IRELAND');
+
+
+            create or replace view sch_report_ea.action_plan as select n.* from action_plan n where exists (select null from account a where a.id = n.account_id);
+            create or replace view sch_report_sepa.action_plan as select n.* from action_plan n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'SCOTLAND');
+            create or replace view sch_report_opred.action_plan as select n.* from action_plan n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'OPRED');
+            create or replace view sch_report_nrw.action_plan as select n.* from action_plan n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'WALES');
+            create or replace view sch_report_niea.action_plan as select n.* from action_plan n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'NORTHERN_IRELAND');
+
+            create or replace view sch_report_ea.progress_update_1 as select n.* from progress_update_1 n where exists (select null from account a where a.id = n.account_id);
+            create or replace view sch_report_sepa.progress_update_1 as select n.* from progress_update_1 n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'SCOTLAND');
+            create or replace view sch_report_opred.progress_update_1 as select n.* from progress_update_1 n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'OPRED');
+            create or replace view sch_report_nrw.progress_update_1 as select n.* from progress_update_1 n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'WALES');
+            create or replace view sch_report_niea.progress_update_1 as select n.* from progress_update_1 n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'NORTHERN_IRELAND');
+
+            create or replace view sch_report_ea.progress_update_2 as select n.* from progress_update_2 n where exists (select null from account a where a.id = n.account_id);
+            create or replace view sch_report_sepa.progress_update_2 as select n.* from progress_update_2 n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'SCOTLAND');
+            create or replace view sch_report_opred.progress_update_2 as select n.* from progress_update_2 n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'OPRED');
+            create or replace view sch_report_nrw.progress_update_2 as select n.* from progress_update_2 n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'WALES');
+            create or replace view sch_report_niea.progress_update_2 as select n.* from progress_update_2 n where exists (select null from account a where a.id = n.account_id and a.competent_authority = 'NORTHERN_IRELAND');
+
+
         </sql>
         <rollback/>
     </changeSet>

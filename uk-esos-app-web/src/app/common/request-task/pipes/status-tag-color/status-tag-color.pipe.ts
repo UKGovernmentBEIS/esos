@@ -14,6 +14,7 @@ export class StatusTagColorPipe implements PipeTransform {
     switch (status) {
       case TaskItemStatus.NOT_STARTED:
       case TaskItemStatus.CANNOT_START_YET:
+      case TaskItemStatus.TERMINATED:
         return 'grey';
       case TaskItemStatus.COMPLETED:
       case TaskItemStatus.APPROVED:

@@ -42,7 +42,7 @@ describe('AccordionComponent', () => {
     fixture.debugElement.query(By.directive(AccordionComponent)).nativeElement;
 
   const getToggleAllButton: () => HTMLButtonElement = () =>
-    getAccordionElement().querySelector('button.govuk-accordion__open-all');
+    getAccordionElement().querySelector('button.govuk-accordion__show-all');
 
   const getAccordionItems: () => NodeListOf<Element> = () =>
     getAccordionElement().querySelectorAll('.govuk-accordion__section');
@@ -51,14 +51,14 @@ describe('AccordionComponent', () => {
     getToggleAllButton().click();
     fixture.detectChanges();
 
-    expect(getToggleAllButton().textContent).toContain('Close all');
+    expect(getToggleAllButton().textContent).toContain('Hide all sections');
     getAccordionItems().forEach((item) => expect(item.classList).toContain('govuk-accordion__section--expanded'));
     expect(getToggleAllButton().getAttribute('aria-expanded')).toEqual('true');
 
     getToggleAllButton().click();
     fixture.detectChanges();
 
-    expect(getToggleAllButton().textContent).toContain('Open all');
+    expect(getToggleAllButton().textContent).toContain('Show all sections');
     getAccordionItems().forEach((item) => expect(item.classList).not.toContain('govuk-accordion__section--expanded'));
     expect(getToggleAllButton().getAttribute('aria-expanded')).toEqual('false');
   };

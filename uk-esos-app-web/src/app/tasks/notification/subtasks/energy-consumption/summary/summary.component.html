@@ -2,7 +2,7 @@
 
 <ng-container *ngIf="vm() as vm">
   <esos-energy-consumption-summary-page
-    [data]="vm.data"
+    [energyConsumptionDetails]="vm.energyConsumptionDetails"
     [changeLink]="vm.wizardSteps"
     [queryParams]="{ change: true }"
     [isEditable]="vm.isEditable"
@@ -12,7 +12,7 @@
     *ngIf="vm.sectionsCompleted[vm.subtaskName] !== 'COMPLETED' && vm.isEditable"
     (click)="submit()"
     govukButton
-    type="button"
+    type="submit"
   >
     Confirm and continue
   </button>

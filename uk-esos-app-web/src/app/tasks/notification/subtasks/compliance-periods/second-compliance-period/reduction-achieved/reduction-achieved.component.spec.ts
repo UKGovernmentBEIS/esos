@@ -45,6 +45,10 @@ describe('ReductionAchievedComponent', () => {
   };
 
   class Page extends BasePage<ReductionAchievedComponent> {
+    get caption() {
+      return this.query<HTMLSpanElement>('span[class^="govuk-caption-"]');
+    }
+
     get submitButton() {
       return this.query<HTMLButtonElement>('button[type="submit"]');
     }
@@ -80,6 +84,10 @@ describe('ReductionAchievedComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display the correct caption based on compliance period', () => {
+    expect(page.caption.textContent.trim()).toEqual('Second compliance period');
   });
 
   it('should navigate to the next page after submitting valid data and display the correct headings', async () => {

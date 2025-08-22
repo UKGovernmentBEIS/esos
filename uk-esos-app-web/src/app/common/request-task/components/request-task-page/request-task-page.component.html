@@ -1,51 +1,55 @@
-<div class="govuk-grid-row" *ngIf="vm() as vm">
-  <div [class]="vm.hasRelatedActions && vm.isAssignable ? 'govuk-grid-column-two-thirds' : 'govuk-grid-column-full'">
-    <esos-page-heading size="l">
-      {{ vm.header }}
+@if (vm(); as vm) {
+  <div class="govuk-grid-row">
+    <div [class]="vm.hasRelatedActions && vm.isAssignable ? 'govuk-grid-column-two-thirds' : 'govuk-grid-column-full'">
+      <esos-page-heading size="l" [bottomSpacing]="vm.warningMessage ? 6 : 2">{{ vm.header }}</esos-page-heading>
 
-      <esos-task-header-info
-        *ngIf="vm.requestTask as rt"
-        [assignee]="rt.assigneeFullName"
-        [daysRemaining]="rt.daysRemaining"
-      ></esos-task-header-info>
-    </esos-page-heading>
+      @if (vm.warningMessage) {
+        <govuk-warning-text [assistiveText]="vm.warningMessage" />
+      }
 
-    <ng-container *ngIf="vm.preContentComponent as preContentComponent">
-      <ng-container *ngComponentOutlet="preContentComponent" />
-    </ng-container>
+      @if (vm.requestTask) {
+        <esos-task-header-info
+          class="govuk-!-margin-bottom-6"
+          [assignee]="vm.requestTask.assigneeFullName"
+          [daysRemaining]="vm.requestTask.daysRemaining"
+        />
+      }
 
-    <ng-container *ngIf="vm.contentComponent as component; else sectionsTpl">
-      <ng-container *ngComponentOutlet="component" />
-    </ng-container>
+      @if (vm.preContentComponent) {
+        <ng-container *ngComponentOutlet="vm.preContentComponent" />
+      }
 
-    <ng-container *ngIf="vm.postContentComponent as postContentComponent">
-      <ng-container *ngComponentOutlet="postContentComponent" />
-    </ng-container>
+      @if (vm.contentComponent) {
+        <ng-container *ngComponentOutlet="vm.contentComponent" />
+      } @else {
+        <esos-task-list [sections]="vm.sections" />
+      }
 
-    <ng-template #sectionsTpl>
-      <esos-task-list [sections]="vm.sections" />
-    </ng-template>
+      @if (vm.postContentComponent) {
+        <ng-container *ngComponentOutlet="vm.postContentComponent" />
+      }
 
-    <ng-container *ngIf="vm.hasRelatedTasks">
-      <esos-related-tasks [items]="vm.relatedTasks" />
-    </ng-container>
+      @if (vm.hasRelatedTasks) {
+        <esos-related-tasks [items]="vm.relatedTasks" />
+      }
 
-    <ng-container *ngIf="vm.hasTimeline">
-      <esos-timeline>
-        <esos-timeline-item
-          *ngFor="let timelineEntry of vm.timeline"
-          [action]="timelineEntry"
-          [link]="['timeline', timelineEntry.id]"
-        ></esos-timeline-item>
-      </esos-timeline>
-    </ng-container>
+      @if (vm.hasTimeline) {
+        <esos-timeline>
+          @for (timelineEntry of vm.timeline; track timelineEntry) {
+            <esos-timeline-item [action]="timelineEntry" [link]="timelineEntry | timelineItemLink: true" />
+          }
+        </esos-timeline>
+      }
+    </div>
+
+    @if (vm.hasRelatedActions && vm.isAssignable) {
+      <div class="govuk-grid-column-one-third">
+        <esos-related-actions
+          [isAssignable]="vm.isAssignable"
+          [taskId]="vm.requestTask.id"
+          [allowedActions]="vm.relatedActions"
+        />
+      </div>
+    }
   </div>
-
-  <div *ngIf="vm.hasRelatedActions && vm.isAssignable" class="govuk-grid-column-one-third">
-    <esos-related-actions
-      [isAssignable]="vm.isAssignable"
-      [taskId]="vm.requestTask.id"
-      [allowedActions]="vm.relatedActions"
-    ></esos-related-actions>
-  </div>
-</div>
+}

@@ -1,4 +1,4 @@
-@include govuk-exports("govuk/component/hint") {
+@include govuk-exports('govuk/component/hint') {
   .govuk-hint {
     @include govuk-font($size: 19);
 
@@ -31,6 +31,7 @@
   // This adjustment will not work in browsers that do not support :not().
   // Users with these browsers will see the default size margin (5px larger).
 
+  // prettier-ignore
   .govuk-fieldset__legend:not(.govuk-fieldset__legend--m):not(.govuk-fieldset__legend--l):not(.govuk-fieldset__legend--xl) + .govuk-hint {
     margin-bottom: govuk-spacing(2);
   }
@@ -40,3 +41,5 @@
     margin-top: govuk-spacing(-1);
   }
 }
+
+/*# sourceMappingURL=_index.scss.map */

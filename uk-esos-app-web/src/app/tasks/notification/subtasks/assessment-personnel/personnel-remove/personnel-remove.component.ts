@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
+import { PendingButtonDirective } from '@shared/pending-button.directive';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import produce from 'immer';
 
@@ -16,7 +17,7 @@ import { ASSESSMENT_PERSONNEL_SUB_TASK, AssessmentPersonnelCurrentStep } from '.
   selector: 'esos-personnel-remove',
   templateUrl: './personnel-remove.component.html',
   standalone: true,
-  imports: [GovukComponentsModule, PageHeadingComponent, RouterLink],
+  imports: [GovukComponentsModule, PageHeadingComponent, RouterLink, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class PersonnelRemoveComponent {

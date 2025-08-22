@@ -46,11 +46,11 @@
         </ng-container>
       </ng-template>
     </govuk-table>
-    <esos-pagination
+    <govuk-pagination
       (currentPageChange)="currentPage$.next($event)"
       [count]="totalPages$ | async"
       [pageSize]="pageSize"
-    ></esos-pagination>
+    ></govuk-pagination>
   </ng-container>
   <ng-template #noResults>
     <div class="govuk-grid-row">

@@ -49,6 +49,6 @@ public class ApprovedOrganisationAccountQueryService implements ApprovedAccountT
     }
 
     private List<OrganisationAccountStatus> getStatusesConsideredNotApproved() {
-        return List.of(OrganisationAccountStatus.UNAPPROVED);
+        return List.of(OrganisationAccountStatus.AWAITING_APPROVAL);
     }
 }

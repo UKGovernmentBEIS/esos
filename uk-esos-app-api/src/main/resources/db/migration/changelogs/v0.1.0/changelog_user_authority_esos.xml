@@ -212,4 +212,498 @@
         </sql>
     </changeSet>
     
+    <changeSet id="0_1_0_add_PERM_UPLOAD_VERIFIED_ORGANISATION_ACCOUNTS_to_regulator_roles" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_UPLOAD_VERIFIED_ORGANISATION_ACCOUNTS'
+            from au_role
+            where code in ('service_super_user', 'ca_super_user');
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission rp
+                using au_role r
+                where r.id = rp.role_id
+                and r.code in ('service_super_user', 'ca_super_user')
+                and rp.permission = 'PERM_UPLOAD_VERIFIED_ORGANISATION_ACCOUNTS'
+                ;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_permission_PERM_ACCOUNT_NOTES_EDIT_to_operator_admin" author="P70383">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_ACCOUNT_NOTES_EDIT'
+            from au_role
+            where code = 'operator_admin';
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code = 'operator_admin')
+                and permission = 'PERM_ACCOUNT_NOTES_EDIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_existing_operators_with_PERM_ACCOUNT_NOTES_EDIT" author="P70383">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+                     join au_role r on au.code = r.code
+                     join au_role_permission rp on r.id = rp.role_id
+            where r.code = 'operator_admin'
+              and rp.permission = 'PERM_ACCOUNT_NOTES_EDIT'
+            ;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission ap
+                using
+                au_authority au,
+                au_role r
+                where ap.authority_id = au.id
+                and au.code = r.code
+                and r.code = 'operator_admin'
+                and ap.permission = 'PERM_ACCOUNT_NOTES_EDIT'
+                ;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERM_ACCOUNT_USERS_EDIT_REGULATOR_USER_ROLE" author="P70383">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_ACCOUNT_USERS_EDIT'
+            from au_role
+            where code in ('ca_super_user', 'service_super_user');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code in ('ca_super_user', 'service_super_user'))
+                and permission = 'PERM_ACCOUNT_USERS_EDIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERM_NOTIFICATION_OF_COMPLIANCE_APPLICATION_RE_INITIATE_TASK_REGULATOR_USER_ROLE" author="P70383">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_NOTIFICATION_OF_COMPLIANCE_APPLICATION_RE_INITIATE_TASK'
+            from au_role
+            where code in ('ca_super_user', 'service_super_user');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code in ('ca_super_user', 'service_super_user'))
+                and permission = 'PERM_NOTIFICATION_OF_COMPLIANCE_APPLICATION_RE_INITIATE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_add_permission_PERM_ACCOUNT_DETAILS_EDIT_to_operator_admin" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_ACCOUNT_DETAILS_EDIT'
+            from au_role
+            where code = 'operator_admin';
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code = 'operator_admin')
+                and permission = 'PERM_ACCOUNT_DETAILS_EDIT';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_populate_existing_operators_with_PERM_ACCOUNT_DETAILS_EDIT" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+                     join au_role r on au.code = r.code
+                     join au_role_permission rp on r.id = rp.role_id
+            where r.code = 'operator_admin'
+              and rp.permission = 'PERM_ACCOUNT_DETAILS_EDIT'
+            ;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission ap
+                using
+                au_authority au,
+                au_role r
+                where ap.authority_id = au.id
+                and au.code = r.code
+                and r.code = 'operator_admin'
+                and ap.permission = 'PERM_ACCOUNT_DETAILS_EDIT'
+                ;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_permission_PERM_ACTION_PLAN_APPLICATION_SUBMIT_EXECUTE_TASK_to_operator_roles" author="pmpountas">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_ACTION_PLAN_APPLICATION_SUBMIT_EXECUTE_TASK'
+            from au_role
+            where code = 'operator_admin';
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code = 'operator_admin')
+                and permission = 'PERM_ACTION_PLAN_APPLICATION_SUBMIT_EXECUTE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_add_permission_PERM_ACTION_PLAN_APPLICATION_SUBMIT_VIEW_TASK_to_operator_roles" author="pmpountas">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_ACTION_PLAN_APPLICATION_SUBMIT_VIEW_TASK'
+            from au_role
+            where code = 'operator_admin';
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code = 'operator_admin')
+                and permission = 'PERM_ACTION_PLAN_APPLICATION_SUBMIT_VIEW_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_populate_existing_operators_with_PERM_ACTION_PLAN_APPLICATION_SUBMIT_EXECUTE_TASK" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+            join au_role r on au.code = r.code
+            join au_role_permission rp on r.id = rp.role_id
+            where r.code = 'operator_admin'
+            and rp.permission = 'PERM_ACTION_PLAN_APPLICATION_SUBMIT_EXECUTE_TASK';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission ap
+                using
+                au_authority au,
+                au_role r
+                where ap.authority_id = au.id
+                and au.code = r.code
+                and r.code = 'operator_admin'
+                and ap.permission = 'PERM_ACTION_PLAN_APPLICATION_SUBMIT_EXECUTE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+
+    <changeSet id="0_1_0_populate_existing_operators_with_PERM_ACTION_PLAN_APPLICATION_SUBMIT_VIEW_TASK" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+            join au_role r on au.code = r.code
+            join au_role_permission rp on r.id = rp.role_id
+            where r.code = 'operator_admin'
+            and rp.permission = 'PERM_ACTION_PLAN_APPLICATION_SUBMIT_VIEW_TASK';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission ap
+                using
+                au_authority au,
+                au_role r
+                where ap.authority_id = au.id
+                and au.code = r.code
+                and r.code = 'operator_admin'
+                and ap.permission = 'PERM_ACTION_PLAN_APPLICATION_SUBMIT_VIEW_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_PERM_ACCOUNT_CLOSURE_to_regulator_roles" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_ACCOUNT_CLOSURE_SUBMIT'
+            from au_role
+            where code in ('service_super_user', 'ca_super_user', 'regulator_team_leader', 'regulator_technical_officer', 'regulator_admin_team');
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission rp
+                using au_role r
+                where r.id = rp.role_id
+                and r.code in ('service_super_user', 'ca_super_user', 'regulator_team_leader', 'regulator_technical_officer', 'regulator_admin_team')
+                and rp.permission = 'PERM_ACCOUNT_CLOSURE_SUBMIT'
+                ;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_PERM_ACCOUNT_CLOSURE_to_regulator_roles" author="bountasp@unisystems.gr">
+        <sql>
+            delete
+            from au_role_permission rp
+            using au_role r
+            where r.id = rp.role_id
+            and r.code in ('regulator_team_leader', 'regulator_technical_officer', 'regulator_admin_team')
+            and rp.permission = 'PERM_ACCOUNT_CLOSURE_SUBMIT'
+        </sql>
+
+        <rollback>
+            <sql>
+                insert into au_role_permission(id, role_id, permission)
+                select nextval('au_role_permission_seq'), id, 'PERM_ACCOUNT_CLOSURE_SUBMIT'
+                from au_role
+                where code in ('regulator_team_leader', 'regulator_technical_officer', 'regulator_admin_team');
+            </sql>
+        </rollback>
+
+    </changeSet>
+
+    <changeSet id="0_1_0_add_permission_PERM_PROGRESS_UPDATE_1_SUBMIT_EXECUTE_TASK_to_operator_roles" author="pmpountas">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_EXECUTE_TASK'
+            from au_role
+            where code = 'operator_admin';
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code = 'operator_admin')
+                and permission = 'PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_EXECUTE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_add_permission_PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_VIEW_TASK_to_operator_roles" author="pmpountas">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_VIEW_TASK'
+            from au_role
+            where code = 'operator_admin';
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code = 'operator_admin')
+                and permission = 'PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_VIEW_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_existing_operators_with_PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_EXECUTE_TASK" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+            join au_role r on au.code = r.code
+            join au_role_permission rp on r.id = rp.role_id
+            where r.code = 'operator_admin'
+            and rp.permission = 'PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_EXECUTE_TASK';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission ap
+                using
+                au_authority au,
+                au_role r
+                where ap.authority_id = au.id
+                and au.code = r.code
+                and r.code = 'operator_admin'
+                and ap.permission = 'PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_EXECUTE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_existing_operators_with_PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_VIEW_TASK" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+            join au_role r on au.code = r.code
+            join au_role_permission rp on r.id = rp.role_id
+            where r.code = 'operator_admin'
+            and rp.permission = 'PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_VIEW_TASK';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission ap
+                using
+                au_authority au,
+                au_role r
+                where ap.authority_id = au.id
+                and au.code = r.code
+                and r.code = 'operator_admin'
+                and ap.permission = 'PERM_PROGRESS_UPDATE_1_APPLICATION_SUBMIT_VIEW_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERM_ACTION_PLAN_APPLICATION_RE_INITIATE_TASK_REGULATOR_USER_ROLE" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_ACTION_PLAN_APPLICATION_RE_INITIATE_TASK'
+            from au_role
+            where code in ('ca_super_user', 'service_super_user');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code in ('ca_super_user', 'service_super_user'))
+                and permission = 'PERM_ACTION_PLAN_APPLICATION_RE_INITIATE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_permission_PERM_PROGRESS_UPDATE_2_SUBMIT_EXECUTE_TASK_to_operator_roles" author="pmpountas">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_EXECUTE_TASK'
+            from au_role
+            where code = 'operator_admin';
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code = 'operator_admin')
+                and permission = 'PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_EXECUTE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_add_permission_PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_VIEW_TASK_to_operator_roles" author="pmpountas">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_VIEW_TASK'
+            from au_role
+            where code = 'operator_admin';
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code = 'operator_admin')
+                and permission = 'PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_VIEW_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_existing_operators_with_PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_EXECUTE_TASK" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+            join au_role r on au.code = r.code
+            join au_role_permission rp on r.id = rp.role_id
+            where r.code = 'operator_admin'
+            and rp.permission = 'PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_EXECUTE_TASK';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission ap
+                using
+                au_authority au,
+                au_role r
+                where ap.authority_id = au.id
+                and au.code = r.code
+                and r.code = 'operator_admin'
+                and ap.permission = 'PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_EXECUTE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_existing_operators_with_PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_VIEW_TASK" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+            join au_role r on au.code = r.code
+            join au_role_permission rp on r.id = rp.role_id
+            where r.code = 'operator_admin'
+            and rp.permission = 'PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_VIEW_TASK';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission ap
+                using
+                au_authority au,
+                au_role r
+                where ap.authority_id = au.id
+                and au.code = r.code
+                and r.code = 'operator_admin'
+                and ap.permission = 'PERM_PROGRESS_UPDATE_2_APPLICATION_SUBMIT_VIEW_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERM_PROGRESS_UPDATE_1_APPLICATION_RE_INITIATE_TASK_REGULATOR_USER_ROLE" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_PROGRESS_UPDATE_1_APPLICATION_RE_INITIATE_TASK'
+            from au_role
+            where code in ('ca_super_user', 'service_super_user');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code in ('ca_super_user', 'service_super_user'))
+                and permission = 'PERM_PROGRESS_UPDATE_1_APPLICATION_RE_INITIATE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERM_PROGRESS_UPDATE_2_APPLICATION_RE_INITIATE_TASK_REGULATOR_USER_ROLE" author="bountasp@unisystems.gr">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_PROGRESS_UPDATE_2_APPLICATION_RE_INITIATE_TASK'
+            from au_role
+            where code in ('ca_super_user', 'service_super_user');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code in ('ca_super_user', 'service_super_user'))
+                and permission = 'PERM_PROGRESS_UPDATE_2_APPLICATION_RE_INITIATE_TASK';
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

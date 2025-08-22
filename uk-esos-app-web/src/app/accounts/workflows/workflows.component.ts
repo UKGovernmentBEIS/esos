@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import {
   BehaviorSubject,
   combineLatest,
   distinctUntilChanged,
+  first,
   map,
   Observable,
   shareReplay,
@@ -13,16 +13,15 @@ import {
 } from 'rxjs';
 
 import { EsosAccount } from '@core/store/auth';
-import { originalOrder } from '@shared/keyvalue-order';
 
 import {
-  OrganisationAccountDTO,
   RequestDetailsDTO,
   RequestDetailsSearchResults,
   RequestSearchByAccountCriteria,
   RequestsService,
 } from 'esos-api';
 
+import { AccountsStore } from '..';
 import { statusesTagMap } from '../shared/statusesTagMap';
 import { workflowTypesDomainMap } from './workflowTypesMap';
 
@@ -32,11 +31,7 @@ import { workflowTypesDomainMap } from './workflowTypesMap';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowsComponent implements OnInit {
-  @Input() currentTab: string;
-
-  readonly originalOrder = originalOrder;
   readonly workflowStatusesTagMap = statusesTagMap;
-
   readonly pageSize = 30;
   page$ = new BehaviorSubject<number>(1);
 
@@ -47,14 +42,13 @@ export class WorkflowsComponent implements OnInit {
   private searchTypes$ = new BehaviorSubject<RequestDetailsDTO['requestType'][]>([]);
   private searchStatuses$ = new BehaviorSubject<RequestSearchByAccountCriteria['requestStatuses'][]>([]);
 
-  constructor(private readonly route: ActivatedRoute, private readonly requestsService: RequestsService) {}
+  constructor(private readonly accountsStore: AccountsStore, private readonly requestsService: RequestsService) {}
 
   ngOnInit(): void {
-    this.accountId$ = (
-      this.route.data as Observable<{
-        data: OrganisationAccountDTO;
-      }>
-    ).pipe(map((account) => account.data.id));
+    this.accountId$ = this.accountsStore.pipe(
+      first(),
+      map((accounts) => accounts.selectedAccount.id),
+    );
 
     this.workflowResults$ = combineLatest([
       this.accountId$,

@@ -5,9 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.esos.api.common.domain.ClassificationCodes;
+import uk.gov.esos.api.common.domain.ClassificationType;
+import uk.gov.esos.api.common.domain.dto.CountyAddressDTO;
+import uk.gov.esos.api.common.domain.dto.PhoneNumberDTO;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 import uk.gov.esos.api.reporting.noc.common.domain.NocSubmitParams;
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
 import uk.gov.esos.api.reporting.noc.common.service.NocService;
+import uk.gov.esos.api.reporting.noc.phase3.domain.ContactPerson;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3Container;
 import uk.gov.esos.api.reporting.noc.phase3.domain.reportingobligation.OrganisationEnergyResponsibilityType;
@@ -19,6 +24,8 @@ import uk.gov.esos.api.reporting.noc.phase3.domain.responsibleundertaking.Respon
 import uk.gov.esos.api.reporting.noc.phase3.domain.responsibleundertaking.ReviewOrganisationDetails;
 import uk.gov.esos.api.workflow.request.core.domain.Request;
 import uk.gov.esos.api.workflow.request.core.domain.RequestTask;
+import uk.gov.esos.api.workflow.request.core.domain.dto.AccountOriginatedData;
+import uk.gov.esos.api.workflow.request.core.domain.dto.OrganisationDetails;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestPayloadType;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestTaskPayloadType;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestTaskType;
@@ -26,8 +33,8 @@ import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestType;
 import uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.common.domain.NotificationOfComplianceP3RequestPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.submit.domain.NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +58,7 @@ class NotificationOfComplianceP3SubmitServiceTest {
             .reportingObligation(ReportingObligation.builder()
                 .qualificationType(OrganisationQualificationType.QUALIFY)
                 .reportingObligationDetails(ReportingObligationDetails.builder()
-                    .qualificationReasonTypes(Set.of(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250))
+                    .qualificationReasonType(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250)
                     .energyResponsibilityType(OrganisationEnergyResponsibilityType.NOT_RESPONSIBLE)
                     .build())
                 .build())
@@ -70,6 +77,32 @@ class NotificationOfComplianceP3SubmitServiceTest {
                 .build())
             .accountId(accountId)
             .build();
+        AccountOriginatedData accountOriginatedData = AccountOriginatedData.builder()
+                .organisationDetails(OrganisationDetails.builder()
+                        .name("name")
+                        .registrationNumber("12345678")
+                        .address(CountyAddressDTO.builder()
+                                .line1("line1")
+                                .city("city")
+                                .postcode("25100")
+                                .county("county")
+                                .build())
+                        .codes(ClassificationCodes.builder()
+                                .type(ClassificationType.SIC)
+                                .codes(List.of("code1"))
+                                .build())
+                        .build())
+                .primaryContact(ContactPerson.builder()
+                        .firstName("Fname")
+                        .lastName("Lname")
+                        .email("email@email.com")
+                        .phoneNumber(PhoneNumberDTO.builder()
+                                .countryCode("30")
+                                .number("12345678")
+                                .build())
+                        .jobTitle("job")
+                        .build())
+                .build();
         RequestTask requestTask = RequestTask.builder()
             .type(RequestTaskType.NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT)
             .request(request)
@@ -78,6 +111,7 @@ class NotificationOfComplianceP3SubmitServiceTest {
                 .noc(noc)
                 .nocAttachments(nocAttachments)
                 .nocSectionsCompleted(nocSectionsCompleted)
+                .accountOriginatedData(accountOriginatedData)
                 .build())
             .build();
 
@@ -97,6 +131,8 @@ class NotificationOfComplianceP3SubmitServiceTest {
             .isEqualTo(nocAttachments);
         assertThat(((NotificationOfComplianceP3RequestPayload) request.getPayload()).getNoc())
             .isEqualTo(noc);
+        assertThat(((NotificationOfComplianceP3RequestPayload) request.getPayload()).getAccountOriginatedData())
+                .isEqualTo(accountOriginatedData);
 
         verify(nocService, times(1)).submitNoc(nocSubmitParams);
     }

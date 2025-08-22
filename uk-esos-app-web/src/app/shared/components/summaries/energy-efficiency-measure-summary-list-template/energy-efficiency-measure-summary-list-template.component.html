@@ -1,0 +1,61 @@
+<dl class="govuk-summary-list">
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.isEnergySavingsOpportunityReportedInAudit.title }}</dt>
+    <dd govukSummaryListRowValue>{{ data?.isEnergySavingsOpportunityReportedInAudit | booleanToText }}</dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.measureScheme.title }}</dt>
+    <dd govukSummaryListRowValue>
+      @if (data.measureScheme?.length) {
+        <ul class="govuk-!-margin-0">
+          @for (option of contentMap.measureScheme.options; track $index) {
+            @if (data.measureScheme.includes(option)) {
+              <li>
+                @if (option === 'OTHER' && data.otherMeasureSchemeName) {
+                  {{ option | measureScheme }}: {{ data.otherMeasureSchemeName }}
+                } @else {
+                  {{ option | measureScheme }}
+                }
+              </li>
+            }
+          }
+        </ul>
+      }
+    </dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.implementationDateForMeasure.title }}</dt>
+    <dd govukSummaryListRowValue>{{ data.implementationDateForMeasure | date: 'MMMM y' }}</dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Estimated energy savings between 6 December 2023 and 5 December 2027</dt>
+    <dd govukSummaryListRowValue>
+      Buildings: {{ data.totalEnergySavingsExpected.buildings }} kWh<br />
+      Transport: {{ data.totalEnergySavingsExpected.transport }} kWh<br />
+      Industrial processes: {{ data.totalEnergySavingsExpected.industrialProcesses }} kWh<br />
+      Other energy uses: {{ data.totalEnergySavingsExpected.otherProcesses }} kWh<br />
+      <br />
+      Total estimated energy savings: {{ data.totalEnergySavingsExpected.total }} kWh<br />
+    </dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.energySavingsEstimateCalculatedType.title }}</dt>
+    <dd govukSummaryListRowValue>
+      {{ data.energySavingsEstimateCalculatedType | estimationMethodType: 'summary' }}
+      @if (data.energySavingsEstimateCalculatedType === 'OTHER_REASONABLE_ESTIMATION_METHOD') {
+        <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+          {{ data.estimationMethodDescription }}
+        </p>
+      }
+    </dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.measureContext.title }}</dt>
+    <dd govukSummaryListRowValue>{{ data.measureContext }}</dd>
+  </div>
+</dl>

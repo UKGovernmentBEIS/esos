@@ -145,9 +145,77 @@ export class RequestsService {
     }
 
     return this.httpClient.get<{ [key: string]: RequestCreateValidationResult }>(
-      `${this.configuration.basePath}/v1.0/requests/available-workflows/permit/${encodeURIComponent(
-        String(accountId),
-      )}`,
+      `${this.configuration.basePath}/v1.0/requests/available-workflows/permit/${encodeURIComponent(String(accountId))}`,
+      {
+        responseType: <any>responseType_,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Get workflows to start a task
+   * @param requestId The request id
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getAvailableRequestWorkflows(requestId: string): Observable<{ [key: string]: RequestCreateValidationResult }>;
+  public getAvailableRequestWorkflows(
+    requestId: string,
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
+  ): Observable<HttpResponse<{ [key: string]: RequestCreateValidationResult }>>;
+  public getAvailableRequestWorkflows(
+    requestId: string,
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
+  ): Observable<HttpEvent<{ [key: string]: RequestCreateValidationResult }>>;
+  public getAvailableRequestWorkflows(
+    requestId: string,
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
+  ): Observable<{ [key: string]: RequestCreateValidationResult }>;
+  public getAvailableRequestWorkflows(
+    requestId: string,
+    observe: any = 'body',
+    reportProgress: boolean = false,
+    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
+  ): Observable<any> {
+    if (requestId === null || requestId === undefined) {
+      throw new Error('Required parameter requestId was null or undefined when calling getAvailableRequestWorkflows.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['*/*', 'application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.get<{ [key: string]: RequestCreateValidationResult }>(
+      `${this.configuration.basePath}/v1.0/requests/available-workflows/reporting/related-actions/${encodeURIComponent(String(requestId))}`,
       {
         responseType: <any>responseType_,
         withCredentials: this.configuration.withCredentials,

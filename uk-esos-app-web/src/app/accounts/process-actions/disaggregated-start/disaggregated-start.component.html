@@ -1,0 +1,20 @@
+<esos-page-heading>Disaggregated undertakings</esos-page-heading>
+
+<p class="govuk-body">
+  Proceed only if you are an undertaking that has left the group / participant which submitted the last notification,
+  and is complying on its own behalf as a responsible undertaking.
+</p>
+<p class="govuk-body govuk-!-margin-bottom-7">
+  If you are the responsible undertaking that submitted the last notification, select 'back' and select the 'start'
+  button under the appropriate task heading.
+</p>
+
+<button
+  (click)="onRequestButtonClick()"
+  esosPendingButton
+  govukButton
+  type="button"
+  [disabled]="accountId === undefined || !this.requestType"
+>
+  Start {{ getRequestTypeString(requestType) }}
+</button>

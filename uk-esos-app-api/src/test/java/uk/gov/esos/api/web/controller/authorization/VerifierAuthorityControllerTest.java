@@ -140,7 +140,7 @@ class VerifierAuthorityControllerTest {
     	when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
 	        .when(roleAuthorizationService)
-	        .evaluate(user, new RoleType[] {RoleType.VERIFIER});
+	        .evaluate(user, new RoleType[] {RoleType.VERIFIER}, true);
         
         mockMvc.perform(
 	        		MockMvcRequestBuilders.get(BASE_PATH)

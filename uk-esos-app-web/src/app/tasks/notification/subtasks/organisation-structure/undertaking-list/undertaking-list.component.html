@@ -1,0 +1,55 @@
+<esos-wizard-step
+  (formSubmit)="submit()"
+  [formGroup]="form"
+  heading="Provide the organisation names of the undertakings that either disaggregated from, or ceased to be part of the participant and which are not complying as if they were still a member of the participant"
+  caption="Organisation structure"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <ng-container formArrayName="organisations">
+    <div *ngFor="let organisation of organisationsFormArray.controls; index as i; last as isLast">
+      <ng-container [formGroupName]="i">
+        <div
+          formControlName="organisationName"
+          govuk-text-input
+          label="Organisation name"
+          widthClass="govuk-!-width-three-quarters"
+        ></div>
+
+        <div
+          formControlName="registrationNumber"
+          govuk-text-input
+          label="Company registration number (optional)"
+          widthClass="govuk-!-width-one-third"
+        ></div>
+      </ng-container>
+
+      <p class="govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-6">
+        <a govukLink [routerLink]="[]" (click)="removeOrganisation(i)">Remove organisation name</a>
+      </p>
+
+      <hr
+        *ngIf="organisationsFormArray.controls.length > 1 && !isLast"
+        class="govuk-section-break govuk-section-break--l govuk-section-break--visible"
+      />
+    </div>
+  </ng-container>
+
+  <button govukSecondaryButton type="button" (click)="addOrganisation()">Add organisation name</button>
+
+  <govuk-details summary="Help me answer this question">
+    <p class="govuk-body">
+      Add the names of any relevant undertakings that qualified for ESOS on 31 December 2022 as a member of a highest UK
+      parent group or participant and which left the group before the compliance deadline on 5 June 2024 because they
+      either:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        agreed to disaggregate in order to comply with ESOS other than as a member of their highest UK parent group or
+        participant; or
+      </li>
+      <li>ceased membership of their highest parent group.</li>
+    </ul>
+  </govuk-details>
+</esos-wizard-step>

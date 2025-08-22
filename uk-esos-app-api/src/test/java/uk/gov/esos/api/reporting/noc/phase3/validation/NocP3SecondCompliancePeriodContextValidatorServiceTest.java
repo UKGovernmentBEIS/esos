@@ -10,6 +10,7 @@ import uk.gov.esos.api.reporting.noc.common.domain.NocViolation;
 import uk.gov.esos.api.reporting.noc.common.validation.NocSectionConstraintValidatorService;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3Container;
+import uk.gov.esos.api.reporting.noc.phase3.domain.OptionalQuestion;
 import uk.gov.esos.api.reporting.noc.phase3.domain.ReportingObligationCategory;
 import uk.gov.esos.api.reporting.noc.phase3.domain.secondcomplianceperiod.SecondCompliancePeriod;
 
@@ -32,7 +33,7 @@ class NocP3SecondCompliancePeriodContextValidatorServiceTest {
 
     @Test
     void validate() {
-        final SecondCompliancePeriod secondCompliancePeriod = SecondCompliancePeriod.builder().informationExists(Boolean.FALSE).build();
+        final SecondCompliancePeriod secondCompliancePeriod = SecondCompliancePeriod.builder().informationExists(OptionalQuestion.NO).build();
         final NocP3Container nocContainer = NocP3Container.builder()
                 .noc(NocP3.builder().secondCompliancePeriod(secondCompliancePeriod).build())
                 .build();
@@ -51,7 +52,7 @@ class NocP3SecondCompliancePeriodContextValidatorServiceTest {
 
     @Test
     void validate_not_valid_for_category() {
-        final SecondCompliancePeriod secondCompliancePeriod = SecondCompliancePeriod.builder().informationExists(Boolean.FALSE).build();
+        final SecondCompliancePeriod secondCompliancePeriod = SecondCompliancePeriod.builder().informationExists(OptionalQuestion.NO).build();
         final NocP3Container nocContainer = NocP3Container.builder()
                 .noc(NocP3.builder().secondCompliancePeriod(secondCompliancePeriod).build())
                 .build();
@@ -72,7 +73,7 @@ class NocP3SecondCompliancePeriodContextValidatorServiceTest {
 
     @Test
     void validate_invalid_section_data() {
-        final SecondCompliancePeriod secondCompliancePeriod = SecondCompliancePeriod.builder().informationExists(Boolean.FALSE).build();
+        final SecondCompliancePeriod secondCompliancePeriod = SecondCompliancePeriod.builder().informationExists(OptionalQuestion.NO).build();
         final NocP3Container nocContainer = NocP3Container.builder()
                 .noc(NocP3.builder().secondCompliancePeriod(secondCompliancePeriod).build())
                 .build();
@@ -95,7 +96,7 @@ class NocP3SecondCompliancePeriodContextValidatorServiceTest {
 
     @Test
     void getApplicableReportingObligationCategories() {
-        assertThat(contextValidator.getApplicableReportingObligationCategories())
+        assertThat(contextValidator.getApplicableReportingObligationCategories(null))
         	.containsExactlyInAnyOrderElementsOf(ReportingObligationCategory.getQualifyCategories()
         );
     }

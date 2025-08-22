@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import uk.gov.esos.api.authorization.core.domain.AppUser;
+import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.common.exception.BusinessException;
 import uk.gov.esos.api.common.note.NotePayload;
 import uk.gov.esos.api.common.note.NoteRequest;
@@ -60,15 +62,76 @@ class RequestNoteServiceTest {
     private DateService dateService;
 
     @Test
-    void getRequestNotesByRequestId() {
+    void getRequestNotesByRequestId_regulator() {
 
         final String requestId = "requestId";
+        final AppUser appUser = AppUser.builder().userId("userId").roleType(RoleType.REGULATOR).build();
+        
+        final NotePayload notePayload1 = NotePayload.builder().note("note 1").build();
+        final NotePayload notePayload2 = NotePayload.builder().note("note 2").build();
+        final NotePayload notePayload3 = NotePayload.builder().note("note 3").build();
+        
+        final RequestNote requestNote1 = RequestNote.builder()
+        		.requestId(requestId)
+        		.payload(notePayload1)
+        		.roleType(RoleType.REGULATOR)
+        		.build();
+        final RequestNote requestNote2 = RequestNote.builder()
+        		.requestId(requestId)
+        		.payload(notePayload2)
+        		.roleType(RoleType.OPERATOR)
+        		.build();
+        final RequestNote requestNote3 = RequestNote.builder()
+        		.requestId(requestId)
+        		.payload(notePayload3)
+        		.roleType(RoleType.REGULATOR)
+        		.build();
+        final List<RequestNote> requestNotes = List.of(requestNote1, requestNote2, requestNote3);
 
+        final RequestNoteDto requestNoteDto1 = RequestNoteDto.builder().requestId(requestId).payload(notePayload1).build();
+        final RequestNoteDto requestNoteDto2 = RequestNoteDto.builder().requestId(requestId).payload(notePayload2).build();
+        final RequestNoteDto requestNoteDto3 = RequestNoteDto.builder().requestId(requestId).payload(notePayload3).build();
+        final List<RequestNoteDto> requestNoteDtos = List.of(requestNoteDto1, requestNoteDto2, requestNoteDto3);
+        
+        final Page<RequestNote> pagedRequestNoteDtos = new PageImpl<>(requestNotes, PageRequest.of(1, 5), 15);
+        final RequestNoteResponse expectedResult = RequestNoteResponse.builder().requestNotes(requestNoteDtos).totalItems(15L).build();
+        
+        when(requestNoteRepository.findRequestNotesByRequestIdOrderByLastUpdatedOnDesc(PageRequest.of(1, 5), requestId))
+            .thenReturn(pagedRequestNoteDtos);
+        when(requestNoteMapper.toRequestNoteDTO(eq(requestNote1), any())).thenReturn(requestNoteDto1);
+        when(requestNoteMapper.toRequestNoteDTO(eq(requestNote2), any())).thenReturn(requestNoteDto2);
+        when(requestNoteMapper.toRequestNoteDTO(eq(requestNote3), any())).thenReturn(requestNoteDto3);
+        
+        final RequestNoteResponse actualResult = requestNoteService.getRequestNotesByRequestId(appUser, requestId, 1, 5);
+        
+        assertThat(actualResult).isEqualTo(expectedResult);
+
+        verify(requestNoteMapper, times(1)).toRequestNoteDTO(requestNote1, RoleType.REGULATOR);
+        verify(requestNoteMapper, times(1)).toRequestNoteDTO(requestNote2, RoleType.REGULATOR);
+        verify(requestNoteMapper, times(1)).toRequestNoteDTO(requestNote3, RoleType.REGULATOR);
+        verify(requestNoteRepository, times(1)).findRequestNotesByRequestIdOrderByLastUpdatedOnDesc(PageRequest.of(1, 5), requestId);
+        verify(fileNoteService, timeout(2000).times(1)).cleanUpUnusedFiles();
+    }
+    
+    @Test
+    void getRequestNotesByRequestId_operator() {
+
+        final String requestId = "requestId";
+        final AppUser appUser = AppUser.builder().userId("userId").roleType(RoleType.OPERATOR).build();
+        
         final NotePayload notePayload1 = NotePayload.builder().note("note 1").build();
         final NotePayload notePayload2 = NotePayload.builder().note("note 2").build();
         
-        final RequestNote requestNote1 = RequestNote.builder().requestId(requestId).payload(notePayload1).build();
-        final RequestNote requestNote2 = RequestNote.builder().requestId(requestId).payload(notePayload2).build();
+        final RequestNote requestNote1 = RequestNote.builder()
+        		.requestId(requestId)
+        		.payload(notePayload1)
+        		.roleType(RoleType.OPERATOR)
+        		.build();
+        final RequestNote requestNote2 = RequestNote.builder()
+        		.requestId(requestId)
+        		.payload(notePayload2)
+        		.roleType(RoleType.OPERATOR)
+        		.build();
         final List<RequestNote> requestNotes = List.of(requestNote1, requestNote2);
 
         final RequestNoteDto requestNoteDto1 = RequestNoteDto.builder().requestId(requestId).payload(notePayload1).build();
@@ -76,28 +139,28 @@ class RequestNoteServiceTest {
         final List<RequestNoteDto> requestNoteDtos = List.of(requestNoteDto1, requestNoteDto2);
         
         final Page<RequestNote> pagedRequestNoteDtos = new PageImpl<>(requestNotes, PageRequest.of(1, 5), 15);
-        
-        when(requestNoteRepository.findRequestNotesByRequestIdOrderByLastUpdatedOnDesc(PageRequest.of(1, 5), requestId))
-            .thenReturn(pagedRequestNoteDtos);
-        when(requestNoteMapper.toRequestNoteDTO(requestNote1)).thenReturn(requestNoteDto1);
-        when(requestNoteMapper.toRequestNoteDTO(requestNote2)).thenReturn(requestNoteDto2);
-        
-        final RequestNoteResponse actualResult = requestNoteService.getRequestNotesByRequestId(requestId, 1, 5);
-
         final RequestNoteResponse expectedResult = RequestNoteResponse.builder().requestNotes(requestNoteDtos).totalItems(15L).build();
+        
+        when(requestNoteRepository.findRequestNotesByRequestIdAndRoleTypeOrderByLastUpdatedOnDesc(
+        		PageRequest.of(1, 5), requestId, RoleType.OPERATOR)).thenReturn(pagedRequestNoteDtos);
+        when(requestNoteMapper.toRequestNoteDTO(eq(requestNote1), any())).thenReturn(requestNoteDto1);
+        when(requestNoteMapper.toRequestNoteDTO(eq(requestNote2), any())).thenReturn(requestNoteDto2);
+
+        final RequestNoteResponse actualResult = requestNoteService.getRequestNotesByRequestId(appUser, requestId, 1, 5);
         
         assertThat(actualResult).isEqualTo(expectedResult);
 
-        verify(requestNoteMapper, times(1)).toRequestNoteDTO(requestNote1);
-        verify(requestNoteMapper, times(1)).toRequestNoteDTO(requestNote2);
-        verify(requestNoteRepository, times(1)).findRequestNotesByRequestIdOrderByLastUpdatedOnDesc(PageRequest.of(1, 5), requestId);
-        verify(fileNoteService, timeout(2000).times(1)).cleanUpUnusedFiles();
+        verify(requestNoteMapper, times(1)).toRequestNoteDTO(requestNote1, RoleType.OPERATOR);
+        verify(requestNoteMapper, times(1)).toRequestNoteDTO(requestNote2, RoleType.OPERATOR);
+        verify(requestNoteRepository, times(1)).findRequestNotesByRequestIdAndRoleTypeOrderByLastUpdatedOnDesc(
+        		PageRequest.of(1, 5), requestId, RoleType.OPERATOR);
     }
 
     @Test
     void getNote() {
 
         final long noteId = 2L;
+        final AppUser appUser = AppUser.builder().userId("userId").roleType(RoleType.OPERATOR).build();
         final RequestNote requestNote = RequestNote.builder()
             .payload(NotePayload.builder()
                 .note("the note")
@@ -110,9 +173,9 @@ class RequestNoteServiceTest {
             .build();
 
         when(requestNoteRepository.findById(noteId)).thenReturn(Optional.of(requestNote));
-        when(requestNoteMapper.toRequestNoteDTO(requestNote)).thenReturn(requestNoteDto);
+        when(requestNoteMapper.toRequestNoteDTO(requestNote, appUser.getRoleType())).thenReturn(requestNoteDto);
 
-        requestNoteService.getNote(noteId);
+        requestNoteService.getNote(appUser, noteId);
 
         verify(requestNoteRepository, times(1)).findById(noteId);
     }
@@ -120,7 +183,12 @@ class RequestNoteServiceTest {
     @Test
     void createNote_whenFilesExist_thenOK() {
 
-        final AppUser pmrvUser = AppUser.builder().userId("userId").firstName("John").lastName("Jones").build();
+        final AppUser pmrvUser = AppUser.builder()
+        		.userId("userId")
+        		.firstName("John")
+        		.lastName("Jones")
+        		.roleType(RoleType.REGULATOR)
+        		.build();
         final UUID file = UUID.randomUUID();
         final Set<UUID> files = Set.of(file);
         final RequestNoteRequest requestNoteRequest = RequestNoteRequest.builder()
@@ -141,6 +209,7 @@ class RequestNoteServiceTest {
             .submitterId("userId")
             .submitter("John Jones")
             .lastUpdatedOn(dateTime)
+            .roleType(RoleType.REGULATOR)
             .build();
 
         verify(fileNoteService, times(1)).getFileNames(files);

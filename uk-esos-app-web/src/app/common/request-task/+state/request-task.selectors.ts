@@ -26,6 +26,11 @@ const selectRequestTaskItem: StateSelector<RequestTaskState, RequestTaskItemDTO>
   (state) => state?.requestTaskItem,
 );
 
+const selectAllowedRequestTaskActions: StateSelector<
+  RequestTaskState,
+  RequestTaskItemDTO['allowedRequestTaskActions']
+> = createDescendingSelector(selectRequestTaskItem, (state) => state?.allowedRequestTaskActions);
+
 const selectRelatedActions: StateSelector<RequestTaskState, RequestTaskActions> = createDescendingSelector(
   selectRequestTaskItem,
   (state) => state?.allowedRequestTaskActions,
@@ -93,6 +98,12 @@ const selectRelatedTasks: StateSelector<RequestTaskState, ItemDTO[]> = createAgg
     }) ?? [],
 );
 
+const selectAccountOrganisationId: StateSelector<RequestTaskState, string> = createAggregateSelector(
+  (state) => state?.relatedTasks,
+  selectRequestTask,
+  (relatedTasks, requestTask) => relatedTasks?.find((t) => t.taskId === requestTask.id)?.accountOrganisationId,
+);
+
 const selectTimeline: StateSelector<RequestTaskState, RequestActionInfoDTO[]> = createSelector((state) =>
   produce(state?.timeline, (timeline) =>
     timeline.sort((a, b) => (isBefore(new Date(a.creationDate), new Date(b.creationDate)) ? 1 : -1)),
@@ -109,6 +120,7 @@ const selectMetadata: StateSelector<RequestTaskState, { [key: string]: unknown }
 
 export const requestTaskQuery = {
   selectRequestTaskItem,
+  selectAllowedRequestTaskActions,
   selectRequestInfo,
   selectRequestId,
   selectRequestType,
@@ -126,4 +138,5 @@ export const requestTaskQuery = {
   selectTaskReassignedTo,
   selectIsEditable,
   selectMetadata,
+  selectAccountOrganisationId,
 };

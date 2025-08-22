@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:21-jdk
 RUN apt-get update
 RUN apt-get install -y openssh-client
 # Do not change the order of the following two commands

@@ -1,92 +1,106 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, ValidatorFn } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, first, map, Observable, ReplaySubject, shareReplay, switchMap, takeUntil, tap } from 'rxjs';
 
 import { accountFinalStatuses } from '@accounts/core/accountFinalStatuses';
 import { DestroySubject } from '@core/services/destroy-subject.service';
-import { AuthStore, selectUserId, selectUserRoleType } from '@core/store/auth';
+import { AuthStore, selectUserId } from '@core/store/auth';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
+import { UserFullNamePipe } from '@shared/pipes/user-full-name.pipe';
 
-import { GovukSelectOption, GovukTableColumn, GovukValidators } from 'govuk-components';
+import { GovukSelectOption, GovukTableColumn } from 'govuk-components';
 
 import {
-  AccountOperatorAuthorityUpdateDTO,
   AuthoritiesService,
   OperatorAuthoritiesService,
   OrganisationAccountDTO,
   UserAuthorityInfoDTO,
+  UserInfoDTO,
 } from 'esos-api';
 
 import { savePartiallyNotFoundOperatorError } from './errors/business-error';
+import {
+  activeContactValidator,
+  activeOperatorAdminValidator,
+  contactTypeOptions,
+  getContactTypeText,
+  primaryContactValidator,
+  restrictedUserContactValidator,
+  uniqueContactType,
+} from './operators.validations';
 
 @Component({
   selector: 'esos-operators',
   templateUrl: './operators.component.html',
+  styles: [
+    `
+      .fixed-width {
+        width: 116px !important;
+        overflow-wrap: break-word;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DestroySubject],
 })
 export class OperatorsComponent implements OnInit {
-  @Input() currentTab: string;
-
-  private accountId$ = this.route.paramMap.pipe(map((paramMap) => Number(paramMap.get('accountId'))));
-
   isAccountEditable$: Observable<boolean>;
-
-  accountAuthorities$: Observable<UserAuthorityInfoDTO[]>;
-  contactType$: Observable<{ [key: string]: string }>;
+  accountAuthorities$: Observable<Array<UserAuthorityInfoDTO & { contactType: string }>>;
   isEditable$: Observable<boolean>;
   isSummaryDisplayed$ = new BehaviorSubject<boolean>(false);
   addUserForm: UntypedFormGroup = this.fb.group({ userType: ['operator'] });
+  userType$: Observable<GovukSelectOption<string>[]>;
+  userId$ = this.authStore.pipe(selectUserId, takeUntil(this.destroy$));
+  refresh$ = new ReplaySubject<void>(1);
+
   editableCols: GovukTableColumn[] = [
     { field: 'name', header: 'Name', isSortable: true },
     { field: 'roleName', header: 'User type' },
-    { field: 'PRIMARY', header: 'Primary contact' },
-    { field: 'SECONDARY', header: 'Secondary contact' },
+    { field: 'contactType', header: 'Contact type' },
     { field: 'authorityStatus', header: 'Account status' },
-    { field: 'deleteBtn', header: undefined },
+    { field: 'deleteBtn', header: 'Remove Action', isHidden: true },
   ];
+
   nonEditableCols = this.editableCols.slice(0, 4);
+
   userTypes: GovukSelectOption<string>[] = [
     { text: 'Advanced user', value: 'operator_admin' },
     { text: 'Restricted user', value: 'operator' },
   ];
+
   authorityStatuses: GovukSelectOption<UserAuthorityInfoDTO['authorityStatus']>[] = [
     { text: 'Active', value: 'ACTIVE' },
     { text: 'Disabled', value: 'DISABLED' },
   ];
+
   authorityStatusesAccepted: GovukSelectOption<UserAuthorityInfoDTO['authorityStatus']>[] = [
     { text: 'Accepted', value: 'ACCEPTED' },
     { text: 'Active', value: 'ACTIVE' },
   ];
-  userType$: Observable<GovukSelectOption<string>[]>;
-  private validators = [
-    this.activeOperatorAdminValidator('You must have an advanced user on your account'),
-    this.activeContactValidator('PRIMARY'),
-    this.primarySecondaryValidator(
-      'You cannot assign the same user as a primary and secondary contact on your account',
-    ),
-    this.restrictedUserContactValidator('PRIMARY'),
-    this.restrictedUserContactValidator('SECONDARY'),
-  ];
+
+  contactTypeOptions = contactTypeOptions;
+
   usersForm = this.fb.group(
     {
       usersArray: this.fb.array([]),
-      contactTypes: this.fb.group(
-        {
-          PRIMARY: [null, GovukValidators.required('You must have a primary contact on your account')],
-          SECONDARY: [],
-        },
-        { updateOn: 'change' },
-      ),
     },
-    { validators: this.validators },
+    {
+      validators: [
+        activeOperatorAdminValidator('You must have an advanced user on your account'),
+        primaryContactValidator(),
+        activeContactValidator('PRIMARY'),
+        uniqueContactType('PRIMARY'),
+        uniqueContactType('SECONDARY'),
+        restrictedUserContactValidator('PRIMARY'),
+        restrictedUserContactValidator('SECONDARY'),
+      ],
+    },
   );
-  roleType$ = this.authStore.pipe(selectUserRoleType, takeUntil(this.destroy$), shareReplay());
-  userId$ = this.authStore.pipe(selectUserId, takeUntil(this.destroy$));
-  refresh$ = new ReplaySubject<void>(1);
+
+  private accountId$ = this.route.paramMap.pipe(map((paramMap) => Number(paramMap.get('accountId'))));
 
   constructor(
     private readonly fb: UntypedFormBuilder,
@@ -103,10 +117,6 @@ export class OperatorsComponent implements OnInit {
     return this.usersForm.get('usersArray') as UntypedFormArray;
   }
 
-  get contactTypes(): UntypedFormGroup {
-    return this.usersForm.get('contactTypes') as UntypedFormGroup;
-  }
-
   ngOnInit(): void {
     this.isAccountEditable$ = this.route.data.pipe(
       map((data?: { account?: OrganisationAccountDTO }) => {
@@ -120,24 +130,35 @@ export class OperatorsComponent implements OnInit {
       switchMap((accountId) => this.operatorAuthoritiesService.getAccountOperatorAuthorities(accountId)),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
-    this.accountAuthorities$ = operatorsManagement$.pipe(map((operators) => operators.authorities));
-    this.contactType$ = operatorsManagement$.pipe(map((operators) => operators.contactTypes));
+    this.accountAuthorities$ = operatorsManagement$.pipe(
+      map((operators) =>
+        operators.authorities.map((authority) => {
+          const contactTypesEntries = Object.entries(operators.contactTypes).find(
+            (entry) => entry[1] === authority.userId,
+          );
+
+          return { ...authority, contactType: contactTypesEntries ? contactTypesEntries[0] : null };
+        }),
+      ),
+    );
     this.isEditable$ = operatorsManagement$.pipe(map((operators) => operators.editable));
     this.userType$ = this.accountId$.pipe(
       switchMap((accountId) => this.authoritiesService.getOperatorRoleCodes(accountId)),
       map((res) => res.map((role) => ({ text: role.name, value: role.code }))),
     );
-    this.contactType$.pipe(takeUntil(this.destroy$)).subscribe((contactTypes) =>
-      this.contactTypes.patchValue({
-        PRIMARY: contactTypes.PRIMARY,
-        SECONDARY: contactTypes.SECONDARY,
-      }),
-    );
   }
 
   addUser(userType: string): void {
-    this.router.navigate([`users/add`, userType], { relativeTo: this.route });
+    this.router.navigate(['users/add', userType], { relativeTo: this.route });
   }
+
+  userFullName(user: UserInfoDTO): string {
+    const userFullNamePipe = new UserFullNamePipe();
+
+    return userFullNamePipe.transform(user);
+  }
+
+  getContactTypeText = getContactTypeText;
 
   saveUsers(): void {
     if (!this.usersForm.dirty) {
@@ -147,6 +168,8 @@ export class OperatorsComponent implements OnInit {
       this.usersForm.markAllAsTouched();
       this.isSummaryDisplayed$.next(true);
     } else {
+      const users = this.usersArray.value as Array<UserAuthorityInfoDTO & { contactType: string }>;
+
       this.accountId$
         .pipe(
           first(),
@@ -159,7 +182,10 @@ export class OperatorsComponent implements OnInit {
                   roleCode: user.value.roleCode,
                   authorityStatus: user.value.authorityStatus,
                 })),
-              contactTypes: this.contactTypes.value,
+              contactTypes: {
+                PRIMARY: users.find((user) => user.contactType === 'PRIMARY')?.userId ?? null,
+                SECONDARY: users.find((user) => user.contactType === 'SECONDARY')?.userId ?? null,
+              },
             }),
           ),
           tap(() => this.usersForm.markAsPristine()),
@@ -173,48 +199,5 @@ export class OperatorsComponent implements OnInit {
         )
         .subscribe(() => this.refresh$.next());
     }
-  }
-
-  private activeOperatorAdminValidator(message: string): ValidatorFn {
-    return GovukValidators.builder(message, (group: UntypedFormGroup) =>
-      (group.get('usersArray').value as Array<AccountOperatorAuthorityUpdateDTO>).find(
-        (item) => item?.roleCode === 'operator_admin' && item.authorityStatus === 'ACTIVE',
-      )
-        ? null
-        : { noActiveOperatorAdmin: true },
-    );
-  }
-
-  private activeContactValidator(contactType: string): ValidatorFn {
-    return GovukValidators.builder(
-      `You must have a ${contactType.toLowerCase()} contact on your account`,
-      (group: UntypedFormGroup) =>
-        (group.get('usersArray').value as Array<AccountOperatorAuthorityUpdateDTO>).find(
-          (item) =>
-            item.authorityStatus !== 'ACTIVE' && item.userId === group.get('contactTypes').get(contactType).value,
-        )
-          ? { [`${contactType.toLowerCase()}NotActive`]: true }
-          : null,
-    );
-  }
-
-  private primarySecondaryValidator(message: string): ValidatorFn {
-    return GovukValidators.builder(message, (group: UntypedFormGroup) =>
-      group.get('contactTypes').get('PRIMARY').value === group.get('contactTypes').get('SECONDARY').value
-        ? { samePrimarySecondary: true }
-        : null,
-    );
-  }
-
-  private restrictedUserContactValidator(contactType: string): ValidatorFn {
-    return GovukValidators.builder(
-      `You cannot assign a Restricted user as ${contactType.toLowerCase()} contact on your account`,
-      (group: UntypedFormGroup) =>
-        (group.get('usersArray').value as Array<AccountOperatorAuthorityUpdateDTO>).find(
-          (item) => item?.roleCode === 'operator' && item.userId === group.get('contactTypes').get(contactType).value,
-        )
-          ? { [`${contactType.toLowerCase()}RestrictedUser`]: true }
-          : null,
-    );
   }
 }

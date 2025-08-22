@@ -2,9 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { ActivatedRouteStub } from '@testing';
+
 import { GovukComponentsModule } from 'govuk-components';
 
-import { ActivatedRouteStub } from '../../../testing';
 import { InvitationComponent } from './invitation.component';
 
 describe('InvitationComponent', () => {
@@ -32,21 +33,16 @@ describe('InvitationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display the installation name for advanced and restricted users', () => {
-    const account = {
-      accountInstallationName: 'Operator Faculty',
-      roleCode: 'operator',
+  it('should display the account name for advanced and restricted users', () => {
+    const userInfo = {
+      accountName: 'Operator Faculty',
     };
 
-    activatedRoute.setResolveMap({ account });
+    activatedRoute.setResolveMap({ operatorInvitedUserInfoDTO: userInfo });
     fixture.detectChanges();
 
     expect(element.querySelector('.govuk-panel__title').textContent).toEqual(
       `You have been added as a user to the account of Operator Faculty`,
     );
-  });
-
-  it('should have a link towards dashboard', () => {
-    expect(element.querySelector('a').href).toMatch(/\/dashboard$/);
   });
 });

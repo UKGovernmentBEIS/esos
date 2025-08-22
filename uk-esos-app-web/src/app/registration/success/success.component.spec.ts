@@ -1,24 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { AuthService } from '@core/services/auth.service';
 import { SharedModule } from '@shared/shared.module';
-import { KeycloakService } from 'keycloak-angular';
 
-import { OperatorUserDTO } from 'esos-api';
+import { OperatorUserRegistrationDTO } from 'esos-api';
 
-import { initialState } from '../store/user-registration.state';
 import { UserRegistrationStore } from '../store/user-registration.store';
 import { SuccessComponent } from './success.component';
 
 describe('SuccessComponent', () => {
   let component: SuccessComponent;
   let fixture: ComponentFixture<SuccessComponent>;
+  let store: UserRegistrationStore;
 
-  const mockUserOperatorDTO: OperatorUserDTO = {
+  const mockUserOperatorDTO: OperatorUserRegistrationDTO = {
     firstName: 'John',
     lastName: 'Doe',
-    email: 'test@email.com',
     jobTitle: 'Job',
     address: {
       line1: 'Line 1',
@@ -36,14 +33,12 @@ describe('SuccessComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [SuccessComponent],
       imports: [SharedModule, RouterTestingModule],
-      providers: [AuthService, KeycloakService],
     }).compileComponents();
 
-    TestBed.inject(UserRegistrationStore).setState({
-      isInvited: true,
+    store = TestBed.inject(UserRegistrationStore);
+
+    store.setState({
       userRegistrationDTO: mockUserOperatorDTO,
-      password: 'asdfg',
-      token: 'token',
     });
   });
 
@@ -57,7 +52,25 @@ describe('SuccessComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should reset the store', () => {
-    expect(TestBed.inject(UserRegistrationStore).getState()).toEqual(initialState);
+  it('should dispay invited info if invited', () => {
+    store.setState({
+      ...store.getValue(),
+      isInvited: true,
+    });
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('Your user account must be activated by Regulator.');
+  });
+
+  it('should dispay invited info if non invited', () => {
+    store.setState({
+      ...store.getValue(),
+      isInvited: false,
+    });
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain(
+      'You can now apply to create a new organisation account so you can start your ESOS reporting.',
+    );
   });
 });

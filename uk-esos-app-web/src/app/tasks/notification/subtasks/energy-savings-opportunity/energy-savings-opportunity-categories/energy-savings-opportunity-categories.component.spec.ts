@@ -16,7 +16,7 @@ import { ActivatedRouteStub, BasePage, MockType } from '@testing';
 
 import { TasksService } from 'esos-api';
 
-import { EnergySavingsOpportunityCategoriesComponent } from './energy-savings-opportunity-categories.component';
+import EnergySavingsOpportunityCategoriesComponent from './energy-savings-opportunity-categories.component';
 
 describe('EnergySavingsOpportunityCategoriesComponent', () => {
   let component: EnergySavingsOpportunityCategoriesComponent;
@@ -45,6 +45,7 @@ describe('EnergySavingsOpportunityCategoriesComponent', () => {
     get submitButton() {
       return this.query<HTMLButtonElement>('button[type="submit"]');
     }
+
     get errorSummary() {
       return this.query<HTMLDivElement>('govuk-error-summary');
     }
@@ -91,8 +92,9 @@ describe('EnergySavingsOpportunityCategoriesComponent', () => {
     const compiled = fixture.nativeElement;
 
     expect(compiled.textContent).toContain('Energy savings opportunities');
+
     expect(compiled.textContent).toContain(
-      'What is an estimate of the potential annual reduction in energy consumption in kWh which could be achieved as a result of implementing all energy saving opportunities against the following energy saving categories identified through energy audits?',
+      'Total annual reduction in energy consumption and energy spend by energy saving category',
     );
 
     expect(navigateSpy).toHaveBeenCalledWith(['../'], { relativeTo: route });

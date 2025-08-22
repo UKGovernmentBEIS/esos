@@ -48,7 +48,7 @@ describe('PersonnelListComponent', () => {
 
   it('should display heading text', () => {
     const headingElement = fixture.debugElement.query(By.css('.govuk-heading-l'));
-    expect(headingElement.nativeElement.textContent).toBe('Add the assessment personnel');
+    expect(headingElement.nativeElement.textContent).toBe('Add the assessment personnel (optional)');
   });
 
   it('should display "Add person" button"', () => {

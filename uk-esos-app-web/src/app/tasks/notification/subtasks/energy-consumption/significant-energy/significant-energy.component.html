@@ -1,14 +1,21 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="What is the significant energy consumption in kWh for the reference period?"
+  heading="What is the significant energy consumption in kWh?"
   caption="Energy consumption"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
   <p class="govuk-body">
     Assets held, or activities carried out, by your organisation should account for at least 95% of your total energy
     consumption.
+  </p>
+
+  <p class="govuk-body">
+    Where reasonably practicable, you must use verifiable data to identify the division of significant energy
+    consumption into different organisational purposes. If verifiable data is unavailable, you may use an estimation
+    method.
   </p>
 
   <esos-energy-consumption-input></esos-energy-consumption-input>
@@ -16,5 +23,7 @@
   <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
   <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Total</h2>
-  <p class="govuk-body">{{ total() }} kWh ({{ percentage() }}% of total energy consumption)</p>
+  <p class="govuk-body">
+    <strong>{{ total() }}</strong> kWh (<strong>{{ percentage() }}%</strong> of total energy consumption)
+  </p>
 </esos-wizard-step>

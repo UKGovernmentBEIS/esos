@@ -34,7 +34,7 @@ describe('InternalServerErrorComponent', () => {
     );
 
     expect(element.querySelector('h1').textContent).toEqual('Sorry, there is a problem with the service');
-    expect(paragraphContents).toEqual(['Try again later.', 'Contact the ESOS helpdesk if you have any questions.']);
-    expect(element.querySelector('a').href).toEqual('mailto:esos@environment-agency.gov.uk');
+    expect(paragraphContents).toEqual(['Try again later.', 'Contact the ESOS helpdesk  if you have any questions.']);
+    expect(element.querySelector('a').href).toEqual('mailto:esos-it@environment-agency.gov.uk');
   });
 });

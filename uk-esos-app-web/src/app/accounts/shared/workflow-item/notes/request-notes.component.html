@@ -10,16 +10,21 @@
           </div>
         </dl>
       </li>
-      <li *ngFor="let note of result.requestNotes">
+      <li *ngFor="let note of result.requestNotes; index as i">
         <dl govuk-summary-list>
           <div govukSummaryListRow>
             <dd govukSummaryListRowValue>
-              <div class="pre-wrap">{{ note.payload.note }}</div>
-              <div>
+              <esos-more-less-text
+                [text]="note.payload.note"
+                [index]="i"
+                [lines]="5"
+                widthClass="note-line-width"
+              ></esos-more-less-text>
+              <div class="govuk-!-margin-top-6">
                 <esos-summary-download-files [files]="getDownloadUrlFiles(note)"> </esos-summary-download-files>
               </div>
               <div>
-                <p class="govuk-caption-m">{{ note.submitter }}, {{ note.lastUpdatedOn | govukDate: 'datetime' }}</p>
+                <p class="govuk-caption-m">{{ note.submitter }}, {{ note.lastUpdatedOn | govukDate : 'datetime' }}</p>
               </div>
             </dd>
             <dd govukSummaryListRowActions>
@@ -30,11 +35,11 @@
         </dl>
       </li>
     </ul>
-    <esos-pagination
+    <govuk-pagination
       *ngIf="result.totalItems > pageSize"
       [count]="result.totalItems"
       (currentPageChange)="page$.next($event)"
       [pageSize]="pageSize"
-    ></esos-pagination>
+    ></govuk-pagination>
   </ng-container>
 </ng-container>

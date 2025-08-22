@@ -1,10 +1,11 @@
 <esos-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  heading="Details of the 2nd responsible officer"
-  caption="Confirmation"
+  heading="Details of the second responsible officer"
+  caption="Responsible officer confirmation"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <esos-user-input phoneType="full"></esos-user-input>
+  <esos-user-input phoneType="full" [isJobTitleOptional]="false" [isNotification]="true"></esos-user-input>
 </esos-wizard-step>

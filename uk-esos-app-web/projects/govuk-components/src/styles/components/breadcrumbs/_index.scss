@@ -1,4 +1,4 @@
-@include govuk-exports("govuk/component/breadcrumbs") {
+@include govuk-exports('govuk/component/breadcrumbs') {
   // Component font-size on the Frontend (used for calculations)
   $font-size: 16;
 
@@ -35,7 +35,6 @@
   }
 
   .govuk-breadcrumbs__list-item {
-
     display: inline-block;
     position: relative;
 
@@ -49,22 +48,13 @@
     float: left;
 
     // Create a chevron using a box with borders on two sides, rotated 45deg.
-    &:before {
-      content: "";
+    &::before {
+      content: '';
       display: block;
 
       position: absolute;
-
-      @if $govuk-use-legacy-font {
-        // Begin adjustments for font baseline offset
-        // These should be removed when legacy font support is dropped
-        $offset: govuk-em(1px, $font-size);
-        top: $offset * -1;
-        bottom: $offset;
-      } @else {
-        top: 0;
-        bottom: 0;
-      }
+      top: 0;
+      bottom: 0;
 
       // Offset by the difference between the width of the non-rotated square
       // and its width when rotated
@@ -75,34 +65,18 @@
 
       margin: auto 0;
 
-      -webkit-transform: rotate(45deg);
-
-          -ms-transform: rotate(45deg);
-
-              transform: rotate(45deg);
+      transform: rotate(45deg);
 
       border: solid;
       border-width: $chevron-border-min-width $chevron-border-min-width 0 0;
       border-color: $chevron-border-colour;
 
-      @supports (border-width: unquote("max(0px)")) {
-        border-width: unquote("max(#{$chevron-border-min-width}, #{$chevron-border-width}) max(#{$chevron-border-min-width}, #{$chevron-border-width})") 0 0;
+      @supports (border-width: unquote('max(0px)')) {
+        $border-width-eval: 'max(#{$chevron-border-min-width}, #{$chevron-border-width})';
 
         // Ensure that the chevron never gets smaller than 16px
-        font-size: unquote("max(#{$font-size * 1px}, 1em)");
-      }
-
-      // Fall back to a greater than sign for IE8
-      @include _govuk-if-ie8 {
-        content: "\003e"; // Greater than sign (>)
-        width: auto;
-        height: auto;
-        border: 0;
-        color: $chevron-border-colour;
-
-        // IE8 doesn't seem to like rendering pseudo-elements using @font-faces,
-        // so fall back to using another sans-serif font to render the chevron.
-        font-family: Arial, sans-serif;
+        border-width: unquote($border-width-eval) unquote($border-width-eval) 0 0;
+        font-size: unquote('max(#{$font-size * 1px}, 1em)');
       }
     }
 
@@ -110,7 +84,7 @@
       margin-left: 0;
       padding-left: 0;
 
-      &:before {
+      &::before {
         content: none;
         display: none;
       }
@@ -132,28 +106,29 @@
           display: inline-block;
         }
 
-        &:before {
+        &::before {
           top: govuk-em(6px, $font-size);
           margin: 0;
         }
       }
 
       .govuk-breadcrumbs__list {
-        display: -ms-flexbox;
         display: flex;
       }
     }
   }
 
   .govuk-breadcrumbs--inverse {
-    color: govuk-colour("white");
+    color: govuk-colour('white');
 
     .govuk-breadcrumbs__link {
       @include govuk-link-style-inverse;
     }
 
-    .govuk-breadcrumbs__list-item:before {
+    .govuk-breadcrumbs__list-item::before {
       border-color: currentcolor;
     }
   }
 }
+
+/*# sourceMappingURL=_index.scss.map */

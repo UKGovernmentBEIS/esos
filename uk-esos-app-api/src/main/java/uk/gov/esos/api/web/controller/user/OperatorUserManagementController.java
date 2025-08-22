@@ -120,4 +120,6 @@ public class OperatorUserManagementController {
         operatorUserManagementService.resetOperator2Fa(accountId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    
+    
 }

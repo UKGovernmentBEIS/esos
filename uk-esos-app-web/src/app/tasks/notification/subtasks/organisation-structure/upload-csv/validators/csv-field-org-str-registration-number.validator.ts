@@ -1,15 +1,16 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 
-import { mapFieldsToColumnNames } from '@tasks/notification/subtasks/organisation-structure/upload-csv/organisation-structure-csv.map';
-
-import { OrganisationAssociatedWithRU } from 'esos-api';
+import {
+  FlattenedOrganisationAssociatedWithRU,
+  mapFieldsToColumnNames,
+} from '@tasks/notification/subtasks/organisation-structure/upload-csv/organisation-structure-csv.map';
 
 /**
- * Validates a CSV field as required
+ * Validates that CSV field is not equal to the registrationNumberRU
  * Returns the column and row the error was found at
  */
 export function csvFieldOrgStrRegistrationNumberValidator(
-  field: keyof OrganisationAssociatedWithRU,
+  field: keyof FlattenedOrganisationAssociatedWithRU,
   registrationNumberRU: string,
   message: string,
 ): ValidatorFn {

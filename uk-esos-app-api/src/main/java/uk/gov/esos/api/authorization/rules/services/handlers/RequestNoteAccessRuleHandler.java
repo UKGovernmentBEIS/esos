@@ -25,7 +25,7 @@ public class RequestNoteAccessRuleHandler implements AuthorizationResourceRuleHa
                               final String resourceId) {
 
         final RequestAuthorityInfoDTO requestInfo =
-            requestNoteAuthorityInfoProvider.getRequestNoteInfo(Long.parseLong(resourceId));
+            requestNoteAuthorityInfoProvider.getRequestNoteInfo(Long.parseLong(resourceId), user.getRoleType());
 
         authorizationRules.forEach(rule -> {
             AuthorizationCriteria authorizationCriteria = AuthorizationCriteria.builder()

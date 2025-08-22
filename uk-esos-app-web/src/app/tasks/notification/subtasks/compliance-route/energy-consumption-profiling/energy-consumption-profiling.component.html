@@ -5,11 +5,20 @@
   caption="Compliance route"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
+  <p class="govuk-body">
+    Energy consumption profiles are a breakdown of how energy is used, and how that energy use varies.
+  </p>
+  <p class="govuk-hint">
+    For example, in an office building, the energy consumption profile could include energy used for heating,
+    ventilation, and appliances.
+  </p>
+
   <div formControlName="energyConsumptionProfilingUsed" govuk-radio>
-    <govuk-radio-option [value]="'YES'" label="Yes"></govuk-radio-option>
-    <govuk-radio-option [value]="'NO'" label="No"></govuk-radio-option>
-    <govuk-radio-option [value]="'NOT_APPLICABLE'" label="Not applicable">
+    <govuk-radio-option [value]="'YES'" [label]="'YES' | notApplicable"></govuk-radio-option>
+    <govuk-radio-option [value]="'NO'" [label]="'NO' | notApplicable"></govuk-radio-option>
+    <govuk-radio-option [value]="'NOT_APPLICABLE'" [label]="'NOT_APPLICABLE' | notApplicable">
       <div govukConditionalContent>
         <p class="govuk-body">
           All significant energy consumption is covered by ISO 50001 certification, Display Energy Certificates or Green
@@ -20,52 +29,17 @@
   </div>
 
   <govuk-details summary="Help me answer this question">
-    <p class="govuk-body govuk-!-font-weight-bold">What is energy consumption profiling?</p>
-    <p class="govuk-body">
-      You must, where practicable, use energy consumption profiling in your analysis of energy use for the ESOS energy
-      audit.
-    </p>
     <p class="govuk-body">
       Energy consumption profiles are a breakdown of how energy is used by a particular asset or activity and how that
       energy use varies.
     </p>
     <p class="govuk-body">
-      For example, in an office building, the energy consumption profile could include energy used for heating,
-      ventilation, air conditioning, lighting, and appliances.
+      Your analysis of energy consumption of buildings, transport and industrial processes for your ESOS audit must be
+      based on energy consumption profiles where appropriate and reasonably practicable.
     </p>
     <p class="govuk-body">
-      Your ESOS energy audit should review the energy consumption profile of buildings or groups of buildings,
-      industrial processes and transportation.
+      Where this is not the case, you must give a reason in your evidence pack and refer to this in your compliance
+      notification to your regulator.
     </p>
-    <p class="govuk-body govuk-!-font-weight-bold">Do my organisation always need an energy consumption profile?</p>
-    <p class="govuk-body">
-      ESOS provides flexibility in the use of energy consumption profiles for ESOS energy audits, as it may not always
-      be possible or proportionate to develop energy consumption profiles. Energy profiling is however, a valuable tool
-      in energy management and should be done whenever practicable.
-    </p>
-    <p class="govuk-body govuk-!-font-weight-bold">What if I don't have an energy consumption profile?</p>
-    <p class="govuk-body">
-      If you do not include an analysis based on energy consumption profiles for an ESOS energy audit, you should
-      outline the justification for this in your ESOS Evidence Pack and make reference to this in your compliance
-      notification to the Environment Agency.
-    </p>
-    <p class="govuk-body">Different types of profiles that may be useful are:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>
-        static profiles: these are useful in situations where there are many different energy uses within an asset or
-        activity (for example at a manufacturing site) at any given time and the profile of energy use is poorly
-        understood
-      </li>
-      <li>
-        time profiles: these are useful in situations where there is a cyclical or identifiable pattern of energy use
-        over time within an asset or activity and you want to (further) understand what is driving that pattern - for
-        example seasonal demand, weather, or human behaviour (for example shift patterns)
-      </li>
-      <li>
-        time interval profiles: this is where two or more time profiles are undertaken at intervals to identify any
-        changes in energy use highlighted by the changing profiles (for example conducting short time profiles before
-        and after the implementation of an energy saving measure)
-      </li>
-    </ul>
   </govuk-details>
 </esos-wizard-step>

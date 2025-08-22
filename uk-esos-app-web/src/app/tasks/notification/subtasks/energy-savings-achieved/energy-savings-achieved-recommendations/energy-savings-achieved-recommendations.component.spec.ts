@@ -73,7 +73,7 @@ describe('EnergySavingsAchievedRecommendationsComponent', () => {
 
   it('should display heading and all form fields', () => {
     expect(page.heading1.textContent.trim()).toEqual(
-      'What is the breakdown of the proportion of energy savings achieved which relate to recommendations from the following categories?',
+      'What is the breakdown of the proportion of energy savings achieved which relate to recommendations from the following categories? (optional)',
     );
 
     expect(page.energyAudits).toBe('0');

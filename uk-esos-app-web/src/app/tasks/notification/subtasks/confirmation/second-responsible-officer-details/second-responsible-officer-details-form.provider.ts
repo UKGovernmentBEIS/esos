@@ -5,6 +5,7 @@ import { RequestTaskStore } from '@common/request-task/+state';
 import { CountyAddressInputComponent } from '@shared/county-address-input/county-address-input.component';
 import { phoneInputValidators } from '@shared/phone-input/phone-input.validators';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
+import { sameResponsibleOfficerEmailValidator } from '@tasks/notification/subtasks/confirmation/confirmation.validators';
 import { TASK_FORM } from '@tasks/task-form.token';
 
 import { GovukValidators } from 'govuk-components';
@@ -20,6 +21,8 @@ export const SecondResponsibleOfficerDetailsFormProvider: Provider = {
     const secondResponsibleOfficerDetails = addAddressProperty(
       store.select(notificationQuery.selectConfirmation)()?.secondResponsibleOfficerDetails ?? ({} as ContactPerson),
     );
+    const firstResponsibleOfficerDetails = store.select(notificationQuery.selectConfirmation)()
+      ?.responsibleOfficerDetails;
 
     return fb.group({
       firstName: [
@@ -62,6 +65,8 @@ export const SecondResponsibleOfficerDetailsFormProvider: Provider = {
         [
           GovukValidators.required('Enter email address'),
           GovukValidators.maxLength(255, 'Email address should not be larger than 255 characters'),
+          GovukValidators.email('Enter an email address in the correct format, like name@example.com'),
+          sameResponsibleOfficerEmailValidator(firstResponsibleOfficerDetails?.email),
         ],
       ],
       address: fb.group(CountyAddressInputComponent.controlsFactory(secondResponsibleOfficerDetails?.address)),

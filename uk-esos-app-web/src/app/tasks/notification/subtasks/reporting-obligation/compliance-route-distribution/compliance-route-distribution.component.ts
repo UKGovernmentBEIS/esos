@@ -9,7 +9,7 @@ import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { TASK_FORM } from '@tasks/task-form.token';
 import produce from 'immer';
 
-import { DetailsComponent, LabelDirective, TextInputComponent } from 'govuk-components';
+import { DetailsComponent, LabelDirective, LinkDirective, TextInputComponent } from 'govuk-components';
 
 import { NotificationTaskPayload } from '../../../notification.types';
 import {
@@ -25,7 +25,14 @@ import {
 @Component({
   selector: 'esos-compliance-route-distribution',
   standalone: true,
-  imports: [WizardStepComponent, TextInputComponent, ReactiveFormsModule, DetailsComponent, LabelDirective],
+  imports: [
+    WizardStepComponent,
+    TextInputComponent,
+    ReactiveFormsModule,
+    DetailsComponent,
+    LabelDirective,
+    LinkDirective,
+  ],
   templateUrl: './compliance-route-distribution.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [complianceRouteDistributionFormProvider],

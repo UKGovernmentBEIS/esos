@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.gov.esos.api.common.domain.ClassificationCodes;
 import uk.gov.esos.api.common.domain.dto.CountyAddressDTO;
 import uk.gov.esos.api.competentauthority.CompetentAuthorityEnum;
 
@@ -33,4 +34,9 @@ public class OrganisationAccountPayload {
     @NotNull(message = "{account.organisation.address.notEmpty}")
     @Valid
     private CountyAddressDTO address;
+    
+    @JsonUnwrapped
+    @NotNull(message = "{account.organisation.codes.notEmpty}")
+    @Valid
+    private ClassificationCodes codes;
 }

@@ -12,7 +12,10 @@ import uk.gov.esos.api.AbstractContainerBaseTest;
 import uk.gov.esos.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.esos.api.competentauthority.domain.CompetentAuthority;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Optional;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Testcontainers
@@ -34,7 +37,8 @@ public class CompetentAuthorityRepositoryIT extends AbstractContainerBaseTest {
     	em.flush();
     	em.clear();
 
-		CompetentAuthority result = competentAuthorityRepository.findById(CompetentAuthorityEnum.ENGLAND);
-    	assertEquals(result.getId(), CompetentAuthorityEnum.ENGLAND);
+		Optional<CompetentAuthority> result = competentAuthorityRepository.findById(CompetentAuthorityEnum.ENGLAND);
+		assertThat(result).isNotEmpty();
+		assertEquals(result.get().getId(), CompetentAuthorityEnum.ENGLAND);
     }
 }

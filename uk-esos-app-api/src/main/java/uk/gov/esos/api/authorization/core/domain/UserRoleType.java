@@ -30,8 +30,7 @@ import uk.gov.esos.api.common.domain.enumeration.RoleType;
     + "when competent_authority is not null then 'REGULATOR' "
     + "when verification_body_id is not null then 'VERIFIER' "
     + "end as role_type "
-    + "from au_authority "
-    + "where status in ('TEMP_DISABLED','DISABLED','ACTIVE', 'ACCEPTED')")
+    + "from au_authority")
 @Immutable
 @Synchronize({"au_authority"})
 public class UserRoleType {

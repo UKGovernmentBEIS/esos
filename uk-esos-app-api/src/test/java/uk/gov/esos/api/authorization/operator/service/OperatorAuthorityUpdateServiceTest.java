@@ -170,23 +170,14 @@ class OperatorAuthorityUpdateServiceTest {
 		AccountOperatorAuthorityUpdateDTO accountOperator2 = AccountOperatorAuthorityUpdateDTO.builder().userId(operator2.getUserId())
 				.roleCode(AuthorityConstants.OPERATOR_ROLE_CODE).authorityStatus(AuthorityStatus.ACTIVE).build();
 
-		NewUserActivated emitter1 = NewUserActivated.builder().userId("emitter1").roleCode(AuthorityConstants.EMITTER_CONTACT).accountId(accountId).build();
-		AccountOperatorAuthorityUpdateDTO accountOperator3 = AccountOperatorAuthorityUpdateDTO.builder().userId(emitter1.getUserId())
-				.roleCode(AuthorityConstants.EMITTER_CONTACT).authorityStatus(AuthorityStatus.ACTIVE).build();
-
-		NewUserActivated emitter2 = NewUserActivated.builder().userId("emitter2").roleCode(AuthorityConstants.EMITTER_CONTACT).accountId(accountId).build();
-		AccountOperatorAuthorityUpdateDTO accountOperator4 = AccountOperatorAuthorityUpdateDTO.builder().userId(emitter2.getUserId())
-				.roleCode(AuthorityConstants.EMITTER_CONTACT).authorityStatus(AuthorityStatus.ACTIVE).build();
-
 		List<AccountOperatorAuthorityUpdateDTO> accountOperatorAuthorities = List.of(
-				accountOperator1, accountOperator2, accountOperator3, accountOperator4
+				accountOperator1, accountOperator2
 		);
 
-		List<NewUserActivated> expected = List.of(operator1, operator2, emitter1, emitter2);
+		List<NewUserActivated> expected = List.of(operator1, operator2);
 
 		List<Role> operatorRoleCodes = List.of(
-				Role.builder().code(AuthorityConstants.OPERATOR_ROLE_CODE).build(),
-				Role.builder().code(AuthorityConstants.EMITTER_CONTACT).build()
+				Role.builder().code(AuthorityConstants.OPERATOR_ROLE_CODE).build()
 		);
 
 		when(roleRepository.findByType(RoleType.OPERATOR))
@@ -195,17 +186,13 @@ class OperatorAuthorityUpdateServiceTest {
 				.thenReturn(Optional.of(Authority.builder().accountId(accountId).code(operator1.getRoleCode()).status(AuthorityStatus.ACCEPTED).build()));
 		when(authorityRepository.findByUserIdAndAccountId(operator2.getUserId(), accountId))
 				.thenReturn(Optional.of(Authority.builder().accountId(accountId).code(operator2.getRoleCode()).status(AuthorityStatus.ACCEPTED).build()));
-		when(authorityRepository.findByUserIdAndAccountId(emitter1.getUserId(), accountId))
-				.thenReturn(Optional.of(Authority.builder().accountId(accountId).code(emitter1.getRoleCode()).status(AuthorityStatus.ACCEPTED).build()));
-		when(authorityRepository.findByUserIdAndAccountId(emitter2.getUserId(), accountId))
-				.thenReturn(Optional.of(Authority.builder().accountId(accountId).code(emitter2.getRoleCode()).status(AuthorityStatus.ACCEPTED).build()));
 
 		// Invoke
 		List<NewUserActivated> res = service.updateAccountOperatorAuthorities(accountOperatorAuthorities, accountId);
 
 		// Verify
 		verify(roleRepository, times(1)).findByType(RoleType.OPERATOR);
-		verify(authorityRepository, times(4)).findByUserIdAndAccountId(anyString(), anyLong());
+		verify(authorityRepository, times(2)).findByUserIdAndAccountId(anyString(), anyLong());
 		verify(roleRepository, never()).findByCode(anyString());
 		verify(authorityAssignmentService, never()).updateAuthorityWithNewRole(any(), any());
 		assertThat(res).isEqualTo(expected);

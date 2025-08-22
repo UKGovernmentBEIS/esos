@@ -2,6 +2,8 @@ package uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.common.mapper;
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import uk.gov.esos.api.common.domain.ClassificationCodes;
+import uk.gov.esos.api.common.domain.ClassificationType;
 import uk.gov.esos.api.common.domain.dto.CountyAddressDTO;
 import uk.gov.esos.api.common.domain.dto.PhoneNumberDTO;
 import uk.gov.esos.api.reporting.noc.phase3.domain.ContactPerson;
@@ -26,6 +28,7 @@ import uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.common.domain.Notif
 import uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.common.domain.NotificationOfComplianceP3RequestPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.common.domain.NotificationOfComplianceP3ApplicationRequestTaskPayload;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -97,23 +100,18 @@ class NotificationOfComplianceP3MapperTest {
                                         .energyNotAuditedPct(10)
                                         .totalPct(100)
                                         .build())
-                                .qualificationReasonTypes(Set.of(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250))
+                                .qualificationReasonType(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250)
                                 .build())
                         .build())
                 .organisationStructure(OrganisationStructure.builder()
-                        .hasCeasedToBePartOfGroup(Boolean.TRUE)
-                        .isPartOfArrangement(Boolean.FALSE)
-                        .isTrust(Boolean.TRUE)
-                        .isPartOfFranchise(Boolean.FALSE)
+                        .isHighestParent(Boolean.FALSE)
                         .organisationsAssociatedWithRU(Set.of(OrganisationAssociatedWithRU.builder()
+                                .registrationNumberExist(Boolean.TRUE)
                                 .registrationNumber("registration number")
-                                .taxReferenceNumber("tax reference number")
                                 .organisationName("organisation name")
-                                .isCoveredByThisNotification(Boolean.FALSE)
                                 .isSubsidiaryOfResponsibleUndertaking(Boolean.TRUE)
                                 .isParentOfResponsibleUndertaking(Boolean.FALSE)
                                 .isPartOfFranchise(Boolean.TRUE)
-                                .isTrust(Boolean.FALSE)
                                 .hasCeasedToBePartOfGroup(Boolean.TRUE)
                                 .isPartOfArrangement(Boolean.FALSE)
                                 .build()))
@@ -125,12 +123,17 @@ class NotificationOfComplianceP3MapperTest {
                 .responsibleUndertaking(ResponsibleUndertaking.builder()
                         .organisationDetails(ReviewOrganisationDetails.builder()
                                 .name("review organisation details name")
+                                .registrationNumberExist(Boolean.TRUE)
                                 .registrationNumber("registration number")
                                 .address(CountyAddressDTO.builder()
                                         .line1("line1")
                                         .county("country")
                                         .city("city")
                                         .postcode("postcode")
+                                        .build())
+                                .codes(ClassificationCodes.builder()
+                                        .type(ClassificationType.SIC)
+                                        .codes(List.of("code 1"))
                                         .build())
                                 .build())
                         .tradingDetails(TradingDetails.builder()
@@ -144,6 +147,7 @@ class NotificationOfComplianceP3MapperTest {
                                         .number("45678")
                                         .build())
                                 .build())
+                        .isBehalfOfTrust(Boolean.FALSE)
                         .hasOverseasParentDetails(Boolean.FALSE)
                         .build())
                 .build();
@@ -189,23 +193,18 @@ class NotificationOfComplianceP3MapperTest {
                         .energyNotAuditedPct(10)
                         .totalPct(100)
                         .build())
-                    .qualificationReasonTypes(Set.of(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250))
+                    .qualificationReasonType(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250)
                     .build())
                 .build())
             .organisationStructure(OrganisationStructure.builder()
-                .hasCeasedToBePartOfGroup(Boolean.TRUE)
-                .isPartOfArrangement(Boolean.FALSE)
-                .isTrust(Boolean.TRUE)
-                .isPartOfFranchise(Boolean.FALSE)
+                    .isHighestParent(Boolean.FALSE)
                 .organisationsAssociatedWithRU(Set.of(OrganisationAssociatedWithRU.builder()
+                    .registrationNumberExist(Boolean.TRUE)
                     .registrationNumber("registration number")
-                    .taxReferenceNumber("tax reference number")
                     .organisationName("organisation name")
-                    .isCoveredByThisNotification(Boolean.FALSE)
                     .isSubsidiaryOfResponsibleUndertaking(Boolean.TRUE)
                     .isParentOfResponsibleUndertaking(Boolean.FALSE)
                     .isPartOfFranchise(Boolean.TRUE)
-                    .isTrust(Boolean.FALSE)
                     .hasCeasedToBePartOfGroup(Boolean.TRUE)
                     .isPartOfArrangement(Boolean.FALSE)
                     .build()))

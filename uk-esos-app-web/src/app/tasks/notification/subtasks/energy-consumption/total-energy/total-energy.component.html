@@ -5,12 +5,17 @@
   caption="Energy consumption"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
+  <p class="govuk-body">
+    Where reasonably practicable, you must use verifiable data to identify the division of total energy consumption into
+    different organisational purposes. If verifiable data is unavailable, you may use an estimation method.
+  </p>
+
   <esos-energy-consumption-input></esos-energy-consumption-input>
 
   <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
   <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Total</h2>
   <p class="govuk-body">{{ total() }} kWh</p>
-
 </esos-wizard-step>

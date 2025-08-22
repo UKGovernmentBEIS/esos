@@ -13,7 +13,7 @@
         </ng-container>
 
         <ng-container *ngSwitchCase="'actions'">
-          <div *ngIf="vm.isEditable" class="actions">
+          <div *ngIf="vm.isEditable" class="govuk-!-text-align-right">
             <a
               govukLink
               [routerLink]="[vm.prefix, index + 1, vm.wizardStep.EDIT_ENERGY_AUDIT]"
@@ -33,5 +33,5 @@
 </ng-container>
 
 <ng-template #noEnergyAudits>
-  <p>No energy audits have been added</p>
+  <p class="govuk-body">No energy audits have been added</p>
 </ng-template>

@@ -1,14 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 import { firstValueFrom, map, of } from 'rxjs';
 
+import { AccountRelatedActionsComponent } from '@accounts/shared/account-related-actions/account-related-actions.component';
 import { mockAccountResults, operatorUserRole, regulatorUserRole } from '@accounts/testing/mock-data';
 import { AuthStore } from '@core/store/auth';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
 import { AccountStatusPipe } from '@shared/pipes/account-status.pipe';
+import { AccountStatusTagColorPipe } from '@shared/pipes/account-status-tag-color.pipe';
 import { ActivatedRouteStub, BasePage, mockClass } from '@testing';
 
 import { GovukComponentsModule } from 'govuk-components';
@@ -19,7 +20,7 @@ import { AccountsListComponent } from '../..';
 import { AccountsStore } from '../../store';
 import { AccountsPageComponent } from '.';
 
-describe('AccountsComponent', () => {
+describe('AccountsPageComponent', () => {
   let component: AccountsPageComponent;
   let fixture: ComponentFixture<AccountsPageComponent>;
   let page: Page;
@@ -34,6 +35,7 @@ describe('AccountsComponent', () => {
     set termValue(value: string) {
       this.setInputValue('#term', value);
     }
+
     get termErrorMessage() {
       return this.query<HTMLElement>('div[formcontrolname="term"] span.govuk-error-message');
     }
@@ -50,8 +52,12 @@ describe('AccountsComponent', () => {
       return this.queryAll<HTMLLIElement>('form#search-form ul.govuk-list > li a');
     }
 
+    get accountRelatedActions() {
+      return this.query<HTMLElement>('esos-account-related-actions');
+    }
+
     get accountStatuses() {
-      return this.queryAll<HTMLSpanElement>('.status-tag');
+      return this.queryAll<HTMLSpanElement>('govuk-tag');
     }
   }
 
@@ -65,7 +71,13 @@ describe('AccountsComponent', () => {
   const createModule = async () => {
     await TestBed.configureTestingModule({
       declarations: [AccountsPageComponent, AccountsListComponent, AccountStatusPipe],
-      imports: [ReactiveFormsModule, RouterTestingModule, GovukComponentsModule, PageHeadingComponent],
+      imports: [
+        ReactiveFormsModule,
+        RouterModule.forRoot([]),
+        GovukComponentsModule,
+        PageHeadingComponent,
+        AccountStatusTagColorPipe,
+      ],
       providers: [AccountsStore, { provide: OrganisationAccountsService, useValue: organisationAccountsService }],
     }).compileComponents();
 
@@ -89,8 +101,9 @@ describe('AccountsComponent', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should render the heading', async () => {
+    it('should display appropriate HTML elements', async () => {
       expect(page.heading.textContent.trim()).toEqual('Accounts');
+      expect(page.accountRelatedActions).toBeFalsy();
     });
 
     it('should show results upon loading the page', () => {
@@ -122,9 +135,9 @@ describe('AccountsComponent', () => {
         'account3',
       ]);
       expect(page.accountStatuses.map((accountStatus) => accountStatus.textContent.trim())).toEqual([
-        'Live',
-        'Live',
-        'Live',
+        'LIVE',
+        'LIVE',
+        'LIVE',
       ]);
     });
   });
@@ -163,9 +176,9 @@ describe('AccountsComponent', () => {
         'account3',
       ]);
       expect(page.accountStatuses.map((accountStatus) => accountStatus.textContent.trim())).toEqual([
-        'Live',
-        'Live',
-        'Live',
+        'LIVE',
+        'LIVE',
+        'LIVE',
       ]);
     });
   });
@@ -185,7 +198,14 @@ describe('AccountsComponent', () => {
     beforeEach(async () => {
       await TestBed.configureTestingModule({
         declarations: [AccountsPageComponent, AccountsListComponent, AccountStatusPipe],
-        imports: [RouterTestingModule, ReactiveFormsModule, GovukComponentsModule, PageHeadingComponent],
+        imports: [
+          RouterModule.forRoot([]),
+          ReactiveFormsModule,
+          GovukComponentsModule,
+          PageHeadingComponent,
+          AccountRelatedActionsComponent,
+          AccountStatusTagColorPipe,
+        ],
         providers: [
           AccountsStore,
           { provide: OrganisationAccountsService, useValue: organisationAccountsService },
@@ -198,11 +218,19 @@ describe('AccountsComponent', () => {
     beforeEach(createComponent);
     beforeEach(async () => {
       authStore.setUserState(regulatorUserRole);
+      authStore.setRegulatorPermissions({
+        MANAGE_VERIFIED_ORGANISATION_ACCOUNTS: 'EXECUTE',
+      });
       fixture.detectChanges();
     });
 
     it('should create', () => {
       expect(component).toBeTruthy();
+    });
+
+    it('should display appropriate HTML elements', async () => {
+      expect(page.heading.textContent.trim()).toEqual('Accounts');
+      expect(page.accountRelatedActions).toBeTruthy();
     });
 
     it('should load the accounts based on the query params', () => {
@@ -212,9 +240,9 @@ describe('AccountsComponent', () => {
         'account3',
       ]);
       expect(page.accountStatuses.map((accountStatus) => accountStatus.textContent.trim())).toEqual([
-        'Live',
-        'Live',
-        'Live',
+        'LIVE',
+        'LIVE',
+        'LIVE',
       ]);
     });
   });

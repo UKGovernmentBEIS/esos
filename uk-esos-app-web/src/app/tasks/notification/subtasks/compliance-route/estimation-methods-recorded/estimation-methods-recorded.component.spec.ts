@@ -103,7 +103,7 @@ describe('EstimationMethodsRecordedComponent', () => {
         noc: {
           complianceRoute: {
             ...mockComplianceRoute,
-            areEstimationMethodsRecordedInEvidencePack: true,
+            areEstimationMethodsRecorded: 'YES',
           },
         },
       },

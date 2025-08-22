@@ -11,14 +11,5 @@
  */
 
 export interface OperatorInvitedUserInfoDTO {
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  roleCode?: string;
-  accountInstallationName?: string;
-  invitationStatus?:
-    | 'ACCEPTED'
-    | 'PENDING_USER_REGISTRATION'
-    | 'PENDING_USER_REGISTRATION_NO_PASSWORD'
-    | 'PENDING_USER_ENABLE';
+  accountName?: string;
 }

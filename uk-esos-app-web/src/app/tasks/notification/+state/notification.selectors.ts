@@ -86,7 +86,7 @@ const selectReportingObligationCategory: StateSelector<RequestTaskState, Reporti
 
 const selectAssessmentPersonnel: StateSelector<RequestTaskState, AssessmentPersonnel> = createDescendingSelector(
   selectPayload,
-  (payload) => payload.noc?.assessmentPersonnel,
+  (payload) => payload?.noc?.assessmentPersonnel,
 );
 
 const selectContactPersons: StateSelector<RequestTaskState, ContactPersons> = createDescendingSelector(
@@ -129,7 +129,7 @@ const selectOrganisationStructure: StateSelector<RequestTaskState, OrganisationS
 
 const selectEnergyConsumption: StateSelector<RequestTaskState, EnergyConsumptionDetails> = createDescendingSelector(
   selectPayload,
-  (payload) => payload.noc?.energyConsumptionDetails,
+  (payload) => payload?.noc?.energyConsumptionDetails,
 );
 
 const selectEnergySavingsOpportunities: StateSelector<RequestTaskState, EnergySavingsOpportunities> =

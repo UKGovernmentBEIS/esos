@@ -4,53 +4,58 @@
 <ng-container *ngIf="compliancePeriod.informationExists != null">
   <dl govuk-summary-list>
     <div govukSummaryListColumn>
-      <dd govukSummaryListColumnValue>{{ compliancePeriod.informationExists | booleanToText }}</dd>
+      <dd govukSummaryListColumnValue>{{ compliancePeriod.informationExists | skipQuestion }}</dd>
       <dd govukSummaryListColumnActions *ngIf="isEditable">
         <a
           govukLink
           [routerLink]="[wizardStep.INFORMATION_EXISTS]"
           [relativeTo]="route"
           [queryParams]="changeQueryParams"
-          >Change</a
         >
+          Change
+        </a>
       </dd>
     </div>
   </dl>
 </ng-container>
 
 <ng-container *ngIf="compliancePeriod.firstCompliancePeriodDetails">
-  <h2 class="govuk-heading-m">{{ organisationalEnergyConsumptionHeading }}</h2>
+  <h2 class="govuk-heading-m">{{ organisationalEnergyConsumption }}</h2>
+
+  <dl govuk-summary-list>
+    <div govukSummaryListColumn>
+      <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+      <ng-container *ngIf="compliancePeriod.firstCompliancePeriodDetails?.organisationalEnergyConsumption != null">
+        <dd govukSummaryListColumnValue>
+          {{ compliancePeriod.firstCompliancePeriodDetails.organisationalEnergyConsumption }}
+        </dd>
+      </ng-container>
+      <dd govukSummaryListColumnActions *ngIf="isEditable">
+        <a
+          govukLink
+          [routerLink]="[wizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION]"
+          [relativeTo]="route"
+          [queryParams]="changeQueryParams"
+        >
+          Change
+        </a>
+      </dd>
+    </div>
+  </dl>
+
+  <h2 class="govuk-heading-m">{{ organisationalEnergyConsumptionBreakdownHeading }}</h2>
+
   <esos-energy-consumption-details-summary-template
-    [energyConsumption]="compliancePeriod.firstCompliancePeriodDetails.organisationalEnergyConsumption"
-    [changeLink]="wizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION"
+    [energyConsumption]="compliancePeriod.firstCompliancePeriodDetails.organisationalEnergyConsumptionBreakdown"
+    [changeLink]="wizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION_BREAKDOWN"
     [queryParams]="changeQueryParams"
     [isEditable]="isEditable"
   >
   </esos-energy-consumption-details-summary-template>
 
-  <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
-  <ng-container *ngIf="compliancePeriod.firstCompliancePeriodDetails.significantEnergyConsumptionExists != null">
-    <h2 class="govuk-heading-m">{{ significantEnergyConsumptionExistsHeading }}</h2>
-    <dl govuk-summary-list>
-      <div govukSummaryListColumn>
-        <dd govukSummaryListColumnValue>
-          {{ compliancePeriod.firstCompliancePeriodDetails.significantEnergyConsumptionExists | booleanToText }}
-        </dd>
-        <dd govukSummaryListColumnActions *ngIf="isEditable">
-          <a
-            govukLink
-            [routerLink]="[wizardStep.SIGNIFICANT_ENERGY_CONSUMPTION_EXISTS]"
-            [relativeTo]="route"
-            [queryParams]="changeQueryParams"
-            >Change</a
-          >
-        </dd>
-      </div>
-    </dl>
-  </ng-container>
-
   <ng-container *ngIf="compliancePeriod.firstCompliancePeriodDetails.significantEnergyConsumption">
     <h2 class="govuk-heading-m">{{ significantEnergyConsumptionHeading }}</h2>
+
     <esos-energy-consumption-details-summary-template
       [energyConsumption]="compliancePeriod.firstCompliancePeriodDetails.significantEnergyConsumption"
       [changeLink]="wizardStep.SIGNIFICANT_ENERGY_CONSUMPTION"
@@ -61,44 +66,29 @@
   </ng-container>
 
   <h2 class="govuk-heading-m">{{ explanationOfChangesToTotalConsumptionHeading }}</h2>
+
   <dl govuk-summary-list>
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ compliancePeriod.firstCompliancePeriodDetails.explanation }}</dd>
-      <dd govukSummaryListRowActions *ngIf="isEditable">
+    <div govukSummaryListColumn>
+      <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+      <ng-container *ngIf="compliancePeriod.firstCompliancePeriodDetails.explanation != null">
+        <dd govukSummaryListColumnValue>{{ compliancePeriod.firstCompliancePeriodDetails.explanation }}</dd>
+      </ng-container>
+      <dd govukSummaryListColumnActions *ngIf="isEditable">
         <a
           govukLink
           [routerLink]="[wizardStep.EXPLANATION_OF_CHANGES_TO_TOTAL_CONSUMPTION]"
           [relativeTo]="route"
           [queryParams]="changeQueryParams"
-          >Change</a
         >
+          Change
+        </a>
       </dd>
     </div>
   </dl>
 
-  <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
-  <ng-container *ngIf="compliancePeriod.firstCompliancePeriodDetails.potentialReductionExists != null">
-    <h2 class="govuk-heading-m">{{ potentialReductionExistsHeading }}</h2>
-    <dl govuk-summary-list>
-      <div govukSummaryListColumn>
-        <dd govukSummaryListColumnValue>
-          {{ compliancePeriod.firstCompliancePeriodDetails?.potentialReductionExists | booleanToText }}
-        </dd>
-        <dd govukSummaryListColumnActions *ngIf="isEditable">
-          <a
-            govukLink
-            [routerLink]="[wizardStep.POTENTIAL_REDUCTION_EXISTS]"
-            [relativeTo]="route"
-            [queryParams]="changeQueryParams"
-            >Change</a
-          >
-        </dd>
-      </div>
-    </dl>
-  </ng-container>
-
   <ng-container *ngIf="compliancePeriod.firstCompliancePeriodDetails.potentialReduction">
     <h2 class="govuk-heading-m">{{ potentialReductionHeading }}</h2>
+
     <esos-energy-consumption-details-summary-template
       [energyConsumption]="compliancePeriod.firstCompliancePeriodDetails.potentialReduction"
       [changeLink]="wizardStep.POTENTIAL_REDUCTION"
@@ -109,27 +99,9 @@
   </ng-container>
 
   <ng-container *ngIf="!isFirstCompliancePeriod">
-    <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
-    <ng-container *ngIf="compliancePeriod.reductionAchievedExists != null">
-      <h2 class="govuk-heading-m">{{ reductionAchievedExistsHeading }}</h2>
-      <dl govuk-summary-list>
-        <div govukSummaryListColumn>
-          <dd govukSummaryListColumnValue>{{ compliancePeriod.reductionAchievedExists | booleanToText }}</dd>
-          <dd govukSummaryListColumnActions *ngIf="isEditable">
-            <a
-              govukLink
-              [routerLink]="[wizardStep.REDUCTION_ACHIEVED_EXISTS]"
-              [relativeTo]="route"
-              [queryParams]="changeQueryParams"
-              >Change</a
-            >
-          </dd>
-        </div>
-      </dl>
-    </ng-container>
-
     <ng-container *ngIf="compliancePeriod.reductionAchieved">
       <h2 class="govuk-heading-m">{{ reductionAchievedHeading }}</h2>
+
       <esos-energy-consumption-details-summary-template
         [energyConsumption]="compliancePeriod.reductionAchieved"
         [changeLink]="wizardStep.REDUCTION_ACHIEVED"

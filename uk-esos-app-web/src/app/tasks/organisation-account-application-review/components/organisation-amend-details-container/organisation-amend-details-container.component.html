@@ -1,0 +1,19 @@
+<esos-wizard-step
+  [formGroup]="form"
+  heading="Enter the organisation details"
+  caption="Organisation details"
+  (formSubmit)="submit()"
+>
+  <div
+    formControlName="registeredName"
+    govuk-text-input
+    label="Organisation name"
+    [widthClass]="'govuk-!-width-two-thirds'"
+  ></div>
+
+  <h3 class="govuk-heading-s">Activity codes</h3>
+  <esos-activity-codes-input></esos-activity-codes-input>
+
+  <h3 class="govuk-heading-s">Organisation address</h3>
+  <esos-county-address-input formGroupName="addressDetails"></esos-county-address-input>
+</esos-wizard-step>

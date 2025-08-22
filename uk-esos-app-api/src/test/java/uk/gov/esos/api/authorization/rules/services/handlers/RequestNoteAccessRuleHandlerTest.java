@@ -61,11 +61,11 @@ class RequestNoteAccessRuleHandlerTest {
                 .build())
             .build();
 
-        when(requestNoteAuthorityInfoProvider.getRequestNoteInfo(noteId)).thenReturn(requestAuthorityInfoDTO);
+        when(requestNoteAuthorityInfoProvider.getRequestNoteInfo(noteId, RoleType.REGULATOR)).thenReturn(requestAuthorityInfoDTO);
 
         requestNoteAccessRuleHandler.evaluateRules(rules, pmrvUser, String.valueOf(noteId));
 
-        verify(requestNoteAuthorityInfoProvider, times(1)).getRequestNoteInfo(noteId);
+        verify(requestNoteAuthorityInfoProvider, times(1)).getRequestNoteInfo(noteId, RoleType.REGULATOR);
         verify(appAuthorizationService, times(1)).authorize(pmrvUser, authorizationCriteria);
     }
 
@@ -93,7 +93,7 @@ class RequestNoteAccessRuleHandlerTest {
                 .build())
             .build();
 
-        when(requestNoteAuthorityInfoProvider.getRequestNoteInfo(noteId)).thenReturn(requestAuthorityInfoDTO);
+        when(requestNoteAuthorityInfoProvider.getRequestNoteInfo(noteId, RoleType.OPERATOR)).thenReturn(requestAuthorityInfoDTO);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN)).when(appAuthorizationService)
             .authorize(pmrvUser, authorizationCriteria);
 
@@ -102,7 +102,7 @@ class RequestNoteAccessRuleHandlerTest {
 
         assertThat(be.getErrorCode()).isEqualTo(ErrorCode.FORBIDDEN);
 
-        verify(requestNoteAuthorityInfoProvider, times(1)).getRequestNoteInfo(noteId);
+        verify(requestNoteAuthorityInfoProvider, times(1)).getRequestNoteInfo(noteId, RoleType.OPERATOR);
         verify(appAuthorizationService, times(1)).authorize(pmrvUser, authorizationCriteria);
     }
 }

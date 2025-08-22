@@ -8,6 +8,7 @@ import { of, throwError } from 'rxjs';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
 import { SharedModule } from '@shared/shared.module';
 import { ActivatedRouteStub, BasePage, mockClass } from '@testing';
+import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { VerifierUsersRegistrationService } from 'esos-api';
 
@@ -58,6 +59,7 @@ describe('VerifierInvitationComponent', () => {
       imports: [RouterTestingModule, SharedModule, PageHeadingComponent, SharedUserModule],
       declarations: [VerifierInvitationComponent],
       providers: [
+        provideZxvbnServiceForPSM(),
         { provide: VerifierUsersRegistrationService, useValue: verifierUsersRegistrationService },
         { provide: PasswordService, useValue: passwordService },
         { provide: ActivatedRoute, useValue: activatedRoute },

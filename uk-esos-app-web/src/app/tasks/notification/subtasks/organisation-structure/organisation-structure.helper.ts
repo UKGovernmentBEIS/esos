@@ -3,7 +3,9 @@ import { OrganisationDetails, ReviewOrganisationDetails } from 'esos-api';
 export const ORGANISATION_STRUCTURE_SUB_TASK = 'organisationStructure';
 
 export enum OrganisationStructureCurrentStep {
-  RU_DETAILS = 'ruDetails',
+  HIGHEST_PARENT = 'highest-parent',
+  INCLUDE_UNDERTAKINGS = 'include-undertakings',
+  UNDERTAKING_LIST = 'undertaking-list',
   LIST = 'list',
   LIST_REMOVE = 'list-remove',
   ADD = 'add',
@@ -13,7 +15,9 @@ export enum OrganisationStructureCurrentStep {
 }
 
 export enum OrganisationStructureWizardStep {
-  RU_DETAILS = 'responsible-undertaking-details',
+  HIGHEST_PARENT = 'highest-parent',
+  INCLUDE_UNDERTAKINGS = 'include-undertakings',
+  UNDERTAKING_LIST = 'undertaking-list',
   LIST = 'list',
   ADD = 'add',
   EDIT = 'edit',

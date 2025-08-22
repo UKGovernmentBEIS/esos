@@ -17,9 +17,9 @@ export interface OperatorUserDTO {
   firstName: string;
   lastName: string;
   termsVersion?: number;
-  status?: 'REGISTERED' | 'PENDING' | 'DELETED';
+  status?: 'REGISTERED' | 'PENDING';
   address: CountyAddressDTO;
-  jobTitle: string;
+  jobTitle?: string;
   phoneNumber?: PhoneNumberDTO;
   mobileNumber?: PhoneNumberDTO;
 }

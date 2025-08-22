@@ -42,10 +42,7 @@ export const primaryContactDetailsFormProvider: Provider = {
       ],
       jobTitle: [
         primaryContact.jobTitle,
-        [
-          GovukValidators.required('Enter job title'),
-          GovukValidators.maxLength(255, 'Job title should not be larger than 255 characters'),
-        ],
+        [GovukValidators.maxLength(255, 'Job title should not be larger than 255 characters')],
       ],
       phoneNumber: [
         { countryCode: primaryContact.phoneNumber.countryCode, number: primaryContact.phoneNumber.number },
@@ -60,6 +57,7 @@ export const primaryContactDetailsFormProvider: Provider = {
         [
           GovukValidators.required('Enter email address'),
           GovukValidators.maxLength(255, 'Email address should not be larger than 255 characters'),
+          GovukValidators.email('Enter an email address in the correct format, like name@example.com'),
         ],
       ],
       address: fb.group(CountyAddressInputComponent.controlsFactory(primaryContact.address)),

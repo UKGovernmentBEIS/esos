@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -9,11 +10,11 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
+import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 
 import { Observable, startWith, tap } from 'rxjs';
 
-import { ConditionalContentDirective, RadioComponent } from 'govuk-components';
+import { ConditionalContentDirective, GovukComponentsModule, LegendSizeType, RadioComponent } from 'govuk-components';
 
 import { existingControlContainer } from '../providers/control-container.factory';
 
@@ -23,10 +24,13 @@ import { existingControlContainer } from '../providers/control-container.factory
   templateUrl: './boolean-radio-group.component.html',
   providers: [existingControlContainer],
   viewProviders: [existingControlContainer],
+  standalone: true,
+  imports: [GovukComponentsModule, ReactiveFormsModule, AsyncPipe],
 })
 export class BooleanRadioGroupComponent implements AfterContentInit, AfterViewInit, OnInit {
   @Input() controlName: string;
   @Input() legend: string;
+  @Input() legendSize: LegendSizeType = 'medium';
   @Input() hint: string;
   @Input() isEditable = true;
 

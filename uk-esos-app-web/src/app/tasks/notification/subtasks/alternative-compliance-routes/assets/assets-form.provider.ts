@@ -25,25 +25,19 @@ export const assetsFormProvider: Provider = {
       iso50001: [
         assets?.iso50001 ?? null,
         isIso50001Enabled(complianceRouteDistribution)
-          ? GovukValidators.required(
-              'List your assets and activities that fall under each certified energy management system',
-            )
+          ? GovukValidators.required('List the assets and activities')
           : null,
       ],
       dec: [
         assets?.dec ?? null,
         isDecEnabled(complianceRouteDistribution)
-          ? GovukValidators.required(
-              'List your assets and activities that fall under each certified energy management system',
-            )
+          ? GovukValidators.required('List the assets and activities')
           : null,
       ],
       gda: [
         assets?.gda ?? null,
         isGdaEnabled(complianceRouteDistribution)
-          ? GovukValidators.required(
-              'List your assets and activities that fall under each certified energy management system',
-            )
+          ? GovukValidators.required('List the assets and activities')
           : null,
       ],
     });

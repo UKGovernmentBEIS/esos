@@ -37,8 +37,11 @@ export abstract class StepFlowManager {
   protected store = inject(RequestTaskStore);
   protected router = inject(Router);
 
-  nextStep(currentStep: string, route: ActivatedRoute): void {
-    this.router.navigate([this.resolveNextStepRoute(currentStep)], { relativeTo: route });
+  nextStep(currentStep: string, route: ActivatedRoute, data?: any): void {
+    this.router.navigate([this.resolveNextStepRoute(currentStep)], {
+      ...(data ? { state: data } : undefined),
+      relativeTo: route,
+    });
   }
 
   abstract resolveNextStepRoute(currentStep: string): string;

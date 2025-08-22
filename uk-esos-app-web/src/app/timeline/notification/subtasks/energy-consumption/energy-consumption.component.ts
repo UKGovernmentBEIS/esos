@@ -9,7 +9,7 @@ import { notificationApplicationTimelineQuery } from '@timeline/notification/+st
 import { EnergyConsumptionDetails } from 'esos-api';
 
 interface ViewModel {
-  data: EnergyConsumptionDetails;
+  energyConsumptionDetails: EnergyConsumptionDetails;
 }
 
 @Component({
@@ -21,7 +21,7 @@ interface ViewModel {
 })
 export default class EnergyConsumptionComponent {
   vm: Signal<ViewModel> = computed(() => ({
-    data: this.store.select(notificationApplicationTimelineQuery.selectEnergyConsumptionDetails)(),
+    energyConsumptionDetails: this.store.select(notificationApplicationTimelineQuery.selectEnergyConsumptionDetails)(),
   }));
 
   constructor(private readonly store: RequestActionStore) {}

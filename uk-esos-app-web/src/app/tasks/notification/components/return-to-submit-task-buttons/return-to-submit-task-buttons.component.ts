@@ -7,7 +7,7 @@ import { requestTaskQuery, RequestTaskStore } from '@common/request-task/+state'
 import { ButtonDirective } from 'govuk-components';
 
 @Component({
-  selector: 'esos-return-to-submit-task-buttons',
+  selector: 'esos-notification-return-to-submit-task-buttons',
   standalone: true,
   imports: [ButtonDirective, NgIf, RouterLink],
   template: `
@@ -17,7 +17,7 @@ import { ButtonDirective } from 'govuk-components';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReturnToSubmitTaskButtonsComponent {
+export class NotificationReturnToSubmitTaskButtonsComponent {
   isEditable = this.store.select(requestTaskQuery.selectIsEditable)();
 
   constructor(readonly store: RequestTaskStore) {}

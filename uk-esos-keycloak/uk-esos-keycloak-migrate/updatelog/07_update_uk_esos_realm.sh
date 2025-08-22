@@ -28,13 +28,3 @@ else
 	echo " $CREATE_REALM"
 	exit;
 fi
-
-#Add script name as user to changelog realm for tracking purposes
-ADD_SCRIPT_TO_CHANGELOG=$(addUserToChangeLogRealm "$SCRIPT_NAME")
-
-if [ -z "$ADD_SCRIPT_TO_CHANGELOG" ]
-then
-	echo " Script $SCRIPT_NAME added to changelog"
-else
-	echo " Script $SCRIPT_NAME was not to added to changelog. Reason: $ADD_SCRIPT_TO_CHANGELOG"
-fi

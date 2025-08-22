@@ -1,0 +1,16 @@
+<esos-page-heading [caption]="title" size="xl">Check your answers</esos-page-heading>
+
+<esos-energy-efficiency-measures-summary-page [data]="actionPlanEnergyEfficiencyMeasure" [isEditable]="isEditable" />
+
+@if (actionPlanEnergyEfficiencyMeasure?.haveEnergyEfficiencyMeasures) {
+  <div class="govuk-!-margin-bottom-6">
+    <a govukSecondaryButton [routerLink]="[stepUrls.ADD_ANOTHER_MEASURE]">Add another energy efficiency measure</a>
+  </div>
+}
+
+@if (isEditable && !isSubTaskCompleted) {
+  <button (click)="onSubmit()" esosPendingButton govukButton type="submit">Confirm and complete</button>
+}
+<div class="govuk-!-margin-bottom-8">
+  <esos-return-to-task-or-action-page />
+</div>

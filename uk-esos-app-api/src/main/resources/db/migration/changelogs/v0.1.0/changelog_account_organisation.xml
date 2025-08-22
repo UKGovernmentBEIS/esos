@@ -64,4 +64,97 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_CHANGE_ACCOUNT_ORGANISATION_STATUS_TO_AWAITING_APPROVAL" author="P70383">
+        <sql>
+            update account_organisation
+            set status = 'AWAITING_APPROVAL'
+            where status = 'UNAPPROVED';
+        </sql>
+        <rollback>
+            <sql>
+                update account_organisation
+                set status = 'UNAPPROVED'
+                where status = 'AWAITING_APPROVAL';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_CREATE_TABLE_ACCOUNT_ORGANISATION_CLASSIFICATION_CODE" author="apostolouk@unisystems.gr">
+        <createSequence sequenceName="account_organisation_classification_code_seq"/>
+        <createTable tableName="account_organisation_classification_code"
+        			 remarks="Represents a classification code associated with an organisation account">
+            <column name="id" type="bigint" remarks="The classification code id">
+                <constraints primaryKey="true" primaryKeyName="account_organisation_classification_code_pk" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint" remarks="The organisation account id to which the classification code belongs to">
+                <constraints nullable="false" foreignKeyName="account_organisation_classification_code_fk" referencedTableName="account_organisation" referencedColumnNames="id" />
+            </column>
+            <column name="type" type="varchar(10)" remarks="The classification type">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(255)" remarks="The classification type name if other than SIC"/>
+            <column name="code" type="varchar(255)" remarks="The classification code">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS account_organisation_classification_code CASCADE;
+                DROP SEQUENCE IF EXISTS account_organisation_classification_code_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_CHANGE_ORGANISATION_ACCOUNT_VARIABLES_VARCHAR_LENGTH" author="pafilisa@unisystems.gr">
+        <modifyDataType tableName="account_organisation" columnName="county" newDataType="varchar(255)"/>
+        <modifyDataType tableName="account_organisation" columnName="postcode" newDataType="varchar(64)"/>
+        <rollback>
+            <modifyDataType tableName="account_organisation" columnName="county" newDataType="varchar(50)"/>
+            <modifyDataType tableName="account_organisation" columnName="postcode" newDataType="varchar(50)"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ORGANISATION_ACCOUNT_COUNTY_COLUMN_DROP_NOT_NULL_CONSTRAINT" author="dimopoulosc@unisystems.gr" >
+        <dropNotNullConstraint tableName="account_organisation" columnName="county"/>
+        <rollback>
+            <addNotNullConstraint tableName="account_organisation" columnName="county" />
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ORGANISATION_ACCOUNT_ADD_LOCATION_COLUMN" author="dimopoulosc@unisystems.gr">
+        <addColumn tableName="account_organisation">
+            <column name="location" type="varchar(255)" remarks="This is a temporary column to store the actual competent authority until the sysadmin feature is complete">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <rollback>
+            <sql>
+                ALTER TABLE account_organisation
+                DROP COLUMN IF EXISTS location CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ORGANISATION_ACCOUNT_UPDATE_LOCATION_COLUMN" author="dimopoulosc@unisystems.gr">
+        <sql>
+				update account_organisation account_org
+                set location = acc.competent_authority
+       			from account acc
+            	where acc.id = account_org.id;
+        </sql>
+        <rollback>
+            <sql>
+                update account_organisation
+                set location = NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ORGANISATION_ACCOUNT_LOCATION_COLUMN_ADD_NOT_NULL_CONSTRAINT" author="dimopoulosc@unisystems.gr">
+        <addNotNullConstraint tableName="account_organisation" columnName="location" />
+        <rollback>
+            <dropNotNullConstraint tableName="account_organisation" columnName="location"/>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

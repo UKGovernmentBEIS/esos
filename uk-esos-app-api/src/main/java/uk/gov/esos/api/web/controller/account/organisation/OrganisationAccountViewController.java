@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uk.gov.esos.api.account.organisation.domain.dto.OrganisationAccountDTO;
 import uk.gov.esos.api.account.organisation.service.OrganisationAccountQueryService;
+import uk.gov.esos.api.authorization.core.domain.AppUser;
 import uk.gov.esos.api.web.controller.exception.ErrorResponse;
 import uk.gov.esos.api.web.security.Authorized;
 
@@ -43,7 +44,8 @@ public class OrganisationAccountViewController {
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#accountId")
     public ResponseEntity<OrganisationAccountDTO> getOrganisationAccountById(
+    		@Parameter(hidden = true) AppUser user,
             @Parameter(description = "The account id") @PathVariable("id") Long accountId) {
-        return new ResponseEntity<>(organisationAccountQueryService.getOrganisationAccountById(accountId), HttpStatus.OK);
+        return new ResponseEntity<>(organisationAccountQueryService.getOrganisationAccount(user, accountId), HttpStatus.OK);
     }
 }

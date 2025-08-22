@@ -16,9 +16,12 @@ export class ItemActionHeaderPipe implements PipeTransform {
         return `${itemActionTypePipe.transform(item.type)} by ${item.submitter}`;
       case 'ORGANISATION_ACCOUNT_OPENING_REJECTED':
         return `${itemActionTypePipe.transform(item.type)} by ${item.submitter}`;
+      case 'ORGANISATION_ACCOUNT_OPENING_CREATED':
+        return `${itemActionTypePipe.transform(item.type)} by ${item.submitter}`;
 
       case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SENT_TO_EDIT':
       case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RETURNED_TO_SUBMIT':
+      case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RE_INITIATED':
       case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMITTED':
         return `${itemActionTypePipe.transform(item.type)} by ${item.submitter}`;
 
@@ -39,6 +42,24 @@ export class ItemActionHeaderPipe implements PipeTransform {
       case 'RFI_CANCELLED':
       case 'RFI_RESPONSE_SUBMITTED':
       case 'RFI_SUBMITTED':
+        return `${itemActionTypePipe.transform(item.type)} by ${item.submitter}`;
+
+      case 'ACTION_PLAN_P3_APPLICATION_RE_INITIATED':
+      case 'ACTION_PLAN_P3_APPLICATION_SUBMITTED':
+      case 'ACTION_PLAN_APPLICATION_CANCELLED':
+        return `${itemActionTypePipe.transform(item.type)} by ${item.submitter}`;
+
+      case 'ACCOUNT_CLOSURE_APPLICATION_SUBMITTED':
+        return `${itemActionTypePipe.transform(item.type)} by ${item.submitter}`;
+      case 'ACCOUNT_CLOSURE_APPLICATION_CANCELLED':
+        return `${itemActionTypePipe.transform(item.type)} by ${item.submitter}`;
+
+      case 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED':
+      case 'PROGRESS_UPDATE_1_P3_APPLICATION_RE_INITIATED':
+      case 'PROGRESS_UPDATE_1_APPLICATION_CANCELLED':
+      case 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED':
+      case 'PROGRESS_UPDATE_2_P3_APPLICATION_RE_INITIATED':
+      case 'PROGRESS_UPDATE_2_APPLICATION_CANCELLED':
         return `${itemActionTypePipe.transform(item.type)} by ${item.submitter}`;
 
       default:

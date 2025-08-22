@@ -2,6 +2,7 @@ package gov.uk.esos.keycloak.user.api.service;
 
 import gov.uk.esos.keycloak.user.api.model.UserOtpValidationDTO;
 import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.core.UriInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.credential.CredentialProvider;
 import org.keycloak.credential.OTPCredentialProvider;
@@ -40,6 +41,7 @@ public class UserOtpService {
         OTPCredentialProvider credentialProvider =
             (OTPCredentialProvider) session.getProvider(CredentialProvider.class, "keycloak-otp");
         RealmModel realm = session.getContext().getRealm();
+        UriInfo uriInfo = session.getContext().getUri();
         OTPCredentialModel preferredCredential = credentialProvider.getDefaultCredential(session, realm, user);
         BruteForceProtector protector = session.getProvider(BruteForceProtector.class);
 
@@ -60,14 +62,14 @@ public class UserOtpService {
         if (!otpValid) {
             //Users should be disabled when multiple incorrect 2FA codes are attempted in succession.
             if (realm.isBruteForceProtected() && user != null) {
-                protector.failedLogin(realm, user, session.getContext().getConnection());
+                protector.failedLogin(realm, user, session.getContext().getConnection(), uriInfo);
             }
             throw new BadRequestException("Invalid OTP");
         } else {
             //If a valid 2FA code has subsequently been entered within the allowed incorrect count range,
             //the incorrect 2FA count should be reset to zero
             if (realm.isBruteForceProtected() && user != null) {
-                protector.successfulLogin(realm, user, session.getContext().getConnection());
+                protector.successfulLogin(realm, user, session.getContext().getConnection(), uriInfo);
             }
         }
     }

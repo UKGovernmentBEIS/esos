@@ -126,7 +126,7 @@ class ItemUnassignedControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(pmrvUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(pmrvUser, new RoleType[]{OPERATOR, REGULATOR, VERIFIER});
+            .evaluate(pmrvUser, new RoleType[]{OPERATOR, REGULATOR, VERIFIER}, true);
 
 
         mockMvc.perform(MockMvcRequestBuilders

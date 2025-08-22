@@ -5,7 +5,7 @@ import { RequestTaskStore } from '@common/request-task/+state';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { TASK_FORM } from '@tasks/task-form.token';
 
-import { allCheckedValidator } from '../responsibility-assessment-types/responsibility-assessment-types-form.provider';
+import { allCheckedValidator } from '../confirmation.validators';
 
 export const NoEnergyResponsibilityAssessmentTypesFormProvider: Provider = {
   provide: TASK_FORM,
@@ -15,7 +15,7 @@ export const NoEnergyResponsibilityAssessmentTypesFormProvider: Provider = {
     const noEnergyResponsibilityAssessmentTypes = state()?.noEnergyResponsibilityAssessmentTypes;
 
     return fb.group({
-      noEnergyResponsibilityAssessmentTypes: [noEnergyResponsibilityAssessmentTypes ?? null, allCheckedValidator(3)],
+      noEnergyResponsibilityAssessmentTypes: [noEnergyResponsibilityAssessmentTypes ?? null, allCheckedValidator(4)],
     });
   },
 };

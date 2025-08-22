@@ -8,8 +8,8 @@ import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import { overseasParentDetailsQuestionFormProvider } from '@tasks/notification/subtasks/responsible-undertaking/overseas-parent-details-question/overseas-parent-details-question-form.provider';
 import {
-  CurrentStep,
   RESPONSIBLE_UNDERTAKING_SUB_TASK,
+  ResponsibleUndertakingCurrentStep,
 } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
 import { TASK_FORM } from '@tasks/task-form.token';
 import produce from 'immer';
@@ -48,7 +48,7 @@ export class OverseasParentDetailsQuestionComponent {
   onSubmit() {
     this.service.saveSubtask({
       subtask: RESPONSIBLE_UNDERTAKING_SUB_TASK,
-      currentStep: CurrentStep.HAS_OVERSEAS_PARENT_DETAILS,
+      currentStep: ResponsibleUndertakingCurrentStep.HAS_OVERSEAS_PARENT_DETAILS,
       route: this.route,
       payload: produce(this.service.payload, (payload) => {
         payload.noc.responsibleUndertaking.hasOverseasParentDetails = this.form.controls.hasOverseasParentDetails.value;

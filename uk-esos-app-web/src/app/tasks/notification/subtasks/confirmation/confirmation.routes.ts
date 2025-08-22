@@ -11,19 +11,19 @@ export const CONFIRMATION_ROUTES: Routes = [
     path: '',
     canActivate: [canActivateConfirmationSummary],
     data: { breadcrumb: true },
-    title: 'Confirmation',
+    title: 'Responsible officer confirmation',
     loadComponent: () => import('./summary/summary.component'),
   },
   {
     path: 'responsibility-assessment-types',
     canActivate: [canActivateConfirmation],
-    title: 'Confirmation',
+    title: 'Responsible officer review',
     loadComponent: () => import('./responsibility-assessment-types/responsibility-assessment-types.component'),
   },
   {
     path: 'no-energy-responsibility-assessment-types',
     canActivate: [canActivateConfirmation],
-    title: 'Confirmation',
+    title: 'Responsible officer review',
     loadComponent: () =>
       import('./no-energy-responsibility-assessment-types/no-energy-responsibility-assessment-types.component'),
   },
@@ -31,7 +31,7 @@ export const CONFIRMATION_ROUTES: Routes = [
     path: 'responsible-officer-details',
     resolve: { backlink: confirmationBacklinkResolver(WizardStep.STEP_OFFICER_DETAILS) },
     canActivate: [canActivateConfirmation],
-    title: 'Confirmation',
+    title: 'Details of the responsible officer',
     loadComponent: () => import('./responsible-officer-details/responsible-officer-details.component'),
   },
   {
@@ -40,7 +40,7 @@ export const CONFIRMATION_ROUTES: Routes = [
       backlink: backlinkResolver(WizardStep.STEP_SUMMARY, WizardStep.STEP_OFFICER_DETAILS),
     },
     canActivate: [canActivateConfirmation],
-    title: 'Confirmation',
+    title: 'When did the responsible officer review the ESOS assessment recommendations?',
     loadComponent: () => import('./review-assessment-date/review-assessment-date.component'),
   },
   {
@@ -49,7 +49,7 @@ export const CONFIRMATION_ROUTES: Routes = [
       backlink: backlinkResolver(WizardStep.STEP_SUMMARY, WizardStep.STEP_ASSESSMENT_DATE),
     },
     canActivate: [canActivateConfirmation],
-    title: 'Confirmation',
+    title: 'Second responsible officer review',
     loadComponent: () =>
       import('./second-responsible-officer-energy-types/second-responsible-officer-energy-types.component'),
   },
@@ -59,7 +59,7 @@ export const CONFIRMATION_ROUTES: Routes = [
       backlink: backlinkResolver(WizardStep.STEP_SUMMARY, WizardStep.STEP_SECOND_OFFICER_TYPES),
     },
     canActivate: [canActivateConfirmation],
-    title: 'Confirmation',
+    title: 'Details of the second responsible officer',
     loadComponent: () => import('./second-responsible-officer-details/second-responsible-officer-details.component'),
   },
 ];

@@ -14,6 +14,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +43,7 @@ import java.util.UUID;
 @RequestMapping(path = "/v1.0/task-attachments")
 @Tag(name = "Request task attachments handling")
 @RequiredArgsConstructor
+@Validated
 public class RequestTaskAttachmentController {
 
     private final RequestTaskAttachmentUploadService requestTaskAttachmentUploadService;
@@ -60,7 +62,7 @@ public class RequestTaskAttachmentController {
             @Parameter(hidden = true) AppUser authUser,
             @RequestPart("requestTaskActionDetails") @Valid @Parameter(description = "The request task attachment properties", required = true)
                     RequestTaskAttachmentActionProcessDTO requestTaskAttachmentActionProcessDTO,
-            @RequestPart("attachment") @Valid @NotBlank @Parameter(description = "The request task source file attachment", required = true)
+            @RequestPart("attachment") @Parameter(description = "The request task source file attachment", required = true)
                     MultipartFile file) throws IOException {
         FileDTO attachment = fileDtoMapper.toFileDTO(file);
         RequestTaskActionType requestTaskActionType = requestTaskAttachmentActionProcessDTO.getRequestTaskActionType();

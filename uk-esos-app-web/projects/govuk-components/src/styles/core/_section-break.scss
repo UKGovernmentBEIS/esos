@@ -1,14 +1,7 @@
-@include govuk-exports("govuk/core/section-break") {
-
+@include govuk-exports('govuk/core/section-break') {
   %govuk-section-break {
     margin: 0;
     border: 0;
-
-    // fix double-width section break and forced visible section break
-    // when combined with styles from alphagov/elements
-    @include _govuk-compatibility(govuk_elements) {
-      height: 0;
-    }
   }
 
   .govuk-section-break {
@@ -18,8 +11,8 @@
   // Sizes
 
   %govuk-section-break--xl {
-    @include govuk-responsive-margin(8, "top");
-    @include govuk-responsive-margin(8, "bottom");
+    @include govuk-responsive-margin(8, 'top');
+    @include govuk-responsive-margin(8, 'bottom');
   }
 
   .govuk-section-break--xl {
@@ -27,8 +20,8 @@
   }
 
   %govuk-section-break--l {
-    @include govuk-responsive-margin(6, "top");
-    @include govuk-responsive-margin(6, "bottom");
+    @include govuk-responsive-margin(6, 'top');
+    @include govuk-responsive-margin(6, 'bottom');
   }
 
   .govuk-section-break--l {
@@ -36,8 +29,8 @@
   }
 
   %govuk-section-break--m {
-    @include govuk-responsive-margin(4, "top");
-    @include govuk-responsive-margin(4, "bottom");
+    @include govuk-responsive-margin(4, 'top');
+    @include govuk-responsive-margin(4, 'bottom');
   }
 
   .govuk-section-break--m {
@@ -54,3 +47,5 @@
     @extend %govuk-section-break--visible;
   }
 }
+
+/*# sourceMappingURL=_section-break.scss.map */

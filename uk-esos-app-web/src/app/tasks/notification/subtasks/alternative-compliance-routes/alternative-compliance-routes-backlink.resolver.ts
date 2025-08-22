@@ -20,13 +20,16 @@ export const alternativeComplianceRoutesBacklinkResolver = (currentStepRoute: st
       return WizardStep.SUMMARY;
     } else {
       switch (currentStepRoute) {
+        case WizardStep.ENERGY_CONSUMPTION_REDUCTION:
+          return `../${WizardStep.TOTAL_ENERGY_CONSUMPTION_REDUCTION}`;
+
         case WizardStep.ENERGY_CONSUMPTION_REDUCTION_CATEGORIES:
           return `../${WizardStep.ENERGY_CONSUMPTION_REDUCTION}`;
 
         case WizardStep.ASSETS:
-          return reportingObligationCategory === 'ISO_50001_COVERING_ENERGY_USAGE'
-            ? `../${WizardStep.TOTAL_ENERGY_CONSUMPTION_REDUCTION}`
-            : `../${WizardStep.ENERGY_CONSUMPTION_REDUCTION_CATEGORIES}`;
+          return reportingObligationCategory !== 'ISO_50001_COVERING_ENERGY_USAGE'
+            ? `../${WizardStep.ENERGY_CONSUMPTION_REDUCTION_CATEGORIES}`
+            : `../${WizardStep.TOTAL_ENERGY_CONSUMPTION_REDUCTION}`;
 
         case WizardStep.ISO_50001_CERTIFICATE_DETAILS:
           return `../${WizardStep.ASSETS}`;

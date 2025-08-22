@@ -1,0 +1,69 @@
+<esos-wizard-step
+  [formGroup]="form"
+  [heading]="title()"
+  [caption]="caption"
+  (formSubmit)="onSubmit()"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <div class="govuk-!-width-two-thirds">
+    <p class="govuk-body govuk-!-margin-top-7 govuk-!-margin-bottom-7">
+      Add any measures you have implemented since Progress update 1 was notified, and which were not included in the
+      action plan.
+    </p>
+
+    <div
+      class="govuk-!-margin-bottom-8"
+      formControlName="measureName"
+      govuk-text-input
+      [label]="contentMap.measureName.title"
+      labelSize="medium"
+    ></div>
+
+    <div
+      class="govuk-!-margin-bottom-8"
+      govuk-checkboxes
+      formControlName="measureScheme"
+      [legend]="contentMap.measureScheme.title"
+      legendSize="medium"
+      [hint]="contentMap.measureScheme.subtitle"
+    >
+      @for (option of contentMap.measureScheme.options; track $index) {
+        <govuk-checkbox [value]="option" [label]="option | measureScheme">
+          @if (option === 'OTHER') {
+            <ng-container govukConditionalContent>
+              <div
+                formControlName="otherMeasureSchemeName"
+                govuk-text-input
+                [label]="contentMap.otherMeasureSchemeName.title"
+                labelSize="normal"
+              ></div>
+            </ng-container>
+          }
+        </govuk-checkbox>
+      }
+    </div>
+
+    <esos-fieldset-reduction-energy-consumption
+      formControlName="reductionEnergyConsumption2025To2026"
+      [title]="contentMap.reductionEnergyConsumption2025To2026.title"
+      [subtitle]="contentMap.reductionEnergyConsumption2025To2026.subtitle"
+    />
+    <esos-fieldset-estimation-method-type
+      formControlName="estimationMethodType"
+      [title]="contentMap.estimationMethodType.title"
+      [subtitle]="contentMap.estimationMethodType.subtitle"
+      [options]="contentMap.estimationMethodType.options"
+      [otherMethodLabel]="contentMap.estimationMethodDescription.title"
+    />
+
+    <div
+      formControlName="measureContext"
+      govuk-textarea
+      [label]="contentMap.measureContext.title"
+      labelSize="medium"
+      [maxLength]="10000"
+    ></div>
+  </div>
+</esos-wizard-step>

@@ -10,6 +10,7 @@ import { BasePage, mockClass } from '@testing';
 
 import { MiReportsService } from 'esos-api';
 
+import { MiReportsExportService } from '../core/mi-reports-export.service';
 import { mockCustomMiReportResult } from '../testing/mock-data';
 import { CustomReportComponent } from './custom.component';
 
@@ -19,6 +20,7 @@ describe('CustomComponent', () => {
   let page: Page;
 
   const miReportsService = mockClass(MiReportsService);
+  const miReportsExportService = mockClass(MiReportsExportService);
 
   class Page extends BasePage<CustomReportComponent> {
     set queryValue(value: string) {
@@ -42,7 +44,11 @@ describe('CustomComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SharedModule, PageHeadingComponent],
       declarations: [CustomReportComponent],
-      providers: [{ provide: MiReportsService, useValue: miReportsService }, DestroySubject],
+      providers: [
+        { provide: MiReportsService, useValue: miReportsService },
+        { provide: MiReportsExportService, useValue: miReportsExportService },
+        DestroySubject,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CustomReportComponent);

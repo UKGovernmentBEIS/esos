@@ -3,6 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
+import { complianceRouteCalculationTypeMap } from '@shared/components/summaries/compliance-route-summary-page/compliance-route.map';
 import { SharedModule } from '@shared/shared.module';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
@@ -21,6 +22,8 @@ import { dataEstimatedFormProvider } from './data-estimated-form.provider';
   providers: [dataEstimatedFormProvider],
 })
 export class DataEstimatedComponent {
+  complianceRouteCalculationTypeMap = complianceRouteCalculationTypeMap;
+
   constructor(
     @Inject(TASK_FORM) readonly form: UntypedFormGroup,
     private readonly service: TaskService<NotificationTaskPayload>,
@@ -28,7 +31,7 @@ export class DataEstimatedComponent {
   ) {}
 
   submit() {
-    const areDataEstimated = this.form.value.areDataEstimated;
+    const estimatedCalculationTypes = this.form.value.estimatedCalculationTypes;
 
     this.service.saveSubtask({
       subtask: COMPLIANCE_ROUTE_SUB_TASK,
@@ -37,7 +40,7 @@ export class DataEstimatedComponent {
       payload: produce(this.service.payload, (payload) => {
         payload.noc.complianceRoute = {
           ...payload.noc.complianceRoute,
-          areDataEstimated: areDataEstimated,
+          estimatedCalculationTypes: estimatedCalculationTypes,
         };
       }),
     });

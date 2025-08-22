@@ -24,7 +24,7 @@ public class NocP3ContactPersonsContextValidatorService extends NocP3SectionVali
     }
 
     @Override
-    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories() {
+    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories(NocP3Container nocContainer) {
         return ReportingObligationCategory.getQualifyCategories();
     }
 

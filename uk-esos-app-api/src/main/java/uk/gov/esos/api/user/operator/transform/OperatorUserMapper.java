@@ -13,6 +13,7 @@ import uk.gov.esos.api.common.domain.dto.PhoneNumberDTO;
 import uk.gov.esos.api.user.core.domain.enumeration.AuthenticationStatus;
 import uk.gov.esos.api.user.core.domain.enumeration.KeycloakUserAttributes;
 import uk.gov.esos.api.user.operator.domain.OperatorUserDTO;
+import uk.gov.esos.api.user.operator.domain.OperatorUserInvitationDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -114,4 +115,11 @@ public interface OperatorUserMapper {
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName", source = "lastName")
     UserRepresentation toUserRepresentation(String email, String firstName, String lastName);
+    
+    @Mapping(target = "username", source = "operatorUserInvitation.email")
+    @Mapping(target = "email", source = "operatorUserInvitation.email")
+    @Mapping(target = "firstName", source = "operatorUserInvitation.firstName")
+    @Mapping(target = "lastName", source = "operatorUserInvitation.lastName")
+    @Mapping(target = "enabled", ignore = true)
+    UserRepresentation toUserRepresentation(OperatorUserInvitationDTO operatorUserInvitation);
 }

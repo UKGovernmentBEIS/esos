@@ -1,56 +1,54 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { TaskService } from '@common/forms/services/task.service';
-import { RequestTaskStore } from '@common/request-task/+state';
+import { TaskServiceExtended } from '@common/forms/services/task.service';
 import { NotificationService } from '@tasks/notification/services/notification.service';
-import { MockType } from '@testing';
+import { ActivatedRouteStub, BasePage, MockType } from '@testing';
 
 import { TasksAssignmentService } from 'esos-api';
-import { TasksService } from 'esos-api';
 
 import { SendToRestrictedComponent } from './send-to-restricted.component';
 
 describe('SendToRestrictedComponent', () => {
   let component: SendToRestrictedComponent;
   let fixture: ComponentFixture<SendToRestrictedComponent>;
-  let mockStore: RequestTaskStore;
-  let mockTasksAssignmentService: TasksAssignmentService;
-  let mockTasksService: TasksService;
-  let mockRouter: Router;
-  let mockRoute: ActivatedRoute;
+  let page: Page;
+
+  const activatedRoute = new ActivatedRouteStub();
+
+  const taskService: MockType<NotificationService> = {
+    sendToRestricted: jest.fn().mockImplementation(),
+  };
+
+  const tasksAssignmentService: MockType<TasksAssignmentService> = {
+    getCandidateAssigneesByTaskType: jest.fn().mockReturnValue(
+      of([
+        {
+          id: '7752ee-2321e-321552',
+          firstName: 'Restricted',
+          lastName: 'User',
+        },
+      ]),
+    ),
+  };
+
+  class Page extends BasePage<SendToRestrictedComponent> {
+    set user(value: string) {
+      this.setInputValue('#user', value);
+    }
+    get submitButton() {
+      return this.query<HTMLButtonElement>('button[type="submit"]');
+    }
+  }
 
   beforeEach(async () => {
-    mockStore = {
-      select: jest.fn().mockReturnValue(() => of(1)),
-    } as any;
-    mockTasksAssignmentService = {
-      getCandidateAssigneesByTaskType: jest
-        .fn()
-        .mockReturnValue(of([{ text: 'Restricted User', value: '7752ee-2321e-321552' }])),
-    } as any;
-    mockTasksService = {
-      getTaskItemInfoById: jest.fn().mockReturnValue(of({ requestInfo: { id: 2 } })),
-      processRequestTaskAction: jest.fn().mockReturnValue(of(null)),
-    } as any;
-    mockRouter = {
-      navigate: jest.fn(),
-    } as any;
-    mockRoute = {} as any;
-    const taskService: MockType<NotificationService> = {
-      returnToSubmit: jest.fn().mockImplementation(),
-    };
-
     await TestBed.configureTestingModule({
       providers: [
-        { provide: RequestTaskStore, useValue: mockStore },
-        { provide: TasksAssignmentService, useValue: mockTasksAssignmentService },
-        { provide: TasksService, useValue: mockTasksService },
-        { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockRoute },
-        { provide: TaskService, useValue: taskService },
+        { provide: TasksAssignmentService, useValue: tasksAssignmentService },
+        { provide: TaskServiceExtended, useValue: taskService },
+        { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();
   });
@@ -58,6 +56,7 @@ describe('SendToRestrictedComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SendToRestrictedComponent);
     component = fixture.componentInstance;
+    page = new Page(fixture);
     fixture.detectChanges();
   });
 
@@ -65,13 +64,21 @@ describe('SendToRestrictedComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return the text of the option that matches the value', () => {
-    const options = [
-      { text: 'Restricted User', value: '7752ee-2321e-321552' },
-      { text: 'Restricted User 2', value: '8152ee-2321e-321552' },
-      { text: 'Restricted User 3', value: '9252ee-2321e-321552' },
-    ];
-    expect(component.getTextByValue(options, '8152ee-2321e-321552')).toBe('Restricted User 2');
-    expect(component.getTextByValue(options, '')).toBe('');
+  it('should send to restricted', () => {
+    const taskServiceSpy = jest.spyOn(taskService, 'sendToRestricted');
+
+    page.user = '0: 7752ee-2321e-321552';
+    page.submitButton.click();
+    fixture.detectChanges();
+
+    expect(taskServiceSpy).toHaveBeenCalledWith({
+      subtask: 'sendToRestricted',
+      userId: '7752ee-2321e-321552',
+      data: {
+        participantFullName: 'Restricted User',
+      },
+      currentStep: 'action',
+      route: activatedRoute,
+    });
   });
 });

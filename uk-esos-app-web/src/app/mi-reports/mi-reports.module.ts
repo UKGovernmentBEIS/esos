@@ -5,9 +5,7 @@ import { PageHeadingComponent } from '@shared/page-heading/page-heading.componen
 import { PendingButtonDirective } from '@shared/pending-button.directive';
 import { SharedModule } from '@shared/shared.module';
 
-import { AccountsRegulatorsSiteContactsComponent } from './accounts-regulators-site-contacts/accounts-regulators-site-contacts.component';
 import { AccountsUsersContactsComponent } from './accounts-users-contacts/accounts-users-contacts.component';
-import { CompletedWorkComponent } from './completed-work/completed-work.component';
 import { CustomReportComponent } from './custom/custom.component';
 import { MiReportsComponent } from './mi-reports.component';
 import { MiReportsRoutingModule } from './mi-reports-routing.module';
@@ -16,10 +14,8 @@ import { VerificationBodyStatusPipe } from './pipes/verification-body-status.pip
 
 @NgModule({
   declarations: [
-    AccountsRegulatorsSiteContactsComponent,
     AccountsUsersContactsComponent,
     AuthorityStatusPipe,
-    CompletedWorkComponent,
     CustomReportComponent,
     MiReportsComponent,
     VerificationBodyStatusPipe,

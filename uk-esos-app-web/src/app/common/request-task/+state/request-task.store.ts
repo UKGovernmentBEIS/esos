@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { SignalStore } from '@common/store/signal-store';
+import { SignalStore } from '@common/store';
 import produce from 'immer';
 
 import { ItemDTO, RequestActionInfoDTO, RequestTaskItemDTO, RequestTaskPayload } from 'esos-api';

@@ -6,6 +6,7 @@ import { first, map, switchMap, withLatestFrom } from 'rxjs';
 import { PendingRequestService } from '@core/guards/pending-request.service';
 import { DestroySubject } from '@core/services/destroy-subject.service';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
+import { PendingButtonDirective } from '@shared/pending-button.directive';
 
 import { GovukComponentsModule } from 'govuk-components';
 
@@ -17,7 +18,7 @@ import { WorkflowItemAbstractComponent } from '../../workflow-item-abstract.comp
   selector: 'esos-delete-request-note',
   templateUrl: './delete-request-note.component.html',
   standalone: true,
-  imports: [GovukComponentsModule, PageHeadingComponent, RouterLink],
+  imports: [GovukComponentsModule, PageHeadingComponent, RouterLink, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DestroySubject],
 })

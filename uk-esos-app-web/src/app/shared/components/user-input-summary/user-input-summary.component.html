@@ -1,90 +1,166 @@
 <dl govuk-summary-list>
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>First name</dt>
-    <dd govukSummaryListRowValue>{{ modifiedUserInfo.firstName }}</dd>
+    <dd govukSummaryListRowValue>{{ userInfo.firstName }}</dd>
     <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+      <a
+        govukLink
+        [routerLink]="changeLink"
+        [relativeTo]="route"
+        [queryParams]="changeQueryParams"
+        aria-label="Change first name"
+      >
+        Change
+      </a>
     </dd>
   </div>
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Last name</dt>
-    <dd govukSummaryListRowValue>{{ modifiedUserInfo.lastName }}</dd>
+    <dd govukSummaryListRowValue>{{ userInfo.lastName }}</dd>
     <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+      <a
+        govukLink
+        [routerLink]="changeLink"
+        [relativeTo]="route"
+        [queryParams]="changeQueryParams"
+        aria-label="Change last name"
+      >
+        Change
+      </a>
     </dd>
   </div>
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Job title</dt>
-    <dd govukSummaryListRowValue>{{ modifiedUserInfo.jobTitle }}</dd>
+    <dd govukSummaryListRowValue>{{ userInfo.jobTitle }}</dd>
     <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+      <a
+        govukLink
+        [routerLink]="changeLink"
+        [relativeTo]="route"
+        [queryParams]="changeQueryParams"
+        aria-label="Change job title"
+      >
+        Change
+      </a>
     </dd>
   </div>
-  <div govukSummaryListRow *ngIf="$any(modifiedUserInfo).email">
+  <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Email address</dt>
-    <dd govukSummaryListRowValue>{{ $any(modifiedUserInfo).email }}</dd>
-    <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+    <dd govukSummaryListRowValue>{{ userEmail }}</dd>
+    <dd *ngIf="canChangeEmail && changeLink" govukSummaryListRowActions>
+      <a
+        govukLink
+        [routerLink]="changeLink"
+        [relativeTo]="route"
+        [queryParams]="changeQueryParams"
+        aria-label="Change email address"
+      >
+        Change
+      </a>
     </dd>
   </div>
-  <ng-container *ngIf="modifiedUserInfo.address">
+  <ng-container *ngIf="userInfo.address">
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Address</dt>
       <dd govukSummaryListRowValue>
-        {{
-          modifiedUserInfo.address.line2
-            ? modifiedUserInfo.address.line1 + ', ' + modifiedUserInfo.address.line2
-            : modifiedUserInfo.address.line1
-        }}
+        {{ userInfo.address.line2 ? userInfo.address.line1 + ', ' + userInfo.address.line2 : userInfo.address.line1 }}
       </dd>
       <dd *ngIf="changeLink" govukSummaryListRowActions>
-        <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+        <a
+          govukLink
+          [routerLink]="changeLink"
+          [relativeTo]="route"
+          [queryParams]="changeQueryParams"
+          aria-label="Change address"
+        >
+          Change
+        </a>
       </dd>
     </div>
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Town or city</dt>
       <dd govukSummaryListRowValue>
-        {{ modifiedUserInfo.address.city }}
+        {{ userInfo.address.city }}
       </dd>
       <dd *ngIf="changeLink" govukSummaryListRowActions>
-        <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+        <a
+          govukLink
+          [routerLink]="changeLink"
+          [relativeTo]="route"
+          [queryParams]="changeQueryParams"
+          aria-label="Change town or city"
+        >
+          Change
+        </a>
       </dd>
     </div>
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>County</dt>
       <dd govukSummaryListRowValue>
-        {{ modifiedUserInfo.address.county }}
+        {{ userInfo.address.county }}
       </dd>
       <dd *ngIf="changeLink" govukSummaryListRowActions>
-        <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+        <a
+          govukLink
+          [routerLink]="changeLink"
+          [relativeTo]="route"
+          [queryParams]="changeQueryParams"
+          aria-label="Change county"
+        >
+          Change
+        </a>
       </dd>
     </div>
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Postcode</dt>
       <dd govukSummaryListRowValue>
-        {{ modifiedUserInfo.address.postcode }}
+        {{ userInfo.address.postcode }}
       </dd>
       <dd *ngIf="changeLink" govukSummaryListRowActions>
-        <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+        <a
+          govukLink
+          [routerLink]="changeLink"
+          [relativeTo]="route"
+          [queryParams]="changeQueryParams"
+          aria-label="Change postcode"
+        >
+          Change
+        </a>
       </dd>
     </div>
   </ng-container>
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Phone number 1</dt>
     <dd govukSummaryListRowValue>
-      {{ modifiedUserInfo.phoneNumber.countryCode | phoneNumber }} {{ modifiedUserInfo.phoneNumber.number }}
+      {{ userInfo.phoneNumber.countryCode | phoneNumber }} {{ userInfo.phoneNumber.number }}
     </dd>
     <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+      <a
+        govukLink
+        [routerLink]="changeLink"
+        [relativeTo]="route"
+        [queryParams]="changeQueryParams"
+        aria-label="Change phone number 1"
+      >
+        Change
+      </a>
     </dd>
   </div>
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Phone number 2</dt>
     <dd govukSummaryListRowValue>
-      {{ modifiedUserInfo.mobileNumber?.countryCode | phoneNumber }} {{ modifiedUserInfo.mobileNumber?.number }}
+      {{ userInfo.mobileNumber?.countryCode | phoneNumber }} {{ userInfo.mobileNumber?.number }}
     </dd>
     <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+      <a
+        govukLink
+        [routerLink]="changeLink"
+        [relativeTo]="route"
+        [queryParams]="changeQueryParams"
+        aria-label="Change phone number 2"
+      >
+        Change
+      </a>
     </dd>
   </div>
 </dl>

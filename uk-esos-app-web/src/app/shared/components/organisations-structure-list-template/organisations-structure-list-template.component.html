@@ -1,58 +1,72 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+
 <div class="govuk-!-margin-bottom-5" *ngIf="organisations() as organisations">
   <h2 class="govuk-heading-m">{{ vm.header }}</h2>
 
-  <govuk-table [columns]="tableColumns" [data]="organisations">
-    <ng-template let-column="column" let-row="row" let-index="index">
-      <ng-container [ngSwitch]="column.field">
-        <ng-container *ngSwitchCase="'organisationDetails'">
-          <div class="pre-wrap">
-            {{ row[column.field] }}
-          </div>
-          <div *ngIf="index === 0 && page() === 1"><span class="govuk-caption-m">Responsible undertaking</span></div>
-        </ng-container>
-        <ng-container *ngSwitchCase="'links'">
-          <div *ngIf="vm.isEditable" [ngSwitch]="index" class="cell-container">
-            <ng-container *ngSwitchCase="'0'">
-              <a
-                govukLink
-                [routerLink]="[vm.isListPreviousPage ? '../' : './', vm.wizardStep.RU_DETAILS]"
-                [queryParams]="queryParams"
-              >
-                Change
-              </a>
+  <div class="overflow-auto overflow-auto-table">
+    <govuk-table [columns]="tableColumns" [data]="organisations">
+      <ng-template let-column="column" let-row="row">
+        <ng-container [ngSwitch]="column.field">
+          <ng-container *ngSwitchCase="'organisationDetails'">
+            <esos-more-less-text
+              [text]="row.organisationName"
+              [index]="row.index"
+              widthClass="org-details-width"
+            />
+            <div>{{ row.registrationNumber }}</div>
+            <div *ngIf="row.index === 0"><span class="govuk-caption-m">RU</span></div>
+            <ng-container *ngIf="row?.classificationCodesDetails as codeDetails">
+              <esos-show-activity-codes
+                *ngIf="codeDetails.areSameAsRU || codeDetails.codes?.codes?.length > 0"
+                [organisationName]="row.organisationName"
+                [classificationCodes]="codeDetails.codes"
+                [sameAsRU]="codeDetails.areSameAsRU"
+                [itemIndex]="row.index"
+              />
             </ng-container>
-            <ng-container *ngSwitchDefault formGroupName="contactTypes">
-              <a
-                govukLink
-                [routerLink]="[vm.isListPreviousPage ? '../' : './', index, vm.wizardStep.EDIT]"
-                [queryParams]="queryParams"
-              >
-                Change
-              </a>
-            </ng-container>
-          </div>
-          <br />
-          <a
-            govukLink
-            *ngIf="index !== 0 && vm.isEditable"
-            [routerLink]="[]"
-            (click)="removeOrganisationClicked(index)"
-          >
-            Remove
-          </a>
+          </ng-container>
+          <ng-container *ngSwitchCase="'links'">
+            <div *ngIf="vm.isEditable">
+              <ng-container *ngIf="row.index === 0; else changeLinkAssociated">
+                <a
+                  govukLink
+                  [routerLink]="[vm.isListPreviousPage ? '../' : './', vm.wizardStep.HIGHEST_PARENT]"
+                  [queryParams]="queryParams"
+                >
+                  Change
+                </a>
+              </ng-container>
+              <ng-template #changeLinkAssociated>
+                <a
+                  govukLink
+                  [routerLink]="[vm.isListPreviousPage ? '../' : './', row.index, vm.wizardStep.EDIT]"
+                  [queryParams]="queryParams"
+                >
+                  Change
+                </a>
+              </ng-template>
+            </div>
+            <a
+              class="govuk-link remove-link"
+              *ngIf="row.index !== 0 && vm.isEditable"
+              (click)="removeOrganisationClicked(row.index)"
+            >
+              Remove
+            </a>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            {{ row[column.field] ? '&#10003;' : null }}
+          </ng-container>
         </ng-container>
-        <ng-container *ngSwitchDefault>
-          {{ row[column.field] ? '&#10003;' : null }}
-        </ng-container>
-      </ng-container>
-    </ng-template>
-  </govuk-table>
+      </ng-template>
+    </govuk-table>
+  </div>
 
-  <ng-container *ngIf="organisationsLength > pageSize">
-    <esos-pagination
-      (currentPageChange)="page.set($event)"
-      [count]="organisationsLength"
-      [pageSize]="pageSize"
-    ></esos-pagination>
-  </ng-container>
+  <govuk-pagination
+    *ngIf="allowPagination && organisationsLength() > pageSize"
+    (currentPageChange)="page.set($event)"
+    [count]="organisationsLength()"
+    [pageSize]="pageSize"
+  />
 </div>

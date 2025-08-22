@@ -1,8 +1,8 @@
-@import "../error-message/index";
-@import "../hint/index";
-@import "../label/index";
+@import '../error-message/index';
+@import '../hint/index';
+@import '../label/index';
 
-@include govuk-exports("govuk/component/file-upload") {
+@include govuk-exports('govuk/component/file-upload') {
   $component-padding: govuk-spacing(1);
 
   .govuk-file-upload {
@@ -29,11 +29,6 @@
       // (which changes element size) and since `outline` is already used for the
       // yellow focus state.
       box-shadow: inset 0 0 0 4px $govuk-input-border-colour;
-
-      @include _govuk-if-ie8 {
-        // IE8 doesn't support `box-shadow` so add an actual border
-        border: 4px solid $govuk-input-border-colour;
-      }
     }
 
     // Set "focus-within" to fix https://bugzilla.mozilla.org/show_bug.cgi?id=1430196
@@ -48,8 +43,10 @@
     }
 
     &:disabled {
-      opacity: .5;
+      opacity: 0.5;
       cursor: not-allowed;
     }
   }
 }
+
+/*# sourceMappingURL=_index.scss.map */

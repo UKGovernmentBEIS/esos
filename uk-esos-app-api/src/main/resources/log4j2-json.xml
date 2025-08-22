@@ -3,7 +3,7 @@
     <Appenders>
         <Console name="consoleJSONAppender" target="SYSTEM_OUT">
             <JsonTemplateLayout  eventTemplateUri="classpath:ApplicationLogJsonLayout.json"
-                                 stackTraceEnabled="true">
+                                 stackTraceEnabled="true" maxStringLength="32768">
             </JsonTemplateLayout >
         </Console>
         <Rewrite name="mask">

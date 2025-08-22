@@ -12,4 +12,5 @@ public interface SendEmailService {
      * @param email {@link Email}
      */
     void sendMail(Email email);
+    
 }

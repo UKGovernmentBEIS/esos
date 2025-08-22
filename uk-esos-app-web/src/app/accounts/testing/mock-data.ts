@@ -108,6 +108,9 @@ export const mockedOrganisationAccount: OrganisationAccountDTO = {
   competentAuthority: 'ENGLAND',
   organisationId: 'ORG000001',
   status: 'LIVE',
+  type: 'OTHER',
+  otherTypeName: 'some classification name',
+  codes: ['CodeA', 'CodeB', 'CodeC'],
 };
 
 export const mockedOrganisationAccountPayload: OrganisationAccountPayload = {
@@ -118,6 +121,9 @@ export const mockedOrganisationAccountPayload: OrganisationAccountPayload = {
   county: 'Aberdeenshire',
   postcode: 'Post code',
   competentAuthority: 'ENGLAND',
+  type: 'OTHER',
+  otherTypeName: 'some classification name',
+  codes: ['CodeA', 'CodeB', 'CodeC'],
 };
 
 export const mockWorkflowResults: RequestDetailsSearchResults = {
@@ -175,9 +181,9 @@ export const mockRequestNotesResults: RequestNoteResponse = {
 
 export const mockAccountResults: AccountSearchResults = {
   accounts: [
-    { id: 1, name: 'account1', emitterId: 'EM00001', status: 'LIVE', legalEntityName: 'le1' },
-    { id: 1, name: 'account2', emitterId: 'EM00002', status: 'LIVE', legalEntityName: 'le2' },
-    { id: 1, name: 'account3', emitterId: 'EM00003', status: 'LIVE', legalEntityName: 'le3' },
+    { id: 1, name: 'account1', organisationId: 'EM00001', status: 'LIVE' },
+    { id: 1, name: 'account2', organisationId: 'EM00002', status: 'LIVE' },
+    { id: 1, name: 'account3', organisationId: 'EM00003', status: 'LIVE' },
   ],
   total: 3,
 };

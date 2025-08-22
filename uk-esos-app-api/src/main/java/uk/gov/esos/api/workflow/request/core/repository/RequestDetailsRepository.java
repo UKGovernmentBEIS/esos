@@ -99,4 +99,23 @@ public class RequestDetailsRepository {
 
         return Optional.ofNullable(jpaQuery.fetchFirst());
     }
+
+    public Optional<RequestDetailsDTO> findRequestDetailsByIdAndAccountId(String requestId, long accountId) {
+        QRequest request = QRequest.request;
+
+        JPAQuery<RequestDetailsDTO> query = new JPAQuery<>(entityManager);
+
+        JPAQuery<RequestDetailsDTO> jpaQuery = query.select(
+                        Projections.constructor(RequestDetailsDTO.class,
+                                request.id,
+                                request.type,
+                                request.status,
+                                request.creationDate,
+                                request.metadata))
+                .from(request)
+                .where(request.id.eq(requestId)
+                        .and(request.accountId.eq(accountId)));
+
+        return Optional.ofNullable(jpaQuery.fetchFirst());
+    }
 }

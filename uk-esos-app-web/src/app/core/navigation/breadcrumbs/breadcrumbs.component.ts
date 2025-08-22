@@ -83,7 +83,7 @@ export class BreadcrumbsComponent {
       : typeof breadcrumb === 'function'
       ? breadcrumb(data)
       : typeof breadcrumb === 'boolean'
-      ? data.pageTitle ?? title
+      ? title
       : breadcrumb;
   }
 

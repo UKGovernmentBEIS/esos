@@ -24,6 +24,8 @@ import uk.gov.esos.api.files.documents.service.FileDocumentTemplateTokenService;
 import uk.gov.esos.api.web.constants.SwaggerApiInfo;
 import uk.gov.esos.api.web.controller.exception.ErrorResponse;
 
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping(path = "/v1.0/file-document-templates")
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class FileDocumentTemplateController {
         FileDTO file = fileDocumentTemplateTokenService.getFileDTOByToken(token);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        ContentDisposition.builder("document").filename(file.getFileName()).build().toString())
+                        ContentDisposition.builder("document").filename(file.getFileName(), StandardCharsets.UTF_8).build().toString())
                 .contentType(MediaType.parseMediaType(file.getFileType()))
                 .body(new ByteArrayResource(file.getFileContent()));
     }

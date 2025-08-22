@@ -58,7 +58,7 @@ class CompetentAuthorityServiceTest {
 				.build();
 		CompetentAuthorityDTO caDTO = CompetentAuthorityDTO.builder().id(competentAuthorityEnum).email("email").name("name").build();
 
-		when(competentAuthorityRepository.findById(competentAuthorityEnum)).thenReturn(ca);
+		when(competentAuthorityRepository.findById(competentAuthorityEnum)).thenReturn(Optional.of(ca));
 		when(competentAuthorityMapper.toCompetentAuthorityDTO(ca, accountType)).thenReturn(caDTO);
 
 		CompetentAuthorityDTO result = competentAuthorityService.getCompetentAuthority(competentAuthorityEnum, accountType);

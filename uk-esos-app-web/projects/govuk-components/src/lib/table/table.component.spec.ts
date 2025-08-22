@@ -184,6 +184,29 @@ describe('TableComponent', () => {
     expect(sortButtons[1].parent.attributes['aria-sort']).toBe('ascending');
   });
 
+  it('should set correct aria-label for sort buttons', () => {
+    hostComponent.columns = [
+      { header: 'Name', field: 'name', isSortable: true },
+      { header: 'Age', field: 'age', isSortable: true },
+    ];
+    hostComponent.data = [
+      { name: 'Alice', age: 30, surname: 'Smith' },
+      { name: 'Bob', age: 24, surname: 'Johnson' },
+    ];
+    fixture.detectChanges();
+    const nameSortButton = fixture.debugElement.query(By.css('th[aria-sort] button')).nativeElement;
+    expect(nameSortButton.getAttribute('aria-label')).toContain('Sort by Name');
+
+    nameSortButton.click();
+    fixture.detectChanges();
+    expect(nameSortButton.getAttribute('aria-label')).toContain('Name sorted in ascending order');
+
+    nameSortButton.click();
+    fixture.detectChanges();
+    expect(nameSortButton.getAttribute('aria-label')).toContain('Name sorted in descending order');
+
+  });
+
   it('should display custom template', () => {
     const templateFixture = TestBed.createComponent(TestTemplateComponent);
     templateFixture.componentInstance.data = [{ link: 'Go to', text: 'Something to watch' }];

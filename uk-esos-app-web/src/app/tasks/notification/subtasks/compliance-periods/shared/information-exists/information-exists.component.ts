@@ -6,13 +6,15 @@ import { ActivatedRoute } from '@angular/router';
 import { TaskService } from '@common/forms/services/task.service';
 import { RequestTaskStore } from '@common/request-task/+state';
 import { WIZARD_STEP_HEADINGS } from '@shared/components/summaries';
+import { SkipQuestionPipe } from '@shared/pipes/skip-question.pipe';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import {
   CurrentStep,
+  getCompliancePeriodHint,
   WizardStep,
 } from '@tasks/notification/subtasks/compliance-periods/shared/compliance-period.helper';
-import { informationExistsProvider } from '@tasks/notification/subtasks/compliance-periods/shared/information-exists/information-exists.provider';
+import { informationExistsFormProvider } from '@tasks/notification/subtasks/compliance-periods/shared/information-exists/information-exists-form.provider';
 import { TASK_FORM } from '@tasks/task-form.token';
 import produce from 'immer';
 
@@ -25,13 +27,14 @@ import { COMPLIANCE_PERIOD_SUB_TASK, CompliancePeriod, CompliancePeriodSubtask }
   templateUrl: './information-exists.component.html',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RadioOptionComponent, WizardStepComponent, RadioComponent, NgIf],
-  providers: [informationExistsProvider],
+  imports: [ReactiveFormsModule, RadioOptionComponent, WizardStepComponent, RadioComponent, NgIf, SkipQuestionPipe],
+  providers: [informationExistsFormProvider],
 })
 export class InformationExistsComponent implements OnInit {
   formGroup: UntypedFormGroup;
   isFirstCompliancePeriod: boolean;
   heading: string;
+  hint: string;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -46,6 +49,7 @@ export class InformationExistsComponent implements OnInit {
   ngOnInit(): void {
     this.isFirstCompliancePeriod = this.subtask === CompliancePeriodSubtask.FIRST;
     this.heading = WIZARD_STEP_HEADINGS[WizardStep.INFORMATION_EXISTS](this.isFirstCompliancePeriod);
+    this.hint = getCompliancePeriodHint(this.isFirstCompliancePeriod);
   }
 
   submit(): void {

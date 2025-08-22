@@ -4,7 +4,7 @@ import { CanActivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 import { requestTaskQuery, RequestTaskStore } from '@common/request-task/+state';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 
-import { WizardStep } from './energy-savings-opportunity.helper';
+import { EnergySavingsOpportunitiesWizardStep } from './energy-savings-opportunity.helper';
 import { isWizardCompleted } from './energy-savings-opportunity.wizard';
 
 export const canActivateEnergySavingsOpportunity: CanActivateFn = (route) => {
@@ -16,7 +16,7 @@ export const canActivateEnergySavingsOpportunity: CanActivateFn = (route) => {
 
   return (
     (isEditable && (!isWizardCompleted(energySavingsOpportunities) || change)) ||
-    createUrlTreeFromSnapshot(route, [WizardStep.SUMMARY])
+    createUrlTreeFromSnapshot(route, [EnergySavingsOpportunitiesWizardStep.SUMMARY])
   );
 };
 
@@ -28,6 +28,6 @@ export const canActivateEnergySavingsOpportunitySummary: CanActivateFn = (route)
   return (
     !isEditable ||
     (isEditable && isWizardCompleted(energySavingsOpportunities)) ||
-    createUrlTreeFromSnapshot(route, [WizardStep.STEP1])
+    createUrlTreeFromSnapshot(route, [EnergySavingsOpportunitiesWizardStep.STEP1])
   );
 };

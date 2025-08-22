@@ -5,6 +5,8 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import uk.gov.esos.api.common.domain.ClassificationCodes;
+import uk.gov.esos.api.common.domain.ClassificationType;
 import uk.gov.esos.api.common.domain.dto.CountyAddressDTO;
 import uk.gov.esos.api.common.domain.dto.PhoneNumberDTO;
 import uk.gov.esos.api.reporting.noc.common.domain.NocViolation;
@@ -13,6 +15,7 @@ import uk.gov.esos.api.reporting.noc.phase3.domain.responsibleundertaking.Respon
 import uk.gov.esos.api.reporting.noc.phase3.domain.responsibleundertaking.ReviewOrganisationDetails;
 import uk.gov.esos.api.reporting.noc.phase3.domain.responsibleundertaking.TradingDetails;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,8 +37,13 @@ class NocSectionConstraintValidatorServiceTest {
     void validate_valid() {
         ReviewOrganisationDetails reviewOrganisationDetails = ReviewOrganisationDetails.builder()
             .name("organisationName")
+            .registrationNumberExist(Boolean.TRUE)
             .registrationNumber("registrationNumber")
             .address(CountyAddressDTO.builder().line1("line1").city("city").county("county").postcode("code").build())
+            .codes(ClassificationCodes.builder()
+                    .type(ClassificationType.SIC)
+                    .codes(List.of("code 1"))
+                    .build())
             .build();
         TradingDetails tradingDetails = TradingDetails.builder().exist(Boolean.FALSE).build();
         OrganisationContactDetails organisationContactDetails = OrganisationContactDetails.builder()
@@ -46,6 +54,8 @@ class NocSectionConstraintValidatorServiceTest {
             .organisationDetails(reviewOrganisationDetails)
             .tradingDetails(tradingDetails)
             .organisationContactDetails(organisationContactDetails)
+            .isBehalfOfTrust(Boolean.TRUE)
+            .trustName("Trust name")
             .hasOverseasParentDetails(Boolean.FALSE)
             .build();
 

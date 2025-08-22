@@ -22,7 +22,7 @@ export default class OrganisationStructureComponent {
       ?.organisationDetails;
     const organisationDetailsOriginatedData = this.store.select(
       notificationApplicationTimelineQuery.selectAccountOriginatedData,
-    )().organisationDetails;
+    )()?.organisationDetails;
 
     return {
       data: this.store.select(notificationApplicationTimelineQuery.selectOrganisationStructure)(),

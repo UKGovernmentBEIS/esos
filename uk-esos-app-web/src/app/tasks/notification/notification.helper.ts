@@ -2,7 +2,10 @@ import { PhasesPipe } from '@shared/pipes/phases.pipe';
 
 import { NotificationOfComplianceP3RequestMetadata, RequestTaskDTO } from 'esos-api';
 
-import { ReturnToSubmitTaskButtonsComponent, SubmissionTaskButtonsComponent } from './components';
+import {
+  NotificationReturnToSubmitTaskButtonsComponent,
+  NotificationSubmissionTaskButtonsComponent,
+} from './components';
 
 export const getNotificationHeader = (
   requestTaskType: RequestTaskDTO['type'],
@@ -12,7 +15,7 @@ export const getNotificationHeader = (
 
   switch (requestTaskType) {
     case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT':
-      return 'Submit notification';
+      return `Submit ${phasePipe.transform(metadata.phase)} notification`;
 
     case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT':
       return `Review ${phasePipe.transform(metadata.phase)} notification`;
@@ -22,9 +25,9 @@ export const getNotificationHeader = (
 export const getPreContentComponent = (requestTaskType: RequestTaskDTO['type']) => {
   switch (requestTaskType) {
     case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT':
-      return SubmissionTaskButtonsComponent;
+      return NotificationSubmissionTaskButtonsComponent;
 
     case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT':
-      return ReturnToSubmitTaskButtonsComponent;
+      return NotificationReturnToSubmitTaskButtonsComponent;
   }
 };

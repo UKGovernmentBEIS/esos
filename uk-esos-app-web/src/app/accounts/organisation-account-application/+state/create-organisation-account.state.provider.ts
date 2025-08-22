@@ -29,4 +29,16 @@ export class CreateOrganisationAccountStateProvider implements OrganisationAccou
   get registrationNumber(): string {
     return this.store.state.registrationNumber;
   }
+
+  get type(): OrganisationAccountDTO['type'] {
+    return this.store.state.type;
+  }
+
+  get codes(): OrganisationAccountDTO['codes'] {
+    return this.store.state.codes;
+  }
+
+  get otherTypeName(): OrganisationAccountDTO['otherTypeName'] {
+    return this.store.state.otherTypeName;
+  }
 }

@@ -72,7 +72,7 @@ class NocP3ContactPersonsContextValidatorServiceTest {
 
     @Test
     void getApplicableReportingObligationCategories() {
-        assertThat(contextValidator.getApplicableReportingObligationCategories()).containsExactlyInAnyOrder(
+        assertThat(contextValidator.getApplicableReportingObligationCategories(null)).containsExactlyInAnyOrder(
                 ReportingObligationCategory.ESOS_ENERGY_ASSESSMENTS_95_TO_100,
                 ReportingObligationCategory.ISO_50001_COVERING_ENERGY_USAGE,
                 ReportingObligationCategory.PARTIAL_ENERGY_ASSESSMENTS,

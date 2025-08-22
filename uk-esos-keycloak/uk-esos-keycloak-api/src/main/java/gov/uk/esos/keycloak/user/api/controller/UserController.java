@@ -8,7 +8,6 @@ import gov.uk.esos.keycloak.user.api.model.UserOtpValidationDTO;
 import gov.uk.esos.keycloak.user.api.service.UserDetailsService;
 import gov.uk.esos.keycloak.user.api.service.UserEntityService;
 import gov.uk.esos.keycloak.user.api.service.UserOtpService;
-import org.jboss.resteasy.annotations.cache.NoCache;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -33,7 +32,6 @@ public class UserController {
 
     @POST
     @Path("")
-    @NoCache
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserInfo> getUsers(List<String> userIds,
                                    @QueryParam("includeAttributes") boolean includeAttributes) {
@@ -42,15 +40,13 @@ public class UserController {
     
     @GET
     @Path("/user/details")
-    @NoCache
     @Produces(MediaType.APPLICATION_JSON)
     public UserDetailsDTO getUserDetails(@QueryParam("userId") String userId) {
         return userDetailsService.getUserDetails(userId);
-    }
+    }   
     
     @POST
     @Path("/user/details")
-    @NoCache
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public void saveUserDetails(UserDetailsRequestDTO userDetailsRequestDTO) {
@@ -59,7 +55,6 @@ public class UserController {
     
     @GET
     @Path("/user/signature")
-    @NoCache
     @Produces(MediaType.APPLICATION_JSON)
     public SignatureDTO getUserSignature(@QueryParam("signatureUuid") String signatureUuid) {
         return userDetailsService.getUserSignature(signatureUuid);
@@ -67,7 +62,6 @@ public class UserController {
 
     @POST
     @Path("/otp/validation")
-    @NoCache
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public void validateUserOtp(UserOtpValidationDTO userOtpValidationDTO) {

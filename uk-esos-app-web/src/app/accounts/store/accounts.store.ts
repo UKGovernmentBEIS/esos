@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@core/store/store';
 import { Paging } from '@shared/interfaces';
 
-import { AccountSearchResultsInfoDTO } from 'esos-api';
+import { OrganisationAccountDTO, OrganisationAccountSearchResultsInfoDTO } from 'esos-api';
 
 import { AccountsState, initialState } from './accounts.state';
 
@@ -21,7 +21,7 @@ export class AccountsStore extends Store<AccountsState> {
     this.setState({ ...this.getState(), searchErrorSummaryVisible });
   }
 
-  setAccounts(accounts: AccountSearchResultsInfoDTO[]) {
+  setAccounts(accounts: OrganisationAccountSearchResultsInfoDTO[]) {
     this.setState({ ...this.getState(), accounts });
   }
 
@@ -31,5 +31,9 @@ export class AccountsStore extends Store<AccountsState> {
 
   setPaging(paging: Paging) {
     this.setState({ ...this.getState(), paging });
+  }
+
+  setSelectedAccount(selectedAccount: OrganisationAccountDTO) {
+    this.setState({ ...this.getState(), selectedAccount });
   }
 }

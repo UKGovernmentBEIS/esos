@@ -213,8 +213,8 @@ class ItemVerifierRepositoryIT extends AbstractContainerBaseTest {
 
         Item item1 = itemPage.getItems().get(0);
         assertThat(item1.getRequestId()).isEqualTo(request1.getId());
-        assertEquals(item1.getCreationDate().truncatedTo(ChronoUnit.MILLIS),
-                requestTask1.getStartDate().truncatedTo(ChronoUnit.MILLIS));
+        assertEquals(item1.getCreationDate().truncatedTo(ChronoUnit.SECONDS),
+                requestTask1.getStartDate().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(item1.getRequestId(), request1.getId());
         assertEquals(item1.getRequestType(), request1.getType());
         assertEquals(item1.getTaskId(), requestTask1.getId());

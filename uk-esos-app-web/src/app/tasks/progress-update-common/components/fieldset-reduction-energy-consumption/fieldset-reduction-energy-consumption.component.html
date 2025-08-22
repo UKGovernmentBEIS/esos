@@ -1,0 +1,11 @@
+<div
+  [class.govuk-!-margin-bottom-7]="!hasNestedStyles"
+  [formControlName]="controlName"
+  widthClass="govuk-!-width-one-third"
+  govuk-text-input
+  inputType="number"
+  suffix="kWh"
+  [label]="title"
+  [labelSize]="hasNestedStyles ? 'normal' : 'small'"
+  [hint]="subtitle"
+></div>

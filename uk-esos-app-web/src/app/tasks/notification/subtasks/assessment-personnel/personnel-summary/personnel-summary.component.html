@@ -2,19 +2,30 @@
   <esos-page-heading caption="Assessment personnel">Check your answers</esos-page-heading>
 
   <ng-container *ngIf="vm.data">
-    <h2 class="govuk-heading-m">
-      List the persons who have carried out a significant proportion of site visits and/or gathering the data used for
-      carrying out the energy audit, and/or drafting sections of the ESOS report
-    </h2>
+    <ng-container *ngIf="vm.data.personnel?.length > 0; else noPersonnel">
+      <esos-personnel-list-template
+        [isEditable]="vm.isEditable"
+        [personnel]="vm.data.personnel"
+        [queryParams]="vm.queryParams"
+        [prefix]="vm.prefix"
+      ></esos-personnel-list-template>
+    </ng-container>
 
-    <esos-personnel-list-template
-      [isEditable]="vm.isEditable"
-      [personnel]="vm.data.personnel"
-      [queryParams]="vm.queryParams"
-      [prefix]="vm.prefix"
-    ></esos-personnel-list-template>
+    <ng-template #noPersonnel>
+      <ng-container>
+        <h2 class="govuk-heading-m">Add the assessment personnel (optional)</h2>
+        <dl govuk-summary-list [hasBorders]="true">
+          <div govukSummaryListColumn>
+            <dd govukSummaryListColumnValue>No persons have been added</dd>
+            <dd *ngIf="vm.isEditable" govukSummaryListColumnActions>
+              <a govukLink [routerLink]="['./', wizardStep.STEP_LIST]" [queryParams]="{ change: true }"> Change </a>
+            </dd>
+          </div>
+        </dl>
+      </ng-container>
+    </ng-template>
 
-    <div class="govuk-body" *ngIf="vm.isEditable">
+    <div class="govuk-body" *ngIf="vm.isEditable && vm.data?.personnel?.length > 0">
       <a govukSecondaryButton [routerLink]="wizardStep.STEP_FORM" type="button">Add person</a>
     </div>
   </ng-container>

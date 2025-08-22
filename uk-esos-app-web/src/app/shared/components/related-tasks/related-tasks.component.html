@@ -1,23 +1,28 @@
 <div class="govuk-!-margin-bottom-9">
   <h2 class="govuk-heading-m">{{ heading }}</h2>
-  <hr class="govuk-!-margin-bottom-3" *ngIf="!noBorders" />
-  <div *ngFor="let item of items">
-    <h3 class="govuk-heading-s govuk-!-margin-bottom-1">
-      {{ item.taskType | itemName: item.requestId?.split('-')[1] }}
-    </h3>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <p class="govuk-body float-left" *ngIf="item.daysRemaining !== null && item.daysRemaining !== undefined">
-          Days Remaining: {{ item.daysRemaining | daysRemaining }}
-        </p>
-        <a
-          [routerLink]="item | itemLink: this.router.url.includes('workflows')"
-          [state]="{ isWorkflow: true }"
-          class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0 float-right"
-          >View task</a
-        >
+  @if (!noBorders) {
+    <hr class="govuk-!-margin-bottom-3" />
+  }
+  @for (item of items; track item) {
+    <div class="flex-space-between">
+      <div class="govuk-!-margin-bottom-4">
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">
+          {{ item.taskType | itemName: item.requestId?.split('-')[1] }}
+        </h3>
+        @if (item.daysRemaining !== null && item.daysRemaining !== undefined) {
+          <p class="govuk-body govuk-!-margin-bottom-0">Days Remaining: {{ item.daysRemaining | daysRemaining }}</p>
+        }
       </div>
+      <a
+        [routerLink]="item | itemLink: this.router.url.includes('workflows')"
+        [state]="{ isWorkflow: true }"
+        class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+      >
+        View task
+      </a>
     </div>
-    <hr class="govuk-!-margin-bottom-3" *ngIf="!noBorders" />
-  </div>
+    @if (!noBorders) {
+      <hr class="govuk-!-margin-bottom-3" />
+    }
+  }
 </div>

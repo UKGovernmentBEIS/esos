@@ -3,6 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
+import { SkipQuestionPipe } from '@shared/pipes/skip-question.pipe';
 import { SharedModule } from '@shared/shared.module';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
@@ -15,7 +16,7 @@ import { energyConsumptionProfilingMethodsRecordedFormProvider } from './energy-
 @Component({
   selector: 'esos-energy-consumption-profiling-methods-recorded',
   standalone: true,
-  imports: [SharedModule, WizardStepComponent],
+  imports: [SharedModule, WizardStepComponent, SkipQuestionPipe],
   templateUrl: './energy-consumption-profiling-methods-recorded.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [energyConsumptionProfilingMethodsRecordedFormProvider],

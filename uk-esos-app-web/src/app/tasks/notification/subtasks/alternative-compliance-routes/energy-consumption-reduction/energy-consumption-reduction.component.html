@@ -5,15 +5,31 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <esos-energy-consumption-input></esos-energy-consumption-input>
+  <p class="govuk-body">
+    To the extent that you have obtained the information through your chosen alternative compliance routes, for each
+    organisational purpose, calculate the sum of all the estimates of annual reductions in energy consumption and energy
+    spend which would be achieved as a result of implementing the energy saving measures identified by your alternative
+    compliance routes that most closely relate to the organisational purpose.
+  </p>
+  <p class="govuk-body">
+    Provide as much of the information as you can, ensuring the totals do not exceed those you provided on the previous
+    page.
+  </p>
+
+  <esos-energy-consumption-input-with-cost></esos-energy-consumption-input-with-cost>
 
   <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Total</h2>
-  <p class="govuk-body">{{ totalKWh() }} kWh</p>
+  <h2 class="govuk-heading-m">Total</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-body">{{ totalConsumption() | noDataEntered : 'kWh' }}</div>
+    </div>
 
-  <govuk-details summary="Help me answer this question">
-    <p class="govuk-body">TBD</p>
-  </govuk-details>
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-body">{{ totalCost() | currency : 'GBP' | noDataEnteredForCost }}</div>
+    </div>
+  </div>
 </esos-wizard-step>

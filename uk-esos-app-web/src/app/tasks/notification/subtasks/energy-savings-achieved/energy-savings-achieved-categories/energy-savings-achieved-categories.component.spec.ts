@@ -43,12 +43,8 @@ describe('EnergySavingsAchievedCategoriesComponent', () => {
       return this.getInputValue('#controlsImprovements');
     }
 
-    get shortTermCapitalInvestments() {
-      return this.getInputValue('#shortTermCapitalInvestments');
-    }
-
-    get longTermCapitalInvestments() {
-      return this.getInputValue('#longTermCapitalInvestments');
+    get capitalInvestments() {
+      return this.getInputValue('#capitalInvestments');
     }
 
     get otherMeasures() {
@@ -89,15 +85,14 @@ describe('EnergySavingsAchievedCategoriesComponent', () => {
 
   it('should display heading and all form fields', () => {
     expect(page.heading1.textContent.trim()).toEqual(
-      'What is the breakdown of the energy savings achieved during the compliance period against the following energy saving categories?',
+      'What is the breakdown of the energy savings achieved during the compliance period against the following energy saving categories? (optional)',
     );
 
     expect(page.energyManagementPractices).toBe('0');
     expect(page.behaviourChangeInterventions).toBe('0');
     expect(page.training).toBe('0');
     expect(page.controlsImprovements).toBe('0');
-    expect(page.shortTermCapitalInvestments).toBe('0');
-    expect(page.longTermCapitalInvestments).toBe('0');
+    expect(page.capitalInvestments).toBe('0');
     expect(page.otherMeasures).toBe('0');
   });
 });

@@ -10,9 +10,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestActionPayloadType;
+import uk.gov.esos.api.workflow.request.flow.esos.accountclosure.domain.AccountClosureApplicationRequestActionPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.accountorganisationopening.review.domain.OrganisationAccountOpeningDecisionSubmittedRequestActionPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.accountorganisationopening.submit.domain.OrganisationAccountOpeningApplicationSubmittedRequestActionPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.actionplan.phase3.common.domain.ActionPlanP3ApplicationRequestActionPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.common.domain.NotificationOfComplianceP3ApplicationRequestActionPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.progressupdate1.phase3.common.domain.ProgressUpdate1P3ApplicationRequestActionPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.progressupdate2.phase3.common.domain.ProgressUpdate2P3ApplicationRequestActionPayload;
 import uk.gov.esos.api.workflow.request.flow.payment.domain.PaymentCancelledRequestActionPayload;
 import uk.gov.esos.api.workflow.request.flow.payment.domain.PaymentProcessedRequestActionPayload;
 import uk.gov.esos.api.workflow.request.flow.rde.domain.RdeDecisionForcedRequestActionPayload;
@@ -45,7 +49,13 @@ import java.util.UUID;
                 @DiscriminatorMapping(schema = PaymentProcessedRequestActionPayload.class, value = "PAYMENT_MARKED_AS_PAID_PAYLOAD"),
                 @DiscriminatorMapping(schema = PaymentProcessedRequestActionPayload.class, value = "PAYMENT_MARKED_AS_RECEIVED_PAYLOAD"),
                 @DiscriminatorMapping(schema = PaymentProcessedRequestActionPayload.class, value = "PAYMENT_COMPLETED_PAYLOAD"),
-                @DiscriminatorMapping(schema = PaymentCancelledRequestActionPayload.class, value = "PAYMENT_CANCELLED_PAYLOAD")
+                @DiscriminatorMapping(schema = PaymentCancelledRequestActionPayload.class, value = "PAYMENT_CANCELLED_PAYLOAD"),
+                @DiscriminatorMapping(schema = ActionPlanP3ApplicationRequestActionPayload.class, value = "ACTION_PLAN_P3_APPLICATION_SUBMITTED_PAYLOAD"),
+                @DiscriminatorMapping(schema = AccountClosureApplicationRequestActionPayload.class, value = "ACCOUNT_CLOSURE_APPLICATION_SUBMITTED_PAYLOAD"),
+                @DiscriminatorMapping(schema = ProgressUpdate1P3ApplicationRequestActionPayload.class, value = "PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED_PAYLOAD"),
+                @DiscriminatorMapping(schema = ProgressUpdate2P3ApplicationRequestActionPayload.class, value = "PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED_PAYLOAD"),
+
+
         },
         discriminatorProperty = "payloadType")
 
@@ -70,6 +80,14 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = PaymentProcessedRequestActionPayload.class, name = "PAYMENT_MARKED_AS_RECEIVED_PAYLOAD"),
         @JsonSubTypes.Type(value = PaymentProcessedRequestActionPayload.class, name = "PAYMENT_COMPLETED_PAYLOAD"),
         @JsonSubTypes.Type(value = PaymentCancelledRequestActionPayload.class, name = "PAYMENT_CANCELLED_PAYLOAD"),
+
+        @JsonSubTypes.Type(value = ActionPlanP3ApplicationRequestActionPayload.class, name = "ACTION_PLAN_P3_APPLICATION_SUBMITTED_PAYLOAD"),
+
+        @JsonSubTypes.Type(value = AccountClosureApplicationRequestActionPayload.class, name = "ACCOUNT_CLOSURE_APPLICATION_SUBMITTED_PAYLOAD"),
+        @JsonSubTypes.Type(value = ProgressUpdate1P3ApplicationRequestActionPayload.class, name = "PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED_PAYLOAD"),
+        @JsonSubTypes.Type(value = ProgressUpdate2P3ApplicationRequestActionPayload.class, name = "PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED_PAYLOAD"),
+
+
 })
 @Data
 @SuperBuilder

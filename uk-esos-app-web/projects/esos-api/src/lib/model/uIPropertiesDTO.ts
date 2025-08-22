@@ -12,5 +12,6 @@
 
 export interface UIPropertiesDTO {
   features?: { [key: string]: boolean };
+  expirationTime?: number;
   analytics?: { [key: string]: string };
 }

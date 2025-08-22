@@ -56,6 +56,9 @@ export class OrganisationAccountService {
       city: state.address.city,
       county: state.address.county,
       postcode: state.address.postcode,
+      type: state.type,
+      otherTypeName: state.otherTypeName,
+      codes: state.codes,
     };
   }
 
@@ -70,6 +73,9 @@ export class OrganisationAccountService {
       city: state.address.city,
       county: state.address.county,
       postcode: state.address.postcode,
+      type: state.type,
+      otherTypeName: state.otherTypeName,
+      codes: state.codes,
     };
   }
 }

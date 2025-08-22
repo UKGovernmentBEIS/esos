@@ -3,8 +3,6 @@ package uk.gov.esos.api.user.operator.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import uk.gov.esos.api.account.service.AccountQueryService;
-import uk.gov.esos.api.authorization.AuthorityConstants;
 import uk.gov.esos.api.authorization.core.domain.dto.RoleDTO;
 import uk.gov.esos.api.authorization.core.service.RoleService;
 import uk.gov.esos.api.authorization.operator.domain.NewUserActivated;
@@ -39,7 +37,6 @@ import static uk.gov.esos.api.notification.template.domain.enumeration.Notificat
 public class OperatorUserNotificationGateway {
 
     private final RoleService roleService;
-    private final AccountQueryService accountQueryService;
     private final NotificationEmailService notificationEmailService;
     private final UserNotificationService userNotificationService;
     private final NotificationProperties notificationProperties;
@@ -148,14 +145,8 @@ public class OperatorUserNotificationGateway {
     public void notifyUsersUpdateStatus(List<NewUserActivated> activatedOperators) {
         activatedOperators.forEach(user -> {
             try{
-                if(AuthorityConstants.EMITTER_CONTACT.equals(user.getRoleCode())){
-                    String installationName = accountQueryService.getAccountName(user.getAccountId());
-                    userNotificationService.notifyEmitterContactAccountActivation(user.getUserId(), installationName);
-                }
-                else{
-                	RoleDTO roleDTO = roleService.getRoleByCode(user.getRoleCode());
-                    userNotificationService.notifyUserAccountActivation(user.getUserId(), roleDTO.getName());
-                }
+            	RoleDTO roleDTO = roleService.getRoleByCode(user.getRoleCode());
+                userNotificationService.notifyUserAccountActivation(user.getUserId(), roleDTO.getName());
             } catch (Exception ex){
                 log.error("Exception during sending email for update operator status:", ex);
             }

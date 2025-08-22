@@ -13,7 +13,13 @@ import { RequestMetadata } from './requestMetadata';
 
 export interface RequestDetailsDTO {
   id?: string;
-  requestType?: 'ORGANISATION_ACCOUNT_OPENING' | 'NOTIFICATION_OF_COMPLIANCE_P3';
+  requestType?:
+    | 'ORGANISATION_ACCOUNT_OPENING'
+    | 'NOTIFICATION_OF_COMPLIANCE_P3'
+    | 'ACTION_PLAN_P3'
+    | 'ACCOUNT_CLOSURE'
+    | 'PROGRESS_UPDATE_1_P3'
+    | 'PROGRESS_UPDATE_2_P3';
   requestStatus?:
     | 'IN_PROGRESS'
     | 'COMPLETED'
@@ -22,7 +28,8 @@ export interface RequestDetailsDTO {
     | 'APPROVED'
     | 'REJECTED'
     | 'CLOSED'
-    | 'EXEMPT';
+    | 'EXEMPT'
+    | 'TERMINATED';
   creationDate?: string;
   requestMetadata?: RequestMetadata;
 }

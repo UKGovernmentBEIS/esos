@@ -1,3 +1,4 @@
+import { Permissions } from '@shared/interfaces';
 import { KeycloakProfile } from 'keycloak-js';
 
 import { ApplicationUserDTO, TermsDTO, UserStateDTO } from 'esos-api';
@@ -11,6 +12,7 @@ export interface AuthState {
   userState: UserStateDTO;
   terms: TermsDTO;
   isLoggedIn: boolean;
+  regulatorPermissions: Permissions;
 }
 
 export const initialState: AuthState = {
@@ -19,4 +21,5 @@ export const initialState: AuthState = {
   userState: null,
   terms: null,
   isLoggedIn: null,
+  regulatorPermissions: null,
 };

@@ -142,7 +142,7 @@ class VerificationBodyControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(roleAuthorizationService)
-                .evaluate(user, new RoleType[] {RoleType.REGULATOR});
+                .evaluate(user, new RoleType[] {RoleType.REGULATOR}, true);
 
         mockMvc.perform(MockMvcRequestBuilders.get(CONTROLLER_PATH)
                 .contentType(MediaType.APPLICATION_JSON))

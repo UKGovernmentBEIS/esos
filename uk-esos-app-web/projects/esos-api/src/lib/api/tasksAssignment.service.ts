@@ -243,7 +243,11 @@ export class TasksAssignmentService {
       | 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT'
-      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT',
+      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT'
+      | 'ACTION_PLAN_P3_APPLICATION_SUBMIT'
+      | 'ACCOUNT_CLOSURE_SUBMIT'
+      | 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT'
+      | 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT',
   ): Observable<Array<AssigneeUserInfoDTO>>;
   public getCandidateAssigneesByTaskType(
     taskId: number,
@@ -251,7 +255,11 @@ export class TasksAssignmentService {
       | 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT'
-      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT',
+      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT'
+      | 'ACTION_PLAN_P3_APPLICATION_SUBMIT'
+      | 'ACCOUNT_CLOSURE_SUBMIT'
+      | 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT'
+      | 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT',
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
@@ -262,7 +270,11 @@ export class TasksAssignmentService {
       | 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT'
-      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT',
+      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT'
+      | 'ACTION_PLAN_P3_APPLICATION_SUBMIT'
+      | 'ACCOUNT_CLOSURE_SUBMIT'
+      | 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT'
+      | 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT',
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
@@ -273,7 +285,11 @@ export class TasksAssignmentService {
       | 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT'
-      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT',
+      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT'
+      | 'ACTION_PLAN_P3_APPLICATION_SUBMIT'
+      | 'ACCOUNT_CLOSURE_SUBMIT'
+      | 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT'
+      | 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT',
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
@@ -284,7 +300,11 @@ export class TasksAssignmentService {
       | 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT'
       | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT'
-      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT',
+      | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT'
+      | 'ACTION_PLAN_P3_APPLICATION_SUBMIT'
+      | 'ACCOUNT_CLOSURE_SUBMIT'
+      | 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT'
+      | 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT',
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' },
@@ -322,9 +342,7 @@ export class TasksAssignmentService {
     }
 
     return this.httpClient.get<Array<AssigneeUserInfoDTO>>(
-      `${this.configuration.basePath}/v1.0/tasks-assignment/${encodeURIComponent(
-        String(taskId),
-      )}/candidate-assignees/${encodeURIComponent(String(taskType))}`,
+      `${this.configuration.basePath}/v1.0/tasks-assignment/${encodeURIComponent(String(taskId))}/candidate-assignees/${encodeURIComponent(String(taskType))}`,
       {
         responseType: <any>responseType_,
         withCredentials: this.configuration.withCredentials,

@@ -1,7 +1,7 @@
 import { OrganisationAssociatedWithRU } from 'esos-api';
 
 export const sortOrganisations = (organisations: Array<OrganisationAssociatedWithRU>) => {
-  return (organisations ?? []).sort((a, b) => {
+  return [...(organisations ?? [])].sort((a, b) => {
     const fa = a.organisationName.toLowerCase(),
       fb = b.organisationName.toLowerCase();
 

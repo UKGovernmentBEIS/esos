@@ -1,20 +1,29 @@
 package uk.gov.esos.api.authorization.core.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.persistence.EntityManager;
+
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import uk.gov.esos.api.common.domain.enumeration.RoleType;
+import uk.gov.esos.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.esos.api.AbstractContainerBaseTest;
+import uk.gov.esos.api.authorization.core.domain.Authority;
+import uk.gov.esos.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.esos.api.authorization.core.domain.UserRoleType;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -22,74 +31,90 @@ import uk.gov.esos.api.authorization.core.domain.UserRoleType;
 @DataJpaTest
 @Import(ObjectMapper.class)
 class UserRoleTypeRepositoryIT extends AbstractContainerBaseTest {
-    private static final String USER_OPERATOR_ID = "user_operator_id";
-    private static final String USER_REGULATOR_ID_A = "user_regulator_id_a";
-    private static final String USER_REGULATOR_ID_B = "user_regulator_id_b";
 
     @Autowired
     private UserRoleTypeRepository userRoleTypeRepository;
+    
+    @Autowired
+	private EntityManager entityManager;
 
-    @Sql(statements = {
-        "INSERT INTO au_authority (id, user_id, code, status, account_id, competent_authority, creation_date, created_by) VALUES (1, 'user_operator_id', 'operator_admin', 'ACTIVE', 1, null, NOW(), 'user_operator_id')",
-        "INSERT INTO au_authority (id, user_id, code, status, account_id, competent_authority, creation_date, created_by) VALUES (2, 'user_operator_id', 'operator_user', 'ACTIVE', 2, null, NOW(), 'user_operator_id')"
-    })
+    
     @Test
-    void findById_active_user1() {
-        Optional<UserRoleType> optionalUserRole = userRoleTypeRepository.findById(USER_OPERATOR_ID);
+    void findById_operator_role() {
+    	final String userId = "user_operator_id";
+    	createAuthority(userId, "operator_admin", AuthorityStatus.ACTIVE, 1L, null, null);
+    	createAuthority(userId, "operator_user", AuthorityStatus.ACTIVE, 2L, null, null);
+    	flushAndClear();
+
+    	Optional<UserRoleType> optionalUserRole = userRoleTypeRepository.findById(userId);
 
         assertTrue(optionalUserRole.isPresent());
         assertEquals(RoleType.OPERATOR, optionalUserRole.get().getRoleType());
-        assertEquals(USER_OPERATOR_ID, optionalUserRole.get().getUserId());
+        assertEquals(userId, optionalUserRole.get().getUserId());
     }
 
-    @Sql(statements = {
-        "INSERT INTO au_authority (id, user_id, code, status, account_id, competent_authority, creation_date, created_by) VALUES (3, 'user_regulator_id_a', 'regulator_user', 'ACTIVE', null, 'ENGLAND', NOW(), 'user_regulator_id_a')",
-        "INSERT INTO au_authority (id, user_id, code, status, account_id, competent_authority, creation_date, created_by) VALUES (4, 'user_regulator_id_b', 'regulator_user', 'DISABLED', null, 'WALES', NOW(), 'user_regulator_id_b')"
-    })
     @Test
-    void findById_active_user2() {
-        Optional<UserRoleType> optionalUserRole = userRoleTypeRepository.findById(USER_REGULATOR_ID_A);
+    void findById_verifier_role() {
+    	final String userId = "verifier_user_id";
+    	createAuthority(userId, "verifier_user", AuthorityStatus.ACTIVE, null, null, 1L);
+    	flushAndClear();
+    	
+        Optional<UserRoleType> optionalUserRole = userRoleTypeRepository.findById(userId);
+
+        assertTrue(optionalUserRole.isPresent());
+        assertEquals(RoleType.VERIFIER, optionalUserRole.get().getRoleType());
+        assertEquals(userId, optionalUserRole.get().getUserId());
+    }
+    
+    @Test
+    void findById_regulator_role() {
+    	final String userId = "reulator_user_id";
+    	createAuthority(userId, "regulator_user", AuthorityStatus.ACTIVE, null, CompetentAuthorityEnum.ENGLAND, null);
+    	flushAndClear();
+    	
+        Optional<UserRoleType> optionalUserRole = userRoleTypeRepository.findById(userId);
 
         assertTrue(optionalUserRole.isPresent());
         assertEquals(RoleType.REGULATOR, optionalUserRole.get().getRoleType());
-        assertEquals(USER_REGULATOR_ID_A, optionalUserRole.get().getUserId());
-    }
-
-    @Sql(statements = {
-        "INSERT INTO au_authority (id, user_id, code, status, account_id, competent_authority, creation_date, created_by) VALUES (3, 'user_regulator_id_a', 'regulator_user', 'ACTIVE', null, 'ENGLAND', NOW(), 'user_regulator_id_a')",
-        "INSERT INTO au_authority (id, user_id, code, status, account_id, competent_authority, creation_date, created_by) VALUES (4, 'user_regulator_id_b', 'regulator_user', 'DISABLED', null, 'WALES', NOW(), 'user_regulator_id_b')"
-    })
-    @Test
-    void findById_disabled_user() {
-        Optional<UserRoleType> optionalUserRole = userRoleTypeRepository.findById(USER_REGULATOR_ID_B);
-
-        assertTrue(optionalUserRole.isPresent());
-        assertEquals(RoleType.REGULATOR, optionalUserRole.get().getRoleType());
-        assertEquals(USER_REGULATOR_ID_B, optionalUserRole.get().getUserId());
+        assertEquals(userId, optionalUserRole.get().getUserId());
     }
 
     @Sql(statements = {
         "INSERT INTO au_authority (id, user_id, code, status, account_id, competent_authority, creation_date, created_by) VALUES (3, 'user_regulator_id_a', 'regulator_user', 'PENDING', null, 'ENGLAND', NOW(), 'user_regulator_id_a')",
         "INSERT INTO au_authority (id, user_id, code, status, account_id, competent_authority, creation_date, created_by) VALUES (4, 'user_regulator_id_b', 'regulator_user', 'DISABLED', null, 'WALES', NOW(), 'user_regulator_id_b')"
     })
-    @Test
-    void findById_pending_user() {
-        Optional<UserRoleType> optionalUserRole = userRoleTypeRepository.findById(USER_REGULATOR_ID_A);
+    
+    void findById_throws_exception_when_multiple_roles_exist() {
+    	final String userId = "user_operator_id";
+    	createAuthority(userId, "operator_admin", AuthorityStatus.ACTIVE, 1L, null, null);
+    	createAuthority(userId, "verifier_admin", AuthorityStatus.ACTIVE, null, null, 1L);
+    	flushAndClear();
 
-        assertTrue(optionalUserRole.isEmpty());
+    	Exception e = assertThrows(Exception.class, () -> userRoleTypeRepository.findById(userId));
+    	assertThat(e.getClass()).isEqualTo(JpaSystemException.class);
     }
+    
+    private Authority createAuthority(String userId, String code, AuthorityStatus authorityStatus, 
+			Long accountId, 
+			CompetentAuthorityEnum ca,
+			Long verificationBodyId) {
+		Authority authority = Authority.builder()
+            .userId(userId)
+            .code(code)
+            .status(authorityStatus)
+            .accountId(accountId)
+            .competentAuthority(ca)
+            .verificationBodyId(verificationBodyId)
+            .createdBy(userId)
+            .build();
 
-    @Sql(statements = {
-        "INSERT INTO au_authority (id, user_id, code, status, creation_date, created_by, verification_body_id) VALUES (1, 'verifier_user_id', 'verifier_user', 'ACTIVE', NOW(), 'verifier_user_id', 1)"
-    })
-    @Test
-    void findById_active_user_with_verifier_role() {
-        final String verifierUserId= "verifier_user_id";
-        Optional<UserRoleType> optionalUserRole = userRoleTypeRepository.findById(verifierUserId);
-
-        assertTrue(optionalUserRole.isPresent());
-        assertEquals(RoleType.VERIFIER, optionalUserRole.get().getRoleType());
-        assertEquals(verifierUserId, optionalUserRole.get().getUserId());
-    }
+		entityManager.persist(authority);
+		return authority;
+	}
+	
+	private void flushAndClear() {
+		entityManager.flush();
+		entityManager.clear();
+	}
 
 }

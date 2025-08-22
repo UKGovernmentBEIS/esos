@@ -11,11 +11,13 @@
         [attr.aria-sort]="!column.isSortable ? null : sortedField === column.field ? sortingDirection : 'none'"
         [class.govuk-table__header]="true"
         [class]="column.widthClass"
+        [class.govuk-visually-hidden]="column.isHidden"
         scope="col"
       >
         <ng-container *ngIf="!column.isSortable; else sortableColumnHeader">{{ column.header }}</ng-container>
         <ng-template #sortableColumnHeader>
-          <button (click)="sortBy(column.field)" type="button">{{ column.header }}</button>
+          <button (click)="sortBy(column.field)" type="button" [attr.aria-label]="getAriaLabelForSorting(column)"
+          >{{ column.header }}</button>
         </ng-template>
       </th>
     </tr>

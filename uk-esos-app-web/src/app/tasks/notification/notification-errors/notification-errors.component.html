@@ -1,0 +1,29 @@
+<div *ngIf="notificationErrorService.error() as error">
+  <div
+    #container
+    *ngIf="errorList() as errorList"
+    aria-labelledby="error-summary-title"
+    class="govuk-error-summary"
+    role="alert"
+    tabindex="-1"
+  >
+    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+    <div class="govuk-error-summary__body">
+      <ul class="govuk-list">
+        <li class="subtask-list" *ngFor="let error of errorList">
+          <ul class="govuk-list error-message-list">
+            <li *ngFor="let message of error.data[0]">
+              <div class="govuk-error-message error-message">{{ message }}</div>
+            </li>
+          </ul>
+          @if (error.link && error.subtask) {
+            <a govukLink [routerLink]="[error.link]" [relativeTo]="route" aria-label="Change subtask answers">
+              Change {{ subtaskNameMapper[error.subtask] }} answers
+            </a>
+          }
+        </li>
+      </ul>
+    </div>
+  </div>
+  <esos-notification-submit-action></esos-notification-submit-action>
+</div>

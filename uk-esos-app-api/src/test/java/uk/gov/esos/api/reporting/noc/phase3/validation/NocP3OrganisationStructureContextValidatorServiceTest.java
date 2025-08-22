@@ -33,7 +33,7 @@ class NocP3OrganisationStructureContextValidatorServiceTest {
     @Test
     void validate() {
         final OrganisationStructure organisationStructure = OrganisationStructure.builder()
-            .isPartOfArrangement(Boolean.FALSE)
+            .isHighestParent(Boolean.FALSE)
             .build();
         final NocP3Container nocContainer = NocP3Container.builder()
                 .noc(NocP3.builder().organisationStructure(organisationStructure).build())
@@ -54,7 +54,7 @@ class NocP3OrganisationStructureContextValidatorServiceTest {
     @Test
     void validate_not_valid_for_category() {
         final OrganisationStructure organisationStructure = OrganisationStructure.builder()
-            .isPartOfArrangement(Boolean.FALSE)
+            .isHighestParent(Boolean.TRUE)
             .build();
         final NocP3Container nocContainer = NocP3Container.builder()
                 .noc(NocP3.builder().organisationStructure(organisationStructure).build())
@@ -77,7 +77,7 @@ class NocP3OrganisationStructureContextValidatorServiceTest {
     @Test
     void validate_invalid_section_data() {
         final OrganisationStructure organisationStructure = OrganisationStructure.builder()
-        		.isPartOfArrangement(Boolean.FALSE)
+        		.isHighestParent(Boolean.FALSE)
                 .build();
         final NocP3Container nocContainer = NocP3Container.builder()
                 .noc(NocP3.builder()
@@ -104,7 +104,7 @@ class NocP3OrganisationStructureContextValidatorServiceTest {
 
     @Test
     void getApplicableReportingObligationCategories() {
-        assertThat(contextValidator.getApplicableReportingObligationCategories())
+        assertThat(contextValidator.getApplicableReportingObligationCategories(null))
         	.containsExactlyInAnyOrderElementsOf(ReportingObligationCategory.getQualifyCategories()
         );
     }

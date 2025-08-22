@@ -1,0 +1,47 @@
+<fieldset govukFieldset [id]="identifier">
+  @if (legend) {
+    <legend govukLegend [size]="legendSize">{{ legend }}</legend>
+  }
+  @if (hint) {
+    <p class="govuk-hint">{{ hint }}</p>
+  }
+
+  @if (shouldDisplayErrors) {
+    <govuk-error-message [errors]="control.errors"></govuk-error-message>
+  }
+
+  <div class="year-month-select" [formGroup]="formGroup">
+    <div class="year-month-select__month">
+      <label for="month-select-{{ identifier }}" class="govuk-label">Month</label>
+      <select
+        formControlName="month"
+        id="month-select-{{ identifier }}"
+        [class.govuk-select--error]="shouldDisplayErrors"
+        class="govuk-select"
+        govukFormError
+      >
+        @for (option of monthOptions; track option.value) {
+          <option [ngValue]="option.value">
+            {{ option.text }}
+          </option>
+        }
+      </select>
+    </div>
+    <div class="year-month-select__year">
+      <label for="year-select-{{ identifier }}" class="govuk-label">Year</label>
+      <select
+        formControlName="year"
+        id="year-select-{{ identifier }}"
+        [class.govuk-select--error]="shouldDisplayErrors"
+        class="govuk-select"
+        govukFormError
+      >
+        @for (option of yearOptions; track option.value) {
+          <option [ngValue]="option.value">
+            {{ option.text }}
+          </option>
+        }
+      </select>
+    </div>
+  </div>
+</fieldset>

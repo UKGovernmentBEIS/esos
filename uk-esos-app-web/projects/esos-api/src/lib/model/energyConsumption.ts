@@ -11,9 +11,9 @@
  */
 
 export interface EnergyConsumption {
-  buildings: number;
-  transport: number;
-  industrialProcesses: number;
-  otherProcesses: number;
-  total: number;
+  buildings?: number;
+  transport?: number;
+  industrialProcesses?: number;
+  otherProcesses?: number;
+  total?: number;
 }

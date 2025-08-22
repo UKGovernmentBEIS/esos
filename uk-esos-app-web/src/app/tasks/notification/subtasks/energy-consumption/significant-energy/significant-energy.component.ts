@@ -6,16 +6,16 @@ import { ActivatedRoute } from '@angular/router';
 import { TaskService } from '@common/forms/services/task.service';
 import { RequestTaskStore } from '@common/request-task/+state';
 import {
+  getEnergyConsumptionTotalSum,
   getSignificantPercentage,
-  getTotalSum,
 } from '@shared/components/energy-consumption-input/energy-consumption-input';
 import { EnergyConsumptionInputComponent } from '@shared/components/energy-consumption-input/energy-consumption-input.component';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import {
-  CurrentStep,
   ENERGY_CONSUMPTION_SUB_TASK,
+  EnergyConsumptionCurrentStep,
 } from '@tasks/notification/subtasks/energy-consumption/energy-consumption.helper';
 import { significantEnergyFormProvider } from '@tasks/notification/subtasks/energy-consumption/significant-energy/significant-energy-form.provider';
 import { TASK_FORM } from '@tasks/task-form.token';
@@ -36,7 +36,7 @@ export class SignificantEnergyComponent {
     initialValue: this.form.value,
   });
 
-  total: Signal<number> = computed(() => getTotalSum(this.formData()));
+  total: Signal<number> = computed(() => getEnergyConsumptionTotalSum(this.formData()));
   percentage: Signal<number> = computed(() =>
     getSignificantPercentage(
       this.store.select(notificationQuery.selectEnergyConsumption)().totalEnergyConsumption.total,
@@ -54,7 +54,7 @@ export class SignificantEnergyComponent {
   submit() {
     this.service.saveSubtask({
       subtask: ENERGY_CONSUMPTION_SUB_TASK,
-      currentStep: CurrentStep.SIGNIFICANT_ENERGY,
+      currentStep: EnergyConsumptionCurrentStep.SIGNIFICANT_ENERGY,
       route: this.route,
       payload: produce(this.service.payload, (payload) => {
         payload.noc.energyConsumptionDetails = {

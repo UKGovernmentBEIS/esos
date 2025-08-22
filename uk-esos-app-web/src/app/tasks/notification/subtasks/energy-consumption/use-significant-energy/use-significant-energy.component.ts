@@ -7,8 +7,8 @@ import { SharedModule } from '@shared/shared.module';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import {
-  CurrentStep,
   ENERGY_CONSUMPTION_SUB_TASK,
+  EnergyConsumptionCurrentStep,
 } from '@tasks/notification/subtasks/energy-consumption/energy-consumption.helper';
 import { useSignificantEnergyFormProvider } from '@tasks/notification/subtasks/energy-consumption/use-significant-energy/use-significant-energy-form.provider';
 import { TASK_FORM } from '@tasks/task-form.token';
@@ -32,7 +32,7 @@ export class UseSignificantEnergyComponent {
   submit() {
     this.service.saveSubtask({
       subtask: ENERGY_CONSUMPTION_SUB_TASK,
-      currentStep: CurrentStep.USE_SIGNIFICANT_ENERGY,
+      currentStep: EnergyConsumptionCurrentStep.USE_SIGNIFICANT_ENERGY,
       route: this.route,
       payload: produce(this.service.payload, (payload) => {
         payload.noc.energyConsumptionDetails = {

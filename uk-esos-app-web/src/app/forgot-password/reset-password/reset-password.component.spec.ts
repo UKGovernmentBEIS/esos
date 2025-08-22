@@ -8,6 +8,7 @@ import { of, throwError } from 'rxjs';
 import { PageNotFoundComponent } from '@error/page-not-found/page-not-found.component';
 import { SharedModule } from '@shared/shared.module';
 import { BasePage, mockClass, MockType } from '@testing';
+import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { ForgotPasswordService } from 'esos-api';
 
@@ -65,6 +66,7 @@ describe('ResetPasswordComponent', () => {
       ],
       declarations: [ResetPasswordComponent],
       providers: [
+        provideZxvbnServiceForPSM(),
         ResetPasswordStore,
         { provide: ForgotPasswordService, useValue: forgotPasswordService },
         { provide: PasswordService, useValue: passwordService },

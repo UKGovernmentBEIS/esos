@@ -1,0 +1,10 @@
+<esos-page-heading [caption]="title" size="xl">Check your answers</esos-page-heading>
+
+<esos-action-plan-responsible-officer-confirmation-summary-page [data]="data" [isEditable]="isEditable" />
+
+@if (isEditable && !isSubTaskCompleted) {
+  <button (click)="onSubmit()" esosPendingButton govukButton type="button">Confirm and complete</button>
+}
+<div class="govuk-!-margin-bottom-8">
+  <esos-return-to-task-or-action-page />
+</div>

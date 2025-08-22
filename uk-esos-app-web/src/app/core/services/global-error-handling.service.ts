@@ -2,9 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { EMPTY, first, from, Observable, switchMap, throwError } from 'rxjs';
+import { EMPTY, from, Observable, switchMap, throwError } from 'rxjs';
 
-import { AuthStore } from '@core/store/auth';
 import { HttpStatuses } from '@error/http-status';
 
 import { AuthService } from './auth.service';
@@ -14,7 +13,6 @@ export class GlobalErrorHandlingService implements ErrorHandler {
   excludedUrls = ['.+/account/+\\w+/header-info$'];
 
   constructor(
-    private readonly authStore: AuthStore,
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly ngZone: NgZone,
@@ -40,13 +38,7 @@ export class GlobalErrorHandlingService implements ErrorHandler {
         case HttpStatuses.Unauthorized:
           return from(this.authService.login()).pipe(switchMap(() => EMPTY));
         case HttpStatuses.Forbidden:
-          return this.authService.loadUserState().pipe(
-            first(),
-            switchMap((userState) => {
-              return userState.status === 'DELETED'
-                ? from(this.authService.logout())
-                : from(this.router.navigate(['landing'], { state: { forceNavigation: true } }));
-            }),
+          return from(this.router.navigate(['landing'], { state: { forceNavigation: true } })).pipe(
             switchMap(() => EMPTY),
           );
         default:

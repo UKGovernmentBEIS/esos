@@ -1,9 +1,11 @@
 package uk.gov.esos.api.user.core.service.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
+import lombok.extern.log4j.Log4j2;
+
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -18,12 +20,13 @@ import uk.gov.esos.api.user.core.domain.enumeration.KeycloakUserAttributes;
 import uk.gov.esos.api.user.core.domain.model.UserDetails;
 import uk.gov.esos.api.user.core.domain.model.UserDetailsRequest;
 import uk.gov.esos.api.user.core.domain.model.UserInfo;
-
 import jakarta.ws.rs.core.Response;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static uk.gov.esos.api.user.core.domain.enumeration.AuthenticationStatus.PENDING;
@@ -35,6 +38,7 @@ import static uk.gov.esos.api.user.core.domain.enumeration.KeycloakUserAttribute
  */
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class AuthService {
 
     private final Keycloak keycloakAdminClient;
@@ -62,6 +66,10 @@ public class AuthService {
     public Optional<UserRepresentation> getByUsername(String username) {
         List<UserRepresentation> users = getUsersResource().search(username, true);
         return users.isEmpty() ? Optional.empty() : Optional.ofNullable(users.get(0));
+    }
+    
+    public Optional<UserRepresentation> getByEmail(String email) {
+        return getByUsername(email);
     }
     
     /**
@@ -99,30 +107,33 @@ public class AuthService {
     public void updateUserTerms(String userId, Short newTermsVersion) {
         UserRepresentation userRepresentation = getUserRepresentationById(userId);
         userRepresentation.singleAttribute(KeycloakUserAttributes.TERMS_VERSION.getName(), newTermsVersion.toString());
-        updateUser(userRepresentation);
+        saveUser(userRepresentation);
     }
 
-    /**
-     * Updates the user with the provided UserRepresentation.
-     *
-     * @param userRepresentation {@link UserRepresentation}
-     */
-    public void updateUser(UserRepresentation userRepresentation) {
-    	getUsersResource().get(userRepresentation.getId()).update(userRepresentation);
+    public String saveUser(UserRepresentation userRepresentation) {
+		Optional<UserRepresentation> existingKeycloakUserOpt = getByEmail(userRepresentation.getEmail());
+		
+		if(existingKeycloakUserOpt.isPresent()) {
+			final String userId = existingKeycloakUserOpt.get().getId();
+			final UserResource existingUserResource = getUsersResource().get(userId);
+			final UserRepresentation existingUserRepresentation = existingUserResource.toRepresentation();
+			userRepresentation.setAttributes(mergeUserAttributes(
+					existingUserRepresentation.getAttributes() == null ? new HashMap<>() : existingUserRepresentation.getAttributes(),
+					userRepresentation.getAttributes() == null ? new HashMap<>() : userRepresentation.getAttributes()));
+			existingUserResource.update(userRepresentation);
+        	return userId;
+		} else {
+			try (Response res = getUsersResource().create(userRepresentation)) {
+				if (HttpStatus.valueOf(res.getStatus()) == HttpStatus.CREATED) {
+					return CreatedResponseUtil.getCreatedId(res);
+				} else {
+					throw new BusinessException(ErrorCode.USER_REGISTRATION_FAILED_500);
+				}
+			}
+		}
     }
     
-    /**
-     * Updates the keycloak user identified by {@code userID} with the {@code userRepresentation}
-     * and set the status to {@link AuthenticationStatus#PENDING}.
-     * @param userId the keycloak user id
-     * @param userRepresentation {@link UserRepresentation}
-     */
-    public void updateUserAndSetStatusAsPending(String userId, UserRepresentation userRepresentation) {
-        setUserAsPending(userRepresentation);
-        updateUser(userId, userRepresentation);
-    }
-    
-    public void updateUserDetails(UserDetailsRequest userDetails) throws UserDetailsSaveException {
+    public void saveUserDetails(UserDetailsRequest userDetails) throws UserDetailsSaveException {
         try{
             keycloakCustomClient.saveUserDetails(userDetails);
         } catch (Exception e) {
@@ -130,17 +141,6 @@ public class AuthService {
         }
     }
     
-    public void deleteUser(String userId) {
-        getUsersResource().get(userId).remove();
-    }
-
-    public void disableUser(String userId) {
-        UserRepresentation keycloakUser = getUserRepresentationById(userId);
-        keycloakUser.setEnabled(false);
-        keycloakUser.singleAttribute(KeycloakUserAttributes.USER_STATUS.getName(), AuthenticationStatus.DELETED.name());
-        updateUser(keycloakUser);
-    }
-
     /**
      * Enable PENDING user in keycloak and set REGISTERED status and password.
      *
@@ -161,11 +161,11 @@ public class AuthService {
     }
 
     /**
-     * Registers a user in keycloak db.
+     * Create a user in keycloak db.
      * @param userRepresentation {@link UserRepresentation}
-     * @return the  registered user id
+     * @return the user id
      */
-    public String registerUser(UserRepresentation userRepresentation) {
+    public String createUser(UserRepresentation userRepresentation) {
         try (Response res = getUsersResource().create(userRepresentation)) {
             if (HttpStatus.valueOf(res.getStatus()) == HttpStatus.CREATED) {
                 return CreatedResponseUtil.getCreatedId(res);
@@ -176,13 +176,13 @@ public class AuthService {
     }
 
     /**
-     * Registers a user in keycloak db with status {@link AuthenticationStatus#PENDING}.
+     * Creates a user in keycloak db with status {@link AuthenticationStatus#PENDING}.
      * @param userRepresentation userRepresentation {@link UserRepresentation}
-     * @return the  registered user id
+     * @return the  created user id
      */
-    public String registerUserWithStatusPending(UserRepresentation userRepresentation) {
+    public String createUserWithStatusPending(UserRepresentation userRepresentation) {
         setUserAsPending(userRepresentation);
-        return registerUser(userRepresentation);
+        return createUser(userRepresentation);
     }
 
     public void validateAuthenticatedUserOtp(String otp, String accessToken) {
@@ -199,11 +199,12 @@ public class AuthService {
                 .ifPresent(optCredential -> getUsersResource().get(userId).removeCredential(optCredential.getId()));
     }
     
+    // TODO will be removed
     public void setPasswordForRegisteredUser(UserRepresentation userRepresentation, String password, String otp, String email) {
-        checkUserStatus(userRepresentation, REGISTERED);
+        //checkUserStatus(userRepresentation, REGISTERED);
         validateUnAuthenticatedUserOtp(otp, email);
         setUserPassword(userRepresentation, password);
-        updateUser(userRepresentation);
+        saveUser(userRepresentation);
     }
     
 	public void deleteUserSessions(String userId) {
@@ -211,10 +212,11 @@ public class AuthService {
 		.forEach(session -> deleteSession(session.getId()));		
 	}
 
+	// TODO will be removed
     private UserRepresentation setPasswordAndEnableUserBasedOnExpectedStatus(String userId, String password,
                                                                AuthenticationStatus expectedUserAuthenticationStatus) {
         UserRepresentation userRepresentation = getUserRepresentationById(userId);
-        checkUserStatus(userRepresentation, expectedUserAuthenticationStatus);
+        //checkUserStatus(userRepresentation, expectedUserAuthenticationStatus);
         setUserPassword(userRepresentation, password);
 
         if (PENDING.equals(expectedUserAuthenticationStatus)) {
@@ -223,18 +225,19 @@ public class AuthService {
             setUserAsEnabled(userRepresentation);
         }
 
-        updateUser(userRepresentation);
+        saveUser(userRepresentation);
         return userRepresentation;
     }
 
-    private void checkUserStatus(UserRepresentation userRepresentation, AuthenticationStatus authenticationStatus) {
-        if (!ObjectUtils.isEmpty(userRepresentation.getAttributes())
-            && userRepresentation.getAttributes().containsKey(KeycloakUserAttributes.USER_STATUS.getName())
-            && !userRepresentation.getAttributes().get(KeycloakUserAttributes.USER_STATUS.getName()).get(0)
-            .equals(authenticationStatus.name())) {
-            throw new BusinessException(ErrorCode.USER_INVALID_STATUS);
-        }
-    }
+    // TODO will be removed
+//    private void checkUserStatus(UserRepresentation userRepresentation, AuthenticationStatus authenticationStatus) {
+//        if (!ObjectUtils.isEmpty(userRepresentation.getAttributes())
+//            && userRepresentation.getAttributes().containsKey(KeycloakUserAttributes.USER_STATUS.getName())
+//            && !userRepresentation.getAttributes().get(KeycloakUserAttributes.USER_STATUS.getName()).get(0)
+//            .equals(authenticationStatus.name())) {
+//            throw new BusinessException(ErrorCode.USER_INVALID_STATUS);
+//        }
+//    }
 
     /**
      * Set user's password in keycloak.
@@ -250,7 +253,7 @@ public class AuthService {
     }
 
     private void setUserAsPending(UserRepresentation userRepresentation) {
-        userRepresentation.singleAttribute(USER_STATUS.getName(), PENDING.name());
+        userRepresentation.singleAttribute(USER_STATUS.getName(), AuthenticationStatus.PENDING.name());
         userRepresentation.setEnabled(false);
     }
 
@@ -269,12 +272,15 @@ public class AuthService {
     	return keycloakAdminClient.realm(keycloakProperties.getRealm()).users();
     }
 
-    private void updateUser(String userId, UserRepresentation userRepresentation) {
-        getUsersResource().get(userId).update(userRepresentation);
+    private void deleteSession(String sessionId) {
+    	keycloakAdminClient.realm(keycloakProperties.getRealm()).deleteSession(sessionId, false);
     }
     
-    private void deleteSession(String sessionId) {
-    	keycloakAdminClient.realm(keycloakProperties.getRealm()).deleteSession(sessionId);
-    }
+    private Map<String, List<String>> mergeUserAttributes(Map<String, List<String>> existingAttributes,
+			Map<String, List<String>> updatedAttributes){
+		Map<String, List<String>> mergedAttributes = new HashMap<>(existingAttributes);
+		updatedAttributes.forEach((key, value) -> mergedAttributes.put(key, value));
+		return mergedAttributes;
+	}
 
 }

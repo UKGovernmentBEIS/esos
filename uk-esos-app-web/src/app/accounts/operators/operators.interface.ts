@@ -14,3 +14,5 @@ export interface OperatorRecord {
   authorityStatus: 'ACTIVE' | 'DISABLED' | 'PENDING';
   locked: boolean;
 }
+
+export type ContactType = 'PRIMARY' | 'SECONDARY';

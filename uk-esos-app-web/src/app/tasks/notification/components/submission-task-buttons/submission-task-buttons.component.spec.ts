@@ -5,11 +5,11 @@ import { RequestTaskStore } from '@common/request-task/+state';
 import { mockStateBuild } from '@tasks/notification/testing/mock-data';
 import { ActivatedRouteStub } from '@testing';
 
-import { SubmissionTaskButtonsComponent } from './submission-task-buttons.component';
+import { NotificationSubmissionTaskButtonsComponent } from './submission-task-buttons.component';
 
 describe('SubmissionTaskButtonsComponent', () => {
-  let component: SubmissionTaskButtonsComponent;
-  let fixture: ComponentFixture<SubmissionTaskButtonsComponent>;
+  let component: NotificationSubmissionTaskButtonsComponent;
+  let fixture: ComponentFixture<NotificationSubmissionTaskButtonsComponent>;
   let store: RequestTaskStore;
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('SubmissionTaskButtonsComponent', () => {
     store = TestBed.inject(RequestTaskStore);
     store.setState(mockStateBuild());
 
-    fixture = TestBed.createComponent(SubmissionTaskButtonsComponent);
+    fixture = TestBed.createComponent(NotificationSubmissionTaskButtonsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

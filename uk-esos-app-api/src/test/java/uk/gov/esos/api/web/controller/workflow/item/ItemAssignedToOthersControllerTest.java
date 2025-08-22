@@ -150,7 +150,7 @@ class ItemAssignedToOthersControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(pmrvUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(pmrvUser, new RoleType[]{OPERATOR, REGULATOR, VERIFIER});
+            .evaluate(pmrvUser, new RoleType[]{OPERATOR, REGULATOR, VERIFIER}, true);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get(BASE_PATH + "/" + ASSIGNED_TO_OTHERS_PATH + "?page=0&size=10")

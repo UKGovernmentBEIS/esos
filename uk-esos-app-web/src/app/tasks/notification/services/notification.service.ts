@@ -1,24 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 
-import { SaveConfig, TaskService } from '@common/forms/services/task.service';
+import {
+  SaveConfig,
+  SendToRestrictedConfig,
+  SubmitConfig,
+  TaskServiceExtended,
+} from '@common/forms/services/task.service';
 import { StepFlowManager } from '@common/forms/step-flow';
-import { requestTaskQuery, RequestTaskStore } from '@common/request-task/+state';
 import { TaskItemStatus } from '@tasks/task-item-status';
 
-import { NotificationTaskPayload, SendToRestrictedPayload } from '../notification.types';
-import { NotificationApiService } from './notification-api.service';
+import { NotificationTaskPayload } from '../notification.types';
 
 export type NotificationSaveConfig = SaveConfig<NotificationTaskPayload>;
+export type NotificationSubmitConfig = SubmitConfig<NotificationTaskPayload>;
 
 @Injectable()
-export class NotificationService extends TaskService<NotificationTaskPayload> {
-  private requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
-
-  constructor(private readonly store: RequestTaskStore, protected readonly router: Router) {
-    super();
-  }
-
+export class NotificationService extends TaskServiceExtended<NotificationTaskPayload> {
   saveSubtask(config: NotificationSaveConfig): void {
     const { subtask, payload, currentStep, route, applySideEffects } = config;
 
@@ -43,7 +40,7 @@ export class NotificationService extends TaskService<NotificationTaskPayload> {
     });
   }
 
-  returnToSubmit(config: NotificationSaveConfig) {
+  returnToSubmit(config: NotificationSubmitConfig) {
     const { subtask, currentStep, route } = config;
 
     this.apiService.returnToSubmit().subscribe(() => {
@@ -51,26 +48,12 @@ export class NotificationService extends TaskService<NotificationTaskPayload> {
     });
   }
 
-  sendToRestricted(config: SendToRestrictedPayload) {
-    const { participant, route } = config;
+  sendToRestricted(config: SendToRestrictedConfig) {
+    const { subtask, userId, data, currentStep, route } = config;
 
-    (this.apiService as NotificationApiService)
-      .sendToRestricted({
-        requestTaskActionType: 'NOTIFICATION_OF_COMPLIANCE_P3_SEND_TO_EDIT',
-        requestTaskActionPayload: {
-          payloadType: 'NOTIFICATION_OF_COMPLIANCE_P3_SEND_TO_EDIT_PAYLOAD',
-          supportingOperator: participant.id,
-        },
-        requestTaskId: this.requestTaskId,
-      })
-      .subscribe(() => {
-        this.router.navigate(['success'], {
-          state: {
-            participantFullName: participant.fullName,
-          },
-          relativeTo: route,
-        });
-      });
+    this.apiService
+      .sendToRestricted(userId)
+      .subscribe(() => this.flowManagerForSubtask(subtask)?.nextStep(currentStep, route, data));
   }
 
   submit(config: NotificationSaveConfig): void {

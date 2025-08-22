@@ -10,7 +10,12 @@ import { notificationQuery } from '@tasks/notification/+state/notification.selec
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import { TaskItemStatus } from '@tasks/task-item-status';
 
-import { GovukComponentsModule } from 'govuk-components';
+import {
+  GovukComponentsModule,
+  SummaryListColumnActionsDirective,
+  SummaryListColumnDirective,
+  SummaryListColumnValueDirective,
+} from 'govuk-components';
 
 import { AssessmentPersonnel } from 'esos-api';
 
@@ -32,7 +37,16 @@ interface ViewModel {
   selector: 'esos-personnel-summary',
   templateUrl: './personnel-summary.component.html',
   standalone: true,
-  imports: [GovukComponentsModule, RouterLink, NgIf, PageHeadingComponent, PersonnelListTemplateComponent],
+  imports: [
+    GovukComponentsModule,
+    RouterLink,
+    NgIf,
+    PageHeadingComponent,
+    PersonnelListTemplateComponent,
+    SummaryListColumnDirective,
+    SummaryListColumnValueDirective,
+    SummaryListColumnActionsDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class PersonnelSummaryComponent {

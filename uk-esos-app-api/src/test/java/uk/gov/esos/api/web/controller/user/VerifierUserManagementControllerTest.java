@@ -220,7 +220,7 @@ class VerifierUserManagementControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(roleAuthorizationService)
-                .evaluate(user, new RoleType[] {RoleType.VERIFIER});
+                .evaluate(user, new RoleType[] {RoleType.VERIFIER}, true);
 
         // Invoke
         mockMvc.perform(

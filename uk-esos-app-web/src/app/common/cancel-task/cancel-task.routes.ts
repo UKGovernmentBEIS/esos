@@ -7,11 +7,12 @@ export const ROUTES: Routes = [
   {
     path: '',
     component: CancelComponent,
-    data: { pageTitle: 'Task cancellation' },
+    title: 'Task cancellation',
+    data: { backlink: '../' },
   },
   {
     path: 'confirmation',
     component: ConfirmationComponent,
-    data: { pageTitle: 'Task cancelled' },
+    title: 'Task cancelled',
   },
 ];

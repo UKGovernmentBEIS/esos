@@ -1,0 +1,18 @@
+<esos-wizard-step (formSubmit)="onSubmit()" [formGroup]="form" submitText="Continue">
+  <p class="govuk-body">This account will be permanently closed down. You will not be able to reverse this action.</p>
+  <p class="govuk-body govuk-!-margin-bottom-7">
+    If you need to add any important information about this account please visit the
+    <a govukLink rel="noreferrer noopener" target="_blank" routerLink="/accounts/{{ accountId }}" fragment="notes"
+      >Notes page (opens in new tab)</a
+    >.
+  </p>
+  <div
+    class="govuk-!-margin-bottom-2"
+    formControlName="reason"
+    govuk-textarea
+    label="Reason for closing this account"
+    labelSize="medium"
+    hint="The participant will be able to view this"
+    [maxLength]="10000"
+  ></div>
+</esos-wizard-step>

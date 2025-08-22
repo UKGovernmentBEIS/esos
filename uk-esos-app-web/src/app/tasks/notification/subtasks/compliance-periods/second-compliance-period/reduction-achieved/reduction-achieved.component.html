@@ -1,16 +1,24 @@
 <esos-wizard-step
   [formGroup]="form"
+  caption="Second compliance period"
   [heading]="heading"
   (formSubmit)="submit()"
   [hideSubmit]="false"
   submitText="Save and continue"
   [showBackLink]="true"
+  [showReturnLink]="true"
 >
+  <p class="govuk-hint">{{ hint }}</p>
+
+  <p class="govuk-hint govuk-!-margin-bottom-6">
+    Enter any values that you want to provide. You do not have to fill in all of the fields.
+  </p>
+
   <esos-energy-consumption-input></esos-energy-consumption-input>
 
   <div>
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
     <h2 class="govuk-heading-m">Total</h2>
-    <div class="govuk-body govuk-!-font-size-19">{{ total() }} kWh</div>
+    <div class="govuk-body govuk-!-font-size-19">{{ total() | noDataEntered : 'kWh' }}</div>
   </div>
 </esos-wizard-step>

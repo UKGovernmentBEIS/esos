@@ -8,7 +8,7 @@ import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestCreateAct
 public interface RequestCreateActionHandler<T extends RequestCreateActionPayload> {
 
     @Transactional
-    String process(Long accountId, RequestCreateActionType type, T payload, AppUser pmrvUser);
+    String process(Long accountId, RequestCreateActionType type, T payload, AppUser appUser);
 
     RequestCreateActionType getType();
 }

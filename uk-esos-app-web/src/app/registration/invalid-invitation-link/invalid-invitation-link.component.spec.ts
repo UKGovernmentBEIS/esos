@@ -40,10 +40,23 @@ describe('InvalidInvitationLinkComponent', () => {
     expect(element.querySelector('h1').textContent).toEqual('This link has expired');
   });
 
-  it('should display invalid link message on any non expired code', () => {
-    activatedRoute.setQueryParamMap({ code: 'TOKEN1001' });
+  it('should display expired link message if code is TOKEN1002', () => {
+    activatedRoute.setQueryParamMap({ code: 'TOKEN1002' });
     fixture.detectChanges();
 
     expect(element.querySelector('h1').textContent).toEqual('This link is invalid');
+    expect(element.querySelector('p').textContent.trim()).toEqual(
+      'It seems you are signed in with another account. Make sure you sign out from the other account and try to access the link again.',
+    );
+  });
+
+  it('should display invalid link message on any unhandled code', () => {
+    activatedRoute.setQueryParamMap({ code: 'unhandledTokenCode' });
+    fixture.detectChanges();
+
+    expect(element.querySelector('h1').textContent).toEqual('This link is invalid');
+    expect(element.querySelector('p').textContent.trim()).toEqual(
+      'Contact the ESOS Service Desk for further assistance.',
+    );
   });
 });

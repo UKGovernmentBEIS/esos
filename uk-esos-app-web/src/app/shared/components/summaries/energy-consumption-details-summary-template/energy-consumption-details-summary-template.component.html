@@ -1,7 +1,10 @@
 <dl govuk-summary-list>
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Buildings</dt>
-    <dd govukSummaryListRowValue>{{ energyConsumption.buildings }} kWh</dd>
+    <dd govukSummaryListRowValue>
+      <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+      {{ isValidEnergyConsumption(energyConsumption.buildings) ? energyConsumption.buildings + ' kWh' : '' }}
+    </dd>
     <dd *ngIf="isEditable" govukSummaryListRowActions>
       <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
     </dd>
@@ -9,7 +12,10 @@
 
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Transport</dt>
-    <dd govukSummaryListRowValue>{{ energyConsumption.transport }} kWh</dd>
+    <dd govukSummaryListRowValue>
+      <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+      {{ isValidEnergyConsumption(energyConsumption.transport) ? energyConsumption.transport + ' kWh' : '' }}
+    </dd>
     <dd *ngIf="isEditable" govukSummaryListRowActions>
       <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
     </dd>
@@ -17,15 +23,21 @@
 
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Industrial processes</dt>
-    <dd govukSummaryListRowValue>{{ energyConsumption.industrialProcesses }} kWh</dd>
+    <dd govukSummaryListRowValue>
+      <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+      {{ isValidEnergyConsumption(energyConsumption.industrialProcesses)  ? energyConsumption.industrialProcesses + ' kWh' : '' }}
+    </dd>
     <dd *ngIf="isEditable" govukSummaryListRowActions>
       <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
     </dd>
   </div>
 
   <div govukSummaryListRow>
-    <dt govukSummaryListRowKey>Other processes</dt>
-    <dd govukSummaryListRowValue>{{ energyConsumption.otherProcesses }} kWh</dd>
+    <dt govukSummaryListRowKey>Other energy uses</dt>
+    <dd govukSummaryListRowValue>
+      <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+      {{ isValidEnergyConsumption(energyConsumption.otherProcesses) ? energyConsumption.otherProcesses + ' kWh' : '' }}
+    </dd>
     <dd *ngIf="isEditable" govukSummaryListRowActions>
       <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
     </dd>
@@ -34,7 +46,9 @@
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Total</dt>
     <dd govukSummaryListRowValue>
-      <strong>{{ energyConsumption.total }}</strong> kWh
+      <strong>{{ energyConsumption.total }}</strong>
+      <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+      {{ energyConsumption.total != null ? 'kWh' : '' }}
       <span *ngIf="energyConsumption?.significantEnergyConsumptionPct">
         (<strong>{{ energyConsumption.significantEnergyConsumptionPct }}%</strong> of total energy consumption)
       </span>

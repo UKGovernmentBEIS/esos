@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EnergySavingsOpportunitiesSummaryPageComponent } from '@shared/components/summaries';
+import { energySavingsOpportunityMap } from '@shared/subtask-list-maps/subtask-list-maps';
 import { BasePage } from '@testing';
 
 describe('EnergySavingsOpportunitiesSummaryPageComponent', () => {
@@ -12,13 +13,9 @@ describe('EnergySavingsOpportunitiesSummaryPageComponent', () => {
     get headers() {
       return this.queryAll<HTMLHeadElement>('h2').map((el) => el?.textContent?.trim());
     }
-    get summaryListValues() {
-      return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
-        .map((row) => [
-          ...(Array.from(row.querySelectorAll('dt')) ?? []),
-          ...(Array.from(row.querySelectorAll('dd')) ?? []),
-        ])
-        .map((pair) => pair.map((element) => element?.textContent?.trim()));
+
+    get tableCells() {
+      return this.queryAll('tr > th, tr > td').map((el) => el.textContent.trim());
     }
   }
 
@@ -34,25 +31,29 @@ describe('EnergySavingsOpportunitiesSummaryPageComponent', () => {
       STEP1: 'step-1',
       STEP2: 'step-2',
     };
+
     component.data = {
       energyConsumption: {
-        buildings: 2,
-        transport: 4,
-        industrialProcesses: 9,
-        otherProcesses: 13,
-        total: 28,
+        buildings: { energyConsumption: 2, energyCost: '0.00' },
+        transport: { energyConsumption: 4, energyCost: '2.00' },
+        industrialProcesses: { energyConsumption: 9, energyCost: '4.45' },
+        otherProcesses: { energyConsumption: 13, energyCost: '110.60' },
+        energyConsumptionTotal: 28,
+        energyCostTotal: '117.05',
       },
       energySavingsCategories: {
-        energyManagementPractices: 1,
-        behaviourChangeInterventions: 2,
-        training: 3,
-        controlsImprovements: 4,
-        shortTermCapitalInvestments: 5,
-        longTermCapitalInvestments: 6,
-        otherMeasures: 7,
-        total: 28,
+        energyManagementPractices: { energyConsumption: 1, energyCost: '1.00' },
+        behaviourChangeInterventions: { energyConsumption: 2, energyCost: '2.20' },
+        training: { energyConsumption: 3, energyCost: '3.03' },
+        controlsImprovements: { energyConsumption: 4, energyCost: '4.00' },
+        capitalInvestments: { energyConsumption: 6, energyCost: '4.00' },
+        otherMeasures: { energyConsumption: 7, energyCost: '4.00' },
+        energyConsumptionTotal: 28,
+        energyCostTotal: '6.23',
       },
     };
+
+    component.energySavingsOpportunityMap = energySavingsOpportunityMap;
 
     page = new Page(fixture);
     fixture.detectChanges();
@@ -64,26 +65,69 @@ describe('EnergySavingsOpportunitiesSummaryPageComponent', () => {
 
   it('should display the headers', () => {
     expect(page.headers).toEqual([
-      `What is an estimate of the potential annual reduction in energy consumption in kWh which could be achieved as a result of implementing all energy saving opportunities identified through energy audits?`,
-      `What is an estimate of the potential annual reduction in energy consumption in kWh which could be achieved as a result of implementing all energy saving opportunities against the following energy saving categories identified through energy audits?`,
+      `Total annual reduction in energy consumption and energy spend by organisational purpose`,
+      `Total annual reduction in energy consumption and energy spend by energy saving category`,
     ]);
   });
 
   it('should display the table with added persons', () => {
-    expect(page.summaryListValues).toEqual([
-      ['Buildings', '2 kWh'],
-      ['Transport', '4 kWh'],
-      ['Industrial processes', '9 kWh'],
-      ['Other processes', '13 kWh'],
-      ['Total', '28 kWh'],
-      ['Energy management practices', '1 kWh'],
-      ['Behaviour change interventions', '2 kWh'],
-      ['Training', '3 kWh'],
-      ['Controls improvements', '4 kWh'],
-      ['Short term capital investments (with a payback period of less than 3 years)', '5 kWh'],
-      ['Long term capital investments (with a payback period of less than 3 years)', '6 kWh'],
-      ['Other measures not covered by one of the above', '7 kWh'],
-      ['Total', '28 kWh', ''],
+    expect(page.tableCells).toEqual([
+      '',
+      'kWh',
+      '£',
+      '',
+      'Buildings',
+      '2',
+      '0.00',
+      '',
+      'Transport',
+      '4',
+      '2.00',
+      '',
+      'Industrial processes',
+      '9',
+      '4.45',
+      '',
+      'Other energy uses',
+      '13',
+      '110.60',
+      '',
+      'Total',
+      '28',
+      '117.05',
+      '',
+      '',
+      'kWh',
+      '£',
+      '',
+      'Energy management practices',
+      '1',
+      '1.00',
+      '',
+      'Behaviour change interventions',
+      '2',
+      '2.20',
+      '',
+      'Training',
+      '3',
+      '3.03',
+      '',
+      'Controls improvements',
+      '4',
+      '4.00',
+      '',
+      'Capital investments',
+      '6',
+      '4.00',
+      '',
+      'Other measures not covered by one of the above',
+      '7',
+      '4.00',
+      '',
+      'Total',
+      '28',
+      '6.23',
+      '',
     ]);
   });
 });

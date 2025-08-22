@@ -19,7 +19,13 @@
   label="Town or city"
   widthClass="govuk-!-width-one-third"
 ></div>
-<div govuk-select esosCounties formControlName="county" label="County" widthClass="govuk-!-width-one-third"></div>
+<div
+  govuk-text-input
+  autoComplete="county"
+  formControlName="county"
+  label="County (optional)"
+  widthClass="govuk-!-width-one-third"
+></div>
 <div
   govuk-text-input
   autoComplete="postal-code"

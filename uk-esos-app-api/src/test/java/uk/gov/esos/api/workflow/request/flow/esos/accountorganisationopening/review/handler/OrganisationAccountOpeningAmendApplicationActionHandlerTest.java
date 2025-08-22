@@ -19,6 +19,7 @@ import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestTaskActio
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestTaskPayloadType;
 import uk.gov.esos.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.esos.api.workflow.request.core.service.RequestTaskValidationService;
+import uk.gov.esos.api.workflow.request.flow.esos.accountorganisationopening.review.domain.OrganisationAccountAmendPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.accountorganisationopening.review.domain.OrganisationAccountOpeningAmendApplicationRequestTaskActionPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.accountorganisationopening.review.domain.OrganisationAccountOpeningApplicationRequestTaskPayload;
 
@@ -51,22 +52,21 @@ class OrganisationAccountOpeningAmendApplicationActionHandlerTest {
         RequestTaskActionType requestTaskActionType = RequestTaskActionType.ORGANISATION_ACCOUNT_OPENING_AMEND_APPLICATION;
         AppUser appUser = AppUser.builder().build();
 
-        OrganisationAccountPayload updatedAccount = OrganisationAccountPayload.builder()
+        OrganisationAccountAmendPayload amendAccount = OrganisationAccountAmendPayload.builder()
             .name("updatedName")
-            .competentAuthority(CompetentAuthorityEnum.WALES)
-            .registrationNumber("regNbr")
             .address(CountyAddressDTO.builder().city("city").build())
             .build();
 
         OrganisationAccountOpeningAmendApplicationRequestTaskActionPayload requestTaskActionPayload =
-            OrganisationAccountOpeningAmendApplicationRequestTaskActionPayload.builder().accountPayload(updatedAccount).build();
+            OrganisationAccountOpeningAmendApplicationRequestTaskActionPayload.builder().accountPayload(amendAccount).build();
 
         Long accountId = 101L;
         Request request = Request.builder().accountId(accountId).build();
         OrganisationAccountPayload account = OrganisationAccountPayload.builder()
-            .name("name")
-            .competentAuthority(CompetentAuthorityEnum.WALES)
-            .build();
+                .name("name")
+                .registrationNumber("regNbr")
+                .competentAuthority(CompetentAuthorityEnum.WALES)
+                .build();
         OrganisationParticipantDetails userDetails = OrganisationParticipantDetails.builder()
             .firstName("fname")
             .lastName("lname")
@@ -84,6 +84,13 @@ class OrganisationAccountOpeningAmendApplicationActionHandlerTest {
             .request(request)
             .payload(requestTaskPayload)
             .build();
+
+        final OrganisationAccountPayload updatedAccount = OrganisationAccountPayload.builder()
+                .name("updatedName")
+                .registrationNumber("regNbr")
+                .competentAuthority(CompetentAuthorityEnum.WALES)
+                .address(CountyAddressDTO.builder().city("city").build())
+                .build();
 
         when(requestTaskService.findTaskById(requestTaskId)).thenReturn(requestTask);
 

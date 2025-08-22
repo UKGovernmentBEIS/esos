@@ -62,9 +62,7 @@ describe('LeadAssessorProvideDetailsComponent', () => {
   });
 
   it('should display correct form labels', () => {
-    expect(
-      screen.getByText('Provide details of the Lead Assessor who has reviewed your ESOS notification'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Enter the details of the lead assessor who reviewed the assessment')).toBeInTheDocument();
     expect(screen.getByText('First name')).toBeInTheDocument();
     expect(screen.getByText('Last name')).toBeInTheDocument();
     expect(screen.getByText('Email address')).toBeInTheDocument();

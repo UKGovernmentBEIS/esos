@@ -5,7 +5,12 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
+
+  <p class="govuk-body">Assets includes offshore installations, and activities includes activities that are
+    offshore.</p>
+
   <div *ngIf="isIso50001Enabled" formControlName="iso50001" govuk-textarea label="ISO 50001" [maxLength]="10000"></div>
   <div
     *ngIf="isDecEnabled"

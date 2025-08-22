@@ -136,7 +136,7 @@ class CaSiteContactControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(roleAuthorizationService)
-                .evaluate(user,new RoleType[] {RoleType.REGULATOR});
+                .evaluate(user,new RoleType[] {RoleType.REGULATOR}, true);
 
         mockMvc.perform(MockMvcRequestBuilders.get(CA_SITE_CONTACT_CONTROLLER_PATH + "?page=0&size=2")
                 .contentType(MediaType.APPLICATION_JSON))

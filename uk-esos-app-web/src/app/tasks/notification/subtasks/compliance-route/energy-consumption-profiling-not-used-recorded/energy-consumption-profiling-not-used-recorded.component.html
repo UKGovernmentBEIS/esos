@@ -1,0 +1,21 @@
+<esos-wizard-step
+  (formSubmit)="submit()"
+  [formGroup]="form"
+  heading="Does the evidence pack record the extent to which, and the reasons why, energy consumption profiling was not used in the energy audit and the details of the alternative method of analysis used?"
+  caption="Compliance route"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <div formControlName="isEnergyConsumptionProfilingNotUsedRecorded" govuk-radio>
+    <govuk-radio-option
+      [value]="'YES'"
+      label="I confirm that these are all recorded in our ESOS evidence pack"
+    ></govuk-radio-option>
+    <govuk-radio-option
+      [value]="'NO'"
+      label="I confirm that these are not recorded in our ESOS evidence pack and I recognise that this is not in compliance with the obligations of ESOS"
+    ></govuk-radio-option>
+    <govuk-radio-option [value]="'SKIP_QUESTION'" label="Skip question" [divider]="true"></govuk-radio-option>
+  </div>
+</esos-wizard-step>

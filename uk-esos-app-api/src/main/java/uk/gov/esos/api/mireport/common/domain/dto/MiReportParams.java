@@ -14,6 +14,9 @@ import uk.gov.esos.api.mireport.common.outstandingrequesttasks.OutstandingRegula
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME , include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "reportType", visible = true)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = EmptyMiReportParams.class, name = "LIST_OF_ACCOUNTS_USERS_CONTACTS"),
+    @JsonSubTypes.Type(value = EmptyMiReportParams.class, name = "ACTION_PLAN_SUBMITTED_DATA_P3"),
+    @JsonSubTypes.Type(value = EmptyMiReportParams.class, name = "PROGRESS_UPDATE_1_SUBMITTED_DATA_P3"),
+    @JsonSubTypes.Type(value = EmptyMiReportParams.class, name = "PROGRESS_UPDATE_2_SUBMITTED_DATA_P3"),
     @JsonSubTypes.Type(value = ExecutedRequestActionsMiReportParams.class, name = "COMPLETED_WORK"),
     @JsonSubTypes.Type(value = OutstandingRegulatorRequestTasksMiReportParams.class, name = "REGULATOR_OUTSTANDING_REQUEST_TASKS"),
     @JsonSubTypes.Type(value = EmptyMiReportParams.class, name = "LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS"),

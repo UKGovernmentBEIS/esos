@@ -27,6 +27,10 @@ describe('ExplanationOfChangesToTotalEnergyConsumptionComponent', () => {
   const activatedRoute = new ActivatedRouteStub();
 
   class Page extends BasePage<ExplanationOfChangesToTotalEnergyConsumptionComponent> {
+    get caption() {
+      return this.query<HTMLSpanElement>('span[class^="govuk-caption-"]');
+    }
+
     get heading1(): HTMLHeadingElement {
       return this.query<HTMLHeadingElement>('h1');
     }
@@ -60,12 +64,17 @@ describe('ExplanationOfChangesToTotalEnergyConsumptionComponent', () => {
 
     fixture = TestBed.createComponent(ExplanationOfChangesToTotalEnergyConsumptionComponent);
     component = fixture.componentInstance;
+    component.isFirstCompliancePeriod = true;
     page = new Page(fixture);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display the correct caption based on compliance period', () => {
+    expect(page.caption.textContent.trim()).toEqual('First compliance period');
   });
 
   it('should display heading and the form field', () => {

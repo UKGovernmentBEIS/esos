@@ -1,6 +1,6 @@
-@include govuk-exports("govuk/component/panel") {
+@include govuk-exports('govuk/component/panel') {
   .govuk-panel {
-    @include govuk-font($size: 19);
+    @include govuk-font($size: 36);
 
     box-sizing: border-box;
 
@@ -12,7 +12,7 @@
     text-align: center;
 
     @include govuk-media-query($until: tablet) {
-      padding: govuk-spacing(3) - $govuk-border-width;
+      padding: govuk-spacing(if($govuk-new-typography-scale, 4, 3)) - $govuk-border-width;
 
       // This is an if-all-else-fails attempt to stop long words from overflowing the container
       // on very narrow viewports by forcing them to break and wrap instead. This
@@ -29,8 +29,8 @@
   }
 
   .govuk-panel--confirmation {
-    color: govuk-colour("white");
-    background: govuk-colour("green", $legacy: "turquoise");
+    color: govuk-colour('white');
+    background: govuk-colour('green');
 
     @include govuk-media-query($media-type: print) {
       border-color: currentcolor;
@@ -40,17 +40,15 @@
   }
 
   .govuk-panel__title {
+    @include govuk-font-size($size: 48);
+    @include govuk-typography-weight-bold;
     margin-top: 0;
     margin-bottom: govuk-spacing(6);
-
-    @include govuk-font($size: 48, $weight: bold);
   }
 
   .govuk-panel__title:last-child {
     margin-bottom: 0;
   }
-
-  .govuk-panel__body {
-    @include govuk-font($size: 36);
-  }
 }
+
+/*# sourceMappingURL=_index.scss.map */

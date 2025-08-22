@@ -2,7 +2,6 @@ import { Provider } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 
 import { RequestTaskStore } from '@common/request-task/+state';
-import { totalValueValidatorGreaterThanZero } from '@shared/components/energy-consumption-input/energy-consumption-input.validators';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import {
   COMPLIANCE_PERIOD_SUB_TASK,
@@ -23,18 +22,18 @@ export const potentialReductionFormProvider: Provider = {
         : store.select(notificationQuery.selectSecondCompliancePeriod)();
     const potentialReductionEnergyConsumption = compliancePeriod?.firstCompliancePeriodDetails?.potentialReduction;
     const numberValidators = [
-      GovukValidators.required('Please provide a value of energy in KWh'),
       GovukValidators.min(0, 'Must be integer greater than or equal to 0'),
       GovukValidators.integerNumber('Enter a whole number without decimal places (you can use zero)'),
+      GovukValidators.maxDigitsValidator(15),
     ];
     return fb.group(
       {
-        buildings: [potentialReductionEnergyConsumption?.buildings ?? 0, numberValidators],
-        transport: [potentialReductionEnergyConsumption?.transport ?? 0, numberValidators],
-        industrialProcesses: [potentialReductionEnergyConsumption?.industrialProcesses ?? 0, numberValidators],
-        otherProcesses: [potentialReductionEnergyConsumption?.otherProcesses ?? 0, numberValidators],
+        buildings: [potentialReductionEnergyConsumption?.buildings, numberValidators],
+        transport: [potentialReductionEnergyConsumption?.transport, numberValidators],
+        industrialProcesses: [potentialReductionEnergyConsumption?.industrialProcesses, numberValidators],
+        otherProcesses: [potentialReductionEnergyConsumption?.otherProcesses, numberValidators],
       },
-      { validators: totalValueValidatorGreaterThanZero, updateOn: 'change' },
+      { updateOn: 'change' },
     );
   },
 };

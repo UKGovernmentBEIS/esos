@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 
 import { RequestActionStore } from '@common/request-action/+state';
-import { BasePage } from '@testing';
+import { ActivatedRouteStub, BasePage } from '@testing';
 import EnergyConsumptionComponent from '@timeline/notification/subtasks/energy-consumption/energy-consumption.component';
 import { mockRequestActionState } from '@timeline/notification/testing/mock-data';
 
@@ -10,6 +11,8 @@ describe('EnergyConsumptionComponent', () => {
   let fixture: ComponentFixture<EnergyConsumptionComponent>;
   let store: RequestActionStore;
   let page: Page;
+
+  const route = new ActivatedRouteStub();
 
   class Page extends BasePage<EnergyConsumptionComponent> {
     get summaryListValues() {
@@ -24,7 +27,7 @@ describe('EnergyConsumptionComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RequestActionStore],
+      providers: [RequestActionStore, { provide: ActivatedRoute, useValue: route }],
     });
   });
 
@@ -47,25 +50,15 @@ describe('EnergyConsumptionComponent', () => {
       ['Buildings', '100 kWh'],
       ['Transport', '0 kWh'],
       ['Industrial processes', '50 kWh'],
-      ['Other processes', '0 kWh'],
+      ['Other energy uses', '0 kWh'],
       ['Total', '150 kWh'],
-      ['Yes'],
       ['Buildings', '100 kWh'],
       ['Transport', '0 kWh'],
       ['Industrial processes', '45 kWh'],
-      ['Other processes', '0 kWh'],
+      ['Other energy uses', '0 kWh'],
       ['Total', '145 kWh  (97% of total energy consumption)'],
-      ['Intensity ratio', 'Unit'],
-      ['50', 'kWh/m2'],
       ['Additional Information', 'Buildings additional information'],
-      ['', 'Intensity ratio', 'Unit'],
-      ['Freights', '60', 'kWh/freight miles'],
-      ['Passengers', '70', 'kWh/passenger miles'],
-      ['Intensity ratio', 'Unit'],
-      ['80', 'kWh/tonnes'],
-      ['Intensity ratio', 'Unit'],
-      ['100', 'kWh/litres'],
-      ['Yes Additional info'],
+      ['Additional Information', 'Industrial processes additional information'],
     ]);
   });
 });

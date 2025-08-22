@@ -5,9 +5,23 @@
   caption="Energy savings achieved"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
+  <div class="govuk-body">
+    <p>Include data from:</p>
+    <ul>
+      <li>energy audits</li>
+      <li>alternative compliance routes</li>
+      <li>sources that were not identified through ESOS</li>
+    </ul>
+  </div>
   <div formControlName="energySavingsRecommendationsExist" govuk-radio>
-    <govuk-radio-option [value]="true" label="Yes"> </govuk-radio-option>
-    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+    <govuk-radio-option value="YES" [label]="'YES' | skipQuestion"> </govuk-radio-option>
+    <govuk-radio-option value="NO" [label]="'NO' | skipQuestion"></govuk-radio-option>
+    <govuk-radio-option
+      value="SKIP_QUESTION"
+      [label]="'SKIP_QUESTION' | skipQuestion"
+      [divider]="true"
+    ></govuk-radio-option>
   </div>
 </esos-wizard-step>

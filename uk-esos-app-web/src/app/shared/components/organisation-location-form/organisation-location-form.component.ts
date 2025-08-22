@@ -2,13 +2,13 @@ import { NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 
+import { ORGANISATION_ACCOUNT_FORM } from '@accounts/core/organisation-account-form.token';
 import { organisationWizardCancelLinkPath } from '@shared/constants/cancel-wizard-link-constants';
 import { regulatorSchemeMap } from '@shared/interfaces/regulator-scheme';
 import { originalOrder } from '@shared/keyvalue-order';
 import { SharedModule } from '@shared/shared.module';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 
-import { ORGANISATION_ACCOUNT_FORM } from '../../../accounts/core/organisation-account-form.token';
 import { organisationLocationFormProvider } from './organisation-location-form.provider';
 
 @Component({

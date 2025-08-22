@@ -42,18 +42,13 @@
                 "glob": "**/*",
                 "input": "./dist/govuk-components/assets",
                 "output": "./assets/"
-              },
-              {
-                "glob": "**/*",
-                "input": "./node_modules/@hmcts/frontend/assets",
-                "output": "hmcts-assets/"
               }
             ],
             "styles": ["src/styles.scss", "node_modules/dialog-polyfill/dialog-polyfill.css"],
             "stylePreprocessorOptions": {
-              "includePaths": [ "./dist/govuk-components/styles"]
+              "includePaths": ["./dist/govuk-components/styles"]
             },
-            "scripts": ["node_modules/marked/marked.min.js"],
+            "scripts": [],
             "allowedCommonJsDependencies": [
               "keycloak-js",
               "clean-deep",
@@ -101,10 +96,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "uk-esos-main-web:build:production"
+              "buildTarget": "uk-esos-main-web:build:production"
             },
             "development": {
-              "browserTarget": "uk-esos-main-web:build:development"
+              "buildTarget": "uk-esos-main-web:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -112,7 +107,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "uk-esos-main-web:build"
+            "buildTarget": "uk-esos-main-web:build"
           }
         },
         "test": {
@@ -159,10 +154,7 @@
           "builder": "@angular-builders/jest:run",
           "options": {
             "tsConfig": "projects/govuk-components/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         },
         "lint": {
@@ -204,9 +196,7 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ],
+    "schematicCollections": ["@angular-eslint/schematics"],
     "analytics": false
   }
 }

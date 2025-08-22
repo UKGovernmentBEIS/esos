@@ -63,7 +63,9 @@ describe('LeadAssessorTypeComponent', () => {
 
   it('should display correct form labels', () => {
     expect(
-      screen.getByText('Is the lead assessor internal or external to your organisational group'),
+      screen.getByText(
+        'Is the lead assessor who reviewed your ESOS assessment internal or external to your corporate group?',
+      ),
     ).toBeInTheDocument();
   });
 

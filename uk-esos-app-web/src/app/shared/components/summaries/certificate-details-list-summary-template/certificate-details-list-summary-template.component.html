@@ -1,18 +1,16 @@
-<div class="govuk-!-margin-bottom-9">
-  <govuk-table [columns]="columns" [data]="certificatesDetails">
-    <ng-template let-column="column" let-row="row">
-      <ng-container [ngSwitch]="column.field">
-        <ng-container *ngSwitchCase="'certificateNumber'">{{ row.certificateNumber }}</ng-container>
-        <ng-container *ngSwitchCase="'validFrom'">{{ row.validFrom | govukDate }}</ng-container>
-        <ng-container *ngSwitchCase="'validUntil'">{{ row.validUntil | govukDate }}</ng-container>
-        <ng-container *ngSwitchCase="'change'">
-          <ng-container *ngIf="isEditable">
-            <div class="govuk-!-text-align-right">
-              <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
-            </div>
-          </ng-container>
+<govuk-table [columns]="columns" [data]="certificatesDetails">
+  <ng-template let-column="column" let-row="row">
+    <ng-container [ngSwitch]="column.field">
+      <ng-container *ngSwitchCase="'certificateNumber'">{{ row.certificateNumber }}</ng-container>
+      <ng-container *ngSwitchCase="'validFrom'">{{ row.validFrom | govukDate }}</ng-container>
+      <ng-container *ngSwitchCase="'validUntil'">{{ row.validUntil | govukDate }}</ng-container>
+      <ng-container *ngSwitchCase="'change'">
+        <ng-container *ngIf="isEditable">
+          <div class="govuk-!-text-align-right">
+            <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
+          </div>
         </ng-container>
       </ng-container>
-    </ng-template>
-  </govuk-table>
-</div>
+    </ng-container>
+  </ng-template>
+</govuk-table>

@@ -1,11 +1,21 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="What is the breakdown of an estimate of energy savings achieved during the compliance period, which for the third compliance period is 6 December 2019 to 5 December 2023?"
+  heading="What is the breakdown of an estimate of the energy savings achieved during the third compliance period?"
   caption="Energy savings achieved"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
+  <p class="govuk-hint">
+    The third compliance period lasted from 6 December 2019 to 5 December 2023.
+  </p>
+
+  <p class="govuk-body govuk-!-margin-bottom-6">
+    You must base the estimate only on savings that are specifically attributable to energy efficiency measures
+    implemented during the compliance period, whether or not they were identified through ESOS.
+  </p>
+
   <esos-energy-consumption-input></esos-energy-consumption-input>
 
   <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />

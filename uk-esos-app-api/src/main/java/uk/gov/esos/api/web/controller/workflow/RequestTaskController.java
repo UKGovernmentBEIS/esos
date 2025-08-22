@@ -61,6 +61,7 @@ public class RequestTaskController {
     @ApiResponse(responseCode = "403", description = FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "503", description = SwaggerApiInfo.GET_COMPANY_PROFILE_SERVICE_UNAVAILABLE, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#requestTaskActionProcessDTO.requestTaskId")
     public ResponseEntity<Void> processRequestTaskAction(@Parameter(hidden = true) AppUser pmrvUser,
                                                          @RequestBody @Valid @Parameter(description = "The request task action body", required = true) RequestTaskActionProcessDTO requestTaskActionProcessDTO) {

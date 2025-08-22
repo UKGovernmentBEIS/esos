@@ -1,0 +1,22 @@
+#!/bin/bash
+
+export UUID_REGEX=[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
+export ONE_LOGIN_IDP_ALIAS="govuk-one-login"
+export ROOT_FLOW_ALIAS="OL-First_broker_login"
+export HANDLE_EXISTING_OR_NEW_PROVIDER_ALIAS="ol-handle-existing-or-add-new"
+export CONDITIONAL_SUBFLOW_EXISTING_USER_ALIAS="Conditional_Flow-Existing_User"
+export CONDITIONAL_SUBFLOW_NEW_USER_ALIAS="Conditional_Flow-New_User"
+export EXISTING_USER_CONDITIONAL_PROVIDER="ol-idp-existing-user-conditional"
+export EXISTING_USER_CONDITIONAL_ALIAS_EXISTING="condition-existing-user"
+export EXISTING_USER_CONDITIONAL_ALIAS_NEW="condition-new-user"
+export CONDITIONAL_SUBFLOW_EXISTING_USER_WITHOUT_LOGIN_HINT="Conditional_Flow-Existing_User_Without_Login_Hint"
+export CONDITIONAL_SUBFLOW_EXISTING_USER_WITH_LOGIN_HINT="Conditional_Flow-Existing_User_With_Login_Hint"
+export EXISTING_USER_LOGIN_HINT_CONDITIONAL_PROVIDER="ol-idp-conditional-login-hint"
+export EXISTING_USER_LOGIN_HINT_CONDITIONAL_ALIAS_WITH_LOGIN_HINT="with-login-hint"
+export EXISTING_USER_LOGIN_HINT_CONDITIONAL_ALIAS_NO_LOGIN_HINT="no-login-hint"
+export USERNAME_PASSWORD_FORM_PROVIDER="ol-idp-user-pass-form"
+export PASSWORD_FORM_PROVIDER="ol-idp-password-form"
+export OTP_FORM_PROVIDER="ol-idp-otp-form"
+export NEW_USER_INFO_PROVIDER="ol-new-user-info"
+export VERIFY_NEW_USER_EMAIL_PROVIDER="ol-idp-email-verification"
+export EMAIL_CONFIRMATION_SUCCESS_PROVIDER="ol-idp-email-success"

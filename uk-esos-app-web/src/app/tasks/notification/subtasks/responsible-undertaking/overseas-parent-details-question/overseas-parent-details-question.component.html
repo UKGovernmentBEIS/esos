@@ -5,9 +5,18 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
+  <p class="govuk-body">The ESOS regulations do not extend to parent companies that are based outside the UK</p>
+  
   <div formControlName="hasOverseasParentDetails" govuk-radio>
-    <govuk-radio-option [value]="true" label="Yes, the organisation has a global parent company based outside of the UK"></govuk-radio-option>
-    <govuk-radio-option [value]="false" label="No, the organisation does not have a global parent company that is based outside of the UK"></govuk-radio-option>
+    <govuk-radio-option
+      [value]="true"
+      label="Yes, the organisation has a global parent company based outside of the UK"
+    ></govuk-radio-option>
+    <govuk-radio-option
+      [value]="false"
+      label="No, the organisation does not have a global parent company that is based outside of the UK"
+    ></govuk-radio-option>
   </div>
 </esos-wizard-step>

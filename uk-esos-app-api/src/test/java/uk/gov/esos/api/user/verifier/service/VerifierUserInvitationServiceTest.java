@@ -67,7 +67,7 @@ class VerifierUserInvitationServiceTest {
 
         String authorityUuid = "uuid";
 
-        when(verifierUserAuthService.registerInvitedVerifierUser(verifierUserInvitation)).thenReturn(invitedUserId);
+        when(verifierUserAuthService.saveInvitedUser(verifierUserInvitation)).thenReturn(invitedUserId);
         when(verifierAuthorityService.createPendingAuthority(vbId, verifierUserInvitation.getRoleCode(), invitedUserId, pmrvUser))
             .thenReturn(authorityUuid);
 
@@ -75,7 +75,7 @@ class VerifierUserInvitationServiceTest {
         verifierUserInvitationService.inviteVerifierUser(pmrvUser, verifierUserInvitation);
 
         //verify
-        verify(verifierUserAuthService, times(1)).registerInvitedVerifierUser(verifierUserInvitation);
+        verify(verifierUserAuthService, times(1)).saveInvitedUser(verifierUserInvitation);
         verify(verifierAuthorityService, times(1))
             .createPendingAuthority(vbId, verifierUserInvitation.getRoleCode(), invitedUserId, pmrvUser);
         verify(verifierUserNotificationGateway, times(1))
@@ -98,7 +98,7 @@ class VerifierUserInvitationServiceTest {
         String authorityUuid = "uuid";
         
         when(verificationBodyQueryService.existsNonDisabledVerificationBodyById(verificationBodyId)).thenReturn(true);
-        when(verifierUserAuthService.registerInvitedVerifierUser(verifierUserInvitation)).thenReturn(invitedUserId);
+        when(verifierUserAuthService.saveInvitedUser(verifierUserInvitation)).thenReturn(invitedUserId);
         when(verifierAuthorityService
             .createPendingAuthority(verificationBodyId, verifierUserInvitation.getRoleCode(), invitedUserId, pmrvUser))
             .thenReturn(authorityUuid);
@@ -107,7 +107,7 @@ class VerifierUserInvitationServiceTest {
 
         // verify
         verify(verificationBodyQueryService, times(1)).existsNonDisabledVerificationBodyById(verificationBodyId);
-        verify(verifierUserAuthService, times(1)).registerInvitedVerifierUser(verifierUserInvitation);
+        verify(verifierUserAuthService, times(1)).saveInvitedUser(verifierUserInvitation);
         verify(verifierAuthorityService, times(1))
             .createPendingAuthority(verificationBodyId, verifierUserInvitation.getRoleCode(), invitedUserId, pmrvUser);
         verify(verifierUserNotificationGateway, times(1))
@@ -133,7 +133,7 @@ class VerifierUserInvitationServiceTest {
         // Verify
         assertEquals(ErrorCode.RESOURCE_NOT_FOUND, businessException.getErrorCode());
         verify(verificationBodyQueryService, times(1)).existsNonDisabledVerificationBodyById(verificationBodyId);
-        verify(verifierUserAuthService, never()).registerInvitedVerifierUser(any());
+        verify(verifierUserAuthService, never()).saveInvitedUser(any());
         verify(verifierAuthorityService, never()).createPendingAuthority(anyLong(), anyString(), anyString(), any());
         verify(verifierUserNotificationGateway, never()).notifyInvitedUser(any(), any());
     }

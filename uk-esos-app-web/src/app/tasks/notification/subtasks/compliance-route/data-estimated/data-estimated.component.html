@@ -1,21 +1,47 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="Was the total energy consumption or spend calculated using any estimated data?"
+  heading="Did you use any estimates in relation to the following calculations (as applicable)?"
   caption="Compliance route"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <p class="govuk-body">
-    For example, your organisation's energy consumption or spend may have been calculated without 12 months of actual
-    data.
-  </p>
-  <p class="govuk-body">
-    If you did not have 12 months of actual data, you must tell us if you estimated the data instead.
-  </p>
+  <p class="govuk-hint">Select the calculations for which you used estimates</p>
 
-  <div formControlName="areDataEstimated" govuk-radio>
-    <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>
-    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+  <div govuk-checkboxes formControlName="estimatedCalculationTypes">
+    <govuk-checkbox
+      [value]="'TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'"
+      [label]="complianceRouteCalculationTypeMap['TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION']"
+    >
+    </govuk-checkbox>
+    <govuk-checkbox
+      [value]="'CONVERSION_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'"
+      [label]="complianceRouteCalculationTypeMap['CONVERSION_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION']"
+    >
+    </govuk-checkbox>
+    <govuk-checkbox
+      [value]="'AMOUNT_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'"
+      [label]="complianceRouteCalculationTypeMap['AMOUNT_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION']"
+    >
+    </govuk-checkbox>
+    <govuk-checkbox
+      [value]="'ENERGY_CONSUMPTION_OVER_TWELVE_MONTHS'"
+      [label]="complianceRouteCalculationTypeMap['ENERGY_CONSUMPTION_OVER_TWELVE_MONTHS']"
+    >
+    </govuk-checkbox>
+    <govuk-checkbox
+      [value]="'NONE_OF_THE_ABOVE'"
+      [divider]="true"
+      [label]="complianceRouteCalculationTypeMap['NONE_OF_THE_ABOVE']"
+    >
+    </govuk-checkbox>
   </div>
+
+  <govuk-details summary="Help me answer this question">
+    <p class="govuk-body">
+      You must state whether you produced any estimates in accordance with Part 4 of the ESOS Regulations 2014 as
+      amended by the ESOS (Amendment) Regulations 2023 and required to be notified under regulation 21A.
+    </p>
+  </govuk-details>
 </esos-wizard-step>

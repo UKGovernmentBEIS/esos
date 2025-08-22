@@ -54,11 +54,11 @@ describe('RequestTaskFileService', () => {
 
   it('should upload a single file', async () => {
     const control = new FormControl({ file: new File(['content'], 'file.txt') });
-    expect(
+    await expect(
       lastValueFrom(
         service.upload(
           myMockedStore.getState().requestTaskId,
-          'PERMIT_SURRENDER_UPLOAD_ATTACHMENT',
+          'NOTIFICATION_OF_COMPLIANCE_P3_UPLOAD_ATTACHMENT',
         )(control) as Observable<ValidationErrors>,
       ),
     ).resolves.toBeNull();
@@ -70,7 +70,7 @@ describe('RequestTaskFileService', () => {
       lastValueFrom(
         service.uploadMany(
           myMockedStore.getState().requestTaskId,
-          'PERMIT_SURRENDER_UPLOAD_ATTACHMENT',
+          'NOTIFICATION_OF_COMPLIANCE_P3_UPLOAD_ATTACHMENT',
         )(control) as Observable<ValidationErrors>,
       ),
     ).resolves.toBeNull();

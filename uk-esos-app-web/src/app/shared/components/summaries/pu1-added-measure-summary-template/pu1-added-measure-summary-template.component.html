@@ -1,0 +1,56 @@
+<dl class="govuk-summary-list">
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.measureScheme.title }}</dt>
+    <dd govukSummaryListRowValue>
+      @if (measure.measureScheme?.length) {
+        <ul class="govuk-!-margin-0">
+          @for (option of contentMap.measureScheme.options; track $index) {
+            @if (measure.measureScheme.includes(option)) {
+              <li>
+                @if (option === 'OTHER' && measure.otherMeasureSchemeName) {
+                  {{ option | measureScheme }}: {{ measure.otherMeasureSchemeName }}
+                } @else {
+                  {{ option | measureScheme }}
+                }
+              </li>
+            }
+          }
+        </ul>
+      }
+    </dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.reductionEnergyConsumption2024To2025.title }}</dt>
+    <dd govukSummaryListRowValue>{{ measure.reductionEnergyConsumption2024To2025 }} kWh</dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.reductionEnergyConsumption2023To2024.title }}</dt>
+    <dd govukSummaryListRowValue>
+      @if (
+        measure?.reductionEnergyConsumption2023To2024 !== null &&
+        measure?.reductionEnergyConsumption2023To2024 !== undefined
+      ) {
+        {{ measure?.reductionEnergyConsumption2023To2024 }} kWh
+      }
+    </dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.estimationMethodType.title }}</dt>
+    <dd govukSummaryListRowValue>
+      {{ measure.estimationMethodType | estimationMethodType: 'summary' }}
+      @if (measure.estimationMethodType === 'OTHER_METHOD') {
+        <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+          {{ measure.estimationMethodDescription }}
+        </p>
+      }
+    </dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.measureContext.title }}</dt>
+    <dd govukSummaryListRowValue>{{ measure.measureContext }}</dd>
+  </div>
+</dl>

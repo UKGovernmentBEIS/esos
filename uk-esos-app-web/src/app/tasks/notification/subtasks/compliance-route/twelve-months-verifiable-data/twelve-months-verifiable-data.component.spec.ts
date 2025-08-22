@@ -34,10 +34,14 @@ describe('TwelveMonthsVerifiableDataComponent', () => {
       return this.query<HTMLHeadingElement>('h1');
     }
     get twelveMonthsVerifiableDataUsedRadios() {
-      return this.queryAll<HTMLInputElement>('input[name$="twelveMonthsVerifiableDataUsed"]');
+      return this.queryAll<HTMLInputElement>('input[name$="areTwelveMonthsVerifiableDataUsed"]');
     }
-    get conditionalContent() {
-      return this.query<HTMLDivElement>('.govuk-radios__conditional');
+    get twelveMonthsVerifiableDataUsedReason() {
+      return this.getInputValue('#twelveMonthsVerifiableDataUsedReason');
+    }
+
+    set twelveMonthsVerifiableDataUsedReason(value: string) {
+      this.setInputValue('#twelveMonthsVerifiableDataUsedReason', value);
     }
     get submitButton() {
       return this.query<HTMLButtonElement>('button[type="submit"]');
@@ -72,13 +76,10 @@ describe('TwelveMonthsVerifiableDataComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render all elements, no errors and no conditional content', () => {
+  it('should render all elements and no errors', () => {
     expect(page.errorSummary).toBeFalsy();
     expect(page.heading).toBeTruthy();
-    expect(page.heading.textContent.trim()).toEqual(
-      'Did this organisation use 12 months verifiable data for the purpose of calculating energy consumption in all of its ESOS energy audits?',
-    );
-    expect(page.conditionalContent.classList.contains('govuk-radios__conditional--hidden')).toBeTruthy();
+    expect(page.heading.textContent.trim()).toEqual('Did all your energy audits use 12 months of verifiable data?');
     expect(page.submitButton).toBeTruthy();
   });
 
@@ -92,16 +93,17 @@ describe('TwelveMonthsVerifiableDataComponent', () => {
     expect(taskServiceSpy).not.toHaveBeenCalled();
   });
 
-  it('should select "Not applicable", render conditional content, submit and navigate to next page', () => {
+  it('should select "NO", fill in conditional content, submit and navigate to next page', () => {
     const taskServiceSpy = jest.spyOn(taskService, 'saveSubtask');
 
-    page.twelveMonthsVerifiableDataUsedRadios[2].click();
+    page.twelveMonthsVerifiableDataUsedRadios[1].click();
+    page.twelveMonthsVerifiableDataUsedReason = 'Twelve months reason';
     fixture.detectChanges();
-    expect(page.conditionalContent.classList.contains('govuk-radios__conditional--hidden')).toBeFalsy();
 
     page.submitButton.click();
     fixture.detectChanges();
 
+    expect(page.errorSummary).toBeFalsy();
     expect(taskServiceSpy).toHaveBeenCalledWith({
       subtask: 'complianceRoute',
       currentStep: 'twelveMonthsVerifiableData',
@@ -110,7 +112,8 @@ describe('TwelveMonthsVerifiableDataComponent', () => {
         noc: {
           complianceRoute: {
             ...mockComplianceRoute,
-            twelveMonthsVerifiableDataUsed: 'NOT_APPLICABLE',
+            areTwelveMonthsVerifiableDataUsed: false,
+            twelveMonthsVerifiableDataUsedReason: 'Twelve months reason',
           },
         },
       },

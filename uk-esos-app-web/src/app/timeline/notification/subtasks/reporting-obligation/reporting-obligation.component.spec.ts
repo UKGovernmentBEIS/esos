@@ -48,16 +48,19 @@ describe('ReportingObligationComponent', () => {
         'Does your organisation qualify for ESOS?',
         'Yes, the organisation qualifies for ESOS and will submit a notification',
       ],
-      ['Select the reasons that your organisation qualifies for ESOS', ''],
+      [
+        'Select the reason that your organisation, or another organisation in its corporate group, qualifies for ESOS',
+        '',
+      ],
       [
         'Are the organisations in this notification responsible for any energy under ESOS?',
         'Yes, the organisation is responsible for energy',
       ],
-      ['ISO 5001', ''],
+      ['ISO 50001', ''],
       ['Display Energy Certificate (DECs)', ''],
       ['Green Deal Assessment', ''],
       ['Energy audits that are compliant with ESOS', ''],
-      ['Energy use not audited', ''],
+      ['Energy use not covered by any compliance route', ''],
       ['Total', ''],
     ]);
   });

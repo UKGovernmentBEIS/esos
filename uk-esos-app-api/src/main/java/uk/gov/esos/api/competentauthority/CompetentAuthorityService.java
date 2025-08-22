@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.esos.api.common.domain.enumeration.AccountType;
 import uk.gov.esos.api.common.exception.BusinessException;
 import uk.gov.esos.api.common.exception.ErrorCode;
+import uk.gov.esos.api.competentauthority.domain.CompetentAuthority;
 import uk.gov.esos.api.competentauthority.repository.CompetentAuthorityRepository;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class CompetentAuthorityService {
 
     public CompetentAuthorityDTO getCompetentAuthority(CompetentAuthorityEnum competentAuthorityEnum, AccountType accountType) {
         return competentAuthorityMapper
-                .toCompetentAuthorityDTO(competentAuthorityRepository.findById(competentAuthorityEnum), accountType);
+                .toCompetentAuthorityDTO(getCompetentAuthority(competentAuthorityEnum), accountType);
     }
 
     public static byte[] getCompetentAuthorityLogo(CompetentAuthorityEnum competentAuthority) {
@@ -40,4 +41,9 @@ public class CompetentAuthorityService {
             throw new BusinessException(ErrorCode.INTERNAL_SERVER);
         }
     }
+    
+	private CompetentAuthority getCompetentAuthority(CompetentAuthorityEnum competentAuthorityEnum) {
+		return competentAuthorityRepository.findById(competentAuthorityEnum)
+				.orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
+	}
 }

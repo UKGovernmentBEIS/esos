@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AuthService } from '@core/services/auth.service';
@@ -7,11 +6,12 @@ import { CountryService } from '@core/services/country.service';
 import { AuthStore } from '@core/store/auth';
 import { GovukDatePipe } from '@shared/pipes/govuk-date.pipe';
 import { SharedModule } from '@shared/shared.module';
-import { ActivatedRouteStub, BasePage, CountryServiceStub } from '@testing';
+import { BasePage, CountryServiceStub } from '@testing';
 
 import { UserStateDTO } from 'esos-api';
 
 import { SharedUserModule } from '../../shared-user/shared-user.module';
+import { AccountsStore } from '..';
 import { mockedOrganisationAccountPayload } from '../testing/mock-data';
 import { DetailsComponent } from './details.component';
 
@@ -20,8 +20,8 @@ describe('DetailsComponent', () => {
   let fixture: ComponentFixture<DetailsComponent>;
   let page: Page;
   let authStore: AuthStore;
+  let accountsStore: AccountsStore;
   let authService: Partial<jest.Mocked<AuthService>>;
-  let activatedRouteStub: ActivatedRouteStub;
 
   class Page extends BasePage<DetailsComponent> {
     get heading() {
@@ -41,29 +41,26 @@ describe('DetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, SharedModule, SharedUserModule, GovukDatePipe, DetailsComponent],
       providers: [
+        AccountsStore,
         { provide: CountryService, useClass: CountryServiceStub },
-        { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: AuthService, useValue: authService },
       ],
     }).compileComponents();
 
+    accountsStore = TestBed.inject(AccountsStore);
+    accountsStore.setState({ ...accountsStore.getState(), selectedAccount: { ...mockedOrganisationAccountPayload } });
     authStore = TestBed.inject(AuthStore);
   };
 
   const createComponent = () => {
     fixture = TestBed.createComponent(DetailsComponent);
     component = fixture.componentInstance;
-    component.currentTab = 'details';
     page = new Page(fixture);
     fixture.detectChanges();
     jest.clearAllMocks();
   };
 
   beforeEach(async () => {
-    activatedRouteStub = new ActivatedRouteStub(undefined, undefined, {
-      data: { ...mockedOrganisationAccountPayload, registrationStatus: true },
-    });
-
     authService = {
       loadUserState: jest.fn(),
     };
@@ -86,6 +83,7 @@ describe('DetailsComponent', () => {
         'Yes',
         'Registration number',
         'Organisation name',
+        'Classification type: Other Classification name: some classification name  Codes: CodeA, CodeB, CodeC',
         'Line 1',
         'City',
         'Aberdeenshire',
@@ -117,6 +115,7 @@ describe('DetailsComponent', () => {
         'Yes',
         'Registration number',
         'Organisation name',
+        'Classification type: Other Classification name: some classification name  Codes: CodeA, CodeB, CodeC',
         'Line 1',
         'City',
         'Aberdeenshire',

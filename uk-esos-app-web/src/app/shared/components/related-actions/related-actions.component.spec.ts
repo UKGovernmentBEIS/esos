@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, Route } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Route, RouterModule } from '@angular/router';
 
 import { RelatedActionsComponent } from '@shared/components/related-actions/related-actions.component';
 import { BasePage } from '@testing';
@@ -40,7 +39,7 @@ describe('RelatedActionsComponent', () => {
 
   const setupTestingModule = async (withChangeAssigneeRoute = false) => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, TestComponent],
+      imports: [RouterModule.forRoot([]), TestComponent],
       providers: [{ provide: ActivatedRoute, useValue: constructRoute(withChangeAssigneeRoute) }],
     }).compileComponents();
   };
@@ -74,13 +73,24 @@ describe('RelatedActionsComponent', () => {
     await setupTestingModule();
     createComponent();
 
-    testComponent.allowedActions = ['RFI_SUBMIT', 'RDE_SUBMIT'];
+    testComponent.allowedActions = [
+      'RFI_SUBMIT',
+      'RDE_SUBMIT',
+      'ACCOUNT_CLOSURE_CANCEL_APPLICATION',
+      'ACTION_PLAN_CANCEL_APPLICATION',
+      'PROGRESS_UPDATE_1_CANCEL_APPLICATION',
+      'PROGRESS_UPDATE_2_CANCEL_APPLICATION',
+    ];
     fixture.detectChanges();
 
     expect(page.links.map((el) => [el.href, el.textContent])).toEqual([
       ['http://localhost/', 'Reassign task'],
       ['http://localhost/rfi/1/questions', 'Request for information'],
       ['http://localhost/rde/1/extend-determination', 'Request deadline extension'],
+      ['http://localhost/', 'Cancel task'],
+      ['http://localhost/', 'Cancel task'],
+      ['http://localhost/', 'Cancel task'],
+      ['http://localhost/', 'Cancel task'],
     ]);
   });
 });

@@ -1,0 +1,109 @@
+<esos-wizard-step
+  [formGroup]="form"
+  [heading]="title()"
+  [caption]="caption"
+  (formSubmit)="onSubmit()"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <div class="govuk-summary-card govuk-!-margin-bottom-7">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">
+        {{ actionPlanMeasure()?.measureName ?? progressUpdate1AddedMeasure()?.measureName }}
+      </h2>
+    </div>
+    <div class="govuk-summary-card__content">
+      @if (actionPlanMeasure()) {
+        <govuk-details summary="Information from the action plan" [bottomSpacing]="3">
+          <esos-energy-efficiency-measure-summary-list-template [data]="actionPlanMeasure()" />
+        </govuk-details>
+      }
+      <govuk-details summary="Progress update 1" [bottomSpacing]="1">
+        @if (progressUpdate1ForActionPlanMeasure()) {
+          <esos-pu1-update-for-measure-summary-template [updateForMeasure]="progressUpdate1ForActionPlanMeasure()" />
+        } @else if (progressUpdate1AddedMeasure()) {
+          <esos-pu1-added-measure-summary-template [measure]="progressUpdate1AddedMeasure()" />
+        }
+      </govuk-details>
+    </div>
+  </div>
+
+  <div class="govuk-!-width-two-thirds" [class.govuk-!-margin-bottom-8]="!shouldShowProvidedContext">
+    @if (wasMeasureImplemented()) {
+      <div
+        class="govuk-!-margin-bottom-7"
+        formControlName="reportReduction2025To2026"
+        govuk-radio
+        [legend]="contentMap.reportReduction2025To2026.title"
+        legendSize="small"
+      >
+        <govuk-radio-option [value]="true" label="Yes">
+          <ng-container govukConditionalContent>
+            <esos-fieldset-reduction-energy-consumption
+              formControlName="reductionEnergyConsumption2025To2026"
+              [title]="contentMap.reductionEnergyConsumption2025To2026.title"
+              [subtitle]="contentMap.reductionEnergyConsumption2025To2026.subtitle"
+              [hasNestedStyles]="true"
+            />
+          </ng-container>
+        </govuk-radio-option>
+        <govuk-radio-option [value]="false" label="No" />
+      </div>
+
+      @if (shouldShowEstimationMethodType) {
+        <esos-fieldset-estimation-method-type
+          formControlName="estimationMethodType"
+          [title]="contentMap.estimationMethodType.title"
+          [subtitle]="contentMap.estimationMethodType.subtitle"
+          [options]="estimationMethodTypeOptions()"
+          [otherMethodLabel]="contentMap.estimationMethodDescription.title"
+        />
+      }
+    } @else {
+      <esos-boolean-radio-group
+        controlName="measureIsImplemented"
+        [legend]="contentMap.measureIsImplemented.title"
+        legendSize="small"
+      >
+        <div govukConditionalContent>
+          <div
+            class="govuk-!-margin-bottom-6"
+            formControlName="measureImplementedByTheDateInActionPlan"
+            govuk-radio
+            [legend]="contentMap.measureImplementedByTheDateInActionPlan.title"
+            legendSize="small"
+            [isInline]="true"
+          >
+            <govuk-radio-option [value]="true" label="Yes" />
+            <govuk-radio-option [value]="false" label="No" />
+          </div>
+
+          <esos-fieldset-reduction-energy-consumption
+            formControlName="reductionEnergyConsumption2025To2026"
+            [title]="contentMap.reductionEnergyConsumption2025To2026.title"
+            [subtitle]="contentMap.reductionEnergyConsumption2025To2026.subtitle"
+          />
+          <esos-fieldset-estimation-method-type
+            formControlName="estimationMethodType"
+            [title]="contentMap.estimationMethodType.title"
+            [subtitle]="contentMap.estimationMethodType.subtitle"
+            [options]="contentMap.estimationMethodType.options"
+            [otherMethodLabel]="contentMap.estimationMethodDescription.title"
+          />
+        </div>
+      </esos-boolean-radio-group>
+    }
+
+    @if (shouldShowProvidedContext) {
+      <div
+        id="providedContextElement"
+        formControlName="providedContext"
+        govuk-textarea
+        [label]="contentMap.providedContext.title"
+        labelSize="small"
+        [maxLength]="10000"
+      ></div>
+    }
+  </div>
+</esos-wizard-step>

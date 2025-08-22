@@ -1,6 +1,9 @@
+import { isAfter } from 'date-fns';
+
 import { Confirmations } from 'esos-api';
 
 import { ReportingObligationCategory } from '../../../../requests/common/reporting-obligation-category.types';
+import { reviewAssessmentCannotBeBefore } from './confirmation.helper';
 
 export const isWizardCompleted = (
   confirmations: Confirmations,
@@ -11,32 +14,20 @@ export const isWizardCompleted = (
 
   const isNoEnergyResponsibilityAssessmentTypesCompleted = !!confirmations?.noEnergyResponsibilityAssessmentTypes;
 
-  const isResponsibleOfficerDetailsCompleted =
-    !!confirmations?.responsibleOfficerDetails?.firstName &&
-    !!confirmations?.responsibleOfficerDetails?.lastName &&
-    !!confirmations?.responsibleOfficerDetails?.jobTitle &&
-    !!confirmations?.responsibleOfficerDetails?.email &&
-    !!confirmations?.responsibleOfficerDetails?.line1 &&
-    !!confirmations?.responsibleOfficerDetails?.city &&
-    !!confirmations?.responsibleOfficerDetails?.county &&
-    !!confirmations?.responsibleOfficerDetails?.postcode;
+  const isResponsibleOfficerDetailsCompleted = !!confirmations?.responsibleOfficerDetails;
 
-  const isReviewAssessmentDateCompleted = !!confirmations?.reviewAssessmentDate;
+  const isReviewAssessmentDateCompleted =
+    !!confirmations?.reviewAssessmentDate &&
+    isAfter(new Date(confirmations?.reviewAssessmentDate), reviewAssessmentCannotBeBefore);
 
-  const isSecondResponsibleOfficerEnergyTypesCompleted =
-    !!confirmations?.secondResponsibleOfficerEnergyTypes ||
+  const isSecondResponsibleOfficerDetailsCompleted =
+    (!!confirmations?.secondResponsibleOfficerDetails &&
+      confirmations?.secondResponsibleOfficerDetails?.email !== confirmations?.responsibleOfficerDetails?.email) ||
     (!leadAssessorType && reportingObligationCategory != 'LESS_THAN_40000_KWH_PER_YEAR') ||
     leadAssessorType === 'EXTERNAL';
 
-  const isSecondResponsibleOfficerDetailsCompleted =
-    (!!confirmations?.secondResponsibleOfficerDetails?.firstName &&
-      !!confirmations?.secondResponsibleOfficerDetails?.lastName &&
-      !!confirmations?.secondResponsibleOfficerDetails?.jobTitle &&
-      !!confirmations?.secondResponsibleOfficerDetails?.email &&
-      !!confirmations?.secondResponsibleOfficerDetails?.line1 &&
-      !!confirmations?.secondResponsibleOfficerDetails?.city &&
-      !!confirmations?.secondResponsibleOfficerDetails?.county &&
-      !!confirmations?.secondResponsibleOfficerDetails?.postcode) ||
+  const isSecondResponsibleOfficerEnergyTypesCompleted =
+    !!confirmations?.secondResponsibleOfficerEnergyTypes ||
     (!leadAssessorType && reportingObligationCategory != 'LESS_THAN_40000_KWH_PER_YEAR') ||
     leadAssessorType === 'EXTERNAL';
 

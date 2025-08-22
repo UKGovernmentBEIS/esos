@@ -1,0 +1,17 @@
+<div class="govuk-accordion__section" [class.govuk-accordion__section--expanded]="isExpanded$.value">
+  <button
+    type="button"
+    class="govuk-accordion__show-all"
+    [attr.aria-controls]="id"
+    [attr.aria-label]="ariaLabel$ | async"
+    [attr.aria-expanded]="isExpanded$.value"
+    (click)="isExpanded$.next(!isExpanded$.value)"
+  >
+    <span class="govuk-accordion-nav__chevron" [class.govuk-accordion-nav__chevron--down]="!isExpanded$.value"></span>
+    <span class="govuk-accordion__show-all-text">{{ isExpanded$.value ? 'Hide' : 'Show' }} {{ header }}</span>
+  </button>
+  <div [id]="id" class="govuk-accordion__section-content govuk-!-margin-0 govuk-!-padding-top-0 govuk-!-padding-bottom-0"
+       [hidden]="isExpanded$.value ? null : 'until-found'">
+    <ng-content></ng-content>
+  </div>
+</div>

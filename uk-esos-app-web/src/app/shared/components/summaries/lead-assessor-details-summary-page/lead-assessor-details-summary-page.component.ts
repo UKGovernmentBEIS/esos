@@ -2,7 +2,7 @@ import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { BooleanToTextPipe } from '@shared/pipes/boolean-to-text.pipe';
+import { InternalExternalPipe } from '@shared/pipes/internal-external.pipe';
 import { ProfessionalBodyPipe } from '@shared/pipes/professional-body.pipe';
 
 import {
@@ -23,6 +23,7 @@ import { LeadAssessor } from 'esos-api';
   selector: 'esos-lead-assessor-details-summary-page',
   standalone: true,
   imports: [
+    InternalExternalPipe,
     LinkDirective,
     ProfessionalBodyPipe,
     SummaryListComponent,
@@ -35,7 +36,6 @@ import { LeadAssessor } from 'esos-api';
     SummaryListColumnActionsDirective,
     RouterLink,
     NgIf,
-    BooleanToTextPipe,
   ],
   templateUrl: './lead-assessor-details-summary-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

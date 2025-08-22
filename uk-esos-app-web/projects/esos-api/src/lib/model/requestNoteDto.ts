@@ -17,4 +17,5 @@ export interface RequestNoteDto {
   submitter?: string;
   lastUpdatedOn?: string;
   requestId?: string;
+  editable?: boolean;
 }

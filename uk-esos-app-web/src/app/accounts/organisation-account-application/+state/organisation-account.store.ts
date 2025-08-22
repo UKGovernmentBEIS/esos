@@ -43,6 +43,30 @@ export class OrganisationAccountStore extends SignalStore<OrganisationAccountOpe
     );
   }
 
+  setType(type: OrganisationAccountDTO['type']) {
+    this.setState(
+      produce(this.state, (state) => {
+        state.type = type;
+      }),
+    );
+  }
+
+  setOtherTypeName(otherTypeName: OrganisationAccountDTO['otherTypeName']) {
+    this.setState(
+      produce(this.state, (state) => {
+        state.otherTypeName = otherTypeName;
+      }),
+    );
+  }
+
+  setCodes(codes: OrganisationAccountDTO['codes']) {
+    this.setState(
+      produce(this.state, (state) => {
+        state.codes = codes;
+      }),
+    );
+  }
+
   setAddress(address: CountyAddressDTO): void {
     this.setState(
       produce(this.state, (state) => {

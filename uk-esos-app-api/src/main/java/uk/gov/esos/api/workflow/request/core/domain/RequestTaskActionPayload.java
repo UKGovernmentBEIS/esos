@@ -8,10 +8,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestTaskActionPayloadType;
 import uk.gov.esos.api.workflow.request.flow.common.domain.RequestTaskActionEmptyPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.accountclosure.domain.AccountClosureSaveApplicationRequestTaskActionPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.accountorganisationopening.review.domain.OrganisationAccountOpeningAmendApplicationRequestTaskActionPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.accountorganisationopening.review.domain.OrganisationAccountOpeningSubmitDecisionRequestTaskActionPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.actionplan.phase3.common.domain.ActionPlanP3SaveApplicationRequestTaskActionPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.noc.common.domain.SendToEditRequestTaskActionPayload;
 import uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.common.domain.NotificationOfComplianceP3SaveApplicationRequestTaskActionPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.progressupdate1.phase3.common.domain.ProgressUpdate1P3SaveApplicationRequestTaskActionPayload;
+import uk.gov.esos.api.workflow.request.flow.esos.progressupdate2.phase3.common.domain.ProgressUpdate2P3SaveApplicationRequestTaskActionPayload;
 import uk.gov.esos.api.workflow.request.flow.payment.domain.PaymentCancelRequestTaskActionPayload;
 import uk.gov.esos.api.workflow.request.flow.payment.domain.PaymentMarkAsReceivedRequestTaskActionPayload;
 import uk.gov.esos.api.workflow.request.flow.rde.domain.RdeForceDecisionRequestTaskActionPayload;
@@ -39,7 +43,16 @@ import uk.gov.esos.api.workflow.request.flow.rfi.domain.RfiSubmitRequestTaskActi
     @JsonSubTypes.Type(value = PaymentMarkAsReceivedRequestTaskActionPayload.class, name = "PAYMENT_MARK_AS_RECEIVED_PAYLOAD"),
     @JsonSubTypes.Type(value = PaymentCancelRequestTaskActionPayload.class, name = "PAYMENT_CANCEL_PAYLOAD"),
 
+    @JsonSubTypes.Type(value = ActionPlanP3SaveApplicationRequestTaskActionPayload.class, name = "ACTION_PLAN_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD"),
+
+    @JsonSubTypes.Type(value = AccountClosureSaveApplicationRequestTaskActionPayload.class, name = "ACCOUNT_CLOSURE_SAVE_APPLICATION_SUBMIT_PAYLOAD"),
+
+    @JsonSubTypes.Type(value = ProgressUpdate1P3SaveApplicationRequestTaskActionPayload.class, name = "PROGRESS_UPDATE_1_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD"),
+
+    @JsonSubTypes.Type(value = ProgressUpdate2P3SaveApplicationRequestTaskActionPayload.class, name = "PROGRESS_UPDATE_2_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD"),
+
     @JsonSubTypes.Type(value = RequestTaskActionEmptyPayload.class, name = "EMPTY_PAYLOAD"),
+
 })
 @Data
 @SuperBuilder

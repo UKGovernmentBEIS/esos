@@ -3,7 +3,7 @@ package uk.gov.esos.api.workflow.request.flow.esos.noc.phase3.submit.transform;
 import org.mapstruct.Mapper;
 
 import uk.gov.esos.api.common.transform.MapperConfig;
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 import uk.gov.esos.api.reporting.noc.phase3.domain.ContactPerson;
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3Container;
 import uk.gov.esos.api.workflow.request.core.domain.dto.OrganisationParticipantDetails;

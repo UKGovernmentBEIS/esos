@@ -12,10 +12,25 @@ export const twelveMonthsVerifiableDataFormProvider: Provider = {
   deps: [UntypedFormBuilder, RequestTaskStore],
   useFactory: (fb: UntypedFormBuilder, store: RequestTaskStore) => {
     const twelveMonthsVerifiableDataUsed = store.select(notificationQuery.selectComplianceRoute)()
-      ?.twelveMonthsVerifiableDataUsed;
+      ?.areTwelveMonthsVerifiableDataUsed;
+    const twelveMonthsVerifiableDataUsedReason = store.select(notificationQuery.selectComplianceRoute)()
+      ?.twelveMonthsVerifiableDataUsedReason;
 
-    return fb.group({
-      twelveMonthsVerifiableDataUsed: [twelveMonthsVerifiableDataUsed, GovukValidators.required('Select an option')],
-    });
+    return fb.group(
+      {
+        areTwelveMonthsVerifiableDataUsed: [
+          twelveMonthsVerifiableDataUsed,
+          GovukValidators.required('Select an option'),
+        ],
+        twelveMonthsVerifiableDataUsedReason: [
+          twelveMonthsVerifiableDataUsedReason ?? null,
+          [
+            GovukValidators.required('Please provide details'),
+            GovukValidators.maxLength(10000, 'Enter up to 10000 characters'),
+          ],
+        ],
+      },
+      { updateOn: 'change' },
+    );
   },
 };

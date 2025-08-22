@@ -28,17 +28,12 @@ export class TwelveMonthsVerifiableDataComponent {
   ) {}
 
   submit() {
-    const twelveMonthsVerifiableDataUsed = this.form.value.twelveMonthsVerifiableDataUsed;
-
     this.service.saveSubtask({
       subtask: COMPLIANCE_ROUTE_SUB_TASK,
       currentStep: CurrentStep.TWELVE_MONTHS_VERIFIABLE_DATA,
       route: this.route,
       payload: produce(this.service.payload, (payload) => {
-        payload.noc.complianceRoute = {
-          ...payload.noc.complianceRoute,
-          twelveMonthsVerifiableDataUsed: twelveMonthsVerifiableDataUsed,
-        };
+        payload.noc.complianceRoute = { ...payload.noc.complianceRoute, ...this.form.value };
       }),
     });
   }

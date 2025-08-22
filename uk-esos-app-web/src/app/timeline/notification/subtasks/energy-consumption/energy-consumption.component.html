@@ -2,8 +2,8 @@
   <esos-page-heading size="xl">Energy consumption</esos-page-heading>
 
   <esos-energy-consumption-summary-page
-    *ngIf="vm.data"
-    [data]="vm.data"
+    *ngIf="vm.energyConsumptionDetails"
+    [energyConsumptionDetails]="vm.energyConsumptionDetails"
     [changeLink]="{}"
   ></esos-energy-consumption-summary-page>
 </ng-container>

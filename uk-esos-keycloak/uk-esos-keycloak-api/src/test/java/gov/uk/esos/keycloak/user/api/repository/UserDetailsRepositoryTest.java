@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Optional;
 import java.util.UUID;
 
+import gov.uk.esos.keycloak.user.api.AbstractContainerBaseTest;
 import gov.uk.esos.keycloak.user.api.model.jpa.Signature;
 import gov.uk.esos.keycloak.user.api.model.jpa.UserDetails;
 import jakarta.persistence.EntityManager;
@@ -19,8 +20,9 @@ import org.keycloak.models.jpa.entities.UserEntity;
 
 import gov.uk.esos.keycloak.user.api.model.SignatureDTO;
 import gov.uk.esos.keycloak.user.api.model.UserDetailsRequestDTO;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class UserDetailsRepositoryTest {
+public class UserDetailsRepositoryTest extends AbstractContainerBaseTest {
 
     private static EntityManagerFactory entityManagerFactory;
     private static EntityManager entityManager;
@@ -115,10 +117,10 @@ public class UserDetailsRepositoryTest {
         resultOpt = repository.findUserDetails(userId);
         assertThat(resultOpt).isNotEmpty();
         assertThat(resultOpt.get().getId()).isEqualTo(userId);
-        assertThat(resultOpt.get().getSignature().getSignatureContent()).isEqualTo("content".getBytes());
         assertThat(resultOpt.get().getSignature().getSignatureName()).isEqualTo("fileName");
         assertThat(resultOpt.get().getSignature().getSignatureSize()).isEqualTo(1L);
         assertThat(resultOpt.get().getSignature().getSignatureType()).isEqualTo("type");
+        assertArrayEquals(resultOpt.get().getSignature().getSignatureContent(), "content".getBytes());
     }
     
     private void flushAndClear() {

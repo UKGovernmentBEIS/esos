@@ -11,10 +11,10 @@
  */
 
 export interface SignificantEnergyConsumption {
-  buildings: number;
-  transport: number;
-  industrialProcesses: number;
-  otherProcesses: number;
-  total: number;
-  significantEnergyConsumptionPct: number;
+  buildings?: number;
+  transport?: number;
+  industrialProcesses?: number;
+  otherProcesses?: number;
+  total?: number;
+  significantEnergyConsumptionPct?: number;
 }

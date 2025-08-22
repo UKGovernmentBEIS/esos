@@ -1,9 +1,9 @@
-@use "sass:math";
+@use 'sass:math';
 
-@include govuk-exports("govuk/component/notification-banner") {
+@include govuk-exports('govuk/component/notification-banner') {
   .govuk-notification-banner {
     @include govuk-font($size: 19);
-    @include govuk-responsive-margin(8, "bottom");
+    @include govuk-responsive-margin(8, 'bottom');
 
     border: $govuk-border-width solid $govuk-brand-colour;
 
@@ -26,13 +26,13 @@
   }
 
   .govuk-notification-banner__title {
-    @include govuk-font($size: 19, $weight: bold);
-
+    // Set the size again because this element is a heading and the user agent
+    // font size overrides the inherited font size
+    @include govuk-font-size($size: 19);
+    @include govuk-typography-weight-bold;
     margin: 0;
-
     padding: 0;
-
-    color: govuk-colour("white");
+    color: govuk-colour('white');
   }
 
   .govuk-notification-banner__content {
@@ -67,7 +67,8 @@
   }
 
   .govuk-notification-banner__heading {
-    @include govuk-font($size: 24, $weight: bold);
+    @include govuk-font-size($size: 24);
+    @include govuk-typography-weight-bold;
 
     margin: 0 0 govuk-spacing(3) 0;
 
@@ -89,3 +90,5 @@
     }
   }
 }
+
+/*# sourceMappingURL=_index.scss.map */

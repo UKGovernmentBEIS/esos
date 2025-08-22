@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 
 @Getter
 @Setter

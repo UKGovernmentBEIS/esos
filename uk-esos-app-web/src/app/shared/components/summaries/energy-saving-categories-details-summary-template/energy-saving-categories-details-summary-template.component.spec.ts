@@ -17,8 +17,7 @@ describe('EnergySavingCategoriesDetailsSummaryTemplateComponent', () => {
     behaviourChangeInterventions: 2,
     training: 3,
     controlsImprovements: 4,
-    shortTermCapitalInvestments: 5,
-    longTermCapitalInvestments: 6,
+    capitalInvestments: 5,
     otherMeasures: 7,
     total: 28,
   };
@@ -60,12 +59,7 @@ describe('EnergySavingCategoriesDetailsSummaryTemplateComponent', () => {
     expect(compiled.textContent).toContain('Behaviour change interventions');
     expect(compiled.textContent).toContain('Training');
     expect(compiled.textContent).toContain('Controls improvements');
-    expect(compiled.textContent).toContain(
-      'Short term capital investments (with a payback period of less than 3 years)',
-    );
-    expect(compiled.textContent).toContain(
-      'Long term capital investments (with a payback period of less than 3 years)',
-    );
+    expect(compiled.textContent).toContain('Capital investments');
     expect(compiled.textContent).toContain('Other measures not covered by one of the above');
   });
 });

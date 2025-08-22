@@ -94,9 +94,12 @@ export class GovukValidators {
     );
   };
 
-  static maxIntegersValidator = (maxIntegerDigits: number): MessageValidatorFn => {
-    const regex = new RegExp('^[-]?[0-9]{1,12}(\\.[0-9]+)?$');
-    return GovukValidators.pattern(regex, `Enter a number up to ${maxIntegerDigits} integer places`);
+  static maxIntegersValidator = (maxIntegerDigits?: number): MessageValidatorFn => {
+    if (maxIntegerDigits != null) {
+      const regex = new RegExp(`^[-]?[0-9]{1,${maxIntegerDigits}}(\\.[0-9]+)?$`);
+      return GovukValidators.pattern(regex, `Enter a number up to ${maxIntegerDigits} integer places`);
+    }
+    return GovukValidators.builder('You have exceeded the maximum number allowed', this.isMaxInteger());
   };
 
   static maxDigitsValidator = (maxDigits: number): MessageValidatorFn => {
@@ -124,6 +127,14 @@ export class GovukValidators {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       const value = control.value;
       return control.value !== null && control.value !== undefined && !intRegex.test(value)
+        ? { invalidInteger: true }
+        : null;
+    };
+  }
+
+  private static isMaxInteger(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      return control.value !== null && control.value !== undefined && control.value > 2147483647
         ? { invalidInteger: true }
         : null;
     };

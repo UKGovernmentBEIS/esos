@@ -51,4 +51,11 @@ export class TableComponent<T> {
 
     this.sort.emit({ column: this.sortedField, direction: this.sortingDirection });
   }
+
+  getAriaLabelForSorting(column: GovukTableColumn<T>): string {
+    if (this.sortedField === column.field) {
+      return `${column.header} sorted in ${this.sortingDirection} order`;
+    }
+    return `Sort by ${column.header}`;
+  }
 }

@@ -52,13 +52,14 @@ export class OrganisationApplicationReviewAmendService {
       requestTaskActionPayload: {
         payloadType: 'ORGANISATION_ACCOUNT_OPENING_AMEND_APPLICATION_PAYLOAD',
         name: account.name,
-        registrationNumber: account.registrationNumber,
-        competentAuthority: account.competentAuthority,
         line1: account.line1,
         line2: account?.line2,
         city: account.city,
         county: account.county,
         postcode: account.postcode,
+        type: account.type,
+        otherTypeName: account.otherTypeName,
+        codes: account.codes,
       },
       requestTaskId: requestTaskId,
     };

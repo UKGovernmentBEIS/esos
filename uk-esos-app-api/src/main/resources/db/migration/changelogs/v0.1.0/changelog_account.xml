@@ -164,5 +164,20 @@
             </sql>
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_account_note_add_role_type_column" author="apostolouk@unisystems.gr">
+        <validCheckSum>1:any</validCheckSum>
+        <addColumn tableName="account_note">
+            <column name="role_type" type="varchar(255)" remarks="The role of the user who submitted the note">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <rollback>
+        	<sql>
+                alter table account_note
+                drop column if exists role_type;             
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

@@ -22,8 +22,9 @@ public class AuthorizedRoleAspect {
     @Before("@annotation(uk.gov.esos.api.web.security.AuthorizedRole)")
     public void authorize(JoinPoint joinPoint) {
         RoleType[] roleTypes = getRoleTypes(joinPoint);
+        boolean authoritiesRequired = getAuthoritiesRequired(joinPoint);
         AppUser user = authorizationAspectUserResolver.getUser(joinPoint);
-        roleAuthorizationService.evaluate(user, roleTypes);
+        roleAuthorizationService.evaluate(user, roleTypes, authoritiesRequired);
     }
 
     private RoleType[] getRoleTypes(JoinPoint joinPoint) {
@@ -31,5 +32,12 @@ public class AuthorizedRoleAspect {
         Method method = signature.getMethod();
         AuthorizedRole authorizedRole = method.getAnnotation(AuthorizedRole.class);
         return authorizedRole.roleType();
+    }
+    
+    private boolean getAuthoritiesRequired(JoinPoint joinPoint) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        AuthorizedRole authorizedRole = method.getAnnotation(AuthorizedRole.class);
+        return authorizedRole.authoritiesRequired();
     }
 }

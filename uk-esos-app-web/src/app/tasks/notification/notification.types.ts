@@ -1,5 +1,3 @@
-import { ActivatedRoute } from '@angular/router';
-
 import {
   NotificationOfComplianceP3ApplicationEditRequestTaskPayload,
   NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload,
@@ -8,11 +6,3 @@ import {
 export type NotificationTaskPayload =
   | NotificationOfComplianceP3ApplicationEditRequestTaskPayload
   | NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload;
-
-export interface SendToRestrictedPayload {
-  participant: {
-    id: string;
-    fullName: string;
-  };
-  route: ActivatedRoute;
-}

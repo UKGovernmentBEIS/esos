@@ -5,11 +5,14 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <div formControlName="name" govuk-text-input
-       label="Parent company name" widthClass="govuk-!-width-two-thirds"></div>
-  <div formControlName="tradingName" govuk-text-input
-       label="Parent company trading name (optional)"
-       hint="Enter the trading name of the parent company if it is different to the registered name"
-       widthClass="govuk-!-width-two-thirds"></div>
+  <div formControlName="name" govuk-text-input label="Overseas parent company name" widthClass="govuk-!-width-two-thirds"></div>
+  <div
+    formControlName="tradingName"
+    govuk-text-input
+    label="The trading or other name of the group of undertakings to which the above company is the overseas parent (optional)"
+    hint="Enter the trading name of the parent company if it is different to the registered name"
+    widthClass="govuk-!-width-two-thirds"
+  ></div>
 </esos-wizard-step>

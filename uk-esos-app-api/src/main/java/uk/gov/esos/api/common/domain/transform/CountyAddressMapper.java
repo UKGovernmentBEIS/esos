@@ -12,4 +12,6 @@ import uk.gov.esos.api.common.transform.MapperConfig;
 public interface CountyAddressMapper {
 
     CountyAddressDTO toCountyAddressDTO(CountyAddress source);
+    
+    CountyAddress toCountyAddress(CountyAddressDTO source);
 }

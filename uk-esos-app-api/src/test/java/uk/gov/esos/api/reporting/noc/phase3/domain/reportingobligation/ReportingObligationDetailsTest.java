@@ -25,7 +25,7 @@ class ReportingObligationDetailsTest {
     @Test
     void validate_when_responsible_valid() {
         ReportingObligationDetails reportingObligationDetails = ReportingObligationDetails.builder()
-            .qualificationReasonTypes(Set.of(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250))
+            .qualificationReasonType(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250)
             .energyResponsibilityType(OrganisationEnergyResponsibilityType.RESPONSIBLE)
             .complianceRouteDistribution(ComplianceRouteDistribution.builder()
                 .iso50001Pct(10)
@@ -45,7 +45,7 @@ class ReportingObligationDetailsTest {
     @Test
     void validate_when_responsible_invalid() {
         ReportingObligationDetails reportingObligationDetails = ReportingObligationDetails.builder()
-            .qualificationReasonTypes(Set.of(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250))
+            .qualificationReasonType(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250)
             .energyResponsibilityType(OrganisationEnergyResponsibilityType.RESPONSIBLE)
             .build();
 
@@ -58,7 +58,7 @@ class ReportingObligationDetailsTest {
     @Test
     void validate_when_not_responsible_valid() {
         ReportingObligationDetails reportingObligationDetails = ReportingObligationDetails.builder()
-            .qualificationReasonTypes(Set.of(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250))
+            .qualificationReasonType(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250)
             .energyResponsibilityType(OrganisationEnergyResponsibilityType.NOT_RESPONSIBLE)
             .build();
 
@@ -70,7 +70,7 @@ class ReportingObligationDetailsTest {
     @Test
     void validate_when_not_responsible_invalid() {
         ReportingObligationDetails reportingObligationDetails = ReportingObligationDetails.builder()
-            .qualificationReasonTypes(Set.of(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250))
+            .qualificationReasonType(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250)
             .energyResponsibilityType(OrganisationEnergyResponsibilityType.NOT_RESPONSIBLE)
             .complianceRouteDistribution(ComplianceRouteDistribution.builder()
                 .iso50001Pct(10)

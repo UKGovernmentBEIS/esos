@@ -8,7 +8,7 @@ import { notificationQuery } from '@tasks/notification/+state/notification.selec
 import { ButtonDirective } from 'govuk-components';
 
 @Component({
-  selector: 'esos-submission-task-buttons',
+  selector: 'esos-notification-submission-task-buttons',
   standalone: true,
   imports: [ButtonDirective, NgIf, RouterLink],
   template: `
@@ -17,7 +17,7 @@ import { ButtonDirective } from 'govuk-components';
       <a
         govukButton
         [routerLink]="isSectionsCompleted() ? ['notification', 'submit'] : []"
-        [attr.disabled]="isSectionsCompleted() ? null : ''"
+        [disabled]="!isSectionsCompleted()"
       >
         Submit to regulator
       </a>
@@ -25,7 +25,7 @@ import { ButtonDirective } from 'govuk-components';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubmissionTaskButtonsComponent {
+export class NotificationSubmissionTaskButtonsComponent {
   isEditable = this.store.select(requestTaskQuery.selectIsEditable);
 
   isSectionsCompleted = this.store.select(notificationQuery.selectCanSubmitNoc);

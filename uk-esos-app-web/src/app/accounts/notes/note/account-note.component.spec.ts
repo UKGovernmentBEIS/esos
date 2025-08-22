@@ -1,7 +1,6 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { AccountNoteComponent } from '@accounts/index';
 import { DestroySubject } from '@core/services/destroy-subject.service';
@@ -74,13 +73,16 @@ describe('AddEditTemplateComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AccountNoteComponent],
-      imports: [RouterTestingModule, SharedModule, PageHeadingComponent],
+      imports: [RouterModule.forRoot([]), SharedModule, PageHeadingComponent],
       providers: [
         DestroySubject,
         { provide: AccountNotesService, useValue: accountNotesService },
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();
+
+    const router = TestBed.inject(Router);
+    jest.spyOn(router, 'navigate').mockImplementation();
   });
 
   it('should create', () => {
@@ -88,10 +90,10 @@ describe('AddEditTemplateComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should succesfully create a note', async () => {
+  it('should successfully create a note', async () => {
     activatedRoute.setParamMap({ accountId });
     activatedRoute.setResolveMap({
-      pageTitle: 'Add a note',
+      heading: 'Add a note',
     });
     createComponent();
 
@@ -119,10 +121,10 @@ describe('AddEditTemplateComponent', () => {
     });
   });
 
-  it('should succesfully edit a note', async () => {
+  it('should successfully edit a note', async () => {
     activatedRoute.setParamMap({ accountId, noteId });
     activatedRoute.setResolveMap({
-      pageTitle: 'Edit a note',
+      heading: 'Edit a note',
     });
     createComponent();
 

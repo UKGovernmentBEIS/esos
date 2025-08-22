@@ -1,8 +1,8 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
+import { mockRequestNotesResults } from '@accounts/testing/mock-data';
 import { DestroySubject } from '@core/services/destroy-subject.service';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
 import { SharedModule } from '@shared/shared.module';
@@ -10,7 +10,6 @@ import { ActivatedRouteStub, asyncData, BasePage, MockType } from '@testing';
 
 import { RequestNotesService } from 'esos-api';
 
-import { mockRequestNotesResults } from '../../../../testing/mock-data';
 import { RequestNoteComponent } from './request-note.component';
 
 describe('RequestNoteComponent', () => {
@@ -77,13 +76,16 @@ describe('RequestNoteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, SharedModule, PageHeadingComponent],
+      imports: [RouterModule.forRoot([]), SharedModule, PageHeadingComponent],
       providers: [
         DestroySubject,
         { provide: RequestNotesService, useValue: requestNotesService },
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();
+
+    const router = TestBed.inject(Router);
+    jest.spyOn(router, 'navigate').mockImplementation();
   });
 
   it('should create', () => {
@@ -94,7 +96,7 @@ describe('RequestNoteComponent', () => {
   it('should successfully create a note', async () => {
     activatedRoute.setParamMap({ 'request-id': 'requestId' });
     activatedRoute.setResolveMap({
-      pageTitle: 'Add a note',
+      heading: 'Add a note',
     });
     createComponent();
 
@@ -125,7 +127,7 @@ describe('RequestNoteComponent', () => {
   it('should successfully edit a note', async () => {
     activatedRoute.setParamMap({ 'request-id': 'requestId', noteId });
     activatedRoute.setResolveMap({
-      pageTitle: 'Edit a note',
+      heading: 'Edit a note',
     });
     createComponent();
 

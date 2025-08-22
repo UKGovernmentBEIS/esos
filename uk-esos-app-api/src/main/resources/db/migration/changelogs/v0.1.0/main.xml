@@ -47,10 +47,15 @@
     <include file="changelog_ca_external_contacts.xml" relativeToChangelogFile="true" />
     <include file="changelog_account_contact.xml" relativeToChangelogFile="true" />
     <include file="changelog_account_organisation.xml" relativeToChangelogFile="true"/>
+    <include file="changelog_account_organisation_onboarding_registry.xml" relativeToChangelogFile="true"/>
 
     <include file="changelog_noc.xml" relativeToChangelogFile="true"/>
 
     <!-- Should be executed at the end -->
     <include file="changelog_schema_cleanup.xml" relativeToChangelogFile="true" />
-    
+    <include file="changelog_workFlowValidPeriod.xml" relativeToChangelogFile="true" />
+    <include file="changelog_action_plan.xml" relativeToChangelogFile="true" />
+    <include file="changelog_progress_update_1.xml" relativeToChangelogFile="true" />
+    <include file="changelog_progress_update_2.xml" relativeToChangelogFile="true" />
+
 </databaseChangeLog>

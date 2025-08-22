@@ -10,31 +10,14 @@ export class AccountStatusPipe implements PipeTransform {
     }
 
     switch (status) {
-      case 'AWAITING_REVOCATION':
-        return 'Awaiting Revocation';
-      case 'AWAITING_SURRENDER':
-        return 'Awaiting surrender';
-      case 'AWAITING_TRANSFER':
-        return 'Awaiting transfer';
-      case 'DEEMED_WITHDRAWN':
-        return 'Deemed Withdrawn';
       case 'DENIED':
         return 'Denied';
       case 'LIVE':
         return 'Live';
-      case 'NEW':
-        return 'New';
-      case 'PERMIT_REFUSED':
-        return 'Permit refused';
-      case 'REVOKED':
-        return 'Revoked';
-      case 'SURRENDERED':
-        return 'Surrendered';
-      case 'TRANSFERRED':
-        return 'Transferred';
-      case 'UNAPPROVED':
-        return 'Unapproved';
-
+      case 'AWAITING_APPROVAL':
+        return 'Awaiting approval';
+      case 'CLOSED':
+        return 'Closed';
       default:
         return null;
     }

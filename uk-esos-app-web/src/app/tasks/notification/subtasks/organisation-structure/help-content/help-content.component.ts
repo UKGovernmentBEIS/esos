@@ -13,5 +13,5 @@ import { OrganisationAssociatedWithRU } from 'esos-api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HelpContentComponent {
-  @Input() field: keyof OrganisationAssociatedWithRU | 'isPartOfArrangementRu' | 'isPartOfFranchiseRu' | 'isTrustRu';
+  @Input() field: keyof OrganisationAssociatedWithRU | 'isPartOfArrangementRu' | 'isPartOfFranchiseRu';
 }

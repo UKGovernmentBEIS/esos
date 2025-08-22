@@ -25,30 +25,112 @@ class CertificateDetailsTest {
     }
 
     @Test
+    void validate_when_all_certificate_details_are_null() {
+        CertificateDetails certificateDetails = CertificateDetails.builder()
+                .certificateNumber(null)
+                .validFrom(null)
+                .validUntil(null)
+                .build();
+
+        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(certificateDetails);
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void validate_when_all_certificated_details_are_not_completed_invalid() {
+        CertificateDetails certificateDetails = CertificateDetails.builder()
+                .certificateNumber(null)
+                .validFrom(LocalDate.of(2024, 4,22))
+                .validUntil(LocalDate.now().plusDays(10))
+                .build();
+
+        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(certificateDetails);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactly("{noc.alternativecomplianceroutes.certificate.details.completed}");
+    }
+
+    @Test
     void validate_when_validUntil_isAfter_validFrom_valid() {
-    	CertificateDetails altRoutes = CertificateDetails.builder()
+    	CertificateDetails certificateDetails = CertificateDetails.builder()
     		.certificateNumber("test")
-            .validFrom(LocalDate.now().minusDays(1))
+            .validFrom(LocalDate.of(2024, 4,22))
             .validUntil(LocalDate.now().plusDays(10))
             .build();
 
-        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(altRoutes);   
+        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(certificateDetails);
         
         assertThat(violations).isEmpty();
     }
     
     @Test
     void validate_when_validUntil_isBefore_validFrom_invalid() {
-    	CertificateDetails altRoutes = CertificateDetails.builder()
+    	CertificateDetails certificateDetails = CertificateDetails.builder()
     			.certificateNumber("test")
-                .validFrom(LocalDate.now().minusDays(1))
-                .validUntil(LocalDate.now().minusDays(10))
+                .validFrom(LocalDate.of(2024, 4,22))
+                .validUntil(LocalDate.of(2024, 4,22).minusDays(10))
             .build();
 
-        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(altRoutes);  
+        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(certificateDetails);
         
         assertThat(violations).isNotEmpty();
         assertThat(violations).extracting(ConstraintViolation::getMessage)
         	.containsExactly("{noc.alternativecomplianceroutes.certificate.date}");
+    }
+
+    @Test
+    void validate_when_validUntil_isBefore_5_December_invalid() {
+        CertificateDetails certificateDetails = CertificateDetails.builder()
+                .certificateNumber("test")
+                .validFrom(LocalDate.of(2023,4,26))
+                .validUntil(LocalDate.of(2023, 11, 3))
+                .build();
+
+        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(certificateDetails);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactly("{noc.alternativecomplianceroutes.certificate.details.validUntil}");
+    }
+
+    @Test
+    void validate_when_validFrom_isAfter_5_June_invalid() {
+        CertificateDetails certificateDetails = CertificateDetails.builder()
+                .certificateNumber("test")
+                .validFrom(LocalDate.of(2024,7,20))
+                .validUntil(LocalDate.of(2024, 11, 17))
+                .build();
+
+        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(certificateDetails);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactly("{noc.alternativecomplianceroutes.certificate.details.validFrom}");
+    }
+
+    @Test
+    void validate_when_validUntil_5_December_valid() {
+        CertificateDetails certificateDetails = CertificateDetails.builder()
+                .certificateNumber("test")
+                .validFrom(LocalDate.of(2023,3,10))
+                .validUntil(LocalDate.of(2023, 12, 5))
+                .build();
+
+        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(certificateDetails);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void validate_when_validFrom_5_June_valid() {
+        CertificateDetails certificateDetails = CertificateDetails.builder()
+                .certificateNumber("test")
+                .validFrom(LocalDate.of(2024,6,5))
+                .validUntil(LocalDate.of(2024, 12, 20))
+                .build();
+
+        final Set<ConstraintViolation<CertificateDetails>> violations = validator.validate(certificateDetails);
+
+        assertThat(violations).isEmpty();
     }
 }

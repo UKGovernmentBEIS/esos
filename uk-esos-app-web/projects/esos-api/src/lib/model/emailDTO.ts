@@ -10,6 +10,9 @@
  * Do not edit the class manually.
  */
 
+/**
+ * The user email
+ */
 export interface EmailDTO {
   email?: string;
 }

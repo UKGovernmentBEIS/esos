@@ -1,0 +1,25 @@
+<esos-wizard-step
+  [formGroup]="form"
+  heading="Enter the organisation details"
+  [caption]="headerCaption"
+  (formSubmit)="submit()"
+  [showBackLink]="true"
+  [showCancelLink]="true"
+  [cancelLinkPath]="'../cancel'"
+>
+  <div
+    formControlName="registeredName"
+    govuk-text-input
+    label="Organisation name"
+    [widthClass]="'govuk-!-width-two-thirds'"
+    autoComplete="organisation-name"
+  ></div>
+
+  <h3 class="govuk-heading-s">Activity codes</h3>
+  <esos-activity-codes-input></esos-activity-codes-input>
+
+  <esos-activity-codes-guidance-template></esos-activity-codes-guidance-template>
+
+  <h3 class="govuk-heading-s">Organisation address</h3>
+  <esos-county-address-input formGroupName="addressDetails"></esos-county-address-input>
+</esos-wizard-step>

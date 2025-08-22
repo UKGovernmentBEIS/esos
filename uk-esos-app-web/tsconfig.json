@@ -7,7 +7,7 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -16,7 +16,6 @@
     "lib": ["ES2022", "dom"],
     "strictPropertyInitialization": false,
     "strictNullChecks": false,
-    "noStrictGenericChecks": true,
     "paths": {
       "govuk-components": ["./dist/govuk-components"],
       "esos-api": ["projects/esos-api/src/lib/index.ts"],
@@ -27,7 +26,8 @@
       "@timeline/*": ["src/app/timeline/*"],
       "@testing": ["src/testing"],
       "@error/*": ["src/app/error/*"],
-      "@accounts/*": ["src/app/accounts/*"]
+      "@accounts/*": ["src/app/accounts/*"],
+      "@requests/*": ["src/app/requests/*"]
     },
     "useDefineForClassFields": false
   },

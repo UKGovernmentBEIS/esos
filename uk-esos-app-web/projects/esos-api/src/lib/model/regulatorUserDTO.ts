@@ -16,7 +16,7 @@ export interface RegulatorUserDTO {
   firstName: string;
   lastName: string;
   termsVersion?: number;
-  status?: 'REGISTERED' | 'PENDING' | 'DELETED';
+  status?: 'REGISTERED' | 'PENDING';
   jobTitle: string;
   phoneNumber: string;
   mobileNumber?: string;

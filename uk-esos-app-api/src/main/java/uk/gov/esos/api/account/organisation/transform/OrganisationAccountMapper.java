@@ -18,8 +18,11 @@ public interface OrganisationAccountMapper extends CountyAddressMapper {
     @Mapping(target = "id",source = "id")
     @Mapping(target = "organisationId",source = "organisationId")
     @Mapping(target = "status",source = "status")
+    @Mapping(target = "competentAuthority", expression = "java(uk.gov.esos.api.competentauthority.CompetentAuthorityEnum.ENGLAND)")
+    @Mapping(target = "location", source = "accountDTO.competentAuthority")
     OrganisationAccount toOrganisationAccount(OrganisationAccountDTO accountDTO, Long id, String organisationId,
                                               AccountType accountType, OrganisationAccountStatus status);
 
+    @Mapping(target = "competentAuthority", source = "source.location")
     OrganisationAccountDTO toOrganisationAccountDTO(OrganisationAccount source);
 }

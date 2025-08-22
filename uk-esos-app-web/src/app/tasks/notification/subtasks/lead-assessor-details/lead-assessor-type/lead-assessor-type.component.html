@@ -1,18 +1,14 @@
 <esos-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  heading="Is the lead assessor internal or external to your organisational group"
+  heading="Is the lead assessor who reviewed your ESOS assessment internal or external to your corporate group?"
   caption="Lead assessor details"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <div
-    formControlName="leadAssessorType"
-    govuk-radio
-    legend="The Lead assessor who signed off your ESOS assessment."
-    legendSize="normal"
-  >
-    <govuk-radio-option [value]="'INTERNAL'" label="Internal"></govuk-radio-option>
-    <govuk-radio-option [value]="'EXTERNAL'" label="External"></govuk-radio-option>
+  <div formControlName="leadAssessorType" govuk-radio>
+    <govuk-radio-option [value]="'INTERNAL'" [label]="'INTERNAL' | internalExternal"></govuk-radio-option>
+    <govuk-radio-option [value]="'EXTERNAL'" [label]="'EXTERNAL' | internalExternal"></govuk-radio-option>
   </div>
 </esos-wizard-step>

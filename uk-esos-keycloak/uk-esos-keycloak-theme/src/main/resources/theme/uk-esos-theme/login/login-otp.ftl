@@ -1,8 +1,14 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout displayMessage=!messagesPerField.existsError('totp'); section>
-    <#if section="header">
+    <#if section = "headerCaption">
+        ${msg("doLogInTotpCaption")}
+    <#elseif section="header">
         ${msg("doLogInTotp")}
     <#elseif section="form">
+        <p class="govuk-body">
+            Use the code from the authenticator app you previously used to sign in to your ESOS account.
+            Do not use a code generated for your GOV.UK One Login.
+        </p>
         <form id="kc-otp-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}"
             method="post">
             <#if otpLogin.userOtpCredentials?size gt 1>
@@ -45,10 +51,11 @@
                     </div>
                 </div>
 
-                <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
+                <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!} govuk-button-group">
                     <input
                         class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
                         name="login" id="kc-login" type="submit" value="${msg("doLogIn")}" />
+                    <a class="govuk-link" role="button" name="cancel" href="${url.loginAction}&formAction=cancel">${msg("btnCancelTxt")}</a>
                 </div>
             </div>
         </form>

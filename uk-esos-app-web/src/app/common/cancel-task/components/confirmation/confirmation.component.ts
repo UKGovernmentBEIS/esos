@@ -12,10 +12,11 @@ import { GovukComponentsModule } from 'govuk-components';
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-panel title="Task cancelled"></govuk-panel>
+        <govuk-panel><h1 class="govuk-panel__title">Task cancelled</h1></govuk-panel>
+        <p class="govuk-body">It has been removed from your task dashboard.</p>
+        <a govukLink routerLink="/dashboard">Return to dashboard</a>
       </div>
     </div>
-    <a govukLink routerLink="/dashboard"> Return to dashboard </a>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [GovukComponentsModule, RouterLink, AsyncPipe],

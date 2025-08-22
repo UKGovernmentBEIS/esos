@@ -27,8 +27,12 @@ describe('ResponsibleUndertakingSummaryPageComponent', () => {
     component.isEditable = true;
     component.responsibleUndertaking = {
       organisationDetails: {
+        registrationNumberExist: true,
         name: 'Corporate Legal Entity Account 2',
-        registrationNumber: '111111',
+        type: 'OTHER',
+        otherTypeName: 'some classification name',
+        codes: ['CodeA', 'CodeB', 'CodeC'],
+        registrationNumber: 'AB123456',
         line1: 'Some address 1',
         line2: 'Some address 2',
         city: 'London',
@@ -46,6 +50,7 @@ describe('ResponsibleUndertakingSummaryPageComponent', () => {
           number: '02071234567',
         },
       },
+      isBehalfOfTrust: false,
       hasOverseasParentDetails: true,
       overseasParentDetails: {
         name: 'Parent company name',
@@ -64,17 +69,20 @@ describe('ResponsibleUndertakingSummaryPageComponent', () => {
 
   it('should display all HTMLElements', () => {
     expect(page.summaries).toEqual([
+      'Does this organisation have a registration number?',
+      'Yes',
+      'Change',
+      'Registration number',
+      'AB123456',
+      'Change',
       'Organisation name',
       'Corporate Legal Entity Account 2',
       'Change',
-      'Registration number',
-      '111111',
+      'Activity codes',
+      'Classification type: Other  Classification name: some classification name  Codes: CodeA, CodeB, CodeC',
       'Change',
-      'Address line 1',
-      'Some address 1',
-      'Change',
-      'Address line 2',
-      'Some address 2',
+      'Address',
+      'Some address 1  Some address 2',
       'Change',
       'Town or city',
       'London',
@@ -94,15 +102,25 @@ describe('ResponsibleUndertakingSummaryPageComponent', () => {
       'Telephone number',
       '44 02071234567',
       'Change',
+      'No',
+      '',
+      'Change',
       'Yes',
       '',
       'Change',
-      'Parent company name',
+      'Overseas parent company name',
       'Parent company name',
       'Change',
-      'Parent company trading name',
+      'The trading or other name of the group of undertakings to which the above company is the overseas parent (optional)',
       'Parent company trading name',
       'Change',
     ]);
+  });
+
+  it('should not display registration number if it does not exist', async () => {
+    component.responsibleUndertaking.organisationDetails.registrationNumber = null;
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement;
+    expect(compiled.querySelector('[govukSummaryListRowValue]').textContent.trim()).not.toContain('AB123456');
   });
 });

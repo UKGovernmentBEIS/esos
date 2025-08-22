@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.esos.api.authorization.core.domain.AppUser;
+import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.common.exception.BusinessException;
 import uk.gov.esos.api.common.exception.ErrorCode;
 import uk.gov.esos.api.common.note.NotePayload;
@@ -39,24 +40,29 @@ public class RequestNoteService {
     private final FileNoteTokenService fileNoteTokenService;
     private final DateService dateService;
 
-    public RequestNoteResponse getRequestNotesByRequestId(final String requestId,
+    public RequestNoteResponse getRequestNotesByRequestId(final AppUser appUser, final String requestId,
                                                           final Integer page,
                                                           final Integer pageSize) {
         this.cleanUpUnusedNoteFilesAsync();
 
-        final Page<RequestNote> requestNotePage = requestNoteRepository
-            .findRequestNotesByRequestIdOrderByLastUpdatedOnDesc(PageRequest.of(page, pageSize), requestId);
+        final Page<RequestNote> requestNotePage = RoleType.REGULATOR.equals(appUser.getRoleType()) ? 
+        		requestNoteRepository.findRequestNotesByRequestIdOrderByLastUpdatedOnDesc(PageRequest.of(page, pageSize), requestId) :
+        		requestNoteRepository.findRequestNotesByRequestIdAndRoleTypeOrderByLastUpdatedOnDesc(
+        				PageRequest.of(page, pageSize), requestId, appUser.getRoleType());	
         final List<RequestNoteDto> requestNoteDtos =
-            requestNotePage.get().map(requestNoteMapper::toRequestNoteDTO).toList();
+            requestNotePage.get()
+            .map(note -> requestNoteMapper.toRequestNoteDTO(note, appUser.getRoleType()))
+            .toList();
         final long totalItems = requestNotePage.getTotalElements();
 
         return RequestNoteResponse.builder().requestNotes(requestNoteDtos).totalItems(totalItems).build();
     }
 
-    public RequestNoteDto getNote(final Long id) {
+    public RequestNoteDto getNote(final AppUser appUser, final Long id) {
 
-        return requestNoteRepository.findById(id).map(requestNoteMapper::toRequestNoteDTO)
-            .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
+        return requestNoteRepository.findById(id)
+        		.map(note -> requestNoteMapper.toRequestNoteDTO(note, appUser.getRoleType()))
+        		.orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 
     @Transactional
@@ -90,6 +96,7 @@ public class RequestNoteService {
         requestNote.setSubmitterId(authUser.getUserId());
         requestNote.setSubmitter(authUser.getFirstName() + " " + authUser.getLastName());
         requestNote.setLastUpdatedOn(dateService.getLocalDateTime());
+        requestNote.setRoleType(authUser.getRoleType());
         fileNoteService.submitFiles(currentFiles);
     }
 
@@ -132,6 +139,7 @@ public class RequestNoteService {
             .submitterId(authUser.getUserId())
             .submitter(authUser.getFirstName() + " " + authUser.getLastName())
             .lastUpdatedOn(dateService.getLocalDateTime())
+            .roleType(authUser.getRoleType())
             .build();
     }
 

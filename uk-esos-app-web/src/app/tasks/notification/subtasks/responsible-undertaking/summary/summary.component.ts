@@ -12,9 +12,9 @@ import { SubTaskListMap } from '@shared/types/sub-task-list-map.type';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import {
-  CurrentStep,
   RESPONSIBLE_UNDERTAKING_SUB_TASK,
-  WizardStep,
+  ResponsibleUndertakingCurrentStep,
+  ResponsibleUndertakingWizardStep,
 } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
 import { TaskItemStatus } from '@tasks/task-item-status';
 
@@ -51,7 +51,7 @@ export class SummaryComponent {
       this.store.select(notificationQuery.selectNocSectionsCompleted)()[RESPONSIBLE_UNDERTAKING_SUB_TASK] ===
       TaskItemStatus.COMPLETED,
     responsibleUndertakingMap: responsibleUndertakingMap,
-    wizardStep: WizardStep,
+    wizardStep: ResponsibleUndertakingWizardStep,
   }));
 
   constructor(
@@ -63,7 +63,7 @@ export class SummaryComponent {
   onSubmit() {
     this.service.submitSubtask({
       subtask: RESPONSIBLE_UNDERTAKING_SUB_TASK,
-      currentStep: CurrentStep.SUMMARY,
+      currentStep: ResponsibleUndertakingCurrentStep.SUMMARY,
       route: this.route,
       payload: this.service.payload,
     });

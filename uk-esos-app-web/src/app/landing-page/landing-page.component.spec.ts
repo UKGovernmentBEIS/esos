@@ -75,12 +75,12 @@ describe('LandingPageComponent', () => {
 
   it('should display the landing page buttons if not logged in', () => {
     expect(page.organisationLink).toBeFalsy();
-    expect(page.notLoggedInLandingPageLinks).toHaveLength(2);
+    expect(page.notLoggedInLandingPageLinks).toHaveLength(1);
   });
 
   it('should only display installation application button to operators', () => {
     expect(page.organisationLink).toBeFalsy();
-    expect(page.notLoggedInLandingPageLinks).toHaveLength(2);
+    expect(page.notLoggedInLandingPageLinks).toHaveLength(1);
 
     authStore.setIsLoggedIn(true);
     setUser('OPERATOR', 'NO_AUTHORITY');
@@ -92,10 +92,6 @@ describe('LandingPageComponent', () => {
     expect(page.organisationLink).toBeTruthy();
 
     setUser('REGULATOR', 'DISABLED');
-
-    expect(page.organisationLink).toBeFalsy();
-
-    setUser('VERIFIER', 'TEMP_DISABLED');
 
     expect(page.organisationLink).toBeFalsy();
   });

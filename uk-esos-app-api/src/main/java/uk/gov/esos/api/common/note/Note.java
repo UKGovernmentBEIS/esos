@@ -3,6 +3,8 @@ package uk.gov.esos.api.common.note;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,6 +15,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import uk.gov.esos.api.common.domain.enumeration.RoleType;
+
 import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -44,4 +48,9 @@ public abstract class Note {
     @Column(name = "last_updated_on")
     @NotNull
     private LocalDateTime lastUpdatedOn;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role_type")
+    @NotNull
+    private RoleType roleType;
 }

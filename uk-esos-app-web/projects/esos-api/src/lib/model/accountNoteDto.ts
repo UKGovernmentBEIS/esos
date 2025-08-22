@@ -17,4 +17,5 @@ export interface AccountNoteDto {
   submitter?: string;
   lastUpdatedOn?: string;
   accountId?: number;
+  editable?: boolean;
 }

@@ -40,6 +40,19 @@ const selectRegistrationStatus: StateSelector<RequestTaskState, boolean> = creat
   (payload) => !!payload.account.registrationNumber,
 );
 
+const selectType: StateSelector<RequestTaskState, OrganisationAccountDTO['type']> = createDescendingSelector(
+  selectPayload,
+  (payload) => payload.account.type,
+);
+
+const selectOtherTypeName: StateSelector<RequestTaskState, OrganisationAccountDTO['otherTypeName']> =
+  createDescendingSelector(selectPayload, (payload) => payload.account.otherTypeName);
+
+const selectCodes: StateSelector<RequestTaskState, OrganisationAccountDTO['codes']> = createDescendingSelector(
+  selectPayload,
+  (payload) => payload.account.codes,
+);
+
 const selectIsEditable: StateSelector<RequestTaskState, boolean> = createSelector((state) => state?.isEditable);
 
 export const organisationAccountReviewQuery = {
@@ -49,5 +62,8 @@ export const organisationAccountReviewQuery = {
   selectAddress,
   selectRegistrationNumber,
   selectRegistrationStatus,
+  selectType,
+  selectOtherTypeName,
+  selectCodes,
   selectIsEditable,
 };

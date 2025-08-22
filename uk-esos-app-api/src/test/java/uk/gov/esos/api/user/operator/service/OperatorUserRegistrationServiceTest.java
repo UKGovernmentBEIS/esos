@@ -10,7 +10,7 @@ import uk.gov.esos.api.authorization.core.domain.AppUser;
 import uk.gov.esos.api.authorization.operator.service.OperatorAuthorityService;
 import uk.gov.esos.api.user.operator.domain.OperatorUserDTO;
 import uk.gov.esos.api.user.operator.domain.OperatorUserInvitationDTO;
-import uk.gov.esos.api.user.operator.domain.OperatorUserRegistrationWithCredentialsDTO;
+import uk.gov.esos.api.user.operator.domain.OperatorUserRegistrationDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -30,16 +30,13 @@ class OperatorUserRegistrationServiceTest {
     private OperatorAuthorityService operatorAuthorityService;
 
     @Mock
-    private OperatorUserTokenVerificationService operatorUserTokenVerificationService;
-
-    @Mock
     private AccountQueryService accountQueryService;
 
     @Mock
     private OperatorUserNotificationGateway operatorUserNotificationGateway;
 
     @Test
-    void registerUserToAccountWithStatusPending() {
+    void createUserToAccountWithStatusPending() {
         String roleCode = "roleCode";
         String userId = "userId";
         Long accountId = 1L;
@@ -48,7 +45,7 @@ class OperatorUserRegistrationServiceTest {
         AppUser currentUser = AppUser.builder().userId("current_user_id").build();
         OperatorUserInvitationDTO operatorUserInvitationDTO = createOperatorUserInvitationDTO(roleCode);
 
-        when(operatorUserAuthService.registerOperatorUserAsPending(
+        when(operatorUserAuthService.createOperatorUserAsPending(
             operatorUserInvitationDTO.getEmail(),
             operatorUserInvitationDTO.getFirstName(),
             operatorUserInvitationDTO.getLastName()))
@@ -58,9 +55,9 @@ class OperatorUserRegistrationServiceTest {
         when(accountQueryService.getAccountName(accountId))
             .thenReturn(accountName);
 
-        service.registerUserToAccountWithStatusPending(operatorUserInvitationDTO, accountId, currentUser);
+        service.createUserToAccountWithStatusPending(operatorUserInvitationDTO, accountId, currentUser);
 
-        verify(operatorUserAuthService, times(1)).registerOperatorUserAsPending(
+        verify(operatorUserAuthService, times(1)).createOperatorUserAsPending(
             operatorUserInvitationDTO.getEmail(),
             operatorUserInvitationDTO.getFirstName(),
             operatorUserInvitationDTO.getLastName());
@@ -75,25 +72,24 @@ class OperatorUserRegistrationServiceTest {
 
     @Test
     void registerUser() {
-    	String token = "token";
-    	String email = "email";
-    	OperatorUserRegistrationWithCredentialsDTO operatorUserRegistrationWithCredentialsDTO = OperatorUserRegistrationWithCredentialsDTO
-            .builder().emailToken(token).build();
-    	OperatorUserDTO userDTO = OperatorUserDTO.builder().firstName("fn").lastName("ln").email(email).build();
-
-    	when(operatorUserTokenVerificationService.verifyRegistrationToken(token)).thenReturn(email);
-    	when(operatorUserAuthService.registerOperatorUser(operatorUserRegistrationWithCredentialsDTO, email))
-    		.thenReturn(userDTO);
+    	AppUser currentUser = AppUser.builder().email("email").build();    	
+    	OperatorUserRegistrationDTO operatorUserRegistrationDTO = OperatorUserRegistrationDTO.builder()
+    			.firstName("fn")
+    			.build();
+    	
+    	OperatorUserDTO operatorUserDTO = OperatorUserDTO.builder().firstName("fn").build();
+    	
+    	when(operatorUserAuthService.registerUser(operatorUserRegistrationDTO, currentUser.getEmail()))
+    		.thenReturn(operatorUserDTO);
 
     	//invoke
-    	OperatorUserDTO result = service.registerUser(operatorUserRegistrationWithCredentialsDTO);
+    	OperatorUserDTO result = service.registerUser(operatorUserRegistrationDTO, currentUser);
 
     	//assert and verify
-    	assertThat(result).isEqualTo(userDTO);
+    	assertThat(result).isEqualTo(operatorUserDTO);
 
-    	verify(operatorUserTokenVerificationService, times(1)).verifyRegistrationToken(token);
-    	verify(operatorUserAuthService, times(1)).registerOperatorUser(operatorUserRegistrationWithCredentialsDTO, email);
-    	verify(operatorUserNotificationGateway, times(1)).notifyRegisteredUser(userDTO);
+    	verify(operatorUserAuthService, times(1)).registerUser(operatorUserRegistrationDTO, currentUser.getEmail());
+    	verify(operatorUserNotificationGateway, times(1)).notifyRegisteredUser(operatorUserDTO);
     }
 
     @Test

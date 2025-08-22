@@ -11,7 +11,7 @@ import { ReportingObligationDetails } from 'esos-api';
 import { notificationQuery } from '../../../+state/notification.selectors';
 
 export type QualificationReasonsFormModel = {
-  qualificationReasons: FormControl<ReportingObligationDetails['qualificationReasonTypes']>;
+  qualificationReason: FormControl<ReportingObligationDetails['qualificationReasonType']>;
 };
 
 export const qualificationReasonsFormProvider: Provider = {
@@ -22,8 +22,8 @@ export const qualificationReasonsFormProvider: Provider = {
 
     return fb.group<QualificationReasonsFormModel>(
       {
-        qualificationReasons: new FormControl(ro?.reportingObligationDetails?.qualificationReasonTypes ?? [], [
-          GovukValidators.required('Select at least one reason'),
+        qualificationReason: new FormControl(ro?.reportingObligationDetails?.qualificationReasonType ?? null, [
+          GovukValidators.required('Select an option'),
         ]),
       },
       { updateOn: 'change' },

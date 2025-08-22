@@ -35,7 +35,7 @@ export class OrganisationStructureSummaryComponent {
     const organisationDetailsRu = this.store.select(notificationQuery.selectResponsibleUndertaking)()
       ?.organisationDetails;
     const organisationDetailsOriginatedData = this.store.select(notificationQuery.selectAccountOriginatedData)()
-      .organisationDetails;
+      ?.organisationDetails;
 
     return {
       subtaskName: ORGANISATION_STRUCTURE_SUB_TASK,
@@ -64,9 +64,9 @@ export class OrganisationStructureSummaryComponent {
   }
 
   removeOrganisation(index: number) {
-    const organisationsAssociatedWithRU = sortOrganisations([
-      ...this.store.select(notificationQuery.selectOrganisationStructure)().organisationsAssociatedWithRU,
-    ]).filter((_, i) => i !== index - 1);
+    const organisationsAssociatedWithRU = sortOrganisations(
+      this.store.select(notificationQuery.selectOrganisationStructure)().organisationsAssociatedWithRU,
+    ).filter((_, i) => i !== index - 1);
 
     this.service.saveSubtask({
       subtask: ORGANISATION_STRUCTURE_SUB_TASK,
@@ -76,6 +76,24 @@ export class OrganisationStructureSummaryComponent {
         payload.noc.organisationStructure = {
           ...payload.noc.organisationStructure,
           organisationsAssociatedWithRU,
+        };
+      }),
+    });
+  }
+
+  removeUndertakingOrganisation(index: number) {
+    const organisations = this.store
+      .select(notificationQuery.selectOrganisationStructure)()
+      .organisationUndertakingDetails.filter((_, i) => i !== index);
+
+    this.service.saveSubtask({
+      subtask: ORGANISATION_STRUCTURE_SUB_TASK,
+      currentStep: OrganisationStructureCurrentStep.LIST_REMOVE,
+      route: this.route,
+      payload: produce(this.service.payload, (payload) => {
+        payload.noc.organisationStructure = {
+          ...payload.noc.organisationStructure,
+          organisationUndertakingDetails: organisations,
         };
       }),
     });

@@ -1,4 +1,11 @@
-<div [formControlName]="controlName" [hint]="hint" [isInline]="true" [legend]="legend" legendSize="medium" govuk-radio>
+<div
+  [formControlName]="controlName"
+  [hint]="hint"
+  [isInline]="true"
+  [legend]="legend"
+  [legendSize]="legendSize"
+  govuk-radio
+>
   <govuk-radio-option [value]="true" [label]="yesLabel"></govuk-radio-option>
   <govuk-radio-option [value]="false" [label]="noLabel"></govuk-radio-option>
 </div>

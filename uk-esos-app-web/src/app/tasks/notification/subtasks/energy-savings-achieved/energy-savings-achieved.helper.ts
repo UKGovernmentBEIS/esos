@@ -25,6 +25,14 @@ export enum EnergySavingsAchievedWizardStep {
 }
 
 export function getTotalPercentageSum(energySavingsRecommendations: EnergySavingsRecommendations): number {
+  if (
+    energySavingsRecommendations.alternativeComplianceRoutes == null &&
+    energySavingsRecommendations.energyAudits == null &&
+    energySavingsRecommendations.other == null
+  ) {
+    return null;
+  }
+
   return (
     +energySavingsRecommendations.alternativeComplianceRoutes +
     +energySavingsRecommendations.energyAudits +

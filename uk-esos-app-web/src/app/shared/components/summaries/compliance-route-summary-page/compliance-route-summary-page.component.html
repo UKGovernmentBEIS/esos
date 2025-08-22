@@ -1,9 +1,62 @@
 <!-- eslint-disable @angular-eslint/template/eqeqeq -->
-<ng-container *ngIf="vm.data?.areDataEstimated != null">
-  <h2 class="govuk-heading-m">Was the total energy consumption or spend calculated using any estimated data?</h2>
+<ng-container *ngIf="vm.data?.estimatedCalculationTypes != null">
+  <h2 class="govuk-heading-m">Did you use any estimates in relation to the following calculations (as applicable)?</h2>
   <dl govuk-summary-list [hasBorders]="true">
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ vm.data.areDataEstimated | booleanToText }}</dd>
+    <ng-container *ngIf="!vm.data.estimatedCalculationTypes.includes('NONE_OF_THE_ABOVE')">
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>
+          {{ complianceRouteCalculationTypeMap['TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'] }}
+        </dt>
+        <dd govukSummaryListRowValue>
+          {{ vm.data.estimatedCalculationTypes.includes('TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION') | booleanToText }}
+        </dd>
+        <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+          <a govukLink [routerLink]="['./', vm.wizardStep.DATA_ESTIMATED]" [queryParams]="{ change: true }"> Change </a>
+        </dd>
+      </div>
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>
+          {{ complianceRouteCalculationTypeMap['CONVERSION_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'] }}
+        </dt>
+        <dd govukSummaryListRowValue>
+          {{
+            vm.data.estimatedCalculationTypes.includes('CONVERSION_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION')
+              | booleanToText
+          }}
+        </dd>
+        <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+          <a govukLink [routerLink]="['./', vm.wizardStep.DATA_ESTIMATED]" [queryParams]="{ change: true }"> Change </a>
+        </dd>
+      </div>
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>
+          {{ complianceRouteCalculationTypeMap['AMOUNT_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION'] }}
+        </dt>
+        <dd govukSummaryListRowValue>
+          {{
+            vm.data.estimatedCalculationTypes.includes('AMOUNT_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION')
+              | booleanToText
+          }}
+        </dd>
+        <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+          <a govukLink [routerLink]="['./', vm.wizardStep.DATA_ESTIMATED]" [queryParams]="{ change: true }"> Change </a>
+        </dd>
+      </div>
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>
+          {{ complianceRouteCalculationTypeMap['ENERGY_CONSUMPTION_OVER_TWELVE_MONTHS'] }}
+        </dt>
+        <dd govukSummaryListRowValue>
+          {{ vm.data.estimatedCalculationTypes.includes('ENERGY_CONSUMPTION_OVER_TWELVE_MONTHS') | booleanToText }}
+        </dd>
+        <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+          <a govukLink [routerLink]="['./', vm.wizardStep.DATA_ESTIMATED]" [queryParams]="{ change: true }"> Change </a>
+        </dd>
+      </div>
+    </ng-container>
+    <div govukSummaryListRow *ngIf="vm.data.estimatedCalculationTypes.includes('NONE_OF_THE_ABOVE')">
+      <dt govukSummaryListRowKey>{{ complianceRouteCalculationTypeMap['NONE_OF_THE_ABOVE'] }}</dt>
+      <dd govukSummaryListRowValue>Yes</dd>
       <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
         <a govukLink [routerLink]="['./', vm.wizardStep.DATA_ESTIMATED]" [queryParams]="{ change: true }"> Change </a>
       </dd>
@@ -11,34 +64,29 @@
   </dl>
 </ng-container>
 
-<ng-container *ngIf="vm.data?.areEstimationMethodsRecordedInEvidencePack != null">
-  <h2 class="govuk-heading-m">Are the methods used for estimated data recorded in the evidence pack?</h2>
+<ng-container *ngIf="vm.data?.areTwelveMonthsVerifiableDataUsed != null">
+  <h2 class="govuk-heading-m">Did all your energy audits use 12 months of verifiable data?</h2>
   <dl govuk-summary-list [hasBorders]="true">
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ vm.data.areEstimationMethodsRecordedInEvidencePack | booleanToText }}</dd>
-      <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
-        <a govukLink [routerLink]="['./', vm.wizardStep.ESTIMATION_METHODS_RECORDED]" [queryParams]="{ change: true }">
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>{{ vm.data.areTwelveMonthsVerifiableDataUsed | booleanToText }}</dd>
+      <dd *ngIf="vm.isEditable" govukSummaryListColumnActions>
+        <a
+          govukLink
+          [routerLink]="['./', vm.wizardStep.TWELVE_MONTHS_VERIFIABLE_DATA]"
+          [queryParams]="{ change: true }"
+        >
           Change
         </a>
       </dd>
     </div>
   </dl>
-</ng-container>
-
-<ng-container *ngIf="vm.data?.twelveMonthsVerifiableDataUsed">
-  <h2 class="govuk-heading-m">
-    Did this organisation use 12 months verifiable data for the purpose of calculating energy consumption in all of its
-    ESOS energy audits?
-  </h2>
-  <dl govuk-summary-list [hasBorders]="true">
+  <dl govuk-summary-list [hasBorders]="true" *ngIf="vm.data?.twelveMonthsVerifiableDataUsedReason != null">
     <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>
-        <ng-container [ngSwitch]="vm.data.twelveMonthsVerifiableDataUsed">
-          <ng-container *ngSwitchCase="'YES'">Yes</ng-container>
-          <ng-container *ngSwitchCase="'NOT_APPLICABLE'">Not applicable</ng-container>
-          <ng-container *ngSwitchDefault>No</ng-container>
-        </ng-container>
-      </dd>
+      <dt govukSummaryListRowKey>
+        Provide details of the extent to which and reasons why your energy audits did not use 12 months of verifiable
+        data
+      </dt>
+      <dd govukSummaryListRowValue>{{ vm.data.twelveMonthsVerifiableDataUsedReason }}</dd>
       <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
         <a
           govukLink
@@ -52,21 +100,32 @@
   </dl>
 </ng-container>
 
-<ng-container *ngIf="vm.data?.energyConsumptionProfilingUsed">
+<ng-container *ngIf="vm.data?.areEstimationMethodsRecorded != null">
+  <h2 class="govuk-heading-m">Are the methods used for estimated data recorded in the evidence pack?</h2>
+  <dl govuk-summary-list [hasBorders]="true">
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>{{ vm.data.areEstimationMethodsRecorded | skipQuestion }}</dd>
+      <dd *ngIf="vm.isEditable" govukSummaryListColumnActions>
+        <a govukLink [routerLink]="['./', vm.wizardStep.ESTIMATION_METHODS_RECORDED]" [queryParams]="{ change: true }">
+          Change
+        </a>
+      </dd>
+    </div>
+  </dl>
+</ng-container>
+
+<ng-container *ngIf="vm.data?.energyConsumptionProfilingUsed != null">
   <h2 class="govuk-heading-m">
     Did this organisation use energy consumption profiling for the purpose of analysing its energy consumption for all
     ESOS energy audits?
   </h2>
+
   <dl govuk-summary-list [hasBorders]="true">
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>
-        <ng-container [ngSwitch]="vm.data.energyConsumptionProfilingUsed">
-          <ng-container *ngSwitchCase="'YES'">Yes</ng-container>
-          <ng-container *ngSwitchCase="'NOT_APPLICABLE'">Not applicable</ng-container>
-          <ng-container *ngSwitchDefault>No</ng-container>
-        </ng-container>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>
+        {{ vm.data.energyConsumptionProfilingUsed | notApplicable }}
       </dd>
-      <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+      <dd *ngIf="vm.isEditable" govukSummaryListColumnActions>
         <a govukLink [routerLink]="['./', vm.wizardStep.ENERGY_CONSUMPTION_PROFILING]" [queryParams]="{ change: true }">
           Change
         </a>
@@ -80,13 +139,12 @@
     vm.data?.areEnergyConsumptionProfilingMethodsRecorded != null && vm.data?.energyConsumptionProfilingUsed === 'YES'
   "
 >
-  <h2 class="govuk-heading-m">
-    Are the methods used for energy consumption profiling recorded in the evidence pack? (optional)
-  </h2>
+  <h2 class="govuk-heading-m">Are the methods used for energy consumption profiling recorded in the evidence pack?</h2>
+
   <dl govuk-summary-list [hasBorders]="true">
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ vm.data.areEnergyConsumptionProfilingMethodsRecorded | booleanToText }}</dd>
-      <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>{{ vm.data.areEnergyConsumptionProfilingMethodsRecorded | skipQuestion }}</dd>
+      <dd *ngIf="vm.isEditable" govukSummaryListColumnActions>
         <a
           govukLink
           [routerLink]="['./', vm.wizardStep.ENERGY_CONSUMPTION_PROFILING_METHODS_RECORDED]"
@@ -99,24 +157,70 @@
   </dl>
 </ng-container>
 
-<esos-energy-audit-list
+<ng-container
   *ngIf="
-    vm.data?.energyConsumptionProfilingUsed === 'NO' || vm.data?.energyConsumptionProfilingUsed === 'NOT_APPLICABLE'
+    vm.data?.isEnergyConsumptionProfilingNotUsedRecorded != null &&
+    ['NO', 'NOT_APPLICABLE'].includes(vm.data?.energyConsumptionProfilingUsed)
   "
-  [vm]="vmList()"
-  [complianceRoute]="complianceRoute"
-  (removeEnergyAudit)="removeEnergyAudit($event)"
-></esos-energy-audit-list>
+>
+  <h2 class="govuk-heading-m">
+    Does the evidence pack record the extent to which, and the reasons why, energy consumption profiling was not used in
+    the energy audit and the details of the alternative method of analysis used?
+  </h2>
+  <dl govuk-summary-list [hasBorders]="true">
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>
+        <ng-container [ngSwitch]="vm.data.isEnergyConsumptionProfilingNotUsedRecorded">
+          <ng-container *ngSwitchCase="'YES'">
+            I confirm that these are all recorded in our ESOS evidence pack
+          </ng-container>
+          <ng-container *ngSwitchCase="'NO'">
+            I confirm that these are not recorded in our ESOS evidence pack and I recognise that this is not in
+            compliance with the obligations of ESOS
+          </ng-container>
+          <ng-container *ngSwitchDefault>Skip question</ng-container>
+        </ng-container>
+      </dd>
+      <dd *ngIf="vm.isEditable" govukSummaryListColumnActions>
+        <a
+          govukLink
+          [routerLink]="['./', vm.wizardStep.ENERGY_CONSUMPTION_PROFILING_NOT_USED_RECORDED]"
+          [queryParams]="{ change: true }"
+        >
+          Change
+        </a>
+      </dd>
+    </div>
+  </dl>
+</ng-container>
+
+<div class="govuk-!-margin-bottom-9" *ngIf="complianceRoute()?.energyAudits?.length > 0">
+  <esos-energy-audit-list
+    [vm]="vmList()"
+    [complianceRoute]="complianceRoute"
+    (removeEnergyAudit)="removeEnergyAudit($event)"
+  ></esos-energy-audit-list>
+
+  <a
+    govukSecondaryButton
+    *ngIf="vm.isEditable"
+    class="govuk-!-margin-bottom-0"
+    [routerLink]="['./', vm.wizardStep.ADD_ENERGY_AUDIT]"
+  >
+    Add energy audit
+  </a>
+</div>
 
 <ng-container *ngIf="vm.data?.partsProhibitedFromDisclosingExist != null">
   <h2 class="govuk-heading-m">
     Are there any parts of the ESOS report, or supporting information, that the responsible undertaking is prohibited
     from disclosing to any group undertaking?
   </h2>
+
   <dl govuk-summary-list [hasBorders]="true">
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ vm.data.partsProhibitedFromDisclosingExist | booleanToText }}</dd>
-      <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>{{ vm.data.partsProhibitedFromDisclosingExist | booleanToText }}</dd>
+      <dd *ngIf="vm.isEditable" govukSummaryListColumnActions>
         <a govukLink [routerLink]="['./', vm.wizardStep.PROHIBITED_DISCLOSING]" [queryParams]="{ change: true }">
           Change
         </a>
@@ -127,13 +231,13 @@
 
 <ng-container *ngIf="vm.data?.partsProhibitedFromDisclosing">
   <h2 class="govuk-heading-m">
-    Explain which parts of the ESOS report, or supporting information, the responsible undertaking is prohibited from
-    disclosing.
+    Which parts of the ESOS report or supporting information is the responsible undertaking prohibited by law from disclosing?
   </h2>
+
   <dl govuk-summary-list [hasBorders]="true">
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue class="pre-wrap">{{ vm.data.partsProhibitedFromDisclosing }}</dd>
-      <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue class="pre-wrap">{{ vm.data.partsProhibitedFromDisclosing }}</dd>
+      <dd *ngIf="vm.isEditable" govukSummaryListColumnActions>
         <a govukLink [routerLink]="['./', vm.wizardStep.PROHIBITED_DISCLOSING_PARTS]" [queryParams]="{ change: true }">
           Change
         </a>
@@ -144,12 +248,13 @@
 
 <ng-container *ngIf="vm.data?.partsProhibitedFromDisclosingReason">
   <h2 class="govuk-heading-m">
-    Explain why the disclosure of these parts of the ESOS report, or supporting information, is prohibited by law.
+    Why is disclosure of these parts of the ESOS report or supporting information prohibited by law?
   </h2>
+
   <dl govuk-summary-list [hasBorders]="true">
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue class="pre-wrap">{{ vm.data.partsProhibitedFromDisclosingReason }}</dd>
-      <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue class="pre-wrap">{{ vm.data.partsProhibitedFromDisclosingReason }}</dd>
+      <dd *ngIf="vm.isEditable" govukSummaryListColumnActions>
         <a govukLink [routerLink]="['./', vm.wizardStep.PROHIBITED_DISCLOSING_REASON]" [queryParams]="{ change: true }">
           Change
         </a>

@@ -9,9 +9,9 @@ import { PageHeadingComponent } from '@shared/page-heading/page-heading.componen
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import {
-  CurrentStep,
   ENERGY_CONSUMPTION_SUB_TASK,
-  WizardStep,
+  EnergyConsumptionCurrentStep,
+  EnergyConsumptionWizardStep,
 } from '@tasks/notification/subtasks/energy-consumption/energy-consumption.helper';
 
 import { GovukComponentsModule } from 'govuk-components';
@@ -20,7 +20,7 @@ import { EnergyConsumptionDetails } from 'esos-api';
 
 interface ViewModel {
   subtaskName: string;
-  data: EnergyConsumptionDetails;
+  energyConsumptionDetails: EnergyConsumptionDetails;
   wizardSteps: { [s: string]: string };
   isEditable: boolean;
   sectionsCompleted: NotificationTaskPayload['nocSectionsCompleted'];
@@ -36,8 +36,8 @@ interface ViewModel {
 export class EnergyConsumptionSummaryComponent {
   vm: Signal<ViewModel> = computed(() => ({
     subtaskName: ENERGY_CONSUMPTION_SUB_TASK,
-    data: this.store.select(notificationQuery.selectEnergyConsumption)(),
-    wizardSteps: WizardStep,
+    energyConsumptionDetails: this.store.select(notificationQuery.selectEnergyConsumption)(),
+    wizardSteps: EnergyConsumptionWizardStep,
     isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
     sectionsCompleted: this.store.select(notificationQuery.selectNocSectionsCompleted)(),
   }));
@@ -51,7 +51,7 @@ export class EnergyConsumptionSummaryComponent {
   submit() {
     this.service.submitSubtask({
       subtask: ENERGY_CONSUMPTION_SUB_TASK,
-      currentStep: CurrentStep.SUMMARY,
+      currentStep: EnergyConsumptionCurrentStep.SUMMARY,
       route: this.route,
       payload: this.service.payload,
     });

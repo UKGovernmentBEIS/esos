@@ -1,19 +1,10 @@
 <esos-page-heading caption="Create user account" size="xl">Check your answers</esos-page-heading>
 
 <esos-user-input-summary-template
-  [changeLink]="'../contact-details'"
   [userInfo]="userInfo$ | async"
+  [userEmail]="userEmail$ | async"
+  [canChangeEmail]="false"
+  [changeLink]="'../contact-details'"
 ></esos-user-input-summary-template>
-
-<ng-container *ngIf="(invitationStatus$ | async) !== 'PENDING_USER_REGISTRATION_NO_PASSWORD'">
-  <h2
-    [changeRoute]="['/registration', 'user', 'choose-password']"
-    esos-summary-header
-    class="govuk-heading-m govuk-!-padding-bottom-2"
-    style="border-bottom: 1px solid #b1b4b6"
-  >
-    Password
-  </h2>
-</ng-container>
 
 <button (click)="registerUser()" [disabled]="isSubmitDisabled" govukButton type="button">Submit</button>

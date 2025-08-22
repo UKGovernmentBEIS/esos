@@ -62,11 +62,7 @@ describe('NoEnergyResponsibilityAssessmentTypesComponent', () => {
   });
 
   it('should display correct form labels', () => {
-    expect(
-      screen.getByText(
-        'Confirm that the organisation has no energy responsibility, despite qualifying for the scheme, and that the board director...',
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Responsible officer review')).toBeInTheDocument();
   });
 
   it(`should submit a valid form and navigate to nextRoute`, () => {

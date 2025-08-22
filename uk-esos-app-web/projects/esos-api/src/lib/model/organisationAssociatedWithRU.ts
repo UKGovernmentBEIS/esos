@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ClassificationCodesDetails } from './classificationCodesDetails';
 
 export interface OrganisationAssociatedWithRU {
+  registrationNumberExist: boolean;
   registrationNumber?: string;
   organisationName: string;
-  taxReferenceNumber?: string;
-  isCoveredByThisNotification: boolean;
   isPartOfArrangement: boolean;
   isParentOfResponsibleUndertaking: boolean;
   isSubsidiaryOfResponsibleUndertaking: boolean;
   isPartOfFranchise: boolean;
-  isTrust: boolean;
   hasCeasedToBePartOfGroup: boolean;
+  classificationCodesDetails: ClassificationCodesDetails;
 }

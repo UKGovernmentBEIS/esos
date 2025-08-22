@@ -5,16 +5,30 @@
   (formSubmit)="submit()"
   submitText="Save and continue"
   [hideSubmit]="!isEditable"
+  [showReturnLink]="true"
 >
-  <div formControlName="energyResponsibility" govuk-radio>
-    <govuk-radio-option value="RESPONSIBLE" label="Yes, the organisation is responsible for energy" />
+  <p class="govuk-body">
+    An organisation is responsible for energy under ESOS if it is supplied with energy and consumes that energy by the
+    assets it holds or the activities it carries out.
+  </p>
+
+  <div
+    formControlName="energyResponsibility"
+    govuk-radio
+    legend="Are the organisations in this notification responsible for any energy under ESOS?"
+    [isLegendHidden]="true"
+  >
+    <govuk-radio-option
+      value="RESPONSIBLE"
+      label="Yes, and at least 40,000 kWh of energy was used in the reference period"
+    />
     <govuk-radio-option
       value="RESPONSIBLE_BUT_LESS_THAN_40000_KWH"
-      label="Yes, the organisation is responsible for energy, but used less than 40,000 kWh of energy in the reference period"
+      label="Yes, but less than 40,000 kWh of energy was used in the reference period"
     />
     <govuk-radio-option
       value="NOT_RESPONSIBLE"
-      label="No, the organisation has no energy responsibility and the total energy consumption is zero"
+      label="No, there is no energy responsibility and the total energy consumption is zero"
     />
   </div>
 </esos-wizard-step>

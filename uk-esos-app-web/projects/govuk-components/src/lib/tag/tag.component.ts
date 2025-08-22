@@ -7,7 +7,11 @@ import { TagColor } from './tag-color.type';
   selector: 'govuk-tag',
   standalone: true,
   imports: [NgClass],
-  templateUrl: './tag.component.html',
+  template: `
+    <strong class="govuk-tag" [ngClass]="color ? 'govuk-tag--' + color : null">
+      <ng-content></ng-content>
+    </strong>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagComponent {

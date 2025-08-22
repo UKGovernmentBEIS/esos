@@ -5,10 +5,6 @@
       <esos-page-heading size="xl">User details</esos-page-heading>
       <esos-user-input phoneType="full"></esos-user-input>
 
-      <ng-template #address>
-        <esos-address-input formGroupName="address"></esos-address-input>
-      </ng-template>
-
       <esos-two-fa-link
         [title]="
           (isLoggedUser$ | async) === true ? 'Change two factor authentication' : 'Reset two-factor authentication'

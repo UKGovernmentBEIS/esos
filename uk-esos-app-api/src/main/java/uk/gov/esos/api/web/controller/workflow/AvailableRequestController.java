@@ -44,9 +44,23 @@ public class AvailableRequestController {
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#accountId")
     public ResponseEntity<Map<RequestCreateActionType, RequestCreateValidationResult>> getAvailableAccountWorkflows(
-            @Parameter(hidden = true) AppUser pmrvUser,
+            @Parameter(hidden = true) AppUser appUser,
             @PathVariable("accountId") @Parameter(name = "accountId", description = "The account id", required = true) Long accountId) {
 
-        return new ResponseEntity<>(availableRequestService.getAvailableAccountWorkflows(accountId, pmrvUser), HttpStatus.OK);
+        return new ResponseEntity<>(availableRequestService.getAvailableAccountWorkflows(accountId, appUser), HttpStatus.OK);
+    }
+
+    @GetMapping("/reporting/related-actions/{requestId}")
+    @Operation(summary = "Get workflows to start a task")
+    @ApiResponse(responseCode = "200", description = OK, useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "404", description = NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @Authorized(resourceId = "#requestId")
+    public ResponseEntity<Map<RequestCreateActionType, RequestCreateValidationResult>> getAvailableRequestWorkflows (
+            @Parameter(hidden = true) AppUser appUser,
+            @PathVariable("requestId") @Parameter(name = "requestId", description = "The request id", required = true) String requestId) {
+
+        return new ResponseEntity<>(availableRequestService.getAvailableRequestWorkflows(requestId, appUser), HttpStatus.OK);
     }
 }

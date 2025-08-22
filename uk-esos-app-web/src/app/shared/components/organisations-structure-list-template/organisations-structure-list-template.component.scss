@@ -1,0 +1,10 @@
+@import '/projects/govuk-components/src/styles/settings/colours-applied';
+
+:host ::ng-deep .org-details-width {
+  width: 210px !important;
+}
+
+.remove-link {
+  cursor: pointer;
+  color: $govuk-link-colour;
+}

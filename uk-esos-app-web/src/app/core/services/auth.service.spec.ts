@@ -81,7 +81,7 @@ describe('AuthService', () => {
     await service.loadUser();
 
     expect(keycloakService.login).toHaveBeenCalledTimes(1);
-    expect(keycloakService.login).toHaveBeenCalledWith({});
+    expect(keycloakService.login).toHaveBeenCalledWith({ 'redirectUri': 'http://localhost' });
     expect(usersService.getCurrentUser).toHaveBeenCalledTimes(1);
   });
 
@@ -99,7 +99,7 @@ describe('AuthService', () => {
 
   it('should update all user info when checkUser is called', async () => {
     await expect(firstValueFrom(authStore.asObservable())).resolves.toEqual(initialState);
-    keycloakService.isLoggedIn.mockResolvedValueOnce(false);
+    keycloakService.isLoggedIn.mockReturnValueOnce(false);
 
     await expect(firstValueFrom(service.checkUser())).resolves.toBeUndefined();
 
@@ -110,7 +110,7 @@ describe('AuthService', () => {
     await expect(firstValueFrom(authStore.pipe(selectUserProfile))).resolves.toBeNull();
 
     authStore.setIsLoggedIn(null);
-    keycloakService.isLoggedIn.mockResolvedValueOnce(true);
+    keycloakService.isLoggedIn.mockReturnValueOnce(true);
 
     await expect(firstValueFrom(service.checkUser())).resolves.toBeUndefined();
 

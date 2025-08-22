@@ -1,9 +1,10 @@
 <ng-container *ngIf="vm() as vm">
-  <esos-page-heading caption="Energy savings opportunities">Check your answers</esos-page-heading>
+  <esos-page-heading [caption]="vm.energySavingsOpportunityMap.title">Check your answers</esos-page-heading>
 
   <esos-energy-savings-opportunities-summary-page
     *ngIf="vm.data"
     [data]="vm.data"
+    [energySavingsOpportunityMap]="vm.energySavingsOpportunityMap"
     [changeLink]="vm.changeLink"
     [isEditable]="vm.isEditable"
     [queryParams]="vm.queryParams"

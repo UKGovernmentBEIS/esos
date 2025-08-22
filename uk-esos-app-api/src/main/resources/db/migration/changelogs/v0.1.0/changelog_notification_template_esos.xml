@@ -966,4 +966,472 @@ This is an automatic email - please do not reply to this address.'
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_UPDATE_USER_ACCOUNT_ACTIVATION_NOTIFICATION_TEMPLATE_TEXT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+              SET text = 'Your ${userRoleType} account has been activated in the Energy Savings Opportunity Scheme reporting service.
+
+You can now [sign in to your account](${homeUrl}).
+
+If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+            WHERE name = 'UserAccountActivation';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET text = 'Your ${userRoleType} account has been activated in the Manage your ESOS reporting service.
+
+                You can now [sign in to your account](${homeUrl}).
+
+                If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+                This is an automatic email - please do not reply to this address.'
+                WHERE name = 'UserAccountActivation';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_EMAIL_CONFIRMATION_NOTIFICATION_TEMPLATE_SUBJECT_AND_TEXT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET subject = 'Confirm your email address - Manage your ESOS reporting',
+                text = 'We received a request to create a sign-in for the Energy Savings Opportunity Scheme reporting service.
+
+Use this link to confirm your email:
+
+[Confirm your email address](${emailConfirmationLink})
+
+If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+            WHERE name = 'EmailConfirmation';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET subject = 'Confirm your email address - Energy Savings Opportunity Scheme',
+                    text = 'We received a request to create a sign-in for the Energy Savings Opportunity Scheme.
+
+                Use this link to confirm your email:
+
+                [Confirm your email address](${emailConfirmationLink})
+
+                If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+                This is an automatic email - please do not reply to this address.'
+                WHERE name = 'EmailConfirmation';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_ACCOUNT_APPLICATION_APPROVED_NOTIFICATION_TEMPLATE_TEXT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET text = 'Your application to set up an organisation account in the Manage your ESOS reporting service has been approved.
+
+You are currently the Admin user on your organisation account.
+
+Sign in to the [ESOS reporting service](${homeUrl}) to:
+
+- report your energy use
+- invite additional users to your account
+
+Users can be managed at any time from your Dashboard by selecting "Manage users and contacts".
+
+If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+            WHERE name = 'AccountApplicationApproved';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET text = 'Your application to set up an organisation account has been approved.
+
+                You are currently the Admin user on your organisation account.
+
+                Sign in to the [ESOS reporting service](${homeUrl}) to:
+
+                - report your energy use
+                - invite additional users to your account
+
+                Users can be managed at any time from your Dashboard by selecting "Manage users and contacts".
+
+                If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+                This is an automatic email - please do not reply to this address.'
+                WHERE name = 'AccountApplicationApproved';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_USER_ACCOUNT_CREATED_NOTIFICATION_TEMPLATE_SUBJECT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET subject = 'User account created - Manage your ESOS reporting'
+            WHERE name = 'UserAccountCreated';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET subject = 'User account created - Energy Savings Opportunity Scheme'
+                WHERE name = 'UserAccountCreated';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_CHANGE_2FA_MESSAGE_NOTIFICATION_TEMPLATE_SUBJECT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET subject = 'Two factor authentication device update request - Manage your ESOS reporting'
+            WHERE name = 'Change2FA';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET subject = 'Two factor authentication device update request - Energy Savings Opportunity Scheme'
+                WHERE name = 'Change2FA';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_RESET_PASSWORD_REQUEST_MESSAGE_NOTIFICATION_TEMPLATE_SUBJECT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET subject = 'Password reset request - Manage your ESOS reporting'
+            WHERE name = 'ResetPasswordRequest';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET subject = 'Password reset request - Energy Savings Opportunity Scheme'
+                WHERE name = 'ResetPasswordRequest';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_RESET_PASSWORD_CONFIRMATION_MESSAGE_NOTIFICATION_TEMPLATE_SUBJECT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET subject = 'Password reset - Manage your ESOS reporting'
+            WHERE name = 'ResetPasswordConfirmation';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET subject = 'Password reset - Energy Savings Opportunity Scheme'
+                WHERE name = 'ResetPasswordConfirmation';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_RESET_2FA_CONFIRMATION_MESSAGE_NOTIFICATION_TEMPLATE_SUBJECT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET subject = 'Two-factor authentication reset - Manage your ESOS reporting'
+            WHERE name = 'Reset2FaConfirmation';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET subject = 'Two-factor authentication reset - Energy Savings Opportunity Scheme'
+                WHERE name = 'Reset2FaConfirmation';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_EMAIL_ASSIGNED_TASK_NOTIFICATION_TEMPLATE_SUBJECT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET subject = 'New task received - Manage your ESOS reporting'
+            WHERE name = 'EmailAssignedTask';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET subject = 'New task received - Energy Savings Opportunity Scheme'
+                WHERE name = 'EmailAssignedTask';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_INSERT_USER_FEEDBACK_NOTIFICATION_TEMPLATE_AND_UPDATES_SUBJECT" author="dimopoulosc@unisystems.gr">
+        <validCheckSum>1:any</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from notification_template where name='UserFeedbackForService';
+            </sqlCheck>
+        </preConditions>
+
+        <comment>Insert record in notification_template Table for User Feedback email</comment>
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text)
+            VALUES (
+                       nextval('notification_template_seq'),
+                       'UserFeedbackForService',
+                       'New feedback received for the Manage your ESOS reporting service',
+                       '## Survey results:
+
+            **Domain** ${domainUrl}
+            **Time created** ${timestamp}
+            - **User registration & 2FA**
+            - Rating: ${userRegistrationRate}
+            - Reason: ${userRegistrationRateReason}
+            - **Online guidance & communication**
+            - Rating: ${onlineGuidanceRate}
+            - Reason: ${onlineGuidanceRateReason}
+            - **Create accounts**
+            - Rating: ${creatingAccountRate}
+            - Reason: ${creatingAccountRateReason}
+            - **On-boarding, Identity & security checks**
+            - Rating: ${onBoardingRate}
+            - Reason: ${onBoardingRateReason}
+            - **View, search & respond to tasks**
+            - Rating: ${tasksRate}
+            - Reason: ${tasksRateReason}
+            - **Overall experience**
+            - Rating: ${satisfactionRate}
+            - Reason: ${satisfactionRateReason}
+            - **Improvement Suggestion**
+            ${improvementSuggestion}
+                       '
+                   )]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'UserFeedbackForService';
+            </sql>
+        </rollback>
+
+    </changeSet>
+    
+    <changeSet id="0_1_0_VERIFIED_ACCOUNT_INVITATION_NOTIFICATION_TEMPLATE" author="apostolouk@unisystems.gr">
+        <validCheckSum>1:any</validCheckSum>
+        <comment>Insert record in notification_template table for verified account invitation</comment>
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text
+            )
+            VALUES (
+            nextval('notification_template_seq'),
+           'VerifiedAccountInvitation',
+           'Sign up invitation - Manage your ESOS reporting',
+           'You have been verified as an authorized user to access the [ESOS reporting service](${homeUrl}).
+
+Please click on the button to proceed with the sign-up process.
+
+If you are already a registered user, you can sign in to the ESOS reporting service to set up your organization account.
+
+If you are already an active user within a LIVE organization account, please disregard this message.
+
+If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+       )]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'VerifiedAccountInvitation';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_INSERT_ORGANISATION_ACCOUNT_CREATED_NOTIFICATION_TEMPLATE" author="pafilisa@unisystems.gr">
+
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text)
+            VALUES (
+                       nextval('notification_template_seq'),
+                       'OrganisationAccountCreated',
+                       'Organisation account created - Manage your ESOS reporting',
+                       'Your organisation account has been created.
+
+You are currently the Administrator user on your organisation account.
+
+Sign in to the [ESOS reporting service](${homeUrl}) to:
+
+- report your energy use
+- invite additional users to your organisation account
+
+Users can be managed from your Dashboard by selecting "Manage users and contacts".
+
+If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+                   )]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'OrganisationAccountCreated';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_VERIFIED_ACCOUNT_INVITATION_NOTIFICATION_TEMPLATE_TEXT" author="dimopoulosc@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET text = 'You have been verified as an authorised user of the Manage your ESOS reporting service.
+
+You can [sign in](${homeUrl}) to your account.
+If you are a new user, you will be asked to create a sign in before you can access your account.
+
+If you are already an active user within a live organisation account, you do not need to take any further action.
+
+If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+            WHERE name = 'VerifiedAccountInvitation';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET text = 'You have been verified as an authorized user to access the [ESOS reporting service](${homeUrl}).
+
+                Please click on the button to proceed with the sign-up process.
+
+                If you are already a registered user, you can sign in to the ESOS reporting service to set up your organization account.
+
+                If you are already an active user within a LIVE organization account, please disregard this message.
+
+                If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+                This is an automatic email - please do not reply to this address.'
+                WHERE name = 'VerifiedAccountInvitation';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+	<changeSet id="0_1_0_UPDATE_VERIFIED_ACCOUNT_INVITATION_NOTIFICATION_TEMPLATE_TEXT_ADD_LINK" author="apostolouk@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET text = 'You have been verified as an authorised user of the Manage your ESOS reporting service.
+
+You can [sign in](${homeUrl}) to your account.
+If you are a new user, you will be asked to create a sign in before you can access your account.
+
+If you are already an active user within a live organisation account, you do not need to take any further action.
+
+Video guidance for creating an account can be found [here.](https://youtu.be/iKAFTZ7sNyI)
+
+If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+            WHERE name = 'VerifiedAccountInvitation';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+            SET text = 'You have been verified as an authorised user of the Manage your ESOS reporting service.
+
+You can [sign in](${homeUrl}) to your account.
+If you are a new user, you will be asked to create a sign in before you can access your account.
+
+If you are already an active user within a live organisation account, you do not need to take any further action.
+
+If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+            WHERE name = 'VerifiedAccountInvitation';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_VERIFIED_ACCOUNT_INVITATION_NOTIFICATION_TEMPLATE_TEXT_UPDATE_LINK" author="P70383">
+        <sql>
+            UPDATE notification_template
+            SET text = 'You have been verified as an authorised user of the Manage your ESOS reporting service.
+
+You can [sign in](${homeUrl}) to your account.
+If you are a new user, you will be asked to create a sign in before you can access your account.
+
+If you are already an active user within a live organisation account, you do not need to take any further action.
+
+Video guidance for creating an account can be found [here.](https://youtu.be/NA2m-qkyBLI)
+
+If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+            WHERE name = 'VerifiedAccountInvitation';
+        </sql>
+
+        <rollback>
+            <sql>
+                UPDATE notification_template
+                SET text = 'You have been verified as an authorised user of the Manage your ESOS reporting service.
+
+                You can [sign in](${homeUrl}) to your account.
+                If you are a new user, you will be asked to create a sign in before you can access your account.
+
+                If you are already an active user within a live organisation account, you do not need to take any further action.
+
+                Video guidance for creating an account can be found [here.](https://youtu.be/iKAFTZ7sNyI)
+
+                If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+                This is an automatic email - please do not reply to this address.'
+                WHERE name = 'VerifiedAccountInvitation';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_INSERT_ACCOUNT_CLOSURE_EMAIL_TEMPLATE" author="pmpountas@unisystems.gr">
+    <sql>
+        <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text)
+            VALUES (
+            nextval('notification_template_seq'),
+           'AccountClosed',
+           'Organisation account closed - Manage your ESOS reporting',
+           'The record for the organisation ${accountName} (ID:${accountId}) has been closed with the following justification:
+
+            ${justification}
+
+            Note that all open workflows have been closed while their respective pending tasks (if any) have been marked as TERMINATED. You can still access in view only any information already stored in the system.
+
+            If you think you should not have received this email, you must [contact the UK ESOS Helpdesk](mailto:${esosHelpdesk}).
+
+            This is an automatic email - please do not reply to this address.'
+       )]]>;
+    </sql>
+    <rollback>
+        <sql>
+            DELETE FROM notification_template WHERE name = 'AccountClosed';
+        </sql>
+    </rollback>
+    </changeSet>
+
 </databaseChangeLog>

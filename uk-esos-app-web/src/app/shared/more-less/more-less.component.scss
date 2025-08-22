@@ -1,0 +1,44 @@
+@use 'base' as govuk;
+@use 'helpers/all';
+
+a {
+  cursor: pointer;
+  color: govuk.$govuk-link-colour;
+}
+
+div {
+  overflow-wrap: break-word;
+}
+
+.initial-class {
+  white-space: nowrap;
+}
+
+.cell-ellipsis-single-line {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cell-ellipsis-multi-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+@media print {
+  .cell-ellipsis-single-line {
+    overflow: visible;
+    white-space: normal;
+    text-overflow: unset;
+  }
+  .cell-ellipsis-multi-line {
+    overflow: visible;
+    white-space: normal;
+    text-overflow: unset;
+    display: block;
+    -webkit-box-orient: unset;
+  }
+}

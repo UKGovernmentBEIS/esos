@@ -22,6 +22,30 @@ describe('ItemLinkPipe', () => {
       taskType: null,
       expectedPath: ['/tasks', taskId],
     },
+    // ACTION_PLAN_P3
+    {
+      requestType: 'ACTION_PLAN_P3',
+      taskType: null,
+      expectedPath: ['/tasks', taskId],
+    },
+    // ACCOUNT_CLOSURE
+    {
+      requestType: 'ACCOUNT_CLOSURE',
+      taskType: null,
+      expectedPath: ['/tasks', taskId],
+    },
+    // PROGRESS_UPDATE_1_P3
+    {
+      requestType: 'PROGRESS_UPDATE_1_P3',
+      taskType: null,
+      expectedPath: ['/tasks', taskId],
+    },
+    // PROGRESS_UPDATE_2_P3
+    {
+      requestType: 'PROGRESS_UPDATE_2_P3',
+      taskType: null,
+      expectedPath: ['/tasks', taskId],
+    },
 
     // NULL
     {

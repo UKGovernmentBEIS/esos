@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, Inject, OnInit, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
@@ -6,15 +7,17 @@ import { ActivatedRoute } from '@angular/router';
 import { TaskService } from '@common/forms/services/task.service';
 import { RequestTaskStore } from '@common/request-task/+state';
 import {
-  getSignificantPercentage,
-  getTotalSum,
+  getEnergyConsumptionTotalSumOrNull,
+  getSignificantPercentageOrNull,
 } from '@shared/components/energy-consumption-input/energy-consumption-input';
 import { EnergyConsumptionInputComponent } from '@shared/components/energy-consumption-input/energy-consumption-input.component';
 import { WIZARD_STEP_HEADINGS } from '@shared/components/summaries';
+import { NoDataEnteredPipe } from '@shared/pipes/no-data-entered.pipe';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import {
   CurrentStep,
+  getCompliancePeriodHint,
   WizardStep,
 } from '@tasks/notification/subtasks/compliance-periods/shared/compliance-period.helper';
 import { significantEnergyConsumptionFormProvider } from '@tasks/notification/subtasks/compliance-periods/shared/significant-energy-consumption/significant-energy-consumption-form.provider';
@@ -40,12 +43,15 @@ import { COMPLIANCE_PERIOD_SUB_TASK, CompliancePeriod, CompliancePeriodSubtask }
     RadioComponent,
     EnergyConsumptionInputComponent,
     DetailsComponent,
+    NgIf,
+    NoDataEnteredPipe,
   ],
   providers: [significantEnergyConsumptionFormProvider],
 })
 export class SignificantEnergyConsumptionComponent implements OnInit {
   isFirstCompliancePeriod: boolean;
   heading: string;
+  hint: string;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -58,19 +64,33 @@ export class SignificantEnergyConsumptionComponent implements OnInit {
   ngOnInit(): void {
     this.isFirstCompliancePeriod = this.subtask === CompliancePeriodSubtask.FIRST;
     this.heading = WIZARD_STEP_HEADINGS[WizardStep.SIGNIFICANT_ENERGY_CONSUMPTION](this.isFirstCompliancePeriod);
+    this.hint = getCompliancePeriodHint(this.isFirstCompliancePeriod);
   }
 
   formData: Signal<EnergyConsumption> = toSignal(this.form.valueChanges, { initialValue: this.form.value });
-  total: Signal<number> = computed(() => getTotalSum(this.formData()));
+  total: Signal<number> = computed(() => getEnergyConsumptionTotalSumOrNull(this.formData()));
 
   percentage: Signal<number> = computed(() => {
     const compliancePeriod = this.isFirstCompliancePeriod
       ? this.store.select(notificationQuery.selectFirstCompliancePeriod)()
       : this.store.select(notificationQuery.selectSecondCompliancePeriod)();
+
+    if (
+      compliancePeriod.firstCompliancePeriodDetails.organisationalEnergyConsumptionBreakdown.buildings == null &&
+      compliancePeriod.firstCompliancePeriodDetails.organisationalEnergyConsumptionBreakdown.industrialProcesses ==
+        null &&
+      compliancePeriod.firstCompliancePeriodDetails.organisationalEnergyConsumptionBreakdown.transport == null &&
+      compliancePeriod.firstCompliancePeriodDetails.organisationalEnergyConsumptionBreakdown.otherProcesses == null
+    ) {
+      return null;
+    }
+
     const totalValue = this.total();
-    const totalConsumption = compliancePeriod?.firstCompliancePeriodDetails?.organisationalEnergyConsumption?.total;
-    getSignificantPercentage(totalValue, totalConsumption);
-    return Math.floor((totalValue / totalConsumption) * 100);
+    const totalConsumption =
+      compliancePeriod?.firstCompliancePeriodDetails?.organisationalEnergyConsumption ??
+      compliancePeriod?.firstCompliancePeriodDetails?.organisationalEnergyConsumptionBreakdown?.total;
+
+    return getSignificantPercentageOrNull(totalConsumption, totalValue);
   });
 
   submit(): void {
@@ -83,10 +103,7 @@ export class SignificantEnergyConsumptionComponent implements OnInit {
           payload.noc.firstCompliancePeriod.firstCompliancePeriodDetails = {
             ...payload.noc.firstCompliancePeriod.firstCompliancePeriodDetails,
             significantEnergyConsumption: {
-              buildings: +this.form.get('buildings').value,
-              transport: +this.form.get('transport').value,
-              industrialProcesses: +this.form.get('industrialProcesses').value,
-              otherProcesses: +this.form.get('otherProcesses').value,
+              ...this.form.value,
               total: this.total(),
               significantEnergyConsumptionPct: this.percentage(),
             },
@@ -95,10 +112,7 @@ export class SignificantEnergyConsumptionComponent implements OnInit {
           payload.noc.secondCompliancePeriod.firstCompliancePeriodDetails = {
             ...payload.noc.secondCompliancePeriod.firstCompliancePeriodDetails,
             significantEnergyConsumption: {
-              buildings: +this.form.get('buildings').value,
-              transport: +this.form.get('transport').value,
-              industrialProcesses: +this.form.get('industrialProcesses').value,
-              otherProcesses: +this.form.get('otherProcesses').value,
+              ...this.form.value,
               total: this.total(),
               significantEnergyConsumptionPct: this.percentage(),
             } as SignificantEnergyConsumption,

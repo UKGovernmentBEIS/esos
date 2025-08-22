@@ -1,0 +1,120 @@
+package uk.gov.esos.api.reporting.actionplan.phase3.domain;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class TotalEnergySavingsExpectedTest {
+
+    private Validator validator;
+
+    @BeforeEach
+    void setup() {
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+    }
+
+    @Test
+    void validate_when_everything_valid() {
+        TotalEnergySavingsExpected ec = buildEnergyConsumption();
+
+        final Set<ConstraintViolation<TotalEnergySavingsExpected>> violations = validator.validate(ec);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void validate_when_null_values_exist_valid() {
+        TotalEnergySavingsExpected ec = buildEnergyConsumptionWithNullValues();
+
+        final Set<ConstraintViolation<TotalEnergySavingsExpected>> violations = validator.validate(ec);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void validate_when_total_not_correct_invalid() {
+        TotalEnergySavingsExpected ec = buildEnergyConsumption();
+        ec.setTotal(399L);
+
+        final Set<ConstraintViolation<TotalEnergySavingsExpected>> violations = validator.validate(ec);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactly(
+                "{ap.energysavings.sum}");
+    }
+
+    @Test
+    void validate_when_null_values_and_total_not_correct_invalid() {
+        TotalEnergySavingsExpected ec = buildEnergyConsumptionWithNullValues();
+        ec.setTotal(199L);
+
+        final Set<ConstraintViolation<TotalEnergySavingsExpected>> violations = validator.validate(ec);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactly(
+                "{ap.energysavings.sum}");
+    }
+
+    @Test
+    void validate_when_all_values_null_valid() {
+        TotalEnergySavingsExpected ec = TotalEnergySavingsExpected.builder().build();
+
+        final Set<ConstraintViolation<TotalEnergySavingsExpected>> violations = validator.validate(ec);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void validate_when_all_values_null_invalid() {
+        TotalEnergySavingsExpected ec = TotalEnergySavingsExpected.builder().total(100L).build();
+
+        final Set<ConstraintViolation<TotalEnergySavingsExpected>> violations = validator.validate(ec);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactly(
+                "{ap.energysavings.sum}");
+    }
+
+    @Test
+    void validate_when_max_digits_not_valid() {
+        TotalEnergySavingsExpected ec = TotalEnergySavingsExpected.builder()
+                .buildings(1000000000000000L)
+                .total(1000000000000000L)
+                .build();
+
+        final Set<ConstraintViolation<TotalEnergySavingsExpected>> violations = validator.validate(ec);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactly(
+                "numeric value out of bounds (<15 digits>.<0 digits> expected)");
+    }
+
+    private TotalEnergySavingsExpected buildEnergyConsumption() {
+        return TotalEnergySavingsExpected.builder()
+                .buildings(100L)
+                .transport(100L)
+                .industrialProcesses(100L)
+                .otherProcesses(100L)
+                .total(400L)
+                .build();
+    }
+
+
+    private TotalEnergySavingsExpected buildEnergyConsumptionWithNullValues() {
+
+        return TotalEnergySavingsExpected.builder()
+                .buildings(100L)
+                .industrialProcesses(100L)
+                .total(200L)
+                .build();
+    }
+
+}

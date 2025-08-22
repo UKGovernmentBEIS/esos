@@ -1,9 +1,9 @@
 import { StepFlowManager } from '@common/forms/step-flow';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import {
-  CurrentStep,
   RESPONSIBLE_UNDERTAKING_SUB_TASK,
-  WizardStep,
+  ResponsibleUndertakingCurrentStep,
+  ResponsibleUndertakingWizardStep,
 } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
 
 import { NocP3 } from 'esos-api';
@@ -16,20 +16,28 @@ export class ResponsibleUndertakingStepFlowManager extends StepFlowManager {
     const hasOverseasParentDetails = responsibleUndertaking.hasOverseasParentDetails;
 
     switch (currentStep) {
-      case CurrentStep.ORGANISATION_DETAILS:
-        return `../${WizardStep.TRADING_DETAILS}`;
+      case ResponsibleUndertakingCurrentStep.REGISTRATION_NUMBER:
+        return `../${ResponsibleUndertakingWizardStep.ORGANISATION_DETAILS}`;
 
-      case CurrentStep.TRADING_DETAILS:
-        return `../${WizardStep.ORGANISATION_CONTACT_DETAILS}`;
+      case ResponsibleUndertakingCurrentStep.ORGANISATION_DETAILS:
+        return `../${ResponsibleUndertakingWizardStep.TRADING_DETAILS}`;
 
-      case CurrentStep.ORGANISATION_CONTACT_DETAILS:
-        return `../${WizardStep.HAS_OVERSEAS_PARENT_DETAILS}`;
+      case ResponsibleUndertakingCurrentStep.TRADING_DETAILS:
+        return `../${ResponsibleUndertakingWizardStep.ORGANISATION_CONTACT_DETAILS}`;
 
-      case CurrentStep.HAS_OVERSEAS_PARENT_DETAILS:
-        return hasOverseasParentDetails ? `../${WizardStep.OVERSEAS_PARENT_DETAILS}` : WizardStep.SUMMARY;
+      case ResponsibleUndertakingCurrentStep.ORGANISATION_CONTACT_DETAILS:
+        return `../${ResponsibleUndertakingWizardStep.NOTIFICATION}`;
 
-      case CurrentStep.OVERSEAS_PARENT_DETAILS:
-        return WizardStep.SUMMARY;
+      case ResponsibleUndertakingCurrentStep.NOTIFICATION:
+        return `../${ResponsibleUndertakingWizardStep.HAS_OVERSEAS_PARENT_DETAILS}`;
+
+      case ResponsibleUndertakingCurrentStep.HAS_OVERSEAS_PARENT_DETAILS:
+        return hasOverseasParentDetails
+          ? `../${ResponsibleUndertakingWizardStep.OVERSEAS_PARENT_DETAILS}`
+          : ResponsibleUndertakingWizardStep.SUMMARY;
+
+      case ResponsibleUndertakingCurrentStep.OVERSEAS_PARENT_DETAILS:
+        return ResponsibleUndertakingWizardStep.SUMMARY;
 
       default:
         return '../../';

@@ -14,18 +14,18 @@ export const PersonFormFormProvider: Provider = {
       firstName: [
         null,
         [
-          GovukValidators.required('Enter the first name'),
+          GovukValidators.required('Enter a first name'),
           GovukValidators.maxLength(255, 'First name should not be more than 255 characters'),
         ],
       ],
       lastName: [
         null,
         [
-          GovukValidators.required('Enter the last name'),
+          GovukValidators.required('Enter a last name'),
           GovukValidators.maxLength(255, 'Last name should not be more than 255 characters'),
         ],
       ],
-      type: [null, [GovukValidators.required('Select an option')]],
+      type: [null, [GovukValidators.required('Select if the person is internal or external to your corporate group')]],
     });
   },
 };

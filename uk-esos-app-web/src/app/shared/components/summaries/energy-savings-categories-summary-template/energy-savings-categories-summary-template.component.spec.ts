@@ -27,14 +27,13 @@ describe('EnergySavingsCategoriesSummaryTemplateComponent', () => {
 
     component = fixture.componentInstance;
     component.isEditable = true;
-    component.energySavingCategoriesExist = true;
+    component.energySavingCategoriesExist = 'YES';
     component.energySavingsCategories = {
       energyManagementPractices: 0,
       behaviourChangeInterventions: 0,
       training: 0,
       controlsImprovements: 0,
-      shortTermCapitalInvestments: 0,
-      longTermCapitalInvestments: 0,
+      capitalInvestments: 0,
       otherMeasures: 0,
       total: 0,
     };
@@ -63,17 +62,14 @@ describe('EnergySavingsCategoriesSummaryTemplateComponent', () => {
       'Controls improvements',
       '0 kWh',
       'Change',
-      'Short term capital investments (with payback period of less than 3 years)',
-      '0 kWh',
-      'Change',
-      'Long term capital investments (with payback period of more than 3 years)',
+      'Capital investments',
       '0 kWh',
       'Change',
       'Other measures not covered by one of the above',
       '0 kWh',
       'Change',
       'Total',
-      '0 kWh',
+      '0   kWh',
     ]);
   });
 });

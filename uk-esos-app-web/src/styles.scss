@@ -1,9 +1,7 @@
 // Flags for support of IE8
-$govuk-if-ie8 : false;
 $govuk-suppressed-warnings: ie8;
 
 @import 'all';
-@import '@hmcts/frontend/all';
 @import 'theming/tables';
 @import 'theming/shared';
 @import 'theming/task-list';

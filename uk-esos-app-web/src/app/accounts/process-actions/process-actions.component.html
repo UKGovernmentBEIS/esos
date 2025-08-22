@@ -1,35 +1,54 @@
-<ng-container *ngIf="availableTasks$ | async as availableTasks">
-  <esos-page-heading>Start a new task</esos-page-heading>
+@if (accountId$ | async; as accountId) {
+  @if (availableTasks$ | async; as availableTasks) {
+    <esos-page-heading>Start a new task</esos-page-heading>
 
-  <ng-container *ngIf="availableTasks?.length > 0; else noAvailableTasks">
-    <ng-container *ngFor="let task of availableTasks">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-          <h2 class="govuk-heading-m">{{ task.title }}</h2>
-          <ng-container *ngIf="task.type === 'NOTIFICATION_OF_COMPLIANCE_P3'">
-            <esos-about-noc-p3-description></esos-about-noc-p3-description>
-          </ng-container>
-          <ng-container *ngIf="!task.errors; else errors">
-            <button (click)="onRequestButtonClick(task.type)" esosPendingButton govukButton type="button">
-              {{ task.button }}
-            </button>
-          </ng-container>
-          <ng-template #errors>
-            <ul class="govuk-list">
-              <li *ngFor="let error of task.errors">
-                {{ error }}
-              </li>
-            </ul>
-          </ng-template>
+    @if (availableTasks?.length > 0) {
+      @for (task of availableTasks; track task) {
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-m">{{ task.title }}</h2>
+            @switch (task.type) {
+              @case ('NOTIFICATION_OF_COMPLIANCE_P3') {
+                <esos-about-noc-p3-description />
+              }
+              @case ('ACTION_PLAN_P3') {
+                <esos-about-action-plan-p3-description />
+              }
+              @case ('PROGRESS_UPDATE_1_P3') {
+                <esos-about-progress-update-1-p3-description />
+              }
+              @case ('PROGRESS_UPDATE_2_P3') {
+                <esos-about-progress-update-2-p3-description />
+              }
+            }
+            @if (!task.errors) {
+              <button (click)="onRequestButtonClick(task.type, +accountId)" esosPendingButton govukButton type="button">
+                {{ task.button }}
+              </button>
+            } @else {
+              <ul class="govuk-list process-actions-error-list">
+                @for (error of task.errors; track error) {
+                  <li>{{ error }}</li>
+                }
+              </ul>
+            }
+            @if (task.showDisaggregatedTriggerPoint && task.disaggregatedTriggerPointText) {
+              <a
+                govukLink
+                class="govuk-body"
+                [routerLink]="['disaggregated-start']"
+                [state]="{ accountId, requestType: task.type }"
+                >{{ task.disaggregatedTriggerPointText }}</a
+              >
+            }
+          </div>
         </div>
-      </div>
-      <hr class="govuk-section-break govuk-section-break--m" />
-    </ng-container>
-  </ng-container>
-
-  <ng-template #noAvailableTasks>
-    <ul class="govuk-list">
-      <li>There are no available processes to initiate.</li>
-    </ul>
-  </ng-template>
-</ng-container>
+        <hr class="govuk-section-break govuk-section-break--m" />
+      }
+    } @else {
+      <ul class="govuk-list process-actions-error-list">
+        <li>There are no available processes to initiate.</li>
+      </ul>
+    }
+  }
+}

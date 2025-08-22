@@ -2,10 +2,6 @@ import { Provider } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 
 import { RequestTaskStore } from '@common/request-task/+state';
-import {
-  percentageValueValidatorGreaterThan95,
-  totalValueValidatorGreaterThanZero,
-} from '@shared/components/energy-consumption-input/energy-consumption-input.validators';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import {
   COMPLIANCE_PERIOD_SUB_TASK,
@@ -24,25 +20,22 @@ export const significantEnergyConsumptionFormProvider: Provider = {
       subtask === CompliancePeriodSubtask.FIRST
         ? store.select(notificationQuery.selectFirstCompliancePeriod)()
         : store.select(notificationQuery.selectSecondCompliancePeriod)();
+
     const significantEnergyConsumption = compliancePeriod?.firstCompliancePeriodDetails?.significantEnergyConsumption;
-    const totalEnergyConsumption =
-      compliancePeriod?.firstCompliancePeriodDetails?.organisationalEnergyConsumption.total;
+
     const numberValidators = [
-      GovukValidators.required('Please provide a value of energy in KWh'),
       GovukValidators.min(0, 'Must be integer greater than or equal to 0'),
       GovukValidators.integerNumber('Enter a whole number without decimal places (you can use zero)'),
+      GovukValidators.maxDigitsValidator(15),
     ];
     return fb.group(
       {
-        buildings: [significantEnergyConsumption?.buildings ?? 0, numberValidators],
-        transport: [significantEnergyConsumption?.transport ?? 0, numberValidators],
-        industrialProcesses: [significantEnergyConsumption?.industrialProcesses ?? 0, numberValidators],
-        otherProcesses: [significantEnergyConsumption?.otherProcesses ?? 0, numberValidators],
+        buildings: [significantEnergyConsumption?.buildings ?? null, numberValidators],
+        transport: [significantEnergyConsumption?.transport ?? null, numberValidators],
+        industrialProcesses: [significantEnergyConsumption?.industrialProcesses ?? null, numberValidators],
+        otherProcesses: [significantEnergyConsumption?.otherProcesses ?? null, numberValidators],
       },
-      {
-        validators: [totalValueValidatorGreaterThanZero, percentageValueValidatorGreaterThan95(totalEnergyConsumption)],
-        updateOn: 'change',
-      },
+      { updateOn: 'change' },
     );
   },
 };

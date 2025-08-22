@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -60,12 +61,30 @@ describe('OrganisationDetailsComponent', () => {
       this.setInputValue('#name', value);
     }
 
-    get registrationNumber() {
-      return this.getInputValue('#registrationNumber');
+    get type() {
+      return this.getInputValue('#type');
     }
 
-    set registrationNumber(value: string) {
-      this.setInputValue('#registrationNumber', value);
+    set type(value: string) {
+      this.setInputValue('#type', value);
+    }
+
+    get otherTypeName() {
+      return this.getInputValue('#otherTypeName');
+    }
+
+    set otherTypeName(value: string) {
+      this.setInputValue('#otherTypeName', value);
+    }
+
+    get codes() {
+      return this.getInputValue('#codes');
+    }
+
+    set codes(codesArray: string[]) {
+      codesArray.forEach((value: string, index: number) => {
+        this.setInputValue(`#codes.${index}`, value);
+      });
     }
 
     get line1() {
@@ -128,10 +147,12 @@ describe('OrganisationDetailsComponent', () => {
     component = fixture.componentInstance;
     page = new Page(fixture);
     fixture.detectChanges();
+    jest.clearAllMocks();
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
@@ -155,7 +176,7 @@ describe('OrganisationDetailsComponent', () => {
     it('should display all HTMLElements and form with 0 errors', () => {
       expect(page.errorSummary).toBeFalsy();
       expect(page.heading1).toBeTruthy();
-      expect(page.heading1.textContent.trim()).toEqual('Review your organisation details');
+      expect(page.heading1.textContent.trim()).toEqual('Enter the organisation details');
       expect(page.submitButton).toBeTruthy();
     });
 
@@ -175,8 +196,11 @@ describe('OrganisationDetailsComponent', () => {
             responsibleUndertaking: {
               ...mockResponsibleUndertaking,
               organisationDetails: {
+                ...mockResponsibleUndertaking.organisationDetails,
                 name: 'Ru Org Name',
-                registrationNumber: null,
+                type: 'SIC',
+                otherTypeName: undefined,
+                codes: ['2222'],
                 line1: 'Line 1',
                 line2: 'Line 2',
                 postcode: 'Postcode',
@@ -193,12 +217,13 @@ describe('OrganisationDetailsComponent', () => {
       const taskServiceSpy = jest.spyOn(taskService, 'saveSubtask');
 
       page.organisationName = 'Organisation name';
-      page.registrationNumber = '1111';
       page.line1 = 'Address 1';
       page.line2 = 'Address 2';
       page.city = 'London';
       page.postcode = '33333';
       page.county = 'London';
+      page.type = 'SIC';
+      page.codes = ['CodeA'];
 
       page.submitButton.click();
       fixture.detectChanges();
@@ -213,13 +238,16 @@ describe('OrganisationDetailsComponent', () => {
             responsibleUndertaking: {
               ...mockResponsibleUndertaking,
               organisationDetails: {
+                ...mockResponsibleUndertaking.organisationDetails,
                 name: 'Organisation name',
-                registrationNumber: '1111',
                 line1: 'Address 1',
                 line2: 'Address 2',
                 postcode: '33333',
                 city: 'London',
                 county: 'London',
+                type: 'SIC',
+                otherTypeName: undefined,
+                codes: ['CodeA'],
               },
             },
           },
@@ -247,9 +275,8 @@ describe('OrganisationDetailsComponent', () => {
     it('should display all HTMLElements and form with 0 errors', () => {
       expect(page.errorSummary).toBeFalsy();
       expect(page.heading1).toBeTruthy();
-      expect(page.heading1.textContent.trim()).toEqual('Review your organisation details');
+      expect(page.heading1.textContent.trim()).toEqual('Enter the organisation details');
       expect(page.organisationName).toEqual('Corporate Legal Entity Account 2');
-      expect(page.registrationNumber).toEqual('111111');
       expect(page.line1).toEqual('Some address 1');
       expect(page.line2).toEqual('Some address 2');
       expect(page.city).toEqual('London');

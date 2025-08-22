@@ -33,12 +33,12 @@
     </div>
 
     <ng-container *ngIf="vm.total > vm.pageSize">
-      <esos-pagination
+      <govuk-pagination
         (currentPageChange)="changePage($event)"
         [count]="vm.total"
         [pageSize]="vm.pageSize"
         *ngIf="vm.activeTab === tab"
-      ></esos-pagination>
+      ></govuk-pagination>
     </ng-container>
   </ng-template>
 

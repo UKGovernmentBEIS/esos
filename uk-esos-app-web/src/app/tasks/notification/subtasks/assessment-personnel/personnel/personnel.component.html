@@ -5,6 +5,7 @@
   caption="Assessment personnel"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
   <div class="govuk-body">
     <h3 class="govuk-heading-s">Name</h3>
@@ -22,12 +23,12 @@
     <div
       formControlName="type"
       govuk-radio
-      legend="Is this person internal or external to your organisation?"
+      legend="Is this person internal or external to your corporate group?"
       legendSize="normal"
       [isInline]="true"
     >
-      <govuk-radio-option [value]="'INTERNAL'" label="Internal"> </govuk-radio-option>
-      <govuk-radio-option [value]="'EXTERNAL'" label="External"></govuk-radio-option>
+      <govuk-radio-option [value]="'INTERNAL'" [label]="'INTERNAL' | internalExternal"> </govuk-radio-option>
+      <govuk-radio-option [value]="'EXTERNAL'" [label]="'EXTERNAL' | internalExternal"></govuk-radio-option>
     </div>
   </div>
 </esos-wizard-step>

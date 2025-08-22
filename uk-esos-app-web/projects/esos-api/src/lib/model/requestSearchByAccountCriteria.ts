@@ -15,9 +15,24 @@
  */
 export interface RequestSearchByAccountCriteria {
   accountId: number;
-  requestTypes?: Array<'ORGANISATION_ACCOUNT_OPENING' | 'NOTIFICATION_OF_COMPLIANCE_P3'>;
+  requestTypes?: Array<
+    | 'ORGANISATION_ACCOUNT_OPENING'
+    | 'NOTIFICATION_OF_COMPLIANCE_P3'
+    | 'ACTION_PLAN_P3'
+    | 'ACCOUNT_CLOSURE'
+    | 'PROGRESS_UPDATE_1_P3'
+    | 'PROGRESS_UPDATE_2_P3'
+  >;
   requestStatuses?: Array<
-    'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'WITHDRAWN' | 'APPROVED' | 'REJECTED' | 'CLOSED' | 'EXEMPT'
+    | 'IN_PROGRESS'
+    | 'COMPLETED'
+    | 'CANCELLED'
+    | 'WITHDRAWN'
+    | 'APPROVED'
+    | 'REJECTED'
+    | 'CLOSED'
+    | 'EXEMPT'
+    | 'TERMINATED'
   >;
   category: 'PERMIT' | 'REPORTING' | 'CA';
   pageNumber: number;

@@ -42,7 +42,7 @@ class RequestCreateValidatorServiceTest {
         final Long accountId = 1L;
         final Set<AccountStatus> applicableAccountStatuses = Set.of(
                 OrganisationAccountStatus.LIVE,
-                OrganisationAccountStatus.UNAPPROVED
+                OrganisationAccountStatus.AWAITING_APPROVAL
         );
         final Set<RequestType> mutuallyExclusiveRequests = Set.of(RequestType.ORGANISATION_ACCOUNT_OPENING);
 
@@ -66,7 +66,7 @@ class RequestCreateValidatorServiceTest {
         final Long accountId = 1L;
         final Set<AccountStatus> applicableAccountStatuses = Set.of(
         		OrganisationAccountStatus.LIVE,
-        		OrganisationAccountStatus.UNAPPROVED
+        		OrganisationAccountStatus.AWAITING_APPROVAL
         );
 
         when(accountQueryService.getAccountStatus(accountId)).thenReturn(OrganisationAccountStatus.DENIED);
@@ -80,7 +80,7 @@ class RequestCreateValidatorServiceTest {
                 .reportedAccountStatus(OrganisationAccountStatus.DENIED)
                 .applicableAccountStatuses(Set.of(
                 		OrganisationAccountStatus.LIVE,
-                		OrganisationAccountStatus.UNAPPROVED
+                		OrganisationAccountStatus.AWAITING_APPROVAL
                 )).build());
 
         verify(accountQueryService, times(1)).getAccountStatus(accountId);
@@ -92,7 +92,7 @@ class RequestCreateValidatorServiceTest {
         final Long accountId = 1L;
         final Set<AccountStatus> applicableAccountStatuses = Set.of(
         		OrganisationAccountStatus.LIVE,
-        		OrganisationAccountStatus.UNAPPROVED
+        		OrganisationAccountStatus.AWAITING_APPROVAL
         );
         final Set<RequestType> mutuallyExclusiveRequests = Set.of(RequestType.ORGANISATION_ACCOUNT_OPENING);
 

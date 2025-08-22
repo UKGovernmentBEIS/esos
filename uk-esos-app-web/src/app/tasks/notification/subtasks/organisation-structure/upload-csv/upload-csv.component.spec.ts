@@ -24,15 +24,20 @@ const mockSuccessPapaResult = {
     {
       'Organisation Name': 'Company A',
       'Registration Number (if exists, otherwise leave the cell blank)': 'AC123456',
-      'Is this organisation covered in this notification?': false,
       'Is this organisation part of an arrangement where 2 or more highest UK parent groups are complying as one participant?':
         true,
+      'Has this organisation ceased to be part of the highest parent group or participant since the qualification date but agreed to comply as if it were still a member?':
+        false,
+      'Is this organisation a franchisee?': true,
       'Is this organisation a parent of the responsible undertaking?': false,
       'Is this organisation a subsidiary of the responsible undertaking?': true,
-      'Is this organisation part of a franchise group?': true,
-      'Is this organisation a trust?': true,
-      'Has this organisation ceased to be a part of the corporate group between 31 December 2022 and 5 June 2024?':
-        false,
+      'Is the Code same as RU?': false,
+      'Select classification type if the organisation covered in this NOC': 'OTHER',
+      'Classification name (if other than SIC)': 'ClassificationNameA',
+      'Code 1': '1111',
+      'Code 2 (Optional)': '2222',
+      'Code 3 (Optional)': '3333',
+      'Code 4 (Optional)': '4444',
     },
   ],
   errors: [],
@@ -52,7 +57,6 @@ const mockErrorPapaResult = {
       'Is this organisation a parent of the responsible undertaking?': null,
       'Is this organisation a subsidiary of the responsible undertaking?': null,
       'Is this organisation part of a franchise group?': null,
-      'Is this organisation a trust?': null,
       'Has this organisation ceased to be a part of the corporate group between 31 December 2022 and 5 June 2024?':
         null,
     },
@@ -142,7 +146,7 @@ describe('UploadCsvComponent', () => {
     expect(page.errorSummary).toBeFalsy();
     expect(page.heading1).toBeTruthy();
     expect(page.heading1.textContent.trim()).toEqual(
-      'Upload a list of all other active UK organisations covered by this notification',
+      "Upload a file with information on the organisations complying as one participant in the responsible undertaking's notification for its corporate group",
     );
     expect(page.paragraphs).toHaveLength(7);
     expect(page.uploadFileButton).toBeTruthy();
@@ -155,22 +159,20 @@ describe('UploadCsvComponent', () => {
 
     expect(page.errorSummary).toBeTruthy();
     expect(page.errorTitles.map((item) => item.textContent.trim())).toEqual([
-      "The field 'Organisation Name' has invalid values",
+      "The field 'Organisation Name' has one or more values missing",
       "Check the data in column 'Organisation Name' on rows 1",
-      "The field 'Is this organisation covered in this notification?' has invalid values",
-      "Check the data in column 'Is this organisation covered in this notification?' on rows 1",
-      "The field 'Is this organisation part of an arrangement where 2 or more highest UK parent groups are complying as one participant?' has invalid values",
+      "The field 'Is this organisation part of an arrangement where 2 or more highest UK parent groups are complying as one participant?' has one or more values missing",
       "Check the data in column 'Is this organisation part of an arrangement where 2 or more highest UK parent groups are complying as one participant?' on rows 1",
-      "The field 'Is this organisation a parent of the responsible undertaking?' has invalid values",
+      "The field 'Has this organisation ceased to be part of the highest parent group or participant since the qualification date but agreed to comply as if it were still a member?' has one or more values missing",
+      "Check the data in column 'Has this organisation ceased to be part of the highest parent group or participant since the qualification date but agreed to comply as if it were still a member?' on rows 1",
+      "The field 'Is this organisation a franchisee?' has one or more values missing",
+      "Check the data in column 'Is this organisation a franchisee?' on rows 1",
+      "The field 'Is this organisation a parent of the responsible undertaking?' has one or more values missing",
       "Check the data in column 'Is this organisation a parent of the responsible undertaking?' on rows 1",
-      "The field 'Is this organisation a subsidiary of the responsible undertaking?' has invalid values",
+      "The field 'Is this organisation a subsidiary of the responsible undertaking?' has one or more values missing",
       "Check the data in column 'Is this organisation a subsidiary of the responsible undertaking?' on rows 1",
-      "The field 'Is this organisation part of a franchise group?' has invalid values",
-      "Check the data in column 'Is this organisation part of a franchise group?' on rows 1",
-      "The field 'Is this organisation a trust?' has invalid values",
-      "Check the data in column 'Is this organisation a trust?' on rows 1",
-      "The field 'Has this organisation ceased to be a part of the corporate group between 31 December 2022 and 5 June 2024?' has invalid values",
-      "Check the data in column 'Has this organisation ceased to be a part of the corporate group between 31 December 2022 and 5 June 2024?' on rows 1",
+      "The field 'Is the Code same as RU?' has one or more values missing",
+      "Check the data in column 'Is the Code same as RU?' on rows 1",
     ]);
   });
 
@@ -193,21 +195,37 @@ describe('UploadCsvComponent', () => {
       payload: {
         noc: {
           organisationStructure: {
-            hasCeasedToBePartOfGroup: false,
-            isPartOfArrangement: true,
-            isPartOfFranchise: false,
-            isTrust: true,
+            isGroupStructureChartProvided: true,
+            isHighestParent: true,
+            isNonComplyingUndertakingsIncluded: true,
+            organisationUndertakingDetails: [
+              {
+                organisationName: 'First undertaking',
+                registrationNumber: '11111111',
+              },
+              {
+                organisationName: 'Second undertaking',
+                registrationNumber: '2222222',
+              },
+            ],
             organisationsAssociatedWithRU: [
               {
-                hasCeasedToBePartOfGroup: false,
-                isCoveredByThisNotification: false,
-                isParentOfResponsibleUndertaking: false,
-                isPartOfArrangement: true,
-                isPartOfFranchise: true,
-                isSubsidiaryOfResponsibleUndertaking: true,
-                isTrust: true,
-                organisationName: 'Company A',
+                registrationNumberExist: true,
                 registrationNumber: 'AC123456',
+                organisationName: 'Company A',
+                isPartOfArrangement: true,
+                hasCeasedToBePartOfGroup: false,
+                isPartOfFranchise: true,
+                isParentOfResponsibleUndertaking: false,
+                isSubsidiaryOfResponsibleUndertaking: true,
+                classificationCodesDetails: {
+                  areSameAsRU: false,
+                  codes: {
+                    codes: ['1111', '2222', '3333', '4444'],
+                    otherTypeName: 'ClassificationNameA',
+                    type: 'OTHER',
+                  },
+                },
               },
             ],
           },

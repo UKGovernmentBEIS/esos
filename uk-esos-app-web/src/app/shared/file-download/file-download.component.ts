@@ -4,11 +4,9 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { combineLatest, expand, map, Observable, of, switchMap, timer } from 'rxjs';
 
 import {
-  EmpsService,
   FileAttachmentsService,
   FileDocumentsService,
   FileToken,
-  PermitsService,
   RequestActionAttachmentsHandlingService,
   RequestActionFileDocumentsHandlingService,
   RequestTaskAttachmentsHandlingService,
@@ -37,13 +35,7 @@ export class FileDownloadComponent implements AfterViewChecked {
 
   url$ = this.route.paramMap.pipe(
     map((params): FileDownloadInfo => {
-      return params.has('taskId')
-        ? this.requestTaskDownloadInfo(params)
-        : params.has('actionId')
-        ? this.requestActionDownloadInfo(params)
-        : params.has('empId')
-        ? this.empsDownloadInfo(params)
-        : this.permitDownloadInfo(params);
+      return params.has('taskId') ? this.requestTaskDownloadInfo(params) : this.requestActionDownloadInfo(params);
     }),
     switchMap(({ request, fileType }) => {
       return combineLatest([
@@ -67,8 +59,6 @@ export class FileDownloadComponent implements AfterViewChecked {
     private readonly requestActionFileDocumentsHandlingService: RequestActionFileDocumentsHandlingService,
     private readonly fileAttachmentsService: FileAttachmentsService,
     private readonly fileDocumentsService: FileDocumentsService,
-    private readonly permitsService: PermitsService,
-    private readonly empsService: EmpsService,
   ) {}
 
   ngAfterViewChecked(): void {
@@ -108,34 +98,6 @@ export class FileDownloadComponent implements AfterViewChecked {
           Number(params.get('actionId')),
           params.get('uuid'),
         ),
-        fileType: 'attachment',
-      };
-    }
-  }
-
-  private empsDownloadInfo(params: ParamMap): FileDownloadInfo {
-    if (params.get('fileType') === 'document') {
-      return {
-        request: this.empsService.generateGetEmpDocumentToken(params.get('empId'), params.get('uuid')),
-        fileType: 'document',
-      };
-    } else {
-      return {
-        request: this.empsService.generateGetEmpAttachmentToken(params.get('empId'), params.get('uuid')),
-        fileType: 'attachment',
-      };
-    }
-  }
-
-  private permitDownloadInfo(params: ParamMap): FileDownloadInfo {
-    if (params.get('fileType') === 'document') {
-      return {
-        request: this.permitsService.generateGetPermitDocumentToken(params.get('permitId'), params.get('uuid')),
-        fileType: 'document',
-      };
-    } else {
-      return {
-        request: this.permitsService.generateGetPermitAttachmentToken(params.get('permitId'), params.get('uuid')),
         fileType: 'attachment',
       };
     }

@@ -60,7 +60,7 @@ describe('AccountsUsersContactsComponent', () => {
         'Organisation',
         '1',
         'Organisation name',
-        'New',
+        'Live',
         '',
         '',
         'Legal entity',

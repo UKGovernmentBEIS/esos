@@ -12,6 +12,7 @@ export const phasesStatusesMap: Record<string, Partial<Record<RequestDetailsDTO[
     COMPLETED: 'Completed',
     IN_PROGRESS: 'In Progress',
     REJECTED: 'Rejected',
+    TERMINATED: 'Terminated',
   },
 };
 
@@ -22,4 +23,5 @@ export const phasesStatusesTagMap: Partial<Record<RequestDetailsDTO['requestStat
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
   CLOSED: 'CLOSED',
+  TERMINATED: 'TERMINATED',
 };

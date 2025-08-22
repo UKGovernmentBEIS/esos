@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import uk.gov.esos.api.token.JwtProperties;
 import uk.gov.esos.api.web.constants.SwaggerApiInfo;
 
 @RestController
@@ -22,6 +24,7 @@ import uk.gov.esos.api.web.constants.SwaggerApiInfo;
 public class UIConfigurationController {
 
     private final UIProperties uiProperties;
+    private final JwtProperties jwtProperties;
 
     @GetMapping
     @Operation(summary = "Retrieves configuration for UI features")
@@ -29,6 +32,7 @@ public class UIConfigurationController {
     public ResponseEntity<UIPropertiesDTO> getUIFlags() {
         return ResponseEntity.ok().body(UIPropertiesDTO.builder()
                 .features(uiProperties.getFeatures())
+                .expirationTime(jwtProperties.getClaim().getUserInvitationExpIntervalMinutes())
                 .analytics(uiProperties.getAnalytics())
                 .build());
     }

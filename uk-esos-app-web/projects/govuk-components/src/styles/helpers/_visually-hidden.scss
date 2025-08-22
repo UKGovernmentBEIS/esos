@@ -20,12 +20,12 @@
   // whitespace surrounding visually hidden text from the accessibility tree.
   // Insert a space character before and after visually hidden text to separate
   // it from any visible text surrounding it.
-  &:before {
-    content: "\00a0";
+  &::before {
+    content: '\00a0';
   }
 
-  &:after {
-    content: "\00a0";
+  &::after {
+    content: '\00a0';
   }
 
   width: 1px if($important, !important, null);
@@ -38,7 +38,7 @@
   overflow: hidden if($important, !important, null);
   clip: rect(0 0 0 0) if($important, !important, null);
   -webkit-clip-path: inset(50%) if($important, !important, null);
-          clip-path: inset(50%) if($important, !important, null);
+  clip-path: inset(50%) if($important, !important, null);
 
   border: 0 if($important, !important, null);
 
@@ -46,6 +46,13 @@
   // causes content to wrap 1 word per line:
   // https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
   white-space: nowrap if($important, !important, null);
+
+  // Prevent users from selecting or copying visually-hidden text. This prevents
+  // a user unintentionally copying more text than they intended and needing to
+  // manually trim it down again.
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /// Hide an element visually, but have it available for screen readers whilst
@@ -71,12 +78,19 @@
   overflow: hidden if($important, !important, null);
   clip: rect(0 0 0 0) if($important, !important, null);
   -webkit-clip-path: inset(50%) if($important, !important, null);
-          clip-path: inset(50%) if($important, !important, null);
+  clip-path: inset(50%) if($important, !important, null);
 
   // For long content, line feeds are not interpreted as spaces and small width
   // causes content to wrap 1 word per line:
   // https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
   white-space: nowrap if($important, !important, null);
+
+  // Prevent users from selecting or copying visually-hidden text. This prevents
+  // a user unintentionally copying more text than they intended and needing to
+  // manually trim it down again.
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 
   &:active,
   &:focus {
@@ -89,8 +103,15 @@
     overflow: visible if($important, !important, null);
     clip: auto if($important, !important, null);
     -webkit-clip-path: none if($important, !important, null);
-            clip-path: none if($important, !important, null);
+    clip-path: none if($important, !important, null);
 
     white-space: inherit if($important, !important, null);
+
+    // Allow the text to be selectable now it's visible
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
 }
+
+/*# sourceMappingURL=_visually-hidden.scss.map */

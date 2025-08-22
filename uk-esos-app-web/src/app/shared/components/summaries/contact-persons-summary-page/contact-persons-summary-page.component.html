@@ -1,7 +1,10 @@
 <ng-container *ngIf="data?.primaryContact">
   <h2 class="govuk-heading-m">Primary contact details</h2>
+
   <esos-user-input-summary-template
-    [userInfo]="data.primaryContact"
+    [userInfo]="toDTO(data.primaryContact)"
+    [userEmail]="data.primaryContact.email"
+    [canChangeEmail]="isEditable"
     [changeLink]="isEditable ? './' + changeLink.PRIMARY_CONTACT : undefined"
   ></esos-user-input-summary-template>
 </ng-container>
@@ -9,10 +12,11 @@
 <!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
 <ng-container *ngIf="data?.hasSecondaryContact != null">
   <h2 class="govuk-heading-m">Do you want to add a secondary contact?</h2>
+
   <dl govuk-summary-list>
-    <div govukSummaryListRow>
-      <dd govukSummaryListRowValue>{{ data.hasSecondaryContact | booleanToText }}</dd>
-      <dd *ngIf="isEditable" govukSummaryListRowActions>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>{{ data.hasSecondaryContact | booleanToText }}</dd>
+      <dd *ngIf="isEditable" govukSummaryListColumnActions>
         <a govukLink [routerLink]="['./', changeLink.ADD_SECONDARY_CONTACT]" [queryParams]="queryParams"> Change </a>
       </dd>
     </div>
@@ -21,8 +25,11 @@
 
 <ng-container *ngIf="data?.secondaryContact">
   <h2 class="govuk-heading-m">Secondary contact details</h2>
+
   <esos-user-input-summary-template
-    [userInfo]="data.secondaryContact"
+    [userInfo]="toDTO(data.secondaryContact)"
+    [userEmail]="data.secondaryContact.email"
+    [canChangeEmail]="isEditable"
     [changeLink]="isEditable ? './' + changeLink.SECONDARY_CONTACT : undefined"
   ></esos-user-input-summary-template>
 </ng-container>

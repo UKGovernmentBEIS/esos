@@ -12,6 +12,6 @@
 import { FirstCompliancePeriodDetails } from './firstCompliancePeriodDetails';
 
 export interface FirstCompliancePeriod {
-  informationExists: boolean;
+  informationExists: 'YES' | 'NO' | 'SKIP_QUESTION';
   firstCompliancePeriodDetails?: FirstCompliancePeriodDetails;
 }

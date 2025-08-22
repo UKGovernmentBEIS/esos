@@ -11,8 +11,10 @@ export abstract class TaskApiService<T extends RequestTaskPayload> {
   protected readonly service = inject(TasksService);
 
   abstract save(payload: T): Observable<void>;
-
-  abstract returnToSubmit(): Observable<void>;
-
   abstract submit(): Observable<void>;
+}
+
+export abstract class TaskApiServiceExtended<T extends RequestTaskPayload> extends TaskApiService<T> {
+  abstract returnToSubmit(): Observable<void>;
+  abstract sendToRestricted(userId: string): Observable<void>;
 }

@@ -2,13 +2,27 @@ import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 
-import { GovukComponentsModule } from 'govuk-components';
+import {
+  LinkDirective,
+  SummaryListColumnActionsDirective,
+  SummaryListColumnDirective,
+  SummaryListColumnValueDirective,
+  SummaryListComponent,
+} from 'govuk-components';
 
 @Component({
   selector: 'esos-energy-savings-details-summary-template',
   templateUrl: './energy-savings-details-summary-template.component.html',
   standalone: true,
-  imports: [GovukComponentsModule, NgIf, RouterLink],
+  imports: [
+    SummaryListComponent,
+    SummaryListColumnDirective,
+    SummaryListColumnValueDirective,
+    SummaryListColumnActionsDirective,
+    NgIf,
+    RouterLink,
+    LinkDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnergySavingsDetailsSummaryTemplateComponent {

@@ -21,6 +21,8 @@ import { ReviewAssessmentDateFormProvider } from './review-assessment-date-form.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ReviewAssessmentDateComponent {
+  today = new Date(new Date().setDate(new Date().getDate()));
+
   constructor(
     @Inject(TASK_FORM) readonly form: UntypedFormGroup,
     private readonly service: TaskService<NotificationTaskPayload>,

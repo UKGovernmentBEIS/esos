@@ -21,7 +21,7 @@ export class EnergySavingsAchievedStepFlowManager extends StepFlowManager {
         return `../${EnergySavingsAchievedWizardStep.STEP_RECOMMENDATIONS_EXIST}`;
 
       case EnergySavingsAchievedCurrentStep.CATEGORIES_EXIST:
-        return energySavingsAchieved.energySavingCategoriesExist
+        return energySavingsAchieved.energySavingCategoriesExist === 'YES'
           ? `../${EnergySavingsAchievedWizardStep.STEP_CATEGORIES}`
           : `../${EnergySavingsAchievedWizardStep.STEP_RECOMMENDATIONS_EXIST}`;
 
@@ -29,7 +29,7 @@ export class EnergySavingsAchievedStepFlowManager extends StepFlowManager {
         return `../${EnergySavingsAchievedWizardStep.STEP_RECOMMENDATIONS_EXIST}`;
 
       case EnergySavingsAchievedCurrentStep.RECOMMENDATIONS_EXIST:
-        return energySavingsAchieved.energySavingsRecommendationsExist
+        return energySavingsAchieved.energySavingsRecommendationsExist === 'YES'
           ? `../${EnergySavingsAchievedWizardStep.STEP_RECOMMENDATIONS}`
           : `../${EnergySavingsAchievedWizardStep.STEP_DETAILS}`;
 

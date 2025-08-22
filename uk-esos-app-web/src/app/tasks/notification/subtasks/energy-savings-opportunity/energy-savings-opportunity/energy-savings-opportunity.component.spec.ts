@@ -16,8 +16,8 @@ import { ActivatedRouteStub, BasePage, MockType } from '@testing';
 
 import { TasksService } from 'esos-api';
 
-import { WizardStep } from '../energy-savings-opportunity.helper';
-import { EnergySavingsOpportunityComponent } from './energy-savings-opportunity.component';
+import { EnergySavingsOpportunitiesWizardStep } from '../energy-savings-opportunity.helper';
+import EnergySavingsOpportunityComponent from './energy-savings-opportunity.component';
 
 describe('EnergySavingsOpportunityComponent', () => {
   let component: EnergySavingsOpportunityComponent;
@@ -91,10 +91,13 @@ describe('EnergySavingsOpportunityComponent', () => {
     const compiled = fixture.nativeElement;
 
     expect(compiled.textContent).toContain('Energy savings opportunities');
+
     expect(compiled.textContent).toContain(
-      'What is an estimate of the potential annual reduction in energy consumption in kWh which could be achieved as a result of implementing all energy saving opportunities identified through energy audits?',
+      'Total annual reduction in energy consumption and energy spend by organisational purpose',
     );
 
-    expect(navigateSpy).toHaveBeenCalledWith([`../${WizardStep.STEP2}`], { relativeTo: route });
+    expect(navigateSpy).toHaveBeenCalledWith([`../${EnergySavingsOpportunitiesWizardStep.STEP3}`], {
+      relativeTo: route,
+    });
   });
 });

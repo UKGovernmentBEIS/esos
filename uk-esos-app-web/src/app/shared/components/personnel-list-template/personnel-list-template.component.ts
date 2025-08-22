@@ -2,6 +2,8 @@ import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 
+import { InternalExternalPipe } from '@shared/pipes/internal-external.pipe';
+
 import { GovukComponentsModule, GovukTableColumn } from 'govuk-components';
 
 import { PersonnelDetails } from 'esos-api';
@@ -10,7 +12,7 @@ import { PersonnelDetails } from 'esos-api';
   selector: 'esos-personnel-list-template',
   templateUrl: './personnel-list-template.component.html',
   standalone: true,
-  imports: [GovukComponentsModule, NgSwitch, NgSwitchCase, NgIf, RouterLink],
+  imports: [GovukComponentsModule, InternalExternalPipe, NgSwitch, NgSwitchCase, NgIf, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PersonnelListTemplateComponent {

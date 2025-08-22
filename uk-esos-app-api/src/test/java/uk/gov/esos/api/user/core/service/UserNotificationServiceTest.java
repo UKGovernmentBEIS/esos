@@ -31,14 +31,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.esos.api.notification.mail.constants.EmailNotificationTemplateConstants.APPLICANT_FNAME;
-import static uk.gov.esos.api.notification.mail.constants.EmailNotificationTemplateConstants.APPLICANT_LNAME;
 import static uk.gov.esos.api.notification.mail.constants.EmailNotificationTemplateConstants.OPERATOR_INVITATION_CONFIRMATION_LINK;
 import static uk.gov.esos.api.notification.mail.constants.EmailNotificationTemplateConstants.USER_ROLE_TYPE;
-import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.INVITATION_TO_EMITTER_CONTACT;
 import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.RESET_2FA_CONFIRMATION;
 import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.RESET_PASSWORD_CONFIRMATION;
 import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.USER_ACCOUNT_ACTIVATION;
+import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.VERIFIED_ACCOUNT_INVITATION;
 import static uk.gov.esos.api.user.NavigationOutcomes.OPERATOR_REGISTRATION_INVITATION_ACCEPTED_URL;
 
 @ExtendWith(MockitoExtension.class)
@@ -120,33 +118,6 @@ class UserNotificationServiceTest {
     }
 
     @Test
-    void notifyNewEmitterContact() {
-        String userId = "userId";
-        String accountName = "accountName";
-        UserInfoDTO userInfo = UserInfoDTO.builder()
-                .firstName("firstName")
-                .lastName("lastName")
-                .email("email").build();
-        EmailData emailInfo = EmailData.builder()
-                .notificationTemplateData(EmailNotificationTemplateData.builder()
-                        .templateName(INVITATION_TO_EMITTER_CONTACT)
-                        .templateParams(Map.of(APPLICANT_FNAME, userInfo.getFirstName(),
-                                APPLICANT_LNAME, userInfo.getLastName(),
-                                EmailNotificationTemplateConstants.ACCOUNT_NAME, accountName,
-                                EmailNotificationTemplateConstants.CONTACT_REGULATOR, "link"))
-                        .build())
-                .build();
-
-        when(userAuthService.getUserByUserId(userId)).thenReturn(userInfo);
-        when(notificationProperties.getEmail().getContactUsLink()).thenReturn("link");
-
-        userNotificationService.notifyEmitterContactAccountActivation(userId, accountName);
-
-        verify(userAuthService, times(1)).getUserByUserId(userId);
-        verify(notificationEmailService, times(1)).notifyRecipient(emailInfo, userInfo.getEmail());
-    }
-    
-    @Test
     void notifyUserPasswordReset() {
         String userId = "userId";
         String email = "email";
@@ -207,6 +178,32 @@ class UserNotificationServiceTest {
         userNotificationService.notifyUserReset2Fa(userId);
 
         verify(userAuthService, times(1)).getUserByUserId(userId);
+        verify(notificationEmailService, times(1)).notifyRecipient(emailInfo, email);
+    }
+    
+    @Test
+    void notifyVerifiedAccountsUser() {
+        String email = "email";
+        String url = "home.com";
+        String helpdesk = "info@esos.com";
+        AppProperties.Web web = mock(AppProperties.Web.class);
+        when(appProperties.getWeb()).thenReturn(web);
+        when(web.getUrl()).thenReturn(url);
+        NotificationProperties.Email notificationEmail = mock(NotificationProperties.Email.class);
+        when(notificationProperties.getEmail()).thenReturn(notificationEmail);
+        when(notificationEmail.getEsosHelpdesk()).thenReturn(helpdesk);
+        
+        EmailData emailInfo = EmailData.builder()
+                .notificationTemplateData(EmailNotificationTemplateData.builder()
+                        .templateName(VERIFIED_ACCOUNT_INVITATION)
+                        .templateParams(Map.of(
+                        		EmailNotificationTemplateConstants.HOME_URL, url,
+                        		EmailNotificationTemplateConstants.ESOS_HELPDESK, helpdesk))
+                        .build())
+                .build();
+
+        userNotificationService.notifyVerifiedAccountUser(email);
+
         verify(notificationEmailService, times(1)).notifyRecipient(emailInfo, email);
     }
 

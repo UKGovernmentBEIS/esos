@@ -4,10 +4,10 @@
       <ng-container [ngSwitch]="column.field">
         <ng-container *ngSwitchCase="'taskType'">
           <a [routerLink]="row | itemLink" govukLink>
-            {{ row[column.field] | itemName: row.requestId?.split('-')[1] }}
+            {{ row[column.field] | itemName : row.requestId?.split('-')[1] }}
           </a>
-          <div>
-            <govuk-tag *ngIf="row.isNew">New</govuk-tag>
+          <div *ngIf="row.isNew" class="govuk-!-margin-top-2">
+            <govuk-tag>New</govuk-tag>
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="'requestType'">{{ row[column.field] | itemType }}</ng-container>

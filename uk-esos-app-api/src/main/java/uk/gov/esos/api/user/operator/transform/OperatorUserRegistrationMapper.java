@@ -1,6 +1,5 @@
 package uk.gov.esos.api.user.operator.transform;
 
-import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -10,7 +9,6 @@ import org.springframework.util.ObjectUtils;
 import uk.gov.esos.api.common.transform.MapperConfig;
 import uk.gov.esos.api.user.core.domain.enumeration.KeycloakUserAttributes;
 import uk.gov.esos.api.user.operator.domain.OperatorUserRegistrationDTO;
-import uk.gov.esos.api.user.operator.domain.OperatorUserRegistrationWithCredentialsDTO;
 
 import jakarta.validation.Valid;
 import java.util.HashMap;
@@ -22,32 +20,9 @@ import java.util.Objects;
 public interface OperatorUserRegistrationMapper {
 	
 	@Mapping(source = "email", target = "username")
-    @Mapping(source = "email", target = "email")
-    UserRepresentation toUserRepresentation(@Valid OperatorUserRegistrationWithCredentialsDTO operatorUserRegistrationWithCredentialsDTO, String email);
-
-	@Mapping(source = "email", target = "username")
 	@Mapping(source = "email", target = "email")
-	@Mapping(source = "userId", target = "id")
-	UserRepresentation toUserRepresentation(
-        OperatorUserRegistrationWithCredentialsDTO operatorUserRegistrationWithCredentialsDTO, String email, String userId);
-
-    @AfterMapping
-    default void populateAttributesToUserRepresentation(
-        OperatorUserRegistrationWithCredentialsDTO operatorUserRegistrationWithCredentialsDTO, @MappingTarget UserRepresentation userRepresentation) {
-        populateUserRepresentationAttributes(operatorUserRegistrationWithCredentialsDTO, userRepresentation);
-
-        /* Set credentials */
-        CredentialRepresentation credentials = new CredentialRepresentation();
-        credentials.setTemporary(false);
-        credentials.setType(CredentialRepresentation.PASSWORD);
-        credentials.setValue(operatorUserRegistrationWithCredentialsDTO.getPassword());
-        userRepresentation.setCredentials(asList(credentials));
-    }
-
-    @Mapping(source = "email", target = "username")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "userId", target = "id")
-    UserRepresentation toUserRepresentation(OperatorUserRegistrationDTO operatorUserRegistrationDTO, String email, String userId);
+	UserRepresentation toUserRepresentation(@Valid OperatorUserRegistrationDTO operatorUserRegistrationDTO,
+			String email);
 
     @AfterMapping
     default void populateAttributesToUserRepresentation(OperatorUserRegistrationDTO operatorUserRegistrationDTO,
@@ -90,7 +65,8 @@ public interface OperatorUserRegistrationMapper {
             Objects.isNull(operatorUserRegistrationDTO.getAddress()) ? null
                 : asList(operatorUserRegistrationDTO.getAddress().getCity()));
         attributes.put(KeycloakUserAttributes.COUNTY.getName(),
-            Objects.isNull(operatorUserRegistrationDTO.getAddress()) ? null
+                (Objects.isNull(operatorUserRegistrationDTO.getAddress()) ||
+                        ObjectUtils.isEmpty(operatorUserRegistrationDTO.getAddress().getCounty())) ? null
                 : asList(operatorUserRegistrationDTO.getAddress().getCounty()));
         attributes.put(KeycloakUserAttributes.POSTCODE.getName(),
             Objects.isNull(operatorUserRegistrationDTO.getAddress()) ? null

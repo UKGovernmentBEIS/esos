@@ -1,6 +1,8 @@
 package uk.gov.esos.api.notification.mail.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,12 +19,14 @@ import jakarta.mail.internet.MimeUtility;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,28 +37,23 @@ import java.util.Map;
 
 import uk.gov.esos.api.notification.mail.domain.Email;
 
-@ExtendWith(MockitoExtension.class)
+@EnableRetry
+@SpringBootTest(classes={JavaSendEmailServiceImpl.class})
+@TestPropertySource(properties = {
+	    "email.max-retries=2",
+	    "email.batch.delay=100",
+	})
 class JavaSendEmailServiceImplTest {
 
-    @InjectMocks
-    private JavaSendEmailServiceImpl sendMailService;
+    @Autowired
+    private SendEmailService sendMailService;
 
-    @Mock
+    @MockBean
     private JavaMailSender javaMailSender;
 
     @Test
     void sendMail() throws MessagingException, IOException {
-        Path sampleFilePath = Paths.get("src", "test", "resources", "files", "sample.pdf");
-        byte[] att1fileContent = Files.readAllBytes(sampleFilePath);
-        
-        Email email = Email.builder()
-                .sendFrom("sender@email")
-                .sendTo(List.of("receiver@email"))
-                .sendCc(List.of("cc@email"))
-                .subject("mail subject")
-                .text("mail text")
-                .attachments(Map.of("att1", att1fileContent))
-                .build();
+        Email email = buildEmail();
         MimeMessage message = new MimeMessage((Session) null);
         when(javaMailSender.createMimeMessage()).thenReturn(message);
 
@@ -82,5 +81,34 @@ class JavaSendEmailServiceImplTest {
         }
         assertThat(countAttachments).isEqualTo(1);
     }
+    
+    
+    @Test
+    void sendMail_retry_when_MailSendException_thrown() throws MessagingException, IOException {
+        Email email = buildEmail();
+        MimeMessage message = new MimeMessage((Session) null);
+        when(javaMailSender.createMimeMessage()).thenReturn(message);
+        doThrow(new MailSendException("Exception")).when(javaMailSender).send(message);
+
+        sendMailService.sendMail(email);
+
+        ArgumentCaptor<MimeMessage> messageCaptor = ArgumentCaptor.forClass(MimeMessage.class);
+        verify(javaMailSender, timeout(3000).times(2)).send(messageCaptor.capture());
+    }
+
+	private Email buildEmail() throws IOException {
+		Path sampleFilePath = Paths.get("src", "test", "resources", "files", "sample.pdf");
+        byte[] att1fileContent = Files.readAllBytes(sampleFilePath);
+        
+        Email email = Email.builder()
+                .sendFrom("sender@email")
+                .sendTo(List.of("receiver@email"))
+                .sendCc(List.of("cc@email"))
+                .subject("mail subject")
+                .text("mail text")
+                .attachments(Map.of("att1", att1fileContent))
+                .build();
+		return email;
+	}
 
 }

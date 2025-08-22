@@ -9,9 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { EnergyIntensityRatio } from './energyIntensityRatio';
 
 export interface EnergyIntensityRatioDetails {
-  ratio: string;
-  unit: string;
+  energyIntensityRatios: Array<EnergyIntensityRatio>;
   additionalInformation?: string;
 }

@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { TaskStateService } from '@common/forms/services/task-state.service';
-import { TaskItemStatus } from '@tasks/task-item-status';
-import produce from 'immer';
 
-import { NocP3, ReportingObligation } from 'esos-api';
+import { ReportingObligation } from 'esos-api';
 
 import { ReportingObligationCategory } from '../../../requests/common/reporting-obligation-category.types';
 import { NotificationTaskPayload } from '../notification.types';
@@ -34,22 +32,6 @@ export class NotificationStateService extends TaskStateService<NotificationTaskP
 
   setPayload(payload: NotificationTaskPayload): void {
     this.store.setPayload(payload);
-  }
-
-  setNocAttachments(attachments: { [key: string]: string }) {
-    this.store.setPayload(
-      produce(this.payload, (state) => {
-        state.nocAttachments = attachments;
-      }),
-    );
-  }
-
-  setNocSectionsCompleted(nocSectionsCompleted: Record<keyof NocP3, TaskItemStatus>) {
-    this.store.setPayload(
-      produce(this.payload, (payload) => {
-        payload.nocSectionsCompleted = nocSectionsCompleted;
-      }),
-    );
   }
 
   setLastReportingObligationCategory(lastReportingObligationCategory: ReportingObligationCategory) {

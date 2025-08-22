@@ -25,6 +25,8 @@ import uk.gov.esos.api.files.common.domain.dto.FileDTO;
 import uk.gov.esos.api.user.core.service.UserSignatureService;
 import uk.gov.esos.api.web.controller.exception.ExceptionControllerAdvice;
 
+import java.nio.charset.StandardCharsets;
+
 @ExtendWith(MockitoExtension.class)
 public class UserSignatureControllerTest {
 
@@ -67,7 +69,7 @@ public class UserSignatureControllerTest {
         assertThat(response.getContentType()).isEqualTo(FileType.BMP.getMimeTypes().iterator().next());
         assertThat(response.getContentAsByteArray()).isEqualTo(fileContent);
         assertThat(response.getHeader(HttpHeaders.CONTENT_DISPOSITION)).isEqualTo(
-                ContentDisposition.builder("signature").filename(signature.getFileName()).build().toString());
+                ContentDisposition.builder("signature").filename(signature.getFileName(), StandardCharsets.UTF_8).build().toString());
         
         verify(userSignatureService, times(1)).getSignatureFileDTOByToken(token);
     }

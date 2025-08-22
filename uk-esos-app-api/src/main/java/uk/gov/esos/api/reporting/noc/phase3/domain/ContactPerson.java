@@ -33,7 +33,6 @@ public class ContactPerson {
     @Size(max = 255)
     private String lastName;
 
-    @NotBlank
     @Size(max = 255)
     private String jobTitle;
 

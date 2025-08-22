@@ -12,7 +12,11 @@
 import { ComplianceRouteDistribution } from './complianceRouteDistribution';
 
 export interface ReportingObligationDetails {
-  qualificationReasonTypes: Array<'TURNOVER_MORE_THAN_44M' | 'STAFF_MEMBERS_MORE_THAN_250'>;
+  qualificationReasonType:
+    | 'TURNOVER_MORE_THAN_44M'
+    | 'STAFF_MEMBERS_MORE_THAN_250'
+    | 'TURNOVER_MORE_THAN_44M_AND_STAFF_MEMBERS_MORE_THAN_250'
+    | 'CONDITIONS_NOT_MET';
   energyResponsibilityType: 'RESPONSIBLE' | 'NOT_RESPONSIBLE' | 'RESPONSIBLE_BUT_LESS_THAN_40000_KWH';
   complianceRouteDistribution?: ComplianceRouteDistribution;
 }

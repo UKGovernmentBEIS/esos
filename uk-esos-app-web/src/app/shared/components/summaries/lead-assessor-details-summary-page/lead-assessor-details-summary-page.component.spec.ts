@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { LeadAssessorDetailsSummaryPageComponent } from '@shared/components/summaries';
-import { WizardStep } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
+import { ResponsibleUndertakingWizardStep } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
 import { mockLeadAssessor } from '@tasks/notification/testing/mock-data';
 import { ActivatedRouteStub, BasePage } from '@testing';
 
@@ -27,7 +27,7 @@ describe('LeadAssessorDetailsSummaryPageComponent', () => {
     component = fixture.componentInstance;
     component.isEditable = true;
     component.leadAssessor = mockLeadAssessor;
-    component.wizardStep = WizardStep;
+    component.wizardStep = ResponsibleUndertakingWizardStep;
     page = new Page(fixture);
     fixture.detectChanges();
   });
@@ -55,7 +55,7 @@ describe('LeadAssessorDetailsSummaryPageComponent', () => {
       'Membership name',
       '13',
       'Change',
-      'Yes',
+      'Yes, the lead assessor reviewed and confirmed that the assessment meets the ESOS requirements',
       'Change',
     ]);
   });

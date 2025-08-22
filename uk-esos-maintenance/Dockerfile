@@ -1,4 +1,4 @@
-FROM nginx:1.24
+FROM nginx:1.28
 ENV XAUTH $HOME/.Xauthority
 
 RUN apt-get update

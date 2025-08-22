@@ -1,24 +1,94 @@
-<esos-page-heading caption="Organisation structure">
-  Add the organisations that are associated with this responsible undertaking
-</esos-page-heading>
+<esos-wizard-step
+  (formSubmit)="submit()"
+  [formGroup]="form"
+  heading="Add information on the organisations complying as one participant in the responsible undertaking's notification for its corporate group"
+  caption="Organisation structure"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <div class="govuk-body">
+    <p>Add details of undertakings that either:</p>
 
-<p class="govuk-body">
-  Add the details of all active UK organisations that have been part of this responsible undertaking, as well as all UK
-  parent organisations, if applicable. You must add these organisations even if they are not included in this
-  notification.
-</p>
-<p class="govuk-body">We have already added the organisation making this notification.</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>comprise the participant for the purposes of this notification; or</li>
+      <li>
+        ceased to be a member of the highest parent group or participant since the qualification date but which have
+        agreed to comply as if they were still a member.
+      </li>
+    </ul>
 
-<div class="govuk-button-group">
-  <a govukSecondaryButton [routerLink]="['../', OrganisationStructureWizardStep.ADD]" type="button">Add organisation</a>
-  <a govukSecondaryButton [routerLink]="['../', OrganisationStructureWizardStep.UPLOAD_CSV]" type="button">Upload a file instead</a>
-</div>
+    <p>We have already added the organisation making this notification.</p>
+  </div>
 
-<esos-organisation-structure-list-table
-  [vm]="vm()"
-  [organisationStructure]="organisationStructure"
-  (removeOrganisation)="removeOrganisation($event)"
-  [queryParams]="queryParams"
-></esos-organisation-structure-list-table>
+  <govuk-details summary="Help me answer this question">
+    <p class="govuk-body">
+      You must provide details, including names, company registration numbers and standard industrial classification
+      codes (or other equivalent industrial classifications), for any of the following undertakings using either the
+      ‘add organisation’ or the ‘upload a file instead’ buttons:
+    </p>
+    <p class="govuk-body">
+      <strong>Co-parent organisation included:</strong> any highest UK parent with whom the responsible undertaking,
+      also a highest UK parent in the same corporate group, has agreed in writing to aggregate in order that their
+      highest parent groups can comply as one participant.
+    </p>
+    <p class="govuk-body">
+      <strong>Ceased to be part of group:</strong> any relevant undertaking which, on the qualification date 31 December
+      2022, was a member of the responsible undertaking’s highest UK parent group or participant, but which ceased to be
+      a member before the compliance date on 5 June 2024 and which has agreed to comply as if it were still a member of
+      the participant.
+    </p>
+    <p class="govuk-body"><strong>Franchisee:</strong> any relevant undertakings that are franchisees.</p>
+    <p class="govuk-body"><strong>Parent of this RU:</strong> any highest UK parent of the responsible undertaking.</p>
+    <p class="govuk-body">
+      <strong>Subsidiary of this RU:</strong> any relevant undertaking in relation to whom the responsible undertaking
+      is the highest UK parent.
+    </p>
+  </govuk-details>
 
-<a govukButton [routerLink]="[OrganisationStructureWizardStep.SUMMARY]" type="button">Save and continue</a>
+  <div class="govuk-button-group">
+    <a govukSecondaryButton [routerLink]="['../', OrganisationStructureWizardStep.ADD]" type="button"
+      >Add organisation</a
+    >
+    <a govukSecondaryButton [routerLink]="['../', OrganisationStructureWizardStep.UPLOAD_CSV]" type="button"
+      >Upload a file instead</a
+    >
+  </div>
+
+  <esos-organisation-structure-list-table
+    [vm]="vm()"
+    [organisationStructure]="organisationStructure"
+    (removeOrganisation)="removeOrganisation($event)"
+    [queryParams]="queryParams"
+  ></esos-organisation-structure-list-table>
+
+  <div
+    formControlName="isGroupStructureChartProvided"
+    govuk-radio
+    legend="Do you also wish to provide a corporate group structure chart or other information setting out the relationship between the RU and relevant undertakings complying with the scheme as one participant?"
+    [legendSize]="'medium'"
+    [isInline]="true"
+  >
+    <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>
+    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+  </div>
+
+  <govuk-details summary="How to provide the relevant information">
+    <p class="govuk-body">
+      A corporate group structure chart or other information setting out the relationship between the RU and relevant
+      undertakings complying with the scheme as one participant must be uploaded to the Notes area under the Phases tab
+      on your account.
+    </p>
+    <p class="govuk-body">
+      <a
+        govukLink
+        rel="noreferrer noopener"
+        target="_blank"
+        routerLink="/accounts/{{ accountId }}/phases/{{ nocId }}"
+        fragment="notes"
+      >
+        Go to Notes (opens in new tab)
+      </a>
+    </p>
+  </govuk-details>
+</esos-wizard-step>

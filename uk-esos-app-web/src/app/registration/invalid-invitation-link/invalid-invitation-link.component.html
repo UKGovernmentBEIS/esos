@@ -1,0 +1,21 @@
+<ng-container [ngSwitch]="error$ | async">
+  <esos-page-heading>{{ title$ | async }}</esos-page-heading>
+  <ng-container *ngSwitchCase="'EMAIL1001'">
+    <p class="govuk-body">
+      Please contact the admin for the installation you are seeking to access and request that they add you once again
+      as a new user.
+    </p>
+    <p class="govuk-body">
+      When the admin user has done this you will receive a new email with a link enabling you to create your account.
+    </p>
+  </ng-container>
+  <ng-container *ngSwitchCase="'TOKEN1002'">
+    <p class="govuk-body">
+      It seems you are signed in with another account. Make sure you sign out from the other account and try to access
+      the link again.
+    </p>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <p class="govuk-body">Contact the ESOS Service Desk for further assistance.</p>
+  </ng-container>
+</ng-container>

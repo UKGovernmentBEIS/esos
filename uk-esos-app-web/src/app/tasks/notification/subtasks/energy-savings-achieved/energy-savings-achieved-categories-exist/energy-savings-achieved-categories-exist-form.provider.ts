@@ -17,7 +17,7 @@ export const energySavingsAchievedCategoriesExistFormProvider: Provider = {
       {
         energySavingCategoriesExist: [
           energySavingsAchieved?.energySavingCategoriesExist,
-          [GovukValidators.required('Please select Yes or No')],
+          [GovukValidators.required('Please select an option')],
         ],
       },
       { updateOn: 'change' },

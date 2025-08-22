@@ -8,38 +8,15 @@ import { PageHeadingComponent } from '@shared/page-heading/page-heading.componen
 import { SharedModule } from '@shared/shared.module';
 import { buttonClick } from '@testing';
 
-import {
-  OperatorUserDTO,
-  OperatorUserRegistrationWithCredentialsDTO,
-  OperatorUsersRegistrationService,
-} from 'esos-api';
+import { OperatorUserRegistrationDTO, OperatorUsersRegistrationService } from 'esos-api';
 
 import { UserRegistrationStore } from '../store/user-registration.store';
 import { SummaryComponent } from './summary.component';
 
-const mockUserRegistrationDTO: OperatorUserRegistrationWithCredentialsDTO = {
+const mockUserRegistrationDTO: OperatorUserRegistrationDTO = {
   firstName: 'John',
   lastName: 'Doe',
   jobTitle: 'job title',
-  emailToken: 'test@email.com',
-  password: 'test',
-  address: {
-    line1: 'Line 1',
-    city: 'City',
-    county: 'County',
-    postcode: 'PostCode',
-  },
-  phoneNumber: {
-    countryCode: 'UK44',
-    number: '123',
-  },
-};
-
-const mockUserOperatorDTO: OperatorUserDTO = {
-  firstName: 'John',
-  lastName: 'Doe',
-  jobTitle: 'job title',
-  email: 'test@email.com',
   address: {
     line1: 'Line 1',
     city: 'City',
@@ -57,7 +34,7 @@ describe('SummaryComponent', () => {
   let fixture: ComponentFixture<SummaryComponent>;
   let store: UserRegistrationStore;
   let router: Router;
-  let service: OperatorUsersRegistrationService;
+  let operatorUsersRegistrationService: OperatorUsersRegistrationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -66,19 +43,14 @@ describe('SummaryComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(UserRegistrationStore);
-
-    jest
-      .spyOn(store, 'select')
-      .mockReturnValueOnce(of(mockUserRegistrationDTO))
-      .mockReturnValueOnce(of('password'))
-      .mockReturnValueOnce(of('token'));
+    store.setState({ userRegistrationDTO: mockUserRegistrationDTO });
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SummaryComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-    service = TestBed.inject(OperatorUsersRegistrationService);
+    operatorUsersRegistrationService = TestBed.inject(OperatorUsersRegistrationService);
 
     fixture.detectChanges();
   });
@@ -87,52 +59,30 @@ describe('SummaryComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create a new user with given data', () => {
-    jest.spyOn(service, 'registerUser').mockReturnValue(of(mockUserOperatorDTO));
+  it('should create a new user with given data when not invited', () => {
+    jest.spyOn(operatorUsersRegistrationService, 'registerCurrentOperatorUser').mockReturnValue(of(null));
 
     const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
 
     buttonClick(fixture);
 
     expect(navigateSpy).toHaveBeenCalledWith(['../success'], { relativeTo: TestBed.inject(ActivatedRoute) });
+    expect(operatorUsersRegistrationService.registerCurrentOperatorUser).toHaveBeenCalledWith(mockUserRegistrationDTO);
   });
 
-  it('should create an invited user with credentials', () => {
-    store.setState({
-      isInvited: true,
-      userRegistrationDTO: mockUserOperatorDTO,
-      password: mockUserRegistrationDTO.password,
-      token: mockUserRegistrationDTO.emailToken,
-    });
-
-    fixture.detectChanges();
+  it('should accept invitation and register user with given data when invited', () => {
+    store.setState({ userRegistrationDTO: mockUserRegistrationDTO });
+    store.setState({ ...store.getState(), isInvited: true, token: 'token' });
+    jest.spyOn(operatorUsersRegistrationService, 'acceptOperatorInvitationAndRegister').mockReturnValue(of(null));
 
     const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
-    jest.spyOn(service, 'registerNewUserFromInvitationWithCredentials').mockReturnValue(of(mockUserOperatorDTO));
-    jest.spyOn(service, 'acceptOperatorInvitation').mockReturnValue(of({ invitationStatus: 'ACCEPTED' }));
 
     buttonClick(fixture);
 
     expect(navigateSpy).toHaveBeenCalledWith(['../success'], { relativeTo: TestBed.inject(ActivatedRoute) });
-  });
-
-  it('should create an invited user without credentials', () => {
-    store.setState({
-      isInvited: true,
-      userRegistrationDTO: mockUserOperatorDTO,
-      password: mockUserRegistrationDTO.password,
-      token: mockUserRegistrationDTO.emailToken,
-      invitationStatus: 'PENDING_USER_REGISTRATION_NO_PASSWORD',
+    expect(operatorUsersRegistrationService.acceptOperatorInvitationAndRegister).toHaveBeenCalledWith({
+      operatorUserRegistrationDTO: mockUserRegistrationDTO,
+      invitationTokenDTO: { token: 'token' },
     });
-
-    fixture.detectChanges();
-
-    const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
-    jest.spyOn(service, 'registerNewUserFromInvitation').mockReturnValue(of(mockUserOperatorDTO));
-    jest.spyOn(service, 'acceptOperatorInvitation').mockReturnValue(of({ invitationStatus: 'ACCEPTED' }));
-
-    buttonClick(fixture);
-
-    expect(navigateSpy).toHaveBeenCalledWith(['../../invitation'], { relativeTo: TestBed.inject(ActivatedRoute) });
   });
 });

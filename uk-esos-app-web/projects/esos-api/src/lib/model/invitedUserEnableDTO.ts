@@ -11,7 +11,7 @@
  */
 
 /**
- * The operator user credentials
+ * The verifier user
  */
 export interface InvitedUserEnableDTO {
   invitationToken: string;

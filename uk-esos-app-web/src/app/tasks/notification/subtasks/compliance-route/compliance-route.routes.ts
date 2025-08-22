@@ -11,10 +11,7 @@ import {
   canEditEnergyAudit,
 } from './compliance-route.guard';
 import { WizardStep } from './compliance-route.helper';
-import {
-  resolveEnergyConsumptionProfilingBackLink,
-  resolveProhibitedDisclosingBackLink,
-} from './compliance-route.resolver';
+import { resolveComplianceRouteBackLink } from './compliance-route.resolver';
 
 export const COMPLIANCE_ROUTE_ROUTES: Routes = [
   {
@@ -34,26 +31,13 @@ export const COMPLIANCE_ROUTE_ROUTES: Routes = [
       {
         path: WizardStep.DATA_ESTIMATED,
         canActivate: [canActivateComplianceRoute],
-        title: 'Was the total energy consumption or spend calculated using any estimated data?',
+        title: 'Did you use any estimates in relation to the following calculations (as applicable)?',
         loadComponent: () => import('./data-estimated/data-estimated.component').then((c) => c.DataEstimatedComponent),
-      },
-      {
-        path: WizardStep.ESTIMATION_METHODS_RECORDED,
-        canActivate: [canActivateComplianceRoute],
-        title: 'Are the methods used for estimated data recorded in the evidence pack?',
-        resolve: {
-          backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.DATA_ESTIMATED),
-        },
-        loadComponent: () =>
-          import('./estimation-methods-recorded/estimation-methods-recorded.component').then(
-            (c) => c.EstimationMethodsRecordedComponent,
-          ),
       },
       {
         path: WizardStep.TWELVE_MONTHS_VERIFIABLE_DATA,
         canActivate: [canActivateRouteAOrRouteCOrRouteE],
-        title:
-          'Did this organisation use 12 months verifiable data for the purpose of calculating energy consumption in all of its ESOS energy audits?',
+        title: 'Did all your energy audits use 12 months of verifiable data?',
         resolve: {
           backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.DATA_ESTIMATED),
         },
@@ -63,12 +47,23 @@ export const COMPLIANCE_ROUTE_ROUTES: Routes = [
           ),
       },
       {
+        path: WizardStep.ESTIMATION_METHODS_RECORDED,
+        canActivate: [canActivateComplianceRoute],
+        title: 'Are the methods used for estimated data recorded in the evidence pack?',
+        resolve: {
+          backlink: resolveComplianceRouteBackLink(WizardStep.ESTIMATION_METHODS_RECORDED),
+        },
+        loadComponent: () =>
+          import('./estimation-methods-recorded/estimation-methods-recorded.component').then(
+            (c) => c.EstimationMethodsRecordedComponent,
+          ),
+      },
+      {
         path: WizardStep.ENERGY_CONSUMPTION_PROFILING,
         canActivate: [canActivateRouteAOrRouteCOrRouteE],
         title:
           'Did this organisation use energy consumption profiling for the purpose of analysing its energy consumption for all ESOS energy audits?',
-        data: { backlink: ({ backlinkUrl }) => backlinkUrl },
-        resolve: { backlinkUrl: resolveEnergyConsumptionProfilingBackLink },
+        resolve: { backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.ESTIMATION_METHODS_RECORDED) },
         loadComponent: () =>
           import('./energy-consumption-profiling/energy-consumption-profiling.component').then(
             (c) => c.EnergyConsumptionProfilingComponent,
@@ -77,7 +72,7 @@ export const COMPLIANCE_ROUTE_ROUTES: Routes = [
       {
         path: WizardStep.ENERGY_CONSUMPTION_PROFILING_METHODS_RECORDED,
         canActivate: [canActivateRouteAOrRouteCOrRouteE],
-        title: 'Are the methods used for energy consumption profiling recorded in the evidence pack? (optional)',
+        title: 'Are the methods used for energy consumption profiling recorded in the evidence pack?',
         resolve: {
           backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.ENERGY_CONSUMPTION_PROFILING),
         },
@@ -87,12 +82,22 @@ export const COMPLIANCE_ROUTE_ROUTES: Routes = [
           ).then((c) => c.EnergyConsumptionProfilingMethodsRecordedComponent),
       },
       {
-        path: WizardStep.ENERGY_AUDITS,
+        path: WizardStep.ENERGY_CONSUMPTION_PROFILING_NOT_USED_RECORDED,
+        canActivate: [canActivateRouteAOrRouteCOrRouteE],
         title:
-          'For each energy audit, state how many sites have been visited and the reasons why they are considered to be representative of how energy is used by assets and activities during the audit period (optional)',
+          'Does the evidence pack record the extent to which, and the reasons why, energy consumption profiling was not used in the energy audit and the details of the alternative method of analysis used?',
         resolve: {
           backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.ENERGY_CONSUMPTION_PROFILING),
         },
+        loadComponent: () =>
+          import(
+            './energy-consumption-profiling-not-used-recorded/energy-consumption-profiling-not-used-recorded.component'
+          ).then((c) => c.EnergyConsumptionProfilingNotUsedRecordedComponent),
+      },
+      {
+        path: WizardStep.ENERGY_AUDITS,
+        title: 'Add an energy audit',
+        resolve: { backlink: resolveComplianceRouteBackLink(WizardStep.ENERGY_AUDITS) },
         loadComponent: () => import('./energy-audits/energy-audits.component').then((c) => c.EnergyAuditsComponent),
       },
       {
@@ -114,9 +119,8 @@ export const COMPLIANCE_ROUTE_ROUTES: Routes = [
         path: WizardStep.PROHIBITED_DISCLOSING,
         canActivate: [canActivateComplianceRoute],
         title:
-          'Are there any parts of the ESOS report (or supporting information) that the responsible undertaking is prohibited from disclosing to any group undertaking?',
-        data: { backlink: ({ backlinkUrl }) => backlinkUrl },
-        resolve: { backlinkUrl: resolveProhibitedDisclosingBackLink },
+          'Are there any parts of the ESOS report, or supporting information, that the responsible undertaking is prohibited from disclosing to any group undertaking?',
+        resolve: { backlink: resolveComplianceRouteBackLink(WizardStep.PROHIBITED_DISCLOSING) },
         loadComponent: () =>
           import('./prohibited-disclosing/prohibited-disclosing.component').then(
             (c) => c.ProhibitedDisclosingComponent,
@@ -126,7 +130,7 @@ export const COMPLIANCE_ROUTE_ROUTES: Routes = [
         path: WizardStep.PROHIBITED_DISCLOSING_PARTS,
         canActivate: [canActivateComplianceRoute],
         title:
-          'Which parts of the ESOS report (or supporting information) that the responsible undertaking is prohibited from disclosing to the group undertaking?',
+          'Which parts of the ESOS report or supporting information is the responsible undertaking prohibited by law from disclosing?',
         resolve: {
           backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.PROHIBITED_DISCLOSING),
         },
@@ -138,8 +142,7 @@ export const COMPLIANCE_ROUTE_ROUTES: Routes = [
       {
         path: WizardStep.PROHIBITED_DISCLOSING_REASON,
         canActivate: [canActivateComplianceRoute],
-        title:
-          'Please tell us why the responsible undertaking considers that disclosure of those parts of the ESOS report (or supporting information) is prohibited by law',
+        title: 'Why is disclosure of these parts of the ESOS report or supporting information prohibited by law?',
         resolve: {
           backlink: backlinkResolver(WizardStep.SUMMARY, WizardStep.PROHIBITED_DISCLOSING_PARTS),
         },

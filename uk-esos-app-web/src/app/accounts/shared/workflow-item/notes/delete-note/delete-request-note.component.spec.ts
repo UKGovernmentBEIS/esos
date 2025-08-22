@@ -64,7 +64,7 @@ describe('DeleteRequestNoteComponent', () => {
     });
 
     it('should delete', () => {
-      const navigateSpy = jest.spyOn(router, 'navigate');
+      const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
 
       page.submitButton.click();
 
@@ -109,7 +109,7 @@ describe('DeleteRequestNoteComponent', () => {
     });
 
     it('should delete', () => {
-      const navigateSpy = jest.spyOn(router, 'navigate');
+      const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
 
       page.submitButton.click();
 

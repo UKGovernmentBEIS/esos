@@ -8,13 +8,14 @@ import {
   Input,
   QueryList,
   TemplateRef,
+  ViewEncapsulation,
 } from '@angular/core';
 
 import {
   SummaryListColumnDirective,
   SummaryListRowDirective,
   SummaryListRowKeyDirective,
-  SummaryListRowValueDirective
+  SummaryListRowValueDirective,
 } from './directives';
 import { SummaryItem } from './summary-list.interface';
 
@@ -34,7 +35,10 @@ import { SummaryItem } from './summary-list.interface';
     SummaryListRowValueDirective,
   ],
   templateUrl: './summary-list.component.html',
+  styleUrls: ['./summary-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
+  encapsulation: ViewEncapsulation.None,
 })
 export class SummaryListComponent {
   @Input() details: SummaryItem[];

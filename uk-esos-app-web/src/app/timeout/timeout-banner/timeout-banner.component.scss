@@ -1,41 +1,44 @@
-@import 'base';
+@use 'base' as govuk;
 
 .govuk-timeout-warning {
   display: none;
-  @include govuk-responsive-padding(6);
-  // Setting width allows IE to center dialog vertically
+  @include govuk.govuk-responsive-padding(6);
+  /* Setting width allows IE to center dialog vertically */
   width: 100%;
 
-  // To do: allow this to be customised
+  /* To do: allow this to be customised */
   max-width: 500px;
 
   .govuk-button {
-    margin: 0 govuk-spacing(2) govuk-spacing(3) 0;
-    @include govuk-media-query($from: tablet) {
-      margin-bottom: govuk-spacing(0);
+    margin: 0 govuk.govuk-spacing(2) govuk.govuk-spacing(3) 0;
+    @include govuk.govuk-media-query($from: tablet) {
+      margin-bottom: govuk.govuk-spacing(0);
     }
   }
 
   &[open] {
     display: block;
-
     $backdrop-colour: rgba(0, 0, 0, 0.8);
 
-    // Backdrop styles for browsers with native support
+    /* Backdrop styles for browsers with native support */
     & + .backdrop {
       background: $backdrop-colour;
     }
 
-    // Backdrop styles for browsers using
-    // Keep these two backdrop styles separate - Safari didn't
-    // work when combined
+    /*
+     * Backdrop styles for browsers using
+     * Keep these two backdrop styles separate - Safari didn't
+     * work when combined
+     */
     &::backdrop {
       background: $backdrop-colour;
     }
   }
 }
 
-// Stop background scrolling while dialog open.
+/*
+ * Stop background scrolling while dialog open.
+ */
 .govuk-timeout-warning-overlay {
   overflow: hidden;
 }
@@ -45,5 +48,5 @@
 }
 
 .tabular-numbers {
-  font-family: $govuk-font-family-tabular;
+  @include govuk.govuk-font-tabular-numbers;
 }

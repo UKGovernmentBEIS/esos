@@ -38,4 +38,23 @@ public class AccountAuthorizationResourceService {
         
         return true;
     }
+
+    public boolean hasUserScopeToAccountAndResourceSubType(AppUser authUser, Long accountId, Scope scope, String resourceSubType) {
+        Permission requiredPermission =
+                resourceScopePermissionService
+                        .findByResourceTypeAndResourceSubTypeAndRoleTypeAndScope(ResourceType.ACCOUNT,
+                                resourceSubType, authUser.getRoleType(), scope)
+                        .map(ResourceScopePermission::getPermission)
+                        .orElse(null);
+        AuthorizationCriteria authCriteria =
+                AuthorizationCriteria.builder()
+                        .accountId(accountId)
+                        .permission(requiredPermission).build();
+        try {
+            appAuthorizationService.authorize(authUser, authCriteria);
+            return true;
+        } catch (BusinessException e) {
+            return false;
+        }
+    }
 }

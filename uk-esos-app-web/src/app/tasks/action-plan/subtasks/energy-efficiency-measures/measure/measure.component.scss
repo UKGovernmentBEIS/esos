@@ -1,0 +1,5 @@
+@import 'base';
+
+.total-energy-savings-group--error-invalid-total.govuk-form-group--error ::ng-deep .govuk-input {
+  border-color: $govuk-error-colour;
+}

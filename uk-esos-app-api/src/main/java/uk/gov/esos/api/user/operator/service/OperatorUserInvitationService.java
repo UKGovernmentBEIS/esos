@@ -26,19 +26,14 @@ public class OperatorUserInvitationService {
      * @param currentUser the current logged-in {@link AppUser}
      */
     @Transactional
-    @AccountStatus(expression = "{#status != 'UNAPPROVED' && #status != 'DENIED'}")
+    @AccountStatus(expression = "{#status != 'AWAITING_APPROVAL' && #status != 'DENIED'}")
     public void inviteUserToAccount(Long accountId, OperatorUserInvitationDTO userRegistrationDTO, AppUser currentUser) {
         Optional<UserInfoDTO> userOptional = authUserService.getUserByEmail(userRegistrationDTO.getEmail());
 
         userOptional.ifPresentOrElse(
-            userRepresentation -> addExistingUserToAccount(userRepresentation, userRegistrationDTO, accountId, currentUser),
-            () -> operatorUserRegistrationService.registerUserToAccountWithStatusPending(userRegistrationDTO, accountId, currentUser));
+            userRepresentation -> existingOperatorUserInvitationService.addExistingUserToAccount(
+            		userRegistrationDTO, accountId, userRepresentation.getUserId(), userRepresentation.getStatus(), 
+            		currentUser),
+            () -> operatorUserRegistrationService.createUserToAccountWithStatusPending(userRegistrationDTO, accountId, currentUser));
     }
-
-
-    private void addExistingUserToAccount(UserInfoDTO userDTO, OperatorUserInvitationDTO userRegistrationDTO,
-                                          Long accountId, AppUser currentUser) {
-        existingOperatorUserInvitationService.addExistingUserToAccount(userRegistrationDTO, accountId, userDTO.getUserId(), userDTO.getStatus(), currentUser);
-    }
-
 }

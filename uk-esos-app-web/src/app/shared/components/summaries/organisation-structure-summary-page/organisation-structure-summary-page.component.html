@@ -1,46 +1,68 @@
-<dl govuk-summary-list>
-  <div govukSummaryListRow>
-    <dt govukSummaryListRowKey>
-      Is the responsible undertaking part of an arrangement where 2 or more highest UK parent groups are complying as 1
-      participant?
-    </dt>
-    <dd govukSummaryListRowValue>{{ vm.data.isPartOfArrangement | booleanToText }}</dd>
-    <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
-      <a govukLink [routerLink]="['./', vm.wizardStep.RU_DETAILS]" [queryParams]="queryParams"> Change </a>
-    </dd>
-  </div>
+<!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+<ng-container *ngIf="vm.data.isHighestParent != null">
+  <h2 class="govuk-heading-m">
+    Is the responsible undertaking a highest parent which has agreed to aggregate with one or more other highest parents
+    to comply as one participant?
+  </h2>
+  <dl govuk-summary-list>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>{{ vm.data.isHighestParent | booleanToText }}</dd>
+      <dd govukSummaryListColumnActions *ngIf="vm.isEditable">
+        <a govukLink [routerLink]="['./', vm.wizardStep.HIGHEST_PARENT]" [queryParams]="queryParams"> Change </a>
+      </dd>
+    </div>
+  </dl>
+</ng-container>
 
-  <div govukSummaryListRow>
-    <dt govukSummaryListRowKey>Is the responsible undertaking part of a franchise group?</dt>
-    <dd govukSummaryListRowValue>{{ vm.data.isPartOfFranchise | booleanToText }}</dd>
-    <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
-      <a govukLink [routerLink]="['./', vm.wizardStep.RU_DETAILS]" [queryParams]="queryParams"> Change </a>
-    </dd>
-  </div>
+<!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+<ng-container *ngIf="vm.data.isNonComplyingUndertakingsIncluded != null">
+  <h2 class="govuk-heading-m">
+    Did the responsible undertaking’s group include any undertakings on 31 December 2022 which either disaggregated
+    from, or ceased to be part of the participant before 5 June 2024 and which are not complying as if they were still a
+    member of the participant?
+  </h2>
+  <dl govuk-summary-list>
+    <div govukSummaryListColumn>
+      <dd govukSummaryListColumnValue>{{ vm.data.isNonComplyingUndertakingsIncluded | booleanToText }}</dd>
+      <dd govukSummaryListColumnActions *ngIf="vm.isEditable">
+        <a govukLink [routerLink]="['./', vm.wizardStep.INCLUDE_UNDERTAKINGS]" [queryParams]="queryParams"> Change </a>
+      </dd>
+    </div>
+  </dl>
+</ng-container>
 
-  <div govukSummaryListRow>
-    <dt govukSummaryListRowKey>Is the responsible undertaking a trust?</dt>
-    <dd govukSummaryListRowValue>{{ vm.data.isTrust | booleanToText }}</dd>
-    <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
-      <a govukLink [routerLink]="['./', vm.wizardStep.RU_DETAILS]" [queryParams]="queryParams"> Change </a>
-    </dd>
-  </div>
-
-  <div govukSummaryListRow>
-    <dt govukSummaryListRowKey>
-      Has the responsible undertaking ceased to be a part of the corporate group between 31 December 2022 and 5 June
-      2024?
-    </dt>
-    <dd govukSummaryListRowValue>{{ vm.data.hasCeasedToBePartOfGroup | booleanToText }}</dd>
-    <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
-      <a govukLink [routerLink]="['./', vm.wizardStep.RU_DETAILS]" [queryParams]="queryParams"> Change </a>
-    </dd>
-  </div>
-</dl>
+<esos-organisations-undertaking-table
+  *ngIf="vm.data.organisationUndertakingDetails?.length > 0"
+  [data]="vm.data.organisationUndertakingDetails"
+  [isEditable]="vm.isEditable"
+  [changeLink]="vm.isEditable ? vm.wizardStep.UNDERTAKING_LIST : ''"
+  [queryParams]="queryParams"
+  (removeUndertakingOrganisation)="removeUndertakingOrganisation($event)"
+></esos-organisations-undertaking-table>
 
 <esos-organisation-structure-list-table
   [vm]="vmList()"
   [organisationStructure]="organisationStructure"
   (removeOrganisation)="removeOrganisation($event)"
   [queryParams]="queryParams"
+  [allowPagination]="!printMode"
 ></esos-organisation-structure-list-table>
+
+<a govukSecondaryButton *ngIf="vm.isEditable" [routerLink]="['./', vm.wizardStep.LIST]">
+  Add organisation or upload file
+</a>
+
+<!-- eslint-disable-next-line @angular-eslint/template/eqeqeq -->
+<dl *ngIf="vm.data.isGroupStructureChartProvided != null" govuk-summary-list>
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>
+      Do you also wish to provide a corporate group structure chart or other information setting out the relationship
+      between the RU and relevant undertakings complying with the scheme as one participant?
+    </dt>
+    <dd govukSummaryListRowValue>{{ vm.data.isGroupStructureChartProvided | booleanToText }}</dd>
+    <dd *ngIf="vm.isEditable" govukSummaryListRowActions>
+      <a govukLink [routerLink]="['./', vm.wizardStep.LIST]" [queryParams]="queryParams"> Change </a>
+    </dd>
+  </div>
+</dl>
+

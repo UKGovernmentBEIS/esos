@@ -20,13 +20,11 @@ import uk.gov.esos.api.user.core.service.auth.UserAuthService;
 import java.util.HashMap;
 import java.util.Map;
 
-import static uk.gov.esos.api.notification.mail.constants.EmailNotificationTemplateConstants.APPLICANT_FNAME;
-import static uk.gov.esos.api.notification.mail.constants.EmailNotificationTemplateConstants.APPLICANT_LNAME;
 import static uk.gov.esos.api.notification.mail.constants.EmailNotificationTemplateConstants.USER_ROLE_TYPE;
-import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.INVITATION_TO_EMITTER_CONTACT;
 import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.RESET_2FA_CONFIRMATION;
 import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.RESET_PASSWORD_CONFIRMATION;
 import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.USER_ACCOUNT_ACTIVATION;
+import static uk.gov.esos.api.notification.template.domain.enumeration.NotificationTemplateName.VERIFIED_ACCOUNT_INVITATION;
 
 @Service
 @RequiredArgsConstructor
@@ -62,15 +60,6 @@ public class UserNotificationService {
                 EmailNotificationTemplateConstants.HOME_URL, appProperties.getWeb().getUrl()));
     }
 
-    public void notifyEmitterContactAccountActivation(String userId, String installationName) {
-        UserInfoDTO user = userAuthService.getUserByUserId(userId);
-        
-        notifyUser(user.getEmail(), INVITATION_TO_EMITTER_CONTACT, Map.of(APPLICANT_FNAME, user.getFirstName(),
-                APPLICANT_LNAME, user.getLastName(),
-                EmailNotificationTemplateConstants.ACCOUNT_NAME, installationName,
-                EmailNotificationTemplateConstants.CONTACT_REGULATOR, notificationProperties.getEmail().getContactUsLink()));
-    }
-    
     public void notifyUserPasswordReset(String userId) {
         UserInfoDTO user = userAuthService.getUserByUserId(userId);
         
@@ -87,6 +76,12 @@ public class UserNotificationService {
         		EmailNotificationTemplateConstants.ESOS_HELPDESK, notificationProperties.getEmail().getEsosHelpdesk()));
 	}
     
+    public void notifyVerifiedAccountUser(String email) {
+    	notifyUser(email, VERIFIED_ACCOUNT_INVITATION, Map.of(
+        		EmailNotificationTemplateConstants.HOME_URL, appProperties.getWeb().getUrl(),
+        		EmailNotificationTemplateConstants.ESOS_HELPDESK, notificationProperties.getEmail().getEsosHelpdesk()));
+	}
+    
     /**
      * Sends generic email notification for specified template and params
      * @param email
@@ -95,15 +90,19 @@ public class UserNotificationService {
      * 
      */
     private void notifyUser(String email, NotificationTemplateName templateName, Map<String, Object> params) {
-    	EmailData emailInfo = EmailData.builder()
+    	EmailData emailInfo = buildEmailData(templateName, params);
+
+        notificationEmailService.notifyRecipient(emailInfo, email);
+    }
+
+	private EmailData buildEmailData(NotificationTemplateName templateName, Map<String, Object> params) {
+		return EmailData.builder()
                 .notificationTemplateData(EmailNotificationTemplateData.builder()
                         .templateName(templateName)
                         .templateParams(params)
                         .build())
                 .build();
-
-        notificationEmailService.notifyRecipient(emailInfo, email);
-    }
+	}
 
     private String constructRedirectionLink(String path, UserNotificationWithRedirectionLinkInfo.TokenParams tokenParams) {
         String token = jwtTokenService

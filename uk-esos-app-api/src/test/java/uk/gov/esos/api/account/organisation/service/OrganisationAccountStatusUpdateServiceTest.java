@@ -27,7 +27,7 @@ class OrganisationAccountStatusUpdateServiceTest {
         Long accountId = 1L;
         OrganisationAccount account = OrganisationAccount.builder()
             .id(accountId)
-            .status(OrganisationAccountStatus.UNAPPROVED)
+            .status(OrganisationAccountStatus.AWAITING_APPROVAL)
             .build();
 
         when(accountQueryService.getAccountById(accountId)).thenReturn(account);
@@ -44,7 +44,7 @@ class OrganisationAccountStatusUpdateServiceTest {
         Long accountId = 1L;
         OrganisationAccount account = OrganisationAccount.builder()
             .id(accountId)
-            .status(OrganisationAccountStatus.UNAPPROVED)
+            .status(OrganisationAccountStatus.AWAITING_APPROVAL)
             .build();
 
         when(accountQueryService.getAccountById(accountId)).thenReturn(account);
@@ -54,5 +54,22 @@ class OrganisationAccountStatusUpdateServiceTest {
 
         //verify
         assertEquals(OrganisationAccountStatus.DENIED, account.getStatus());
+    }
+
+    @Test
+    void handleOrganisationAccountClosed() {
+        Long accountId = 1L;
+        OrganisationAccount account = OrganisationAccount.builder()
+                .id(accountId)
+                .status(OrganisationAccountStatus.LIVE)
+                .build();
+
+        when(accountQueryService.getAccountById(accountId)).thenReturn(account);
+
+        //invoke
+        accountStatusUpdateService.handleOrganisationAccountClosed(accountId);
+
+        //verify
+        assertEquals(OrganisationAccountStatus.CLOSED, account.getStatus());
     }
 }

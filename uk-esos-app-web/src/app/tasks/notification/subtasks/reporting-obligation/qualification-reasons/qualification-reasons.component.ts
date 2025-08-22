@@ -10,7 +10,7 @@ import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { TASK_FORM } from '@tasks/task-form.token';
 import produce from 'immer';
 
-import { CheckboxComponent, CheckboxesComponent } from 'govuk-components';
+import { CheckboxComponent, RadioComponent, RadioOptionComponent } from 'govuk-components';
 
 import { NotificationTaskPayload } from '../../../notification.types';
 import {
@@ -25,8 +25,9 @@ import { QualificationReasonsFormModel, qualificationReasonsFormProvider } from 
   standalone: true,
   imports: [
     WizardStepComponent,
-    CheckboxesComponent,
     ReactiveFormsModule,
+    RadioComponent,
+    RadioOptionComponent,
     CheckboxComponent,
     KeyValuePipe,
     NgForOf,
@@ -56,8 +57,8 @@ export class QualificationReasonsComponent {
         if (!payload.noc.reportingObligation.reportingObligationDetails) {
           payload.noc.reportingObligation.reportingObligationDetails = {} as any;
         }
-        payload.noc.reportingObligation.reportingObligationDetails.qualificationReasonTypes =
-          this.form.value.qualificationReasons;
+        payload.noc.reportingObligation.reportingObligationDetails.qualificationReasonType =
+          this.form.value.qualificationReason;
       }),
       applySideEffects: false,
     });

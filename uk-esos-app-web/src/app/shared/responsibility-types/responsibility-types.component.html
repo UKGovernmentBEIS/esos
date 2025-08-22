@@ -1,34 +1,42 @@
 <p class="govuk-body">
-  In the absence of a board director, an individual with management control can confirm the following.
+  A responsible officer is an individual from one of the organisations covered by the notification who is either:
 </p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>a director who has been nominated for the purpose of ensuring ESOS compliance</li>
+  <li>an individual who has management control, in the absence of a director</li>
+</ul>
+
 <p class="govuk-body">
-  This should only be another individual with management control where a board director does not exist.
+  You must confirm that all of these statements are true before you can submit your notification of compliance.
 </p>
+
+<h3 class="govuk-heading-s">
+  I confirm that {{ isSecondOfficer ? 'a second' : 'the' }} responsible officer has reviewed the recommendations of the
+  ESOS assessment and is satisfied that, to the best of their knowledge, the following statements are true:
+</h3>
 
 <div govuk-checkboxes [formControlName]="controlName">
   <govuk-checkbox
-    [value]="'REVIEWED_THE_RECOMMENDATIONS'"
-    label="has reviewed the recommendations of your organisation's ESOS assessment or alternative routes to compliance (e.g. ISO 50001)"
-  >
-  </govuk-checkbox>
-  <govuk-checkbox
     [value]="'SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME'"
-    label="is satisfied, to the best of their knowledge, that the organisation is within the scope of the scheme"
+    [label]="
+      'SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME' | energyAssessmentTypes : hasNoEnergyResponsibility
+    "
   >
   </govuk-checkbox>
   <govuk-checkbox
     [value]="'SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME'"
-    label="is satisfied, to the best of their knowledge, that the organisation is compliant with the scheme"
+    [label]="'SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME' | energyAssessmentTypes"
   >
   </govuk-checkbox>
   <govuk-checkbox
     [value]="'SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON'"
-    label="Is satisfied, to the best of their knowledge, that relevant sections of the ESOS report, and supporting information where relevant, have been shared with all undertakings in the corporate group, unless there is a declared reason why this is prohibited by law"
+    [label]="'SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON' | energyAssessmentTypes"
   >
   </govuk-checkbox>
   <govuk-checkbox
     [value]="'SATISFIED_WITH_INFORMATION_PROVIDED'"
-    label="is satisfied, to the best of their knowledge, that the information provided in this notification is correct"
+    [label]="'SATISFIED_WITH_INFORMATION_PROVIDED' | energyAssessmentTypes"
   >
   </govuk-checkbox>
 </div>

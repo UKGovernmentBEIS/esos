@@ -5,22 +5,27 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
   <p class="govuk-body">
     This is the organisation responsible for submitting the Energy Savings Opportunity Scheme (ESOS) compliance
     notification.
   </p>
+
   <div
     formControlName="name"
     govuk-text-input
     label="Organisation name"
     [widthClass]="'govuk-!-width-two-thirds'"
   ></div>
-  <div
-    formControlName="registrationNumber"
-    govuk-text-input
-    label="Registration number (optional)"
-    [widthClass]="'govuk-!-width-two-thirds'"
-  ></div>
+
+  <h3 class="govuk-heading-s">Activity codes</h3>
+  <esos-activity-codes-input></esos-activity-codes-input>
+
+  <esos-activity-codes-guidance-template></esos-activity-codes-guidance-template>
+
+  <h3 class="govuk-heading-s">Organisation address</h3>
+  <p class="govuk-body"> This is the registered address for organisations with a companies house registration number, otherwise,
+    the principle place of activity. </p>
   <esos-county-address-input></esos-county-address-input>
 </esos-wizard-step>

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.esos.api.account.domain.AccountNote;
+import uk.gov.esos.api.common.domain.enumeration.RoleType;
 
 public interface AccountNoteRepository extends JpaRepository<AccountNote, Long> {
 
@@ -14,6 +15,5 @@ public interface AccountNoteRepository extends JpaRepository<AccountNote, Long> 
     Page<AccountNote> findAccountNotesByAccountIdOrderByLastUpdatedOnDesc(Pageable pageable, Long accountId);
 
     @Transactional(readOnly = true)
-    @Query("select accountNote.accountId from AccountNote accountNote where accountNote.id = :id")
-    Optional<Long> getAccountIdById(Long id);
+    Page<AccountNote> findAccountNotesByAccountIdAndRoleTypeOrderByLastUpdatedOnDesc(Pageable pageable, Long accountId, RoleType roleType);
 }

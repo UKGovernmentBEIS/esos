@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1exuv7h" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.25.0">
+  <bpmn:process id="PROCESS_ACTION_PLAN_P3" name="P3 Action plan" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="ACTION_PLAN_START_EVENT" name="Start Event">
+      <bpmn:outgoing>Flow_0oue52q</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="ACTION_PLAN_P3_APPLICATION_SUBMIT" name="Advanced user: Submit action plan">
+      <bpmn:incoming>Flow_0oue52q</bpmn:incoming>
+      <bpmn:outgoing>Flow_0m15yqo</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="ACTION_PLAN_END_EVENT" name="End Event">
+      <bpmn:incoming>Flow_0icacpp</bpmn:incoming>
+      <bpmn:incoming>Flow_0xlhlfh</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0oue52q" sourceRef="ACTION_PLAN_START_EVENT" targetRef="ACTION_PLAN_P3_APPLICATION_SUBMIT" />
+    <bpmn:serviceTask id="Activity_0121xhp" name="Update Workflow status to COMPLETED" camunda:delegateExpression="#{requestUpdateStatusHandler}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="requestStatus">COMPLETED</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1q8wmev</bpmn:incoming>
+      <bpmn:outgoing>Flow_0icacpp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0icacpp" sourceRef="Activity_0121xhp" targetRef="ACTION_PLAN_END_EVENT" />
+    <bpmn:sequenceFlow id="Flow_0m15yqo" sourceRef="ACTION_PLAN_P3_APPLICATION_SUBMIT" targetRef="Gateway_0mssskp" />
+    <bpmn:serviceTask id="Activity_18drh6f" name="Generate action plan &#10;document" camunda:delegateExpression="#{actionPlanP3GenerateDocumentHandler}">
+      <bpmn:incoming>Flow_1otj6vm</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i9uhcd</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1i9uhcd" sourceRef="Activity_18drh6f" targetRef="Activity_1v7m5sq" />
+    <bpmn:serviceTask id="Activity_1v7m5sq" name="Add submitted request action" camunda:delegateExpression="#{actionPlanP3AddSubmittedRequestActionHandler}">
+      <bpmn:incoming>Flow_1i9uhcd</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sp5co0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1sp5co0" sourceRef="Activity_1v7m5sq" targetRef="Activity_0b09p9i" />
+    <bpmn:serviceTask id="Activity_0b09p9i" name="Send action plan &#10;document " camunda:delegateExpression="#{actionPlanP3SendDocumentHandler}">
+      <bpmn:incoming>Flow_1sp5co0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1q8wmev</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1q8wmev" sourceRef="Activity_0b09p9i" targetRef="Activity_0121xhp" />
+    <bpmn:exclusiveGateway id="Gateway_0mssskp" name="what is the outcome?" default="Flow_1otj6vm">
+      <bpmn:incoming>Flow_0m15yqo</bpmn:incoming>
+      <bpmn:outgoing>Flow_1otj6vm</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1uoyqkb</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1otj6vm" sourceRef="Gateway_0mssskp" targetRef="Activity_18drh6f" />
+    <bpmn:serviceTask id="Activity_1rga0o1" name="Update Workflow status to CANCELLED" camunda:delegateExpression="#{requestUpdateStatusHandler}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="requestStatus">CANCELLED</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1uoyqkb</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xlhlfh</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1uoyqkb" name="cancelled" sourceRef="Gateway_0mssskp" targetRef="Activity_1rga0o1">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${apOutcome=='CANCELLED'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0xlhlfh" sourceRef="Activity_1rga0o1" targetRef="ACTION_PLAN_END_EVENT" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PROCESS_ACTION_PLAN_P3">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="ACTION_PLAN_START_EVENT">
+        <dc:Bounds x="122" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="114" y="142" width="55" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1r03gnf_di" bpmnElement="ACTION_PLAN_P3_APPLICATION_SUBMIT">
+        <dc:Bounds x="210" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0o8ulv7_di" bpmnElement="ACTION_PLAN_END_EVENT">
+        <dc:Bounds x="1252" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1244" y="75" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0121xhp_di" bpmnElement="Activity_0121xhp">
+        <dc:Bounds x="1060" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ucn2zx_di" bpmnElement="Activity_18drh6f">
+        <dc:Bounds x="480" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dnx7tj_di" bpmnElement="Activity_1v7m5sq">
+        <dc:Bounds x="660" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08f4ai3_di" bpmnElement="Activity_0b09p9i">
+        <dc:Bounds x="850" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1jdpkz0" bpmnElement="Gateway_0mssskp" isMarkerVisible="true">
+        <dc:Bounds x="375" y="92" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="373" y="65" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1rga0o1_di" bpmnElement="Activity_1rga0o1">
+        <dc:Bounds x="1060" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0oue52q_di" bpmnElement="Flow_0oue52q">
+        <di:waypoint x="158" y="117" />
+        <di:waypoint x="210" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0icacpp_di" bpmnElement="Flow_0icacpp">
+        <di:waypoint x="1160" y="117" />
+        <di:waypoint x="1252" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0m15yqo_di" bpmnElement="Flow_0m15yqo">
+        <di:waypoint x="310" y="117" />
+        <di:waypoint x="375" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i9uhcd_di" bpmnElement="Flow_1i9uhcd">
+        <di:waypoint x="580" y="117" />
+        <di:waypoint x="660" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sp5co0_di" bpmnElement="Flow_1sp5co0">
+        <di:waypoint x="760" y="117" />
+        <di:waypoint x="850" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1q8wmev_di" bpmnElement="Flow_1q8wmev">
+        <di:waypoint x="950" y="117" />
+        <di:waypoint x="1060" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1otj6vm_di" bpmnElement="Flow_1otj6vm">
+        <di:waypoint x="425" y="117" />
+        <di:waypoint x="480" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1uoyqkb_di" bpmnElement="Flow_1uoyqkb">
+        <di:waypoint x="400" y="142" />
+        <di:waypoint x="400" y="270" />
+        <di:waypoint x="1060" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="406" y="203" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xlhlfh_di" bpmnElement="Flow_0xlhlfh">
+        <di:waypoint x="1160" y="270" />
+        <di:waypoint x="1270" y="270" />
+        <di:waypoint x="1270" y="135" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

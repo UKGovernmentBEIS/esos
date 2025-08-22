@@ -17,6 +17,7 @@ describe('WorkflowStatusPipe', () => {
     expect(pipe.transform('REJECTED')).toEqual('Rejected');
     expect(pipe.transform('WITHDRAWN')).toEqual('Withdrawn');
     expect(pipe.transform('CLOSED')).toEqual('Closed');
+    expect(pipe.transform('TERMINATED')).toEqual('Terminated');
     expect(pipe.transform(undefined)).toEqual(null);
   });
 });

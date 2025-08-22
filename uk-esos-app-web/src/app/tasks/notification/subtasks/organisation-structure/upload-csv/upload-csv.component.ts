@@ -11,16 +11,25 @@ import {
   ORGANISATION_STRUCTURE_SUB_TASK,
   OrganisationStructureCurrentStep,
 } from '@tasks/notification/subtasks/organisation-structure/organisation-structure.helper';
-import { organisationStructureCSVMapper } from '@tasks/notification/subtasks/organisation-structure/upload-csv/organisation-structure-csv.map';
+import {
+  FlattenedOrganisationAssociatedWithRU,
+  organisationStructureCsvMap,
+  organisationStructureCSVMapper,
+} from '@tasks/notification/subtasks/organisation-structure/upload-csv/organisation-structure-csv.map';
 import { TASK_FORM } from '@tasks/task-form.token';
 import produce from 'immer';
 import Papa from 'papaparse';
 
 import { ButtonDirective, DetailsComponent, LinkDirective } from 'govuk-components';
 
-import { OrganisationAssociatedWithRU } from 'esos-api';
+import { ClassificationCodes, OrganisationAssociatedWithRU } from 'esos-api';
 
-import { addOrganisationRUGroup, UploadCSVFormModel, uploadCsvFormProvider } from './upload-csv-form.provider';
+import {
+  addOrganisationRUGroup,
+  OrganisationsAssociatedWithRUFormModel,
+  UploadCSVFormModel,
+  uploadCsvFormProvider,
+} from './upload-csv-form.provider';
 
 @Component({
   selector: 'esos-upload-csv',
@@ -45,7 +54,7 @@ export class UploadCsvComponent {
   organisationsRUCtrl = this.form.controls.organisationsRU;
   columnsCtrl = this.form.controls.columns;
   fileCtrl = this.form.controls.file;
-  parsedData: WritableSignal<OrganisationAssociatedWithRU[] | null> = signal(null);
+  parsedData: WritableSignal<FlattenedOrganisationAssociatedWithRU[] | null> = signal(null);
   uploadedFile: File;
 
   constructor(
@@ -64,7 +73,7 @@ export class UploadCsvComponent {
     } else {
       Papa.parse(this.uploadedFile, {
         header: true,
-        transform: this.booleanTransformer,
+        transform: this.csvValuesTransformer,
         skipEmptyLines: true,
         complete: (result) => this.processCSVData(result),
       });
@@ -78,6 +87,7 @@ export class UploadCsvComponent {
 
     this.columnsCtrl.setValue(result.meta.fields);
     this.organisationsRUCtrl.clear();
+
     processedData?.map((organisationAssociatedWithRU) =>
       this.organisationsRUCtrl.push(addOrganisationRUGroup(organisationAssociatedWithRU)),
     );
@@ -101,12 +111,34 @@ export class UploadCsvComponent {
   }
 
   /**
-   * Transforms a CSV value of 'Yes', 'YES', 'NO' etc. to true or false
+   * Transforms a CSV value
+   * If is of boolean type, then convert 'Yes', 'YES', 'NO' etc. to true or false
+   * If is of classification type, then convert 'sic'/'other' to 'SIC'/ 'OTHER'
+   * If is of code type, convert empty strings to undefined
    */
-  private booleanTransformer(value?: string) {
-    if (value?.toLowerCase() === 'yes') return true;
-    if (value?.toLowerCase() === 'no') return false;
-    return value?.length > 0 ? value : undefined;
+  private csvValuesTransformer(value: string, field: string) {
+    switch (field) {
+      case organisationStructureCsvMap.isPartOfArrangement:
+      case organisationStructureCsvMap.hasCeasedToBePartOfGroup:
+      case organisationStructureCsvMap.isPartOfFranchise:
+      case organisationStructureCsvMap.isParentOfResponsibleUndertaking:
+      case organisationStructureCsvMap.isSubsidiaryOfResponsibleUndertaking:
+      case organisationStructureCsvMap.areSameAsRU:
+        return value?.toLowerCase() === 'yes' ? true : value?.toLowerCase() === 'no' ? false : value;
+
+      case organisationStructureCsvMap.type:
+        return value?.toLowerCase() === 'sic' ? 'SIC' : value?.toLowerCase() === 'other' ? 'OTHER' : value;
+
+      case organisationStructureCsvMap.registrationNumber:
+      case organisationStructureCsvMap.code1:
+      case organisationStructureCsvMap.code2:
+      case organisationStructureCsvMap.code3:
+      case organisationStructureCsvMap.code4:
+        return value === '' ? null : value;
+
+      default:
+        return value;
+    }
   }
 
   onSubmit() {
@@ -115,9 +147,59 @@ export class UploadCsvComponent {
       currentStep: OrganisationStructureCurrentStep.UPLOAD_CSV,
       route: this.route,
       payload: produce(this.service.payload, (payload) => {
-        payload.noc.organisationStructure.organisationsAssociatedWithRU = this.organisationsRUCtrl
-          .value as OrganisationAssociatedWithRU[];
+        payload.noc.organisationStructure.organisationsAssociatedWithRU = this.getTransformedFormData();
       }),
     });
+  }
+
+  private getTransformedFormData(): OrganisationAssociatedWithRU[] {
+    const organisationsAssociatedWithRU: OrganisationAssociatedWithRU[] = [];
+
+    this.organisationsRUCtrl.controls.forEach((group) => {
+      const newOrganisation: OrganisationAssociatedWithRU = {
+        registrationNumberExist: !!group.controls.registrationNumber.value,
+        organisationName: group.controls.organisationName.value,
+        registrationNumber: group.controls.registrationNumber.value,
+        isPartOfArrangement: group.controls.isPartOfArrangement.value,
+        hasCeasedToBePartOfGroup: group.controls.hasCeasedToBePartOfGroup.value,
+        isPartOfFranchise: group.controls.isPartOfFranchise.value,
+        isParentOfResponsibleUndertaking: group.controls.isParentOfResponsibleUndertaking.value,
+        isSubsidiaryOfResponsibleUndertaking: group.controls.isSubsidiaryOfResponsibleUndertaking.value,
+        classificationCodesDetails: {
+          areSameAsRU: group.controls.areSameAsRU.value,
+          codes: this.getClassificationCodes(group),
+        },
+      };
+
+      organisationsAssociatedWithRU.push(newOrganisation);
+    });
+
+    return organisationsAssociatedWithRU;
+  }
+
+  /**
+   * Returns ClassificationCodes based on areSameAsRU.
+   * If areSameAsRU === true or if at least no codes exist then sets to null
+   * Otherwise returns the appropriate object
+   */
+  private getClassificationCodes(group: FormGroup<OrganisationsAssociatedWithRUFormModel>): ClassificationCodes | null {
+    const codesValues = [
+      group.controls.code1.value,
+      group.controls.code2.value,
+      group.controls.code3.value,
+      group.controls.code4.value,
+    ];
+
+    const filteredCodes = group.controls.areSameAsRU.value
+      ? []
+      : codesValues.filter((code) => code !== '' && code !== null);
+
+    return group.controls.areSameAsRU.value || !(filteredCodes.length > 0)
+      ? null
+      : {
+          type: group.controls.type.value,
+          otherTypeName: group.controls.type.value === 'OTHER' ? group.controls.otherTypeName.value : null,
+          codes: filteredCodes,
+        };
   }
 }

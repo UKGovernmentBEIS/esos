@@ -14,6 +14,7 @@ describe('StatusTagColorPipe', () => {
 
     expect(pipe.transform(TaskItemStatus.NOT_STARTED)).toBe('grey');
     expect(pipe.transform(TaskItemStatus.CANNOT_START_YET)).toBe('grey');
+    expect(pipe.transform(TaskItemStatus.TERMINATED)).toBe('grey');
     expect(pipe.transform(TaskItemStatus.COMPLETED)).toBe('green');
     expect(pipe.transform(TaskItemStatus.APPROVED)).toBe('green');
     expect(pipe.transform(TaskItemStatus.IN_PROGRESS)).toBe('blue');

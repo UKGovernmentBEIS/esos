@@ -54,7 +54,7 @@ describe('EnergyConsumptionDetailsSummaryTemplateComponent', () => {
       'Industrial processes',
       '0 kWh',
       'Change',
-      'Other processes',
+      'Other energy uses',
       '0 kWh',
       'Change',
       'Total',

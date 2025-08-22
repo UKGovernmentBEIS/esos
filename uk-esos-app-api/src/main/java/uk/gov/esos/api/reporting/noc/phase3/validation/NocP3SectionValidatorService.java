@@ -21,7 +21,7 @@ public abstract class NocP3SectionValidatorService<T extends NocP3Section> {
     private final NocSectionConstraintValidatorService<T> nocSectionConstraintValidatorService;
 
     public NocValidationResult validate(T nocSection, NocP3Container nocContainer, ReportingObligationCategory reportingObligationCategory) {
-        boolean isSectionMandatory = this.getApplicableReportingObligationCategories().contains(reportingObligationCategory);
+        boolean isSectionMandatory = this.getApplicableReportingObligationCategories(nocContainer).contains(reportingObligationCategory);
 
         if(!isSectionMandatory && ObjectUtils.isEmpty(nocSection)) {
             return NocValidationResult.validNoc();
@@ -43,7 +43,7 @@ public abstract class NocP3SectionValidatorService<T extends NocP3Section> {
         return nocViolations;
     }
 
-    protected abstract Set<ReportingObligationCategory> getApplicableReportingObligationCategories();
+    protected abstract Set<ReportingObligationCategory> getApplicableReportingObligationCategories(NocP3Container nocContainer);
 
     protected abstract String getSectionName();
 }

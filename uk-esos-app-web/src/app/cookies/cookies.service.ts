@@ -83,4 +83,13 @@ export class CookiesService {
     });
     document.cookie = updatedCookie;
   }
+
+  hasAnalyticsConsent(): boolean {
+    const cookieStr = this.getCookie(this.COOKIES_POLICY);
+    if (!cookieStr) {
+      return false;
+    }
+
+    return JSON.parse(cookieStr).usage;
+  }
 }

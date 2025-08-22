@@ -5,15 +5,30 @@
   (formSubmit)="submit()"
   submitText="Save and continue"
   [hideSubmit]="!isEditable"
+  [showReturnLink]="true"
 >
-  <div govuk-checkboxes formControlName="qualificationReasons">
-    <govuk-checkbox
+  <div
+    govuk-radio
+    formControlName="qualificationReason"
+    legend="Select the reason that your organisation, or another organisation in its corporate group, qualifies for ESOS"
+    [isLegendHidden]="true"
+  >
+    <govuk-radio-option
       value="TURNOVER_MORE_THAN_44M"
       label="The annual turnover is over &#163;44 million and annual balance sheet total in excess of &#163;38 million"
-    ></govuk-checkbox>
-    <govuk-checkbox
-      value="STAFF_MEMBERS_MORE_THAN_250"
-      label="The organisation has over 250 members of staff"
-    ></govuk-checkbox>
+    >
+    </govuk-radio-option>
+    <govuk-radio-option value="STAFF_MEMBERS_MORE_THAN_250" label="The organisation has 250 or more members of staff">
+    </govuk-radio-option>
+    <govuk-radio-option
+      value="TURNOVER_MORE_THAN_44M_AND_STAFF_MEMBERS_MORE_THAN_250"
+      label="The annual turnover is over &#163;44 million and annual balance sheet total in excess of &#163;38 million, and the organisation has 250 or more members of staff"
+    >
+    </govuk-radio-option>
+    <govuk-radio-option
+      value="CONDITIONS_NOT_MET"
+      label="The organisation does not meet any of these conditions, but belongs to a corporate group containing an organisation that does meet these conditions"
+    >
+    </govuk-radio-option>
   </div>
 </esos-wizard-step>

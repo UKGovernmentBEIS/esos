@@ -115,11 +115,51 @@ describe('AdditionalInfoComponent', () => {
         requestTaskActionPayload: {
           payloadType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD',
           noc: {
-            ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.noc,
+            assessmentPersonnel: {},
+            confirmations: {},
+            contactPersons: {},
             energyConsumptionDetails: {
-              ...mockEnergyConsumptionDetails,
               additionalInformationExists: false,
-              additionalInformation: undefined,
+              energyIntensityRatioData: {
+                buildings: {
+                  additionalInformation: 'Buildings additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '50',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+                industrialProcesses: {
+                  additionalInformation: 'Industrial processes additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '70',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+              },
+              significantEnergyConsumption: {
+                buildings: 100,
+                industrialProcesses: 45,
+                otherProcesses: 0,
+                significantEnergyConsumptionPct: 96,
+                total: 145,
+                transport: 0,
+              },
+              significantEnergyConsumptionExists: true,
+              totalEnergyConsumption: {
+                buildings: 100,
+                industrialProcesses: 50,
+                otherProcesses: 0,
+                total: 150,
+                transport: 0,
+              },
+            },
+            organisationStructure: {},
+            reportingObligation: {
+              qualificationType: 'QUALIFY',
             },
           },
           nocSectionsCompleted: {
@@ -190,8 +230,53 @@ describe('AdditionalInfoComponent', () => {
         requestTaskActionPayload: {
           payloadType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD',
           noc: {
-            ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.noc,
-            energyConsumptionDetails: mockEnergyConsumptionDetails,
+            assessmentPersonnel: {},
+            confirmations: {},
+            contactPersons: {},
+            energyConsumptionDetails: {
+              additionalInformation: 'Additional info',
+              additionalInformationExists: true,
+              energyIntensityRatioData: {
+                buildings: {
+                  additionalInformation: 'Buildings additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '50',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+                industrialProcesses: {
+                  additionalInformation: 'Industrial processes additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '70',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+              },
+              significantEnergyConsumption: {
+                buildings: 100,
+                industrialProcesses: 45,
+                otherProcesses: 0,
+                significantEnergyConsumptionPct: 96,
+                total: 145,
+                transport: 0,
+              },
+              significantEnergyConsumptionExists: true,
+              totalEnergyConsumption: {
+                buildings: 100,
+                industrialProcesses: 50,
+                otherProcesses: 0,
+                total: 150,
+                transport: 0,
+              },
+            },
+            organisationStructure: {},
+            reportingObligation: {
+              qualificationType: 'QUALIFY',
+            },
           },
           nocSectionsCompleted: {
             ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.nocSectionsCompleted,

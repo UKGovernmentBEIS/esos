@@ -9,8 +9,11 @@ import uk.gov.esos.api.reporting.noc.common.validation.NocSectionConstraintValid
 import uk.gov.esos.api.reporting.noc.phase3.domain.NocP3Container;
 import uk.gov.esos.api.reporting.noc.phase3.domain.ReportingObligationCategory;
 import uk.gov.esos.api.reporting.noc.phase3.domain.complianceroute.ComplianceRoute;
+import uk.gov.esos.api.reporting.noc.phase3.domain.reportingobligation.ReportingObligation;
+import uk.gov.esos.api.reporting.noc.phase3.domain.reportingobligation.ReportingObligationDetails;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -30,25 +33,37 @@ public class NocP3ComplianceRouteContextValidatorService extends NocP3SectionVal
     protected List<NocViolation> validateSection(ComplianceRoute nocSection, NocP3Container nocContainer, ReportingObligationCategory reportingObligationCategory) {
         List<NocViolation> nocViolations = super.validateSection(nocSection, nocContainer, reportingObligationCategory);
 
-        return switch (reportingObligationCategory){
-            case ISO_50001_COVERING_ENERGY_USAGE, ALTERNATIVE_ENERGY_ASSESSMENTS_95_TO_100 -> {
-                // Hide QID20, QID21, QID22, QID23, QID25
-                validateEnergyConsumptionData(nocSection, nocViolations);
-
-                yield nocViolations;
-            }
-            case ESOS_ENERGY_ASSESSMENTS_95_TO_100, PARTIAL_ENERGY_ASSESSMENTS, LESS_THAN_40000_KWH_PER_YEAR -> {
-                // validate that TwelveMonthsVerifiableData should exist if areDataEstimated is false
-                validateTwelveMonthsVerifiableData(nocSection, nocViolations);
-
-                yield nocViolations;
-            }
-            default -> nocViolations;
-        };
+        if(Set.of(
+        		ReportingObligationCategory.ISO_50001_COVERING_ENERGY_USAGE, 
+        		ReportingObligationCategory.ALTERNATIVE_ENERGY_ASSESSMENTS_95_TO_100).contains(reportingObligationCategory)
+        		|| (ReportingObligationCategory.LESS_THAN_40000_KWH_PER_YEAR.equals(reportingObligationCategory) && 
+        				!hasEnergyAudit(nocContainer))) {
+        	
+        	// Hide QID20, QID21, QID22, QID23, QID25, QID110
+            validateEnergyConsumptionData(nocSection, nocViolations, false);    
+        } else if(Set.of(
+        		ReportingObligationCategory.ESOS_ENERGY_ASSESSMENTS_95_TO_100, 
+        		ReportingObligationCategory.PARTIAL_ENERGY_ASSESSMENTS).contains(reportingObligationCategory)
+        		|| (ReportingObligationCategory.LESS_THAN_40000_KWH_PER_YEAR.equals(reportingObligationCategory) && 
+        				hasEnergyAudit(nocContainer))) {
+        	
+        	// Validate mandatory energy consumption questions
+        	validateEnergyConsumptionData(nocSection, nocViolations, true);
+        }
+        
+        return nocViolations;
     }
 
+	private boolean hasEnergyAudit(NocP3Container nocContainer) {
+		return Optional.ofNullable(nocContainer.getNoc().getReportingObligation())
+    			.map(ReportingObligation::getReportingObligationDetails)
+    			.map(ReportingObligationDetails::getComplianceRouteDistribution)
+    			.map(crd -> crd.getEnergyAuditsPct().compareTo(0) > 0)
+    			.orElse(false);
+	}
+
 	@Override
-    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories() {
+    protected Set<ReportingObligationCategory> getApplicableReportingObligationCategories(NocP3Container nocContainer) {
         return Set.of(
                 ReportingObligationCategory.ESOS_ENERGY_ASSESSMENTS_95_TO_100,
                 ReportingObligationCategory.ISO_50001_COVERING_ENERGY_USAGE,
@@ -63,21 +78,24 @@ public class NocP3ComplianceRouteContextValidatorService extends NocP3SectionVal
         return ComplianceRoute.class.getName();
     }
     
-    private void validateEnergyConsumptionData(ComplianceRoute nocSection, List<NocViolation> nocViolations) {
-    	if(ObjectUtils.isNotEmpty(nocSection.getTwelveMonthsVerifiableDataUsed())
-                || ObjectUtils.isNotEmpty(nocSection.getEnergyConsumptionProfilingUsed())
-                || nocSection.getAreEnergyConsumptionProfilingMethodsRecorded() != null
-                || CollectionUtils.isNotEmpty(nocSection.getEnergyAudits())) {
+    private void validateEnergyConsumptionData(ComplianceRoute nocSection, List<NocViolation> nocViolations, boolean shouldExist) {
+    	if(shouldExist && energyConsumptionDataNotExist(nocSection) || (!shouldExist && energyConsumptionDataExist(nocSection))) {
             nocViolations.add(new NocViolation(this.getSectionName(), NocViolation.NocViolationMessage.INVALID_ENERGY_CONSUMPTION_DATA));
         }
 	}
-    
-    private void validateTwelveMonthsVerifiableData(ComplianceRoute nocSection, List<NocViolation> nocViolations) {
-    	if((Boolean.FALSE.equals(nocSection.getAreDataEstimated())
-                && ObjectUtils.isEmpty(nocSection.getTwelveMonthsVerifiableDataUsed()))
-                || (Boolean.TRUE.equals(nocSection.getAreDataEstimated()
-                && ObjectUtils.isNotEmpty(nocSection.getTwelveMonthsVerifiableDataUsed())))) {
-            nocViolations.add(new NocViolation(this.getSectionName(), NocViolation.NocViolationMessage.INVALID_TWELVE_MONTHS_VERIFIABLE_DATA));
-        }
+
+	private boolean energyConsumptionDataExist(ComplianceRoute nocSection) {
+		return ObjectUtils.isNotEmpty(nocSection.getAreTwelveMonthsVerifiableDataUsed())
+    			|| ObjectUtils.isNotEmpty(nocSection.getTwelveMonthsVerifiableDataUsedReason())
+                || ObjectUtils.isNotEmpty(nocSection.getEnergyConsumptionProfilingUsed())
+                || ObjectUtils.isNotEmpty(nocSection.getAreEnergyConsumptionProfilingMethodsRecorded())
+                || CollectionUtils.isNotEmpty(nocSection.getEnergyAudits())
+                || ObjectUtils.isNotEmpty(nocSection.getIsEnergyConsumptionProfilingNotUsedRecorded());
+	}
+	
+	private boolean energyConsumptionDataNotExist(ComplianceRoute nocSection) {
+		return ObjectUtils.isEmpty(nocSection.getAreTwelveMonthsVerifiableDataUsed())
+				|| ObjectUtils.isEmpty(nocSection.getEnergyConsumptionProfilingUsed())
+				|| CollectionUtils.isEmpty(nocSection.getEnergyAudits());
 	}
 }

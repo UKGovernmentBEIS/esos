@@ -19,7 +19,12 @@
         <ng-content select="[govukLabel]"></ng-content>
       </ng-template>
     </label>
-    <div *ngIf="hint" [id]="identifier + '-item-hint'" class="govuk-hint govuk-checkboxes__hint">{{ hint }}</div>
+    <div
+      *ngIf="hint"
+      [id]="identifier + '-item-hint'"
+      class="govuk-hint govuk-checkboxes__hint"
+      [innerHTML]="hint"
+    ></div>
   </div>
 </ng-template>
 <ng-template #conditionalTemplate>

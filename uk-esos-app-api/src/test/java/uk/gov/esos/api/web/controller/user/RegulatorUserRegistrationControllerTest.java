@@ -1,137 +1,99 @@
 package uk.gov.esos.api.web.controller.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+import org.springframework.aop.framework.AopProxy;
+import org.springframework.aop.framework.DefaultAopProxyFactory;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.Validator;
-import uk.gov.esos.api.common.exception.BusinessException;
-import uk.gov.esos.api.common.exception.ErrorCode;
-import uk.gov.esos.api.user.core.domain.dto.InvitedUserEnableDTO;
-import uk.gov.esos.api.user.core.domain.dto.InvitedUserInfoDTO;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import uk.gov.esos.api.authorization.core.domain.AppUser;
+import uk.gov.esos.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.esos.api.authorization.rules.services.RoleAuthorizationService;
 import uk.gov.esos.api.user.core.domain.dto.TokenDTO;
 import uk.gov.esos.api.user.regulator.service.RegulatorUserAcceptInvitationService;
-import uk.gov.esos.api.user.regulator.service.RegulatorUserInvitationService;
+import uk.gov.esos.api.web.config.AppUserArgumentResolver;
 import uk.gov.esos.api.web.controller.exception.ExceptionControllerAdvice;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import uk.gov.esos.api.web.security.AppSecurityComponent;
+import uk.gov.esos.api.web.security.AuthorizationAspectUserResolver;
+import uk.gov.esos.api.web.security.AuthorizedAspect;
+import uk.gov.esos.api.web.security.AuthorizedRoleAspect;
 
 @ExtendWith(MockitoExtension.class)
 class RegulatorUserRegistrationControllerTest {
 
-    private static final String BASE_PATH = "/v1.0/regulator-users/registration";
-    private static final String ACCEPT_INVITATION_PATH = "/accept-invitation";
-    public static final String ENABLE_FROM_INVITATION = "/enable-from-invitation";
+	private static final String BASE_PATH = "/v1.0/regulator-users/registration";
 
+	private MockMvc mockMvc;
 
-    @InjectMocks
-    private RegulatorUserRegistrationController regulatorUserRegistrationController;
+	@InjectMocks
+	private RegulatorUserRegistrationController controller;
 
-    @Mock
-    private RegulatorUserInvitationService regulatorUserInvitationService;
+	@Mock
+	private AppSecurityComponent appSecurityComponent;
 
-    @Mock
-    private RegulatorUserAcceptInvitationService regulatorUserAcceptInvitationService;
+	@Mock
+	private AppUserAuthorizationService appUserAuthorizationService;
 
-    @Mock
-    private Validator validator;
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+	@Mock
+	private RegulatorUserAcceptInvitationService regulatorUserAcceptInvitationService;
 
-    @BeforeEach
-    public void setUp() {
-        objectMapper = new ObjectMapper();
-        mockMvc = MockMvcBuilders.standaloneSetup(regulatorUserRegistrationController)
-            .setControllerAdvice(new ExceptionControllerAdvice())
-            .setValidator(validator)
-            .build();
-    }
+	@Mock
+	private RoleAuthorizationService roleAuthorizationService;
 
-    @Test
-    void acceptInvitation() throws Exception {
-        String email = "email";
-        TokenDTO invitationToken = TokenDTO.builder().token("token").build();
-        InvitedUserInfoDTO invitedUserInfo = InvitedUserInfoDTO.builder().email(email).build();
+	private ObjectMapper objectMapper;
 
-        when(regulatorUserInvitationService.acceptInvitation(invitationToken.getToken()))
-            .thenReturn(invitedUserInfo);
+	@BeforeEach
+	public void setUp() {
+		objectMapper = new ObjectMapper();
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + ACCEPT_INVITATION_PATH)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(invitationToken)))
-            .andExpect(status().isOk())
-            .andReturn();
+		AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(
+				appSecurityComponent);
+		AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
 
-        InvitedUserInfoDTO actualResult =
-            objectMapper.readValue(result.getResponse().getContentAsString(), InvitedUserInfoDTO.class);
+		AuthorizedRoleAspect authorizedRoleAspect = new AuthorizedRoleAspect(roleAuthorizationService,
+				authorizationAspectUserResolver);
 
-        assertEquals(invitedUserInfo, actualResult);
+		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(controller);
+		aspectJProxyFactory.addAspect(aspect);
+		aspectJProxyFactory.addAspect(authorizedRoleAspect);
 
-        verify(regulatorUserInvitationService, times(1)).acceptInvitation(invitationToken.getToken());
-    }
+		DefaultAopProxyFactory proxyFactory = new DefaultAopProxyFactory();
+		AopProxy aopProxy = proxyFactory.createAopProxy(aspectJProxyFactory);
 
-    @Test
-    void acceptInvitation_bad_request_exception() throws Exception {
-        TokenDTO invitationToken = new TokenDTO();
-        invitationToken.setToken("token");
+		controller = (RegulatorUserRegistrationController) aopProxy.getProxy();
 
-        doThrow(new BusinessException(ErrorCode.USER_INVALID_STATUS)).when(regulatorUserInvitationService)
-            .acceptInvitation(invitationToken.getToken());
+		mockMvc = MockMvcBuilders.standaloneSetup(controller)
+				.setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
+				.setControllerAdvice(new ExceptionControllerAdvice()).build();
+	}
 
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + ACCEPT_INVITATION_PATH)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(invitationToken)))
-            .andExpect(status().isBadRequest());
+	@Test
+	void acceptRegulatorInvitationAndRegister() throws Exception {
+		AppUser currentUser = AppUser.builder().userId("authId").build();
+		TokenDTO invitationTokenDTO  =TokenDTO.builder().token("token").build();
+		
+		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
 
-        verify(regulatorUserInvitationService, times(1)).acceptInvitation(invitationToken.getToken());
-    }
+		mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + "/accept-invitation-and-register")
+				.contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(invitationTokenDTO)))
+				.andExpect(status().isOk());
 
-    @Test
-    void enableRegulatorInvitedUser() throws Exception{
-        InvitedUserEnableDTO invitedUserEnableDTO = InvitedUserEnableDTO.builder()
-            .invitationToken("invitationToken")
-            .password("password")
-            .build();
-
-        doNothing().when(regulatorUserAcceptInvitationService).acceptAndEnableRegulatorInvitedUser(invitedUserEnableDTO);
-
-        mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + ENABLE_FROM_INVITATION)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(invitedUserEnableDTO)))
-            .andExpect(status().isNoContent());
-
-        verify(regulatorUserAcceptInvitationService, times(1)).acceptAndEnableRegulatorInvitedUser(invitedUserEnableDTO);
-    }
-
-    @Test
-    void enableRegulatorInvitedUser_bad_request_exception() throws Exception{
-        InvitedUserEnableDTO invitedUserEnableDTO = InvitedUserEnableDTO.builder()
-            .invitationToken("invitationToken")
-            .password("password")
-            .build();
-
-        doThrow(new BusinessException(ErrorCode.INVALID_TOKEN)).when(regulatorUserAcceptInvitationService)
-            .acceptAndEnableRegulatorInvitedUser(invitedUserEnableDTO);
-
-        mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + ENABLE_FROM_INVITATION)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(invitedUserEnableDTO)))
-            .andExpect(status().isBadRequest());
-
-        verify(regulatorUserAcceptInvitationService, times(1)).acceptAndEnableRegulatorInvitedUser(invitedUserEnableDTO);
-    }
+		verify(regulatorUserAcceptInvitationService, times(1)).acceptInvitationAndRegister(currentUser, invitationTokenDTO);
+	}
+	
 }

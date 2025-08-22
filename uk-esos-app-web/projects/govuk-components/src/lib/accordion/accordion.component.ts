@@ -24,12 +24,17 @@ import { AccordionItemComponent } from './accordion-item/accordion-item.componen
       <div class="govuk-accordion__controls">
         <button
           type="button"
-          class="govuk-accordion__open-all"
+          class="govuk-accordion__show-all"
           [attr.aria-expanded]="areExpanded$ | async"
           (click)="toggleAllSections()"
         >
-          {{ (areExpanded$ | async) ? 'Close all' : 'Open all' }}
-          <span class="govuk-visually-hidden"> sections</span>
+          <span
+            class="govuk-accordion-nav__chevron"
+            [class.govuk-accordion-nav__chevron--down]="(areExpanded$ | async) === false"
+          ></span>
+          <span class="govuk-accordion__show-all-text"
+            >{{ (areExpanded$ | async) ? 'Hide' : 'Show' }} all sections</span
+          >
         </button>
       </div>
       <ng-content select="govuk-accordion-item"></ng-content>
@@ -39,7 +44,7 @@ import { AccordionItemComponent } from './accordion-item/accordion-item.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionComponent implements OnInit, AfterContentInit {
-  @Input() id: string;
+  @Input({ required: true }) id: string;
   @Input() openIndexes: number[];
   @Input() cacheDisabled: boolean;
   @ContentChildren(AccordionItemComponent) accordionItems: QueryList<AccordionItemComponent>;

@@ -68,6 +68,6 @@ describe('EnergySavingsAchievedEstimateTotalComponent', () => {
       'What is the estimate of the total energy savings achieved during the third compliance period?',
     );
 
-    expect(page.totalEnergySavingsEstimation).toBe('0');
+    expect(page.totalEnergySavingsEstimation).toBe('');
   });
 });

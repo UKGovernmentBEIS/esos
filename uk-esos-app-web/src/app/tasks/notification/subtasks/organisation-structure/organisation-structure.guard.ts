@@ -37,6 +37,6 @@ export const canActivateOrganisationStructureSummary: CanActivateFn = (route) =>
   return (
     !isEditable ||
     (isEditable && isWizardCompleted(organisationStructure)) ||
-    createUrlTreeFromSnapshot(route, ['./', OrganisationStructureWizardStep.RU_DETAILS])
+    createUrlTreeFromSnapshot(route, ['./', OrganisationStructureWizardStep.HIGHEST_PARENT])
   );
 };

@@ -13,11 +13,14 @@ export const overseasParentDetailsQuestionFormProvider = {
     const hasOverseasParentDetails = store.select(notificationQuery.selectResponsibleUndertaking)()
       ?.hasOverseasParentDetails;
 
-    return fb.group({
-      hasOverseasParentDetails: [
-        hasOverseasParentDetails ?? null,
-        [GovukValidators.required('Select Yes if the organisation has a parent company based outside of the UK')],
-      ],
-    });
+    return fb.group(
+      {
+        hasOverseasParentDetails: [
+          hasOverseasParentDetails ?? null,
+          [GovukValidators.required('Select Yes if the organisation has a parent company based outside of the UK')],
+        ],
+      },
+      { updateOn: 'change' },
+    );
   },
 };

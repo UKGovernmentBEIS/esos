@@ -21,7 +21,8 @@ import static org.mockito.Mockito.times;
         properties = {
                 "camunda.bpm.enabled=false"
         }
-)class RegulatorAuthorityDeletionEventListenerIT extends AbstractContainerBaseTest {
+)
+class RegulatorAuthorityDeletionEventListenerIT extends AbstractContainerBaseTest {
 
     @Autowired 
     private ApplicationEventPublisher eventPublisher;
@@ -31,9 +32,6 @@ import static org.mockito.Mockito.times;
     
     @MockBean
     private RegulatorAuthorityDeletionEventListener workflowRegulatorAuthorityDeletionEventListener;
-
-    @MockBean
-    private uk.gov.esos.api.user.regulator.service.RegulatorAuthorityDeletionEventListener regulatorAuthorityDeletionEventListener;
 
     @MockBean
     WorkflowService workflowService;
@@ -48,11 +46,9 @@ import static org.mockito.Mockito.times;
         
         //verify
         InOrder inOrder = inOrder(accountRegulatorAuthorityDeletionEventListener, 
-                                  workflowRegulatorAuthorityDeletionEventListener, 
-                                  regulatorAuthorityDeletionEventListener);
+                                  workflowRegulatorAuthorityDeletionEventListener);
         
         inOrder.verify(accountRegulatorAuthorityDeletionEventListener, times(1)).onRegulatorUserDeletedEvent(event);
         inOrder.verify(workflowRegulatorAuthorityDeletionEventListener, times(1)).onRegulatorUserDeletedEvent(event);
-        inOrder.verify(regulatorAuthorityDeletionEventListener, times(1)).onRegulatorAuthorityDeletedEvent(event);
     }
 }

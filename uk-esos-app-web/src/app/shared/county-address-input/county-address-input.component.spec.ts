@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 import { CountyService } from '@core/services/county.service';
 import { changeInputValue, getInputValue, MockType } from '@testing';
 
-import { GovukValidators, SelectComponent, TextInputComponent } from 'govuk-components';
+import { GovukValidators, TextInputComponent } from 'govuk-components';
 
 import { CountyAddressDTO } from 'esos-api';
 
@@ -95,11 +95,9 @@ describe('CountyAddressInputComponent', () => {
       'Address line 1',
       'Address line 2 (optional)',
       'Town or city',
+      'County (optional)',
       'Postcode',
     ]);
-
-    const select: HTMLElement = fixture.debugElement.query(By.directive(SelectComponent)).nativeElement;
-    expect(select.querySelector('label').textContent.trim()).toEqual('County');
   });
 
   it('should set autocomplete attributes', () => {
@@ -109,6 +107,7 @@ describe('CountyAddressInputComponent', () => {
       'address-line1',
       'address-line2',
       'address-level2',
+      'county',
       'postal-code',
     ]);
   });
@@ -161,7 +160,7 @@ describe('CountyAddressInputComponent', () => {
     expect(city.valid).toBeTruthy();
 
     const county = hostComponent.form.get('address.county');
-    expect(county.errors).toEqual({ required: 'Enter a county' });
+    expect(county.errors).toEqual(null);
     changeInputValue(fixture, '#address\\.county', address.county);
     fixture.detectChanges();
     expect(hostComponent.form.invalid).toBeTruthy();

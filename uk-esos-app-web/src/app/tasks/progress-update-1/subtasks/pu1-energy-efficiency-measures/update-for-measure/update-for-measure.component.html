@@ -1,0 +1,126 @@
+<esos-wizard-step
+  [formGroup]="form"
+  [heading]="title()"
+  [caption]="caption"
+  (formSubmit)="onSubmit()"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  @if (actionPlanEnergyEfficiencyMeasure()) {
+    <div class="govuk-summary-card govuk-!-margin-bottom-7">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">
+          {{ actionPlanEnergyEfficiencyMeasure().measureName }}: information from the action plan
+        </h2>
+      </div>
+      <div class="govuk-summary-card__content">
+        <esos-energy-efficiency-measure-summary-list-template [data]="actionPlanEnergyEfficiencyMeasure()" />
+      </div>
+    </div>
+  }
+
+  <div class="govuk-!-width-two-thirds" [class.govuk-!-margin-bottom-8]="!shouldShowProvidedContext">
+    @if (measureImplType() === 'MEASURE_IMPL_AFTER_SUBMIT_ACTION_PLAN') {
+      <esos-boolean-radio-group
+        controlName="measureIsImplemented"
+        [legend]="contentMap.measureIsImplemented.title"
+        legendSize="small"
+        [hint]="contentMap.measureIsImplemented.subtitle"
+      >
+        <div govukConditionalContent>
+          <div
+            class="govuk-!-margin-bottom-6"
+            formControlName="measureImplementedByTheDateInActionPlan"
+            govuk-radio
+            [legend]="contentMap.measureImplementedByTheDateInActionPlan.title"
+            legendSize="small"
+            [isInline]="true"
+          >
+            <govuk-radio-option [value]="true" label="Yes" />
+            <govuk-radio-option [value]="false" label="No" />
+          </div>
+
+          <esos-fieldset-reduction-energy-consumption
+            formControlName="reductionEnergyConsumption2024To2025"
+            [title]="contentMap.reductionEnergyConsumption2024To2025.title"
+            [subtitle]="contentMap.reductionEnergyConsumption2024To2025.subtitle"
+          />
+          <esos-fieldset-reduction-energy-consumption
+            formControlName="reductionEnergyConsumption2023To2024"
+            [title]="contentMap.reductionEnergyConsumption2023To2024.title + ' (optional)'"
+            [subtitle]="contentMap.reductionEnergyConsumption2023To2024.subtitle"
+          />
+          <esos-fieldset-estimation-method-type
+            formControlName="estimationMethodType"
+            [title]="contentMap.estimationMethodType.title"
+            [subtitle]="contentMap.estimationMethodType.subtitle"
+            [options]="contentMap.estimationMethodType.options"
+            [otherMethodLabel]="contentMap.estimationMethodDescription.title"
+          />
+        </div>
+      </esos-boolean-radio-group>
+    } @else if (measureImplType() === 'MEASURE_IMPL_BEFORE_SUBMIT_ACTION_PLAN') {
+      <div
+        class="govuk-!-margin-bottom-7"
+        formControlName="reportReduction2024To2025"
+        govuk-radio
+        [legend]="contentMap.reportReduction2024To2025.title"
+        legendSize="small"
+      >
+        <govuk-radio-option [value]="true" label="Yes">
+          <ng-container govukConditionalContent>
+            <esos-fieldset-reduction-energy-consumption
+              formControlName="reductionEnergyConsumption2024To2025"
+              [title]="contentMap.reductionEnergyConsumption2024To2025.title"
+              [subtitle]="contentMap.reductionEnergyConsumption2024To2025.subtitle"
+              [hasNestedStyles]="true"
+            />
+          </ng-container>
+        </govuk-radio-option>
+        <govuk-radio-option [value]="false" label="No" />
+      </div>
+
+      <div
+        class="govuk-!-margin-bottom-7"
+        formControlName="reportReduction2023To2024"
+        govuk-radio
+        [legend]="contentMap.reportReduction2023To2024.title"
+        legendSize="small"
+      >
+        <govuk-radio-option [value]="true" label="Yes">
+          <ng-container govukConditionalContent>
+            <esos-fieldset-reduction-energy-consumption
+              formControlName="reductionEnergyConsumption2023To2024"
+              [title]="contentMap.reductionEnergyConsumption2023To2024.title"
+              [subtitle]="contentMap.reductionEnergyConsumption2023To2024.subtitle"
+              [hasNestedStyles]="true"
+            />
+          </ng-container>
+        </govuk-radio-option>
+        <govuk-radio-option [value]="false" label="No" />
+      </div>
+
+      @if (shouldShowEstimationMethodType) {
+        <esos-fieldset-estimation-method-type
+          formControlName="estimationMethodType"
+          [title]="contentMap.estimationMethodType.title"
+          [subtitle]="contentMap.estimationMethodType.subtitleForMeasuresImplementedBeforeActionPlanSubmission"
+          [options]="contentMap.estimationMethodType.options"
+          [otherMethodLabel]="contentMap.estimationMethodDescription.title"
+        />
+      }
+    }
+
+    @if (shouldShowProvidedContext) {
+      <div
+        id="providedContextElement"
+        formControlName="providedContext"
+        govuk-textarea
+        [label]="contentMap.providedContext.title"
+        labelSize="small"
+        [maxLength]="10000"
+      ></div>
+    }
+  </div>
+</esos-wizard-step>

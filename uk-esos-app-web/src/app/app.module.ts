@@ -1,22 +1,19 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApplicationRef, DoBootstrap, ErrorHandler, NgModule } from '@angular/core';
-import { BrowserModule, Title } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
+import { TitleStrategy } from '@angular/router';
 
-import { combineLatest, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
-import { initializeGoogleAnalytics } from '@core/analytics';
 import { FeaturesConfigService } from '@core/features/features-config.service';
-import { AnalyticsInterceptor } from '@core/interceptors/analytics.interceptor';
 import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor';
 import { PendingRequestInterceptor } from '@core/interceptors/pending-request.interceptor';
+import { EsosTitleStrategy } from '@core/navigation/esos-title-strategy';
 import { AuthService } from '@core/services/auth.service';
 import { GlobalErrorHandlingService } from '@core/services/global-error-handling.service';
-import { markdownModuleConfig } from '@shared/markdown/markdown-options';
 import { SharedModule } from '@shared/shared.module';
-import { PasswordStrengthMeterModule } from 'angular-password-strength-meter';
-import { DEFAULT_PSM_OPTIONS } from 'angular-password-strength-meter/zxcvbn';
+import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import { MarkdownModule } from 'ngx-markdown';
 
 import { ApiModule, Configuration } from 'esos-api';
 
@@ -48,8 +45,6 @@ const keycloakService = new KeycloakService();
     KeycloakAngularModule,
     LandingPageComponent,
     LegislationComponent,
-    MarkdownModule.forRoot(markdownModuleConfig),
-    PasswordStrengthMeterModule.forRoot(DEFAULT_PSM_OPTIONS),
     PrivacyNoticeComponent,
     SharedModule,
     TermsAndConditionsComponent,
@@ -57,6 +52,7 @@ const keycloakService = new KeycloakService();
     VersionComponent,
   ],
   providers: [
+    provideZxvbnServiceForPSM(),
     {
       provide: KeycloakService,
       useValue: keycloakService,
@@ -75,23 +71,24 @@ const keycloakService = new KeycloakService();
       useClass: PendingRequestInterceptor,
       multi: true,
     },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AnalyticsInterceptor,
-      multi: true,
-    },
-    Title,
+    { provide: TitleStrategy, useClass: EsosTitleStrategy },
   ],
 })
 export class AppModule implements DoBootstrap {
   ngDoBootstrap(appRef: ApplicationRef): void {
     const authService = appRef.injector.get(AuthService);
     const featuresService = appRef.injector.get(FeaturesConfigService);
+
     firstValueFrom(featuresService.initFeatureState())
-      .then(() => keycloakService.init(environment.keycloakOptions))
+      .then(async () => {
+        try {
+          return await keycloakService.init(environment.keycloakOptions);
+        } catch (error) {
+          console.warn('Keycloak first init failed - retrying after replacement with clean url', error);
+          return await keycloakService.init(environment.keycloakOptions);
+        }
+      })
       .then(() => firstValueFrom(authService.checkUser()))
-      .then(() => firstValueFrom(combineLatest([featuresService.getMeasurementId(), featuresService.getPropertyId()])))
-      .then(([measurementId, propertyId]) => initializeGoogleAnalytics(measurementId, propertyId))
       .then(() => appRef.bootstrap(AppComponent))
       .catch((error) => console.error('[ngDoBootstrap] init Keycloak failed', error));
   }

@@ -189,7 +189,7 @@ class RegulatorUserManagementServiceTest {
 		verify(regulatorAuthorityService, times(1)).existsByUserIdAndCompetentAuthority(userId, ca);
 		verify(userSecuritySetupService, never()).resetUser2Fa(anyString());
 	}
-
+	
 	private AppUser buildRegulatorUser(String userId, String username, List<AppAuthority> pmrvAuthorities) {
 
 		return AppUser.builder()

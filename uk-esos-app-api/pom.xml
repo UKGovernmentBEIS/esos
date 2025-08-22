@@ -7,16 +7,17 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <maven.checkstyle.plugin.version>3.2.0</maven.checkstyle.plugin.version>
         <maven.checkstyle.plugin.configLocation>checkstyle-ukesos.xml</maven.checkstyle.plugin.configLocation>
         <maven.checkstyle.plugin.suppressionsLocation>checkstyle-ukesos-suppressed-checks.xml</maven.checkstyle.plugin.suppressionsLocation>
-        <maven.jacoco.plugin>0.8.8</maven.jacoco.plugin>
+        <maven.jacoco.plugin>0.8.12</maven.jacoco.plugin>
         <git.commit.id.plugin.version>5.0.0</git.commit.id.plugin.version>
         <apt-maven-plugin.version>1.1.3</apt-maven-plugin.version>
-        <keycloak.version>23.0.4</keycloak.version>
+        <keycloak-admin-client.version>26.0.4</keycloak-admin-client.version>
+        <keycloak.version>26.1.0</keycloak.version>
         <liquibase.version>4.23.0</liquibase.version>
-        <lombok.version>1.18.28</lombok.version>
+        <lombok.version>1.18.32</lombok.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <libphonenumber.version>8.13.17</libphonenumber.version>
         <commons.beanutils.version>1.9.4</commons.beanutils.version>
@@ -26,12 +27,12 @@
         <zxcvbn.version>1.8.0</zxcvbn.version>
         <maven.dependency.check.suppressionsLocation>dependency-check-ukesos-suppressed.xml</maven.dependency.check.suppressionsLocation>
         <maven.dependency.check.hints>dependency-check-ukesos-hints.xml</maven.dependency.check.hints>
-        <camunda.spring-boot.version>7.20.0</camunda.spring-boot.version>
-        <spring-retry.version>2.0.0</spring-retry.version>
+        <camunda.spring-boot.version>7.21.0</camunda.spring-boot.version>
+        <spring-retry.version>2.0.5</spring-retry.version>
         <commonmark.version>0.21.0</commonmark.version>
         <mockito.version>5.2.0</mockito.version>
         <xyz.capybara.version>2.1.2</xyz.capybara.version>
-        <hypersistence-utils.version>3.5.1</hypersistence-utils.version>
+        <hypersistence-utils.version>3.7.5</hypersistence-utils.version>
         <apache.tika.version>2.8.0</apache.tika.version>
         <xdocreport.version>2.0.4</xdocreport.version>
         <docx4j.version>11.4.9</docx4j.version>
@@ -50,7 +51,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.9</version>
+        <version>3.2.5</version>
         <relativePath/>
     </parent>
 
@@ -133,7 +134,7 @@
         <dependency>
             <groupId>org.camunda.bpm.extension</groupId>
             <artifactId>camunda-platform-7-keycloak</artifactId>
-            <version>7.20.1</version>
+            <version>7.21.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.retry</groupId>
@@ -142,7 +143,7 @@
         </dependency>
         <dependency>
             <groupId>io.hypersistence</groupId>
-            <artifactId>hypersistence-utils-hibernate-60</artifactId>
+            <artifactId>hypersistence-utils-hibernate-63</artifactId>
             <version>${hypersistence-utils.version}</version>
         </dependency>
         <dependency>
@@ -183,7 +184,7 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
-            <version>${keycloak.version}</version>
+            <version>${keycloak-admin-client.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
@@ -311,24 +312,17 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>fluent-hc</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit-junit5</artifactId>
-            <version>1.0.1</version>
+            <version>1.3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -531,10 +525,6 @@
                 <version>${hibernate.version}</version>
                 <executions>
                     <execution>
-                        <configuration>
-                            <failOnError>true</failOnError>
-                            <enableLazyInitialization>true</enableLazyInitialization>
-                        </configuration>
                         <goals>
                             <goal>enhance</goal>
                         </goals>

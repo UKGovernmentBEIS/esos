@@ -1,0 +1,34 @@
+<dl govuk-summary-list [hasBorders]="true">
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.otherResponsibleUndertakingName }}</dt>
+    <dd govukSummaryListRowValue>{{ data()?.otherResponsibleUndertakingName ?? '' }}</dd>
+
+    @if (isEditable()) {
+      <dd govukSummaryListRowActions>
+        <a
+          govukLink
+          class="govuk-link--no-visited-state"
+          [routerLink]="[stepUrls.FORM]"
+          [queryParams]="{ change: true }"
+          >Change</a
+        >
+      </dd>
+    }
+  </div>
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.otherResponsibleUndertakingCrn }}</dt>
+    <dd govukSummaryListRowValue>{{ data()?.otherResponsibleUndertakingCrn ?? '' }}</dd>
+
+    @if (isEditable()) {
+      <dd govukSummaryListRowActions>
+        <a
+          govukLink
+          class="govuk-link--no-visited-state"
+          [routerLink]="[stepUrls.FORM]"
+          [queryParams]="{ change: true }"
+          >Change</a
+        >
+      </dd>
+    }
+  </div>
+</dl>

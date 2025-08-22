@@ -5,7 +5,7 @@ import { RequestTaskStore } from '@common/request-task/+state';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { TASK_FORM } from '@tasks/task-form.token';
 
-import { numberValidatorsTotal } from '../energy-savings-achieved.validators';
+import { mandatoryNumberValidators } from '../energy-savings-achieved.validators';
 
 export const energySavingsAchievedEstimateTotalFormProvider: Provider = {
   provide: TASK_FORM,
@@ -16,7 +16,7 @@ export const energySavingsAchievedEstimateTotalFormProvider: Provider = {
 
     return fb.group(
       {
-        totalEnergySavingsEstimation: [totalEnergySavingsEstimation ?? 0, numberValidatorsTotal],
+        totalEnergySavingsEstimation: [totalEnergySavingsEstimation ?? null, mandatoryNumberValidators],
       },
       { updateOn: 'change' },
     );

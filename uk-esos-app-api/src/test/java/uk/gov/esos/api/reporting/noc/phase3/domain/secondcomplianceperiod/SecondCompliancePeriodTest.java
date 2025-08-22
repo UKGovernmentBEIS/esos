@@ -7,6 +7,7 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.esos.api.reporting.noc.phase3.domain.EnergyConsumption;
+import uk.gov.esos.api.reporting.noc.phase3.domain.OptionalQuestion;
 import uk.gov.esos.api.reporting.noc.phase3.domain.SignificantEnergyConsumption;
 import uk.gov.esos.api.reporting.noc.phase3.domain.firstcomplianceperiod.FirstCompliancePeriodDetails;
 
@@ -28,7 +29,7 @@ class SecondCompliancePeriodTest {
     @Test
     void validate_when_no_informationExists_valid() {
     	SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
-            .informationExists(Boolean.FALSE)
+            .informationExists(OptionalQuestion.NO)
             .build();
 
         final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
@@ -39,16 +40,14 @@ class SecondCompliancePeriodTest {
     @Test
     void validate_when_informationExists_valid() {
     	SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
-            .informationExists(Boolean.TRUE)
+            .informationExists(OptionalQuestion.YES)
             .firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
-	            .organisationalEnergyConsumption(buildEnergyConsumption())
-	            .significantEnergyConsumptionExists(Boolean.TRUE)
+				.organisationalEnergyConsumption(400L)
+	            .organisationalEnergyConsumptionBreakdown(buildEnergyConsumption())
 	            .significantEnergyConsumption(buildSignificantEnergyConsumption())
 	            .explanation("explanation")
-	            .potentialReductionExists(Boolean.TRUE)
 	            .potentialReduction(buildEnergyConsumption())
 	            .build())
-            .reductionAchievedExists(Boolean.TRUE)
             .reductionAchieved(buildEnergyConsumption())
             .build();
 
@@ -60,14 +59,11 @@ class SecondCompliancePeriodTest {
     @Test
     void validate_when_informationExists_nothing_else_exists_valid() {
     	SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
-            .informationExists(Boolean.TRUE)
+            .informationExists(OptionalQuestion.YES)
             .firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
-	            .organisationalEnergyConsumption(buildEnergyConsumption())
-	            .significantEnergyConsumptionExists(Boolean.FALSE)
+	            .organisationalEnergyConsumptionBreakdown(buildEnergyConsumption())
 	            .explanation("explanation")
-	            .potentialReductionExists(Boolean.FALSE)
 	            .build())
-            .reductionAchievedExists(Boolean.FALSE)
             .build();
 
         final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
@@ -78,14 +74,11 @@ class SecondCompliancePeriodTest {
     @Test
     void validate_when_no_informationExists_anything_else_exists_invalid() {
     	SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
-            .informationExists(Boolean.FALSE)
+            .informationExists(OptionalQuestion.NO)
             .firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
-	            .organisationalEnergyConsumption(buildEnergyConsumption())
-	            .significantEnergyConsumptionExists(Boolean.TRUE)
+	            .organisationalEnergyConsumptionBreakdown(buildEnergyConsumption())
 	            .explanation("explanation")
-	            .potentialReductionExists(Boolean.FALSE)
 	            .build())
-            .reductionAchievedExists(Boolean.TRUE)
             .reductionAchieved(buildEnergyConsumption())
             .build();
 
@@ -93,90 +86,72 @@ class SecondCompliancePeriodTest {
 
         assertThat(violations).isNotEmpty();
         assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactlyInAnyOrder(
-        		"{noc.complianceperiod.reductionAchievedExists}",
-        	    "{noc.complianceperiod.energyconsumption.details}",
-        	    "{noc.complianceperiod.significantEnergyConsumption}");
+        	    "{noc.complianceperiod.energyconsumption.details}");
     }
     
     @Test
-    void validate_when_no_significantEnergyConsumptionExists_invalid() {
+    void validate_when_no_significantEnergyConsumptionExists_valid() {
     	SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
-            .informationExists(Boolean.TRUE)
+            .informationExists(OptionalQuestion.YES)
             .firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
-	            .organisationalEnergyConsumption(buildEnergyConsumption())
-	            .significantEnergyConsumptionExists(Boolean.TRUE)
+	            .organisationalEnergyConsumptionBreakdown(buildEnergyConsumption())
 	            .explanation("explanation")
-	            .potentialReductionExists(Boolean.FALSE)
 	            .build())
-            .reductionAchievedExists(Boolean.TRUE)
             .reductionAchieved(buildEnergyConsumption())
             .build();
 
         final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
 
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactly(
-        		"{noc.complianceperiod.significantEnergyConsumption}");
+        assertThat(violations).isEmpty();
     }
     
     @Test
-    void validate_when_potentialReductionExists_invalid() {
+    void validate_when_potentialReductionExists_valid() {
     	SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
-            .informationExists(Boolean.TRUE)
+            .informationExists(OptionalQuestion.YES)
             .firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
-	            .organisationalEnergyConsumption(buildEnergyConsumption())
-	            .significantEnergyConsumptionExists(Boolean.FALSE)
+				.organisationalEnergyConsumption(100L)
+	            .organisationalEnergyConsumptionBreakdown(buildEnergyConsumption())
 	            .explanation("explanation")
-	            .potentialReductionExists(Boolean.FALSE)
 	            .potentialReduction(buildEnergyConsumption())
 	            .build())
-            .reductionAchievedExists(Boolean.FALSE)
             .build();
 
         final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
 
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactly(
-        		"{noc.complianceperiod.potentialReduction}");
+        assertThat(violations).isEmpty();
     }
     
     @Test
-    void validate_when_no_reductionAchievedExists_invalid() {
+    void validate_when_no_reductionAchievedExists_valid() {
     	SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
-            .informationExists(Boolean.TRUE)
+            .informationExists(OptionalQuestion.YES)
             .firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
-	            .organisationalEnergyConsumption(buildEnergyConsumption())
-	            .significantEnergyConsumptionExists(Boolean.FALSE)
+	            .organisationalEnergyConsumptionBreakdown(buildEnergyConsumption())
 	            .explanation("explanation")
-	            .potentialReductionExists(Boolean.TRUE)
 	            .potentialReduction(buildEnergyConsumption())
 	            .build())
-            .reductionAchievedExists(Boolean.FALSE)
             .reductionAchieved(buildEnergyConsumption())
             .build();
 
         final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
 
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactly(
-        		"{noc.complianceperiod.reductionAchieved}");
+        assertThat(violations).isEmpty();
+
     }
     
     @Test
     void validate_when_significantEnergyConsumptionPct_not_correct_invalid() {
     	SignificantEnergyConsumption sec = buildSignificantEnergyConsumption();
-    	sec.setSignificantEnergyConsumptionPct(95);
+    	sec.setSignificantEnergyConsumptionPct(95L);
     	SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
-            .informationExists(Boolean.TRUE)
+            .informationExists(OptionalQuestion.YES)
             .firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
-	            .organisationalEnergyConsumption(buildEnergyConsumption())
-	            .significantEnergyConsumptionExists(Boolean.TRUE)
+	            .organisationalEnergyConsumptionBreakdown(buildEnergyConsumption())
 	            .significantEnergyConsumption(sec)
 	            .explanation("explanation")
-	            .potentialReductionExists(Boolean.TRUE)
 	            .potentialReduction(buildEnergyConsumption())
 	            .build())
-            .reductionAchievedExists(Boolean.FALSE)
             .reductionAchieved(null)
             .build();
 
@@ -187,24 +162,149 @@ class SecondCompliancePeriodTest {
         		"{noc.complianceperiod.significantEnergyConsumptionPct}");
     }
 
+	@Test
+	void validate_when_organisational_energy_consumption_breakdown_is_null_valid() {
+		SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
+				.informationExists(OptionalQuestion.YES)
+				.firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
+						.organisationalEnergyConsumption(400L)
+						.significantEnergyConsumption(buildSignificantEnergyConsumption())
+						.explanation("explanation")
+						.potentialReduction(buildEnergyConsumption())
+						.build())
+				.reductionAchieved(buildEnergyConsumption())
+				.build();
+
+		final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
+
+		assertThat(violations).isEmpty();
+	}
+
+	@Test
+	void validate_when_all_numeric_values_null_valid() {
+		SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
+				.informationExists(OptionalQuestion.YES)
+				.firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
+						.explanation("explanation")
+						.build())
+				.build();
+
+		final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
+
+		assertThat(violations).isEmpty();
+	}
+
+	@Test
+	void validate_when_informationExists_with_null_values_valid() {
+		SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
+				.informationExists(OptionalQuestion.YES)
+				.firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
+						.organisationalEnergyConsumptionBreakdown(EnergyConsumption.builder()
+								.buildings(100L)
+								.transport(100L)
+								.total(200L)
+								.build())
+						.significantEnergyConsumption(SignificantEnergyConsumption.builder()
+								.industrialProcesses(60L)
+								.otherProcesses(120L)
+								.total(180L)
+								.significantEnergyConsumptionPct(90L)
+								.build())
+						.explanation("explanation")
+						.potentialReduction(EnergyConsumption.builder()
+								.transport(150L)
+								.industrialProcesses(200L)
+								.total(350L)
+								.build())
+						.build())
+				.reductionAchieved(EnergyConsumption.builder().build())
+				.build();
+
+		final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
+
+		assertThat(violations).isEmpty();
+	}
+
+	@Test
+	void validate_when_organisational_energy_consumption_breakdown_is_null_and_percentage_invalid() {
+		SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
+				.informationExists(OptionalQuestion.YES)
+				.firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
+						.organisationalEnergyConsumption(200L)
+						.significantEnergyConsumption(buildSignificantEnergyConsumption())
+						.explanation("explanation")
+						.potentialReduction(buildEnergyConsumption())
+						.build())
+				.reductionAchieved(buildEnergyConsumption())
+				.build();
+
+		final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
+
+		assertThat(violations).isNotEmpty();
+		assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactly(
+				"{noc.complianceperiod.significantEnergyConsumptionPct}");
+	}
+
+	@Test
+	void validate_when_significant_energy_consumption_percentage_greater_than_100_valid() {
+		SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
+				.informationExists(OptionalQuestion.YES)
+				.firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
+						.organisationalEnergyConsumption(400L)
+						.significantEnergyConsumption(SignificantEnergyConsumption.builder()
+								.buildings(200L)
+								.transport(200L)
+								.industrialProcesses(200L)
+								.otherProcesses(200L)
+								.total(800L)
+								.significantEnergyConsumptionPct(200L)
+								.build())
+						.explanation("explanation")
+						.potentialReduction(buildEnergyConsumption())
+						.build())
+				.reductionAchieved(buildEnergyConsumption())
+				.build();
+
+		final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
+
+		assertThat(violations).isEmpty();
+	}
+
+	@Test
+	void validate_when_max_digits_not_valid() {
+		SecondCompliancePeriod compliancePeriod = SecondCompliancePeriod.builder()
+				.informationExists(OptionalQuestion.YES)
+				.firstCompliancePeriodDetails(FirstCompliancePeriodDetails.builder()
+						.organisationalEnergyConsumption(1000000000000000L)
+						.build())
+				.build();
+
+		final Set<ConstraintViolation<SecondCompliancePeriod>> violations = validator.validate(compliancePeriod);
+
+		assertThat(violations)
+				.isNotEmpty()
+				.extracting(ConstraintViolation::getMessage)
+				.containsExactly("numeric value out of bounds (<15 digits>.<0 digits> expected)");
+	}
+
 	private SignificantEnergyConsumption buildSignificantEnergyConsumption() {
 		return SignificantEnergyConsumption.builder()
-				.buildings(100)
-				.transport(100)
-				.industrialProcesses(100)
-				.otherProcesses(95)
-				.total(395)
-				.significantEnergyConsumptionPct(98)
+				.buildings(100L)
+				.transport(100L)
+				.industrialProcesses(100L)
+				.otherProcesses(95L)
+				.total(395L)
+				.significantEnergyConsumptionPct(98L)
 				.build();
 	}
 
 	private EnergyConsumption buildEnergyConsumption() {
 		return EnergyConsumption.builder()
-				.buildings(100)
-				.transport(100)
-				.industrialProcesses(100)
-				.otherProcesses(100)
-				.total(400)
+				.buildings(100L)
+				.transport(100L)
+				.industrialProcesses(100L)
+				.otherProcesses(100L)
+				.total(400L)
 				.build();
 	}
 }

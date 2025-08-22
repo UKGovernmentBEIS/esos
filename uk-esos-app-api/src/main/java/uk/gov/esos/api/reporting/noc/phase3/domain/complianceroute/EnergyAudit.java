@@ -19,7 +19,6 @@ public class EnergyAudit {
     @Size(max = 10000)
 	private String description;
 	
-	@NotNull
 	@PositiveOrZero
 	private Integer numberOfSitesCovered;
 	

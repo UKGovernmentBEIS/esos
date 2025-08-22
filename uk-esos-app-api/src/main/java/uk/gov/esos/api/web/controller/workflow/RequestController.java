@@ -55,6 +55,7 @@ public class RequestController {
     @ApiResponse(responseCode = "400", description = SwaggerApiInfo.REQUEST_ACTION_BAD_REQUEST, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "503", description = SwaggerApiInfo.GET_COMPANY_PROFILE_SERVICE_UNAVAILABLE, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
 // TODO remove for now update it later.
     @Authorized(resourceId = "#accountId", resourceSubType = "#requestCreateActionProcess.requestCreateActionType")
     public ResponseEntity<RequestCreateActionProcessResponseDTO> processRequestCreateAction(@Parameter(hidden = true) AppUser appUser,

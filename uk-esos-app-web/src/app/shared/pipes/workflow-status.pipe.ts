@@ -20,6 +20,8 @@ export class WorkflowStatusPipe implements PipeTransform {
         return 'Withdrawn';
       case 'CLOSED':
         return 'Closed';
+      case 'TERMINATED':
+        return 'Terminated';
       default:
         return null;
     }

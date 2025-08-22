@@ -37,7 +37,7 @@ describe('HelpMeComponent', () => {
 
   it('should display all HTML Elements', () => {
     expect(page.summaryComponent).toBeTruthy();
-    expect(page.paragraphs).toHaveLength(12);
-    expect(page.lists).toHaveLength(18);
+    expect(page.paragraphs).toHaveLength(4);
+    expect(page.lists).toHaveLength(6);
   });
 });

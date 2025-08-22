@@ -63,7 +63,7 @@ describe('ReviewAssessmentDateComponent', () => {
 
   it('should display correct form labels', () => {
     expect(
-      screen.getByText('When did the board director review the ESOS assessment recommendations?'),
+      screen.getByText('When did the responsible officer review the ESOS assessment recommendations?'),
     ).toBeInTheDocument();
   });
 

@@ -79,7 +79,7 @@ describe('ProhibitedDisclosingPartsComponent', () => {
     expect(page.errorSummary).toBeFalsy();
     expect(page.heading).toBeTruthy();
     expect(page.heading.textContent.trim()).toEqual(
-      'Explain which parts of the ESOS report, or supporting information, the responsible undertaking is prohibited from disclosing.',
+      'Which parts of the ESOS report or supporting information is the responsible undertaking prohibited by law from disclosing?',
     );
     expect(page.submitButton).toBeTruthy();
   });
@@ -91,7 +91,7 @@ describe('ProhibitedDisclosingPartsComponent', () => {
 
     expect(page.errorSummary).toBeTruthy();
     expect(page.errors.map((error) => error.textContent.trim())).toEqual([
-      'Enter the parts of the ESOS report (or supporting information) that the responsible undertaking is prohibited from disclosing to the group undertaking',
+      'Enter the information that the responsible undertaking is prohibited from disclosing',
     ]);
     expect(taskServiceSpy).not.toHaveBeenCalled();
   });

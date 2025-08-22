@@ -40,8 +40,8 @@ public class OperatorUserManagementService {
      * @param user {@link AppUser}
      * @param operatorUserDTO {@link OperatorUserDTO}
      */
-    public void updateOperatorUser(AppUser pmrvUser, OperatorUserDTO operatorUserDTO) {
-        operatorUserAuthService.updateOperatorUser(pmrvUser.getUserId(), operatorUserDTO);
+    public void updateOperatorUser(AppUser user, OperatorUserDTO operatorUserDTO) {
+        operatorUserAuthService.updateOperatorUser(user.getUserId(), operatorUserDTO);
     }
 
     /**

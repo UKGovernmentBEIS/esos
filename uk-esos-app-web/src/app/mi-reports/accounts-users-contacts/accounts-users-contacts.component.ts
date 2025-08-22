@@ -13,7 +13,8 @@ import { GovukTableColumn } from 'govuk-components';
 import { AccountsUsersContactsMiReportResult, AccountUserContact, MiReportsService } from 'esos-api';
 
 import { ExtendedMiReportResult } from '../core/mi-interfaces';
-import { createTableColumns, createTablePage, manipulateResultsAndExportToExcel, pageSize } from '../core/mi-report';
+import { createTableColumns, createTablePage, pageSize } from '../core/mi-report';
+import { MiReportsExportService } from '../core/mi-reports-export.service';
 import { AuthorityStatusPipe } from '../pipes/authority-status.pipe';
 
 @Component({
@@ -24,16 +25,18 @@ import { AuthorityStatusPipe } from '../pipes/authority-status.pipe';
       <button esosPendingButton govukButton type="button" (click)="generateReport()">Execute</button>
       <button esosPendingButton govukButton type="button" (click)="exportToExcel()">Export to excel</button>
     </div>
+
     <div *ngIf="pageItems$ | async as items">
       <ng-container *ngIf="items.length">
         <div class="overflow-auto overflow-auto-table">
           <govuk-table [columns]="tableColumns" [data]="items"></govuk-table>
         </div>
-        <esos-pagination
+
+        <govuk-pagination
           [count]="totalNumOfItems$ | async"
           (currentPageChange)="currentPage$.next($event)"
           [pageSize]="pageSize"
-        ></esos-pagination>
+        ></govuk-pagination>
       </ng-container>
     </div>
   `,
@@ -61,6 +64,7 @@ export class AccountsUsersContactsComponent implements OnInit {
 
   constructor(
     private readonly miReportsService: MiReportsService,
+    private readonly miReportsExportService: MiReportsExportService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
   ) {}
@@ -106,7 +110,7 @@ export class AccountsUsersContactsComponent implements OnInit {
     this.accountsUsersContacts$
       .pipe(
         map((miReportResult: ExtendedMiReportResult) =>
-          manipulateResultsAndExportToExcel(miReportResult, 'Accounts, Users and Contacts'),
+          this.miReportsExportService.manipulateResultsAndExportToExcel(miReportResult, 'Accounts, Users and Contacts'),
         ),
       )
       .subscribe();

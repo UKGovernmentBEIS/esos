@@ -12,13 +12,14 @@
 import { Assets } from './assets';
 import { CertificateDetails } from './certificateDetails';
 import { CertificatesDetails } from './certificatesDetails';
-import { EnergyConsumption } from './energyConsumption';
-import { EnergySavingsCategories } from './energySavingsCategories';
+import { EnergyConsumptionPotentialReduction } from './energyConsumptionPotentialReduction';
+import { EnergySavingsCategoriesPotentialReduction } from './energySavingsCategoriesPotentialReduction';
+import { TotalEnergyConsumptionReduction } from './totalEnergyConsumptionReduction';
 
 export interface AlternativeComplianceRoutes {
-  totalEnergyConsumptionReduction?: number;
-  energyConsumptionReduction?: EnergyConsumption;
-  energyConsumptionReductionCategories?: EnergySavingsCategories;
+  totalEnergyConsumptionReduction?: TotalEnergyConsumptionReduction;
+  energyConsumptionReduction?: EnergyConsumptionPotentialReduction;
+  energyConsumptionReductionCategories?: EnergySavingsCategoriesPotentialReduction;
   assets?: Assets;
   iso50001CertificateDetails?: CertificateDetails;
   decCertificatesDetails?: CertificatesDetails;

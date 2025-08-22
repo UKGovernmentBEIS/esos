@@ -16,12 +16,13 @@ export class ActivatedRouteSnapshotStub implements ActivatedRouteSnapshot {
   params: Params;
   queryParams: Params;
   readonly routeConfig: Route | null;
-  title = '';
+  title: string;
 
-  constructor(initialParams?: Params, initialQueryParams?: Params, resolves?: Data) {
+  constructor(initialParams?: Params, initialQueryParams?: Params, resolves?: Data, title?: string) {
     this.paramMap = convertToParamMap(initialParams);
     this.queryParamMap = convertToParamMap(initialQueryParams);
     this.data = resolves;
+    this.title = title ?? '';
   }
 
   get children(): ActivatedRouteSnapshot[] {

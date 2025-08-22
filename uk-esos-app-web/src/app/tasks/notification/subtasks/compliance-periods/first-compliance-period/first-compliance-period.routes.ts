@@ -7,9 +7,9 @@ import {
   CompliancePeriodSubtask,
 } from '@tasks/notification/subtasks/compliance-periods/compliance-period.token';
 import {
-  canActivateFirstCompliancePeriod,
-  canActivateFirstCompliancePeriodSummary,
-} from '@tasks/notification/subtasks/compliance-periods/first-compliance-period/first-compliance-period.guard';
+  canActivateCompliancePeriods,
+  canActivateCompliancePeriodsSummary,
+} from '@tasks/notification/subtasks/compliance-periods/compliance-periods.guard';
 import { WizardStep } from '@tasks/notification/subtasks/compliance-periods/shared/compliance-period.helper';
 
 import { compliancePeriodBackLinkResolver } from '../compliance-periods.navigation';
@@ -28,7 +28,7 @@ export const FIRST_COMPLIANCE_PERIOD_ROUTES: Routes = [
     children: [
       {
         path: '',
-        canActivate: [canActivateFirstCompliancePeriodSummary],
+        canActivate: [canActivateCompliancePeriodsSummary],
         title: 'First Compliance Period',
         data: { breadcrumb: 'First Compliance Period' },
         loadComponent: () =>
@@ -37,16 +37,16 @@ export const FIRST_COMPLIANCE_PERIOD_ROUTES: Routes = [
       {
         path: WizardStep.INFORMATION_EXISTS,
         title: 'First Compliance Period Information Exists',
-        canActivate: [canActivateFirstCompliancePeriod],
+        canActivate: [canActivateCompliancePeriods],
         loadComponent: () =>
           import('../shared/information-exists/information-exists.component').then((c) => c.InformationExistsComponent),
       },
       {
         path: WizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION,
-        canActivate: [canActivateFirstCompliancePeriod],
-        title: 'Organisation Total Energy Consumption',
+        title: 'Organisational Energy Consumption',
+        canActivate: [canActivateCompliancePeriods],
         resolve: {
-          backlink: compliancePeriodBackLinkResolver(WizardStep.SUMMARY, ''),
+          backlink: compliancePeriodBackLinkResolver(WizardStep.SUMMARY, WizardStep.INFORMATION_EXISTS),
         },
         loadComponent: () =>
           import('../shared/organisational-energy-consumption/organisational-energy-consumption.component').then(
@@ -54,25 +54,25 @@ export const FIRST_COMPLIANCE_PERIOD_ROUTES: Routes = [
           ),
       },
       {
-        path: WizardStep.SIGNIFICANT_ENERGY_CONSUMPTION_EXISTS,
-        canActivate: [canActivateFirstCompliancePeriod],
-        title: 'Significant Energy Consumption Exists',
+        path: WizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION_BREAKDOWN,
+        canActivate: [canActivateCompliancePeriods],
+        title: 'Organisation Total Energy Consumption',
         resolve: {
           backlink: compliancePeriodBackLinkResolver(WizardStep.SUMMARY, WizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION),
         },
         loadComponent: () =>
           import(
-            '../shared/significant-energy-consumption-exists/significant-energy-consumption-exists.component'
-          ).then((c) => c.SignificantEnergyConsumptionExistsComponent),
+            '../shared/organisational-energy-consumption-breakdown/organisational-energy-consumption-breakdown.component'
+          ).then((c) => c.OrganisationalEnergyConsumptionBreakdownComponent),
       },
       {
         path: WizardStep.SIGNIFICANT_ENERGY_CONSUMPTION,
         title: 'Significant Energy Consumption',
-        canActivate: [canActivateFirstCompliancePeriod],
+        canActivate: [canActivateCompliancePeriods],
         resolve: {
           backlink: compliancePeriodBackLinkResolver(
             WizardStep.SUMMARY,
-            WizardStep.SIGNIFICANT_ENERGY_CONSUMPTION_EXISTS,
+            WizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION_BREAKDOWN,
           ),
         },
         loadComponent: () =>
@@ -82,7 +82,7 @@ export const FIRST_COMPLIANCE_PERIOD_ROUTES: Routes = [
       },
       {
         path: WizardStep.EXPLANATION_OF_CHANGES_TO_TOTAL_CONSUMPTION,
-        canActivate: [canActivateFirstCompliancePeriod],
+        canActivate: [canActivateCompliancePeriods],
         title: 'Explanation Of Changes',
         resolve: {
           backlink: compliancePeriodBackLinkResolver(WizardStep.SUMMARY, WizardStep.SIGNIFICANT_ENERGY_CONSUMPTION),
@@ -93,26 +93,14 @@ export const FIRST_COMPLIANCE_PERIOD_ROUTES: Routes = [
           ).then((c) => c.ExplanationOfChangesToTotalEnergyConsumptionComponent),
       },
       {
-        path: WizardStep.POTENTIAL_REDUCTION_EXISTS,
-        canActivate: [canActivateFirstCompliancePeriod],
-        title: 'Energy Measures Exist',
+        path: WizardStep.POTENTIAL_REDUCTION,
+        canActivate: [canActivateCompliancePeriods],
+        title: 'Annual Reduction Breakdown',
         resolve: {
           backlink: compliancePeriodBackLinkResolver(
             WizardStep.SUMMARY,
             WizardStep.EXPLANATION_OF_CHANGES_TO_TOTAL_CONSUMPTION,
           ),
-        },
-        loadComponent: () =>
-          import('../shared/potential-reduction-exists/potential-reduction-exists.component').then(
-            (c) => c.PotentialReductionExistsComponent,
-          ),
-      },
-      {
-        path: WizardStep.POTENTIAL_REDUCTION,
-        canActivate: [canActivateFirstCompliancePeriod],
-        title: 'Annual Reduction Breakdown',
-        resolve: {
-          backlink: compliancePeriodBackLinkResolver(WizardStep.SUMMARY, WizardStep.POTENTIAL_REDUCTION_EXISTS),
         },
         loadComponent: () =>
           import('../shared/potential-reduction/potential-reduction.component').then(

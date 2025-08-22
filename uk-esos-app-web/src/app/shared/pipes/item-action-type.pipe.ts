@@ -12,11 +12,15 @@ export class ItemActionTypePipe implements PipeTransform {
         return 'Organisation account approved';
       case 'ORGANISATION_ACCOUNT_OPENING_REJECTED':
         return 'Organisation account rejected';
+      case 'ORGANISATION_ACCOUNT_OPENING_CREATED':
+        return 'Original application created';
 
       case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SENT_TO_EDIT':
         return 'Notification sent for review';
       case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RETURNED_TO_SUBMIT':
         return 'Notification returned';
+      case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RE_INITIATED':
+        return 'Notification returned for changes';
       case 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMITTED':
         return 'Notification submitted';
 
@@ -52,6 +56,32 @@ export class ItemActionTypePipe implements PipeTransform {
         return 'Request for information sent';
       case 'REQUEST_TERMINATED':
         return 'Workflow terminated by the system';
+
+      case 'ACTION_PLAN_P3_APPLICATION_RE_INITIATED':
+        return 'Action Plan returned for changes';
+      case 'ACTION_PLAN_P3_APPLICATION_SUBMITTED':
+        return 'Action Plan submitted';
+      case 'ACTION_PLAN_APPLICATION_CANCELLED':
+        return 'Action Plan cancelled';
+
+      case 'ACCOUNT_CLOSURE_APPLICATION_SUBMITTED':
+        return 'Account closed';
+      case 'ACCOUNT_CLOSURE_APPLICATION_CANCELLED':
+        return 'Account closure task cancelled';
+
+      case 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED':
+        return 'Progress Update 1 submitted';
+      case 'PROGRESS_UPDATE_1_P3_APPLICATION_RE_INITIATED':
+        return 'Progress Update 1 returned for changes';
+      case 'PROGRESS_UPDATE_1_APPLICATION_CANCELLED':
+        return 'Progress Update 1 cancelled';
+
+      case 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED':
+        return 'Progress Update 2 submitted';
+      case 'PROGRESS_UPDATE_2_P3_APPLICATION_RE_INITIATED':
+        return 'Progress Update 2 returned for changes';
+      case 'PROGRESS_UPDATE_2_APPLICATION_CANCELLED':
+        return 'Progress Update 2 cancelled';
 
       default:
         return 'Approved Application';

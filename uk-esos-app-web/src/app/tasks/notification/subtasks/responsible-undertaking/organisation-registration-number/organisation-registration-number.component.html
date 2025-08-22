@@ -1,0 +1,16 @@
+<esos-wizard-step
+  [formGroup]="form"
+  heading="Is the UK organisation registered at Companies House?"
+  [caption]="responsibleUndertakingMap.title"
+  (formSubmit)="onSubmit()"
+  submitText="Save and continue"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
+>
+  <p class="govuk-body">
+    This is the organisation responsible for submitting the ESOS compliance notification. Please confirm or update the
+    data, accordingly.
+  </p>
+
+  <esos-organisation-companies-house-form></esos-organisation-companies-house-form>
+</esos-wizard-step>

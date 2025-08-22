@@ -13,7 +13,7 @@ describe('ComplianceRouteComponent', () => {
 
   class Page extends BasePage<ComplianceRouteComponent> {
     get summaryListValues() {
-      return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
+      return this.queryAll<HTMLDivElement>('.govuk-summary-list__column')
         .map((row) => [
           ...(Array.from(row.querySelectorAll('dt')) ?? []),
           ...(Array.from(row.querySelectorAll('dd')) ?? []),
@@ -43,6 +43,6 @@ describe('ComplianceRouteComponent', () => {
   });
 
   it('should show summary values', () => {
-    expect(page.summaryListValues).toEqual([['No'], ['Yes'], ['Yes'], ['No'], ['No']]);
+    expect(page.summaryListValues).toEqual([['Yes'], ['No'], ['Yes'], ['Skip question'], ['No']]);
   });
 });

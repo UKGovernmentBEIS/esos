@@ -18,6 +18,9 @@ export interface OrganisationAccountOpeningSubmitApplicationCreateActionPayload 
   line1: string;
   line2?: string;
   city: string;
-  county: string;
+  county?: string;
   postcode: string;
+  type: 'SIC' | 'OTHER';
+  otherTypeName?: string;
+  codes: Array<string>;
 }

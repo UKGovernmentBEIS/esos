@@ -5,12 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+
 import uk.gov.esos.api.authorization.core.domain.dto.AuthorityInfoDTO;
-import uk.gov.esos.api.user.operator.domain.OperatorInvitedUserInfoDTO;
 import uk.gov.esos.api.user.operator.domain.OperatorUserAcceptInvitationDTO;
 import uk.gov.esos.api.user.operator.domain.OperatorUserDTO;
-import uk.gov.esos.api.user.core.domain.enumeration.UserInvitationStatus;
-import uk.gov.esos.api.user.operator.transform.OperatorUserAcceptInvitationMapper;
 
 class OperatorUserAcceptInvitationMapperTest {
 
@@ -21,29 +19,6 @@ class OperatorUserAcceptInvitationMapperTest {
         mapper = Mappers.getMapper(OperatorUserAcceptInvitationMapper.class);
     }
 	
-	@Test
-	void toOperatorInvitedUserInfoDTO() {
-        OperatorUserAcceptInvitationDTO operatorUserAcceptInvitation =
-            OperatorUserAcceptInvitationDTO.builder()
-                .firstName("firstName")
-                .lastName("lastName")
-                .email("email")
-                .accountInstallationName("accountInstallationName")
-                .build();
-        String roleCode = "roleCode";
-        UserInvitationStatus userInvitationStatus = UserInvitationStatus.ACCEPTED;
-
-        OperatorInvitedUserInfoDTO expectedDto = mapper
-            .toOperatorInvitedUserInfoDTO(operatorUserAcceptInvitation, roleCode, userInvitationStatus);
-
-        assertThat(expectedDto.getFirstName()).isEqualTo(operatorUserAcceptInvitation.getFirstName());
-        assertThat(expectedDto.getLastName()).isEqualTo(operatorUserAcceptInvitation.getLastName());
-        assertThat(expectedDto.getEmail()).isEqualTo(operatorUserAcceptInvitation.getEmail());
-        assertThat(expectedDto.getAccountInstallationName()).isEqualTo(operatorUserAcceptInvitation.getAccountInstallationName());
-        assertThat(expectedDto.getRoleCode()).isEqualTo(roleCode);
-        assertThat(expectedDto.getInvitationStatus()).isEqualTo(userInvitationStatus);
-    }
-
     @Test
     void toOperatorUserAcceptInvitationDTO() {
         OperatorUserDTO operatorUser = OperatorUserDTO.builder()

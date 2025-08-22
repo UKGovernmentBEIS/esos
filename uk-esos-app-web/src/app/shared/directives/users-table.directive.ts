@@ -52,6 +52,7 @@ export class UsersTableDirective implements OnInit {
                 roleName: [userAuthority.roleName],
                 jobTitle: [userAuthority.jobTitle],
                 authorityCreationDate: [userAuthority.authorityCreationDate],
+                contactType: [userAuthority.contactType],
               },
               { updateOn: 'change' }, // Update on change so that the change is reflected in resorting
             ),

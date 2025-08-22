@@ -14,12 +14,8 @@ export class AuthGuard implements CanActivate {
   canActivate(): Observable<boolean | UrlTree> {
     return this.authService.checkUser().pipe(
       switchMap(() => this.store),
-      map(({ isLoggedIn, userState, terms, user }) =>
-        isLoggedIn && terms.version === user.termsVersion && !loginDisabled(userState)
-          ? (true as const)
-          : isLoggedIn && terms.version !== user.termsVersion
-          ? this.router.parseUrl('/terms')
-          : this.router.parseUrl('landing'),
+      map(({ isLoggedIn, userState }) =>
+        isLoggedIn && !loginDisabled(userState) ? (true as const) : this.router.parseUrl('landing'),
       ),
       first(),
     );

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Injector } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 
 import { BehaviorSubject, filter, takeUntil } from 'rxjs';
@@ -19,8 +19,11 @@ import { DestroySubject } from '@core/services/destroy-subject.service';
 export class BackLinkComponent {
   protected backlink$ = new BehaviorSubject<{ link: string; route: ActivatedRouteSnapshot }>(null);
 
-  constructor(private router: Router, private injector: Injector, private destroy$: DestroySubject) {
-    router.events
+  constructor(
+    private router: Router,
+    private destroy$: DestroySubject,
+  ) {
+    this.router.events
       .pipe(
         takeUntil(this.destroy$),
         filter((event) => event instanceof NavigationEnd),
@@ -28,7 +31,7 @@ export class BackLinkComponent {
       .subscribe(() => {
         const activeRoute = getActiveRoute(router, true);
 
-        if (activeRoute.data?.backlink) {
+        if (activeRoute.data?.backlink && this.getLink(activeRoute)) {
           this.backlink$.next({ link: this.getLink(activeRoute), route: activeRoute });
         } else {
           this.backlink$.next(null);

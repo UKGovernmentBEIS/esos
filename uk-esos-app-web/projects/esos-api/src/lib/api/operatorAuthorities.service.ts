@@ -151,9 +151,7 @@ export class OperatorAuthoritiesService {
     }
 
     return this.httpClient.delete<any>(
-      `${this.configuration.basePath}/v1.0/operator-authorities/account/${encodeURIComponent(
-        String(accountId),
-      )}/${encodeURIComponent(String(userId))}`,
+      `${this.configuration.basePath}/v1.0/operator-authorities/account/${encodeURIComponent(String(accountId))}/${encodeURIComponent(String(userId))}`,
       {
         responseType: <any>responseType_,
         withCredentials: this.configuration.withCredentials,

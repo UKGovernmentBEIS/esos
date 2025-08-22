@@ -1,17 +1,26 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
-import { BehaviorSubject, combineLatest, distinctUntilChanged, map, Observable, shareReplay, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  first,
+  map,
+  Observable,
+  shareReplay,
+  switchMap,
+} from 'rxjs';
 
 import { workflowDetailsTypesMap } from '@accounts/shared/workflowDetailsTypesMap';
 import { StatusTagColorPipe } from '@common/request-task/pipes/status-tag-color';
 import { AccountType } from '@core/store/auth';
-import { originalOrder } from '@shared/keyvalue-order';
 import { PhasesPipe } from '@shared/pipes/phases.pipe';
 import { SharedModule } from '@shared/shared.module';
 
-import { OrganisationAccountDTO, RequestDetailsDTO, RequestSearchByAccountCriteria, RequestsService } from 'esos-api';
+import { RequestDetailsDTO, RequestSearchByAccountCriteria, RequestsService } from 'esos-api';
 
+import { AccountsStore } from '..';
 import { phasesStatusesMap, phasesStatusesTagMap, phasesTypesMap } from './phasesMap';
 
 interface Report {
@@ -26,11 +35,10 @@ interface Report {
   imports: [PhasesPipe, RouterLink, SharedModule, StatusTagColorPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReportsComponent implements OnInit {
+export class PhasesComponent implements OnInit {
   reportsTypesTagsMap = workflowDetailsTypesMap;
   reportsStatusesTagMap = phasesStatusesTagMap;
 
-  readonly originalOrder = originalOrder;
   readonly pageSize = 5;
   page$ = new BehaviorSubject<number>(1);
   showPagination$ = new BehaviorSubject<boolean>(true);
@@ -46,14 +54,13 @@ export class ReportsComponent implements OnInit {
   private searchTypes$ = new BehaviorSubject<RequestDetailsDTO['requestType'][]>([]);
   private searchStatuses$ = new BehaviorSubject<RequestSearchByAccountCriteria['requestStatuses'][]>([]);
 
-  constructor(private readonly route: ActivatedRoute, private readonly requestsService: RequestsService) {}
+  constructor(private readonly accountsStore: AccountsStore, private readonly requestsService: RequestsService) {}
 
   ngOnInit(): void {
-    this.accountId$ = (
-      this.route.data as Observable<{
-        data: OrganisationAccountDTO;
-      }>
-    ).pipe(map((account) => account.data.id));
+    this.accountId$ = this.accountsStore.pipe(
+      first(),
+      map((accounts) => accounts.selectedAccount.id),
+    );
 
     this.reportTypesPerDomain = phasesTypesMap[this.domain];
 

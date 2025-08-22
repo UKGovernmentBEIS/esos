@@ -5,6 +5,20 @@
   caption="Energy savings achieved"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
+  <p class="govuk-body">
+    Possible sources of government support are included in
+    <a
+      class="govuk-link"
+      href="https://www.gov.uk/government/publications/comply-with-the-energy-savings-opportunity-scheme-esos/complying-with-the-energy-savings-opportunity-scheme-esos#carrying-out-an-esos-energy-audit "
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      Section 8.9.2
+    </a>
+    of the Comply with the Energy Savings Opportunity Scheme (ESOS): phase 3 guidance.
+  </p>
+  <p class="govuk-body">Provide, where applicable, the name of the support scheme and details of the period covered.</p>
   <div formControlName="details" govuk-textarea [maxLength]="10000"></div>
 </esos-wizard-step>

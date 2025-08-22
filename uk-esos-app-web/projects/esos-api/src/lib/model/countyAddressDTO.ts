@@ -14,6 +14,6 @@ export interface CountyAddressDTO {
   line1: string;
   line2?: string;
   city: string;
-  county: string;
+  county?: string;
   postcode: string;
 }

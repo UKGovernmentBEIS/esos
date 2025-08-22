@@ -5,6 +5,7 @@ import { TaskSection } from '@common/shared/model';
 export type RequestActionPageContent = {
   component?: Type<unknown>;
   header: string;
+  headerDate?: string;
   sections?: TaskSection[];
 };
 

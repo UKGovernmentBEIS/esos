@@ -46,8 +46,8 @@ describe('BooleanRadioGroupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GovukComponentsModule, ReactiveFormsModule],
-      declarations: [BooleanRadioGroupComponent, TestComponent],
+      imports: [BooleanRadioGroupComponent, GovukComponentsModule, ReactiveFormsModule],
+      declarations: [TestComponent],
     }).compileComponents();
   });
 

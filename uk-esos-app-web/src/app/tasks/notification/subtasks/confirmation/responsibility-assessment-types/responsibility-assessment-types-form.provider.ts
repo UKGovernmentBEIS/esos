@@ -1,9 +1,11 @@
 import { Provider } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 
 import { RequestTaskStore } from '@common/request-task/+state';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { TASK_FORM } from '@tasks/task-form.token';
+
+import { allCheckedValidator } from '../confirmation.validators';
 
 export const ResponsibilityAssessmentTypesFormProvider: Provider = {
   provide: TASK_FORM,
@@ -13,13 +15,7 @@ export const ResponsibilityAssessmentTypesFormProvider: Provider = {
     const responsibilityAssessmentTypes = state()?.responsibilityAssessmentTypes;
 
     return fb.group({
-      responsibilityAssessmentTypes: [responsibilityAssessmentTypes ?? null, allCheckedValidator(5)],
+      responsibilityAssessmentTypes: [responsibilityAssessmentTypes ?? null, allCheckedValidator(4)],
     });
   },
 };
-
-export function allCheckedValidator(length: number): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    return length !== control?.value?.length ? { notAllChecked: 'Select all declaration notes' } : null;
-  };
-}

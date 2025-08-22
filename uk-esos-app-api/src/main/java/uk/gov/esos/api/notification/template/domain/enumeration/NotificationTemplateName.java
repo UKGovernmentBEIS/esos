@@ -19,23 +19,27 @@ public enum NotificationTemplateName {
     USER_ACCOUNT_ACTIVATION("UserAccountActivation"),
     ACCOUNT_APPLICATION_APPROVED("AccountApplicationApproved"),
     ACCOUNT_APPLICATION_REJECTED("AccountApplicationRejected"),
+    ORGANISATION_ACCOUNT_CREATED("OrganisationAccountCreated"),
     INVITATION_TO_OPERATOR_ACCOUNT("InvitationToOperatorAccount"),
     INVITATION_TO_REGULATOR_ACCOUNT("InvitationToRegulatorAccount"),
     INVITATION_TO_VERIFIER_ACCOUNT("InvitationToVerifierAccount"),
-    INVITATION_TO_EMITTER_CONTACT("InvitationToEmitterContact"),
     INVITEE_INVITATION_ACCEPTED("InviteeInvitationAccepted"),
     INVITER_INVITATION_ACCEPTED("InviterInvitationAccepted"),
     CHANGE_2FA("Change2FA"),
     RESET_PASSWORD_REQUEST("ResetPasswordRequest"),
     RESET_PASSWORD_CONFIRMATION("ResetPasswordConfirmation"),
     RESET_2FA_CONFIRMATION("Reset2FaConfirmation"),
+    VERIFIED_ACCOUNT_INVITATION("VerifiedAccountInvitation"),
     
     GENERIC_EMAIL("Generic email template"),
     GENERIC_EXPIRATION_REMINDER("Generic Expiration Reminder Template"),
 
     USER_FEEDBACK("UserFeedbackForService"),
 
-    EMAIL_ASSIGNED_TASK("EmailAssignedTask");
+    EMAIL_ASSIGNED_TASK("EmailAssignedTask"),
+
+    ACCOUNT_CLOSED("AccountClosed");
+
 
     /** The name. */
     private final String name;

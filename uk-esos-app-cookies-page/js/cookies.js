@@ -1,5 +1,5 @@
-const PREFERENCES_SET_COOKIE = "uk_pmrv_cookies_preferences_set";
-const COOKIES_POLICY = "uk_pmrv_cookies_policy";
+const PREFERENCES_SET_COOKIE = "uk_esos_cookies_preferences_set";
+const COOKIES_POLICY = "uk_esos_cookies_policy";
 
 function init() {
   document.getElementById("success-message-cookies").style.display = "none";

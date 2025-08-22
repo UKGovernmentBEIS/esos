@@ -108,6 +108,13 @@ export class DetailsComponent implements OnInit {
       ASSIGN_REASSIGN_TASKS: ['NONE'],
       MANAGE_USERS_AND_CONTACTS: ['NONE'],
       REVIEW_ORGANISATION_ACCOUNT: ['NONE'],
+      MANAGE_VERIFIED_ORGANISATION_ACCOUNTS: ['NONE'],
+      MANAGE_PARTICIPANT_USERS: ['NONE'],
+      RETURN_NOC: ['NONE'],
+      RETURN_ACTION_PLAN: ['NONE'],
+      RETURN_PROGRESS_UPDATE_1: ['NONE'],
+      RETURN_PROGRESS_UPDATE_2: ['NONE'],
+      ACCOUNT_CLOSURE: ['NONE'],
     }),
   });
 
@@ -132,8 +139,43 @@ export class DetailsComponent implements OnInit {
     },
     {
       permission: 'REVIEW_ORGANISATION_ACCOUNT',
-      task: 'Review Organisation Account',
+      task: 'Review organisation account',
       type: 'Organisation account details',
+    },
+    {
+      permission: 'RETURN_NOC',
+      task: 'Return NOC',
+      type: 'Notification of Compliance',
+    },
+    {
+      permission: 'RETURN_ACTION_PLAN',
+      task: 'Return Action Plan',
+      type: 'Action Plan',
+    },
+    {
+      permission: 'RETURN_PROGRESS_UPDATE_1',
+      task: 'Return Progress Update 1',
+      type: 'Progress Update 1',
+    },
+    {
+      permission: 'RETURN_PROGRESS_UPDATE_2',
+      task: 'Return Progress Update 2',
+      type: 'Progress Update 2',
+    },
+    {
+      permission: 'MANAGE_VERIFIED_ORGANISATION_ACCOUNTS',
+      task: 'Upload verified list',
+      type: 'Organisation account application',
+    },
+    {
+      permission: 'MANAGE_PARTICIPANT_USERS',
+      task: 'Manage participant users',
+      type: 'Users and contacts',
+    },
+    {
+      permission: 'ACCOUNT_CLOSURE',
+      task: 'Close account',
+      type: 'Account closure',
     },
   ];
 

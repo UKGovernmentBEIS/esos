@@ -16,14 +16,12 @@ import { DaysRemainingPipe } from '@shared/pipes/days-remaining.pipe';
 import { GovukDatePipe } from '@shared/pipes/govuk-date.pipe';
 import { ItemNamePipe } from '@shared/pipes/item-name.pipe';
 import { PipesModule } from '@shared/pipes/pipes.module';
-import { MarkdownModule } from 'ngx-markdown';
 
 import { GovukComponentsModule } from 'govuk-components';
 
 import { AddAnotherDirective } from './add-another/add-another.directive';
 import { AddressInputComponent } from './address-input/address-input.component';
 import { BaseSuccessComponent } from './base-success/base-success.component';
-import { BooleanRadioGroupComponent } from './boolean-radio-group/boolean-radio-group.component';
 import { NotifyOperatorComponent } from './components/notify-operator/notify-operator.component';
 import { RequestActionHeadingComponent } from './components/request-action-heading/request-action-heading.component';
 import { SummaryDownloadFilesComponent } from './components/summary-download-files/summary-download-files.component';
@@ -37,18 +35,12 @@ import { FileInputComponent } from './file-input/file-input.component';
 import { FileUploadListComponent } from './file-upload-list/file-upload-list.component';
 import { GroupedSummaryListDirective } from './grouped-summary-list/grouped-summary-list.directive';
 import { HighlightDiffComponent } from './highlight-diff/highlight-diff.component';
-import { HoldingCompanyFormComponent } from './holding-company-form';
-import { IdentityBarComponent } from './identity-bar/identity-bar.component';
-import { ConvertLinksDirective } from './markdown/convert-links.directive';
-import { RouterLinkComponent } from './markdown/router-link.component';
 import { MultipleFileInputComponent } from './multiple-file-input/multiple-file-input.component';
-import { PaginationComponent } from './pagination/pagination.component';
 import { PendingButtonDirective } from './pending-button.directive';
 import { PhaseBarComponent } from './phase-bar/phase-bar.component';
 import { PhoneInputComponent } from './phone-input/phone-input.component';
 import { ItemLinkPipe } from './pipes/item-link.pipe';
 import { NegativeNumberPipe } from './pipes/negative-number.pipe';
-import { ReportingSubheadingPipe } from './pipes/reporting-subheading.pipe';
 import { TextEllipsisPipe } from './pipes/text-ellipsis.pipe';
 import { RadioOptionComponent } from './radio-option/radio-option.component';
 import { ResponsibilityTypesComponent } from './responsibility-types/responsibility-types.component';
@@ -63,17 +55,16 @@ import { UserLockedComponent } from './user-locked/user-locked.component';
     FormsModule,
     GovukComponentsModule,
     PipesModule,
-    MarkdownModule.forChild(),
     ReactiveFormsModule,
     RouterModule,
     StatusTagColorPipe,
     PageHeadingComponent,
-    PaginationComponent,
     DaysRemainingPipe,
     ItemNamePipe,
     ItemLinkPipe,
     GovukDatePipe,
     PendingButtonDirective,
+    ResponsibilityTypesComponent,
   ],
   declarations: [
     AddAnotherDirective,
@@ -82,9 +73,7 @@ import { UserLockedComponent } from './user-locked/user-locked.component';
     AsyncValidationFieldDirective,
     BackLinkComponent,
     BaseSuccessComponent,
-    BooleanRadioGroupComponent,
     BreadcrumbsComponent,
-    ConvertLinksDirective,
     CountriesDirective,
     CountiesDirective,
     DashboardPageComponent,
@@ -94,8 +83,6 @@ import { UserLockedComponent } from './user-locked/user-locked.component';
     FileUploadListComponent,
     GroupedSummaryListDirective,
     HighlightDiffComponent,
-    HoldingCompanyFormComponent,
-    IdentityBarComponent,
     ItemTypePipe,
     MultipleFileInputComponent,
     NegativeNumberPipe,
@@ -104,10 +91,7 @@ import { UserLockedComponent } from './user-locked/user-locked.component';
     PhaseBarComponent,
     PhoneInputComponent,
     RadioOptionComponent,
-    ReportingSubheadingPipe,
     RequestActionHeadingComponent,
-    ResponsibilityTypesComponent,
-    RouterLinkComponent,
     SelectOtherComponent,
     SkipLinkFocusDirective,
     SummaryDownloadFilesComponent,
@@ -125,10 +109,8 @@ import { UserLockedComponent } from './user-locked/user-locked.component';
     AsyncValidationFieldDirective,
     BackLinkComponent,
     BaseSuccessComponent,
-    BooleanRadioGroupComponent,
     BreadcrumbsComponent,
     CommonModule,
-    ConvertLinksDirective,
     CountriesDirective,
     CountiesDirective,
     DashboardPageComponent,
@@ -139,20 +121,16 @@ import { UserLockedComponent } from './user-locked/user-locked.component';
     GovukComponentsModule,
     GroupedSummaryListDirective,
     HighlightDiffComponent,
-    HoldingCompanyFormComponent,
-    IdentityBarComponent,
     ItemTypePipe,
     MultipleFileInputComponent,
     NegativeNumberPipe,
     NotifyOperatorComponent,
-    PaginationComponent,
     PaymentNotCompletedComponent,
     PhaseBarComponent,
     PhoneInputComponent,
     PipesModule,
     RadioOptionComponent,
     ReactiveFormsModule,
-    ReportingSubheadingPipe,
     RequestActionHeadingComponent,
     ResponsibilityTypesComponent,
     SelectOtherComponent,

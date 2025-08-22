@@ -25,6 +25,9 @@ describe('OrganisationAccountSummaryComponent', () => {
       county: 'West Sussex',
       postcode: 'TST 123',
       competentAuthority: 'ENGLAND',
+      type: 'OTHER',
+      otherTypeName: 'some classification name',
+      codes: ['CodeA', 'CodeB', 'CodeC'],
     };
   });
 
@@ -63,5 +66,8 @@ describe('OrganisationAccountSummaryComponent', () => {
     expect(compiled.textContent).toContain('West Sussex');
     expect(compiled.textContent).toContain('TST 123');
     expect(compiled.textContent).toContain('England');
+    expect(compiled.textContent).toContain('Classification type: Other');
+    expect(compiled.textContent).toContain('Classification name: some classification name');
+    expect(compiled.textContent).toContain('Codes: CodeA, CodeB, CodeC');
   });
 });

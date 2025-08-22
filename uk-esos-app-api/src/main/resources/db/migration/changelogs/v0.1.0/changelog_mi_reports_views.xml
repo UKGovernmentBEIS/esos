@@ -142,17 +142,17 @@
             create or replace view sch_report_niea.verification_body as select s.* from verification_body s;
             create or replace view sch_report_niea.verification_body_emission_trading_scheme as select s.* from verification_body_emission_trading_scheme s;
 
-            create or replace view sch_report_ea.account as select s.* from account s where s.competent_authority = 'ENGLAND';
-            create or replace view sch_report_ea.account_contact as select s.* from account_contact s where exists (select null from account a where a.id = s.account_id and a.competent_authority = 'ENGLAND');
-            create or replace view sch_report_ea.account_ca_external_contacts as select s.* from account_ca_external_contacts s where s.competent_authority = 'ENGLAND';
-            create or replace view sch_report_ea.au_authority as select s.* from au_authority s where s.competent_authority = 'ENGLAND' or s.verification_body_id is not null or exists (select null from account a where a.id = s.account_id and a.competent_authority = 'ENGLAND');
-            create or replace view sch_report_ea.au_authority_permission as select s.* from au_authority_permission s where exists (select null from au_authority aa where aa.id = s.authority_id and (aa.competent_authority = 'ENGLAND' or aa.verification_body_id is not null or exists (select null from account a where a.id = aa.account_id and a.competent_authority = 'ENGLAND')));
+            create or replace view sch_report_ea.account as select s.* from account s;
+            create or replace view sch_report_ea.account_contact as select s.* from account_contact s;
+            create or replace view sch_report_ea.account_ca_external_contacts as select s.* from account_ca_external_contacts s;
+            create or replace view sch_report_ea.au_authority as select s.* from au_authority s;
+            create or replace view sch_report_ea.au_authority_permission as select s.* from au_authority_permission s;
             create or replace view sch_report_ea.au_role as select s.* from au_role s;
             create or replace view sch_report_ea.au_role_permission as select s.* from au_role_permission s;
-            create or replace view sch_report_ea.request as select id, type, status, creation_date, competent_authority, account_id, verification_body_id, payload, submission_date, metadata, end_date from request s where s.competent_authority = 'ENGLAND';
-            create or replace view sch_report_ea.request_action as select s.* from request_action s where exists (select null from request r where r.id = s.request_id and r.competent_authority = 'ENGLAND');
-            create or replace view sch_report_ea.request_task as select id, request_id, type, assignee, due_date, start_date, pause_date, payload, version from request_task s where exists (select null from request r where r.id = s.request_id and r.competent_authority = 'ENGLAND');
-            create or replace view sch_report_ea.request_task_visit as select s.* from request_task_visit s where exists (select null from request_task rt join request r on r.id = rt.request_id where rt.id = s.task_id and r.competent_authority = 'ENGLAND');
+            create or replace view sch_report_ea.request as select id, type, status, creation_date, competent_authority, account_id, verification_body_id, payload, submission_date, metadata, end_date from request s;
+            create or replace view sch_report_ea.request_action as select s.* from request_action s;
+            create or replace view sch_report_ea.request_task as select id, request_id, type, assignee, due_date, start_date, pause_date, payload, version from request_task s;
+            create or replace view sch_report_ea.request_task_visit as select s.* from request_task_visit s;
             create or replace view sch_report_ea.verification_body as select s.* from verification_body s;
             create or replace view sch_report_ea.verification_body_emission_trading_scheme as select s.* from verification_body_emission_trading_scheme s;
 

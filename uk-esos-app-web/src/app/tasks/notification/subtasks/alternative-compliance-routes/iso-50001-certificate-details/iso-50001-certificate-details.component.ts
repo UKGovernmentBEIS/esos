@@ -27,7 +27,6 @@ import { DateInputComponent, TextInputComponent } from 'govuk-components';
 export class Iso50001CertificateDetailsComponent {
   protected readonly alternativeComplianceRoutesMap = alternativeComplianceRoutesMap;
   dateHint = 'For example, 27 3 2023.<br/>This can be found after the “Scope” section on your certificate.';
-  dateMax = new Date();
 
   constructor(
     @Inject(TASK_FORM) protected readonly form: UntypedFormGroup,

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.esos.api.authorization.AuthorityConstants.OPERATOR_ADMIN_ROLE_CODE;
-import static uk.gov.esos.api.authorization.AuthorityConstants.CONSULTANT_AGENT;
+import static uk.gov.esos.api.authorization.AuthorityConstants.OPERATOR_ROLE_CODE;
 import static uk.gov.esos.api.authorization.core.domain.AuthorityStatus.ACTIVE;
 import static uk.gov.esos.api.authorization.core.domain.AuthorityStatus.DISABLED;
 import static uk.gov.esos.api.common.exception.ErrorCode.AUTHORITY_MIN_ONE_OPERATOR_ADMIN_SHOULD_EXIST;
@@ -39,7 +39,7 @@ class OperatorAdminExistenceValidatorTest {
     @Test
     void validate_when_at_least_one_active_operator_admin_to_be_updated() {
         List<AccountOperatorAuthorityUpdateDTO> accountOperatorUsers = List.of(
-            AccountOperatorAuthorityUpdateDTO.builder().userId("user1").roleCode(CONSULTANT_AGENT).authorityStatus(ACTIVE)
+            AccountOperatorAuthorityUpdateDTO.builder().userId("user1").roleCode(OPERATOR_ROLE_CODE).authorityStatus(ACTIVE)
                 .build(),
             AccountOperatorAuthorityUpdateDTO.builder().userId("user2").roleCode(OPERATOR_ADMIN_ROLE_CODE).authorityStatus(ACTIVE)
                 .build()
@@ -53,7 +53,7 @@ class OperatorAdminExistenceValidatorTest {
     void validate_when_no_operator_admin_to_be_updated() {
         Long accountId = 1L;
         List<AccountOperatorAuthorityUpdateDTO> accountOperatorUsers = List.of(
-            AccountOperatorAuthorityUpdateDTO.builder().userId("user1").roleCode(CONSULTANT_AGENT).authorityStatus(ACTIVE)
+            AccountOperatorAuthorityUpdateDTO.builder().userId("user1").roleCode(OPERATOR_ROLE_CODE).authorityStatus(ACTIVE)
                 .build()
         );
 
@@ -87,7 +87,7 @@ class OperatorAdminExistenceValidatorTest {
     void validate_one_operator_admin_to_be_modified() {
         Long accountId = 1L;
         List<AccountOperatorAuthorityUpdateDTO> accountOperatorUsers = List.of(
-            AccountOperatorAuthorityUpdateDTO.builder().userId("user1").roleCode(CONSULTANT_AGENT).authorityStatus(ACTIVE)
+            AccountOperatorAuthorityUpdateDTO.builder().userId("user1").roleCode(OPERATOR_ROLE_CODE).authorityStatus(ACTIVE)
                 .build()
         );
 
@@ -106,7 +106,7 @@ class OperatorAdminExistenceValidatorTest {
         List<AccountOperatorAuthorityUpdateDTO> accountOperatorUsers = List.of(
             AccountOperatorAuthorityUpdateDTO.builder().userId("user1").roleCode(OPERATOR_ADMIN_ROLE_CODE).authorityStatus(DISABLED)
                 .build(),
-            AccountOperatorAuthorityUpdateDTO.builder().userId("user2").roleCode(CONSULTANT_AGENT).authorityStatus(ACTIVE)
+            AccountOperatorAuthorityUpdateDTO.builder().userId("user2").roleCode(OPERATOR_ROLE_CODE).authorityStatus(ACTIVE)
                 .build()
         );
 

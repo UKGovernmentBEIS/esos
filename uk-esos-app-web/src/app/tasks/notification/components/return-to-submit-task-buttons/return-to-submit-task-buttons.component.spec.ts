@@ -3,17 +3,17 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@testing';
 
-import { ReturnToSubmitTaskButtonsComponent } from './return-to-submit-task-buttons.component';
+import { NotificationReturnToSubmitTaskButtonsComponent } from './return-to-submit-task-buttons.component';
 
 describe('ReturnToSubmitTaskButtonsComponent', () => {
-  let component: ReturnToSubmitTaskButtonsComponent;
-  let fixture: ComponentFixture<ReturnToSubmitTaskButtonsComponent>;
+  let component: NotificationReturnToSubmitTaskButtonsComponent;
+  let fixture: ComponentFixture<NotificationReturnToSubmitTaskButtonsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [{ provide: ActivatedRoute, useValue: new ActivatedRouteStub() }],
     });
-    fixture = TestBed.createComponent(ReturnToSubmitTaskButtonsComponent);
+    fixture = TestBed.createComponent(NotificationReturnToSubmitTaskButtonsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

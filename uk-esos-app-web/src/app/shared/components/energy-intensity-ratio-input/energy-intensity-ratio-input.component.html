@@ -1,17 +1,39 @@
 <ng-content></ng-content>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-third">
-    <div govuk-text-input inputType="number" label="Intensity ratio" formControlName="ratio"></div>
+<ng-container *ngIf="intensityRatioFormArray.length >= 0">
+  <div formArrayName="energyIntensityRatios">
+    <div *ngFor="let otherGroup of intensityRatioFormArray.controls; index as i">
+      <div class="govuk-grid-row" [formGroupName]="i">
+        <div class="govuk-grid-column-one-third">
+          <div govuk-text-input inputType="number" label="Energy intensity ratio" formControlName="ratio"></div>
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+          <div govuk-text-input label="Indicator of activity" prefix="kWh per" formControlName="unit"></div>
+        </div>
+
+        <div class="govuk-body govuk-grid-column-one-third govuk-!-margin-top-6">
+          <!--eslint-disable-next-line @angular-eslint/template/click-events-have-key-events-->
+          <a
+            govukLink
+            role="button"
+            aria-label="remove intensity ratio"
+            tabindex="0"
+            *ngIf="intensityRatioFormArray.controls.length > 1"
+            (click)="deleteRatioGroup(i)"
+          >
+            Remove
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="govuk-grid-column-one-third">
-    <div govuk-text-input label="Unit" prefix="kWh/" formControlName="unit"></div>
-  </div>
-</div>
+
+  <button govukSecondaryButton type="button" (click)="addRatioGroup()">Add another intensity ratio</button>
+</ng-container>
 
 <div
-  *ngIf="hasAdditionalInfo"
   formControlName="additionalInformation"
   govuk-textarea
   [maxLength]="10000"
-  label="Additional Information (optional)"
+  label="Additional context about the intensity ratio calculations (optional)"
 ></div>

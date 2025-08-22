@@ -13,13 +13,12 @@ import { CountyAddressDTO } from './countyAddressDTO';
 import { PhoneNumberDTO } from './phoneNumberDTO';
 
 /**
- * The operator user
+ * The userRegistrationDTO
  */
 export interface OperatorUserRegistrationDTO {
-  emailToken: string;
   firstName: string;
   lastName: string;
-  jobTitle: string;
+  jobTitle?: string;
   address: CountyAddressDTO;
   phoneNumber?: PhoneNumberDTO;
   mobileNumber?: PhoneNumberDTO;

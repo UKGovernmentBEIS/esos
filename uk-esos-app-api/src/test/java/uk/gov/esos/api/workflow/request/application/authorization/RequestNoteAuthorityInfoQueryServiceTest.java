@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.esos.api.authorization.rules.services.authorityinfo.dto.RequestAuthorityInfoDTO;
 import uk.gov.esos.api.authorization.rules.services.authorityinfo.dto.ResourceAuthorityInfo;
+import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.common.exception.BusinessException;
 import uk.gov.esos.api.common.exception.ErrorCode;
 import uk.gov.esos.api.workflow.request.core.domain.Request;
@@ -35,6 +36,7 @@ class RequestNoteAuthorityInfoQueryServiceTest {
 
         final long noteId = 1L;
         final long accountId = 2L;
+        final RoleType roleType = RoleType.REGULATOR;
 
         final Request request = Request.builder()
             .accountId(accountId)
@@ -43,9 +45,9 @@ class RequestNoteAuthorityInfoQueryServiceTest {
             .type(RequestType.ORGANISATION_ACCOUNT_OPENING)
             .build();
 
-        when(requestNoteRepository.getRequestByNoteId(noteId)).thenReturn(Optional.of(request));
+        when(requestNoteRepository.getRequestByNoteIdAndRoleType(noteId, roleType)).thenReturn(Optional.of(request));
 
-        final RequestAuthorityInfoDTO requestInfoDTO = service.getRequestNoteInfo(noteId);
+        final RequestAuthorityInfoDTO requestInfoDTO = service.getRequestNoteInfo(noteId, roleType);
 
         final RequestAuthorityInfoDTO expectedRequestInfoDTO = RequestAuthorityInfoDTO.builder()
             .authorityInfo(ResourceAuthorityInfo.builder()
@@ -60,9 +62,10 @@ class RequestNoteAuthorityInfoQueryServiceTest {
     void getRequestInfo_does_not_exist() {
 
         final long noteId = 1L;
-        when(requestNoteRepository.getRequestByNoteId(noteId)).thenReturn(Optional.empty());
+        final RoleType roleType = RoleType.REGULATOR;
+        when(requestNoteRepository.getRequestByNoteIdAndRoleType(noteId, roleType)).thenReturn(Optional.empty());
 
-        BusinessException be = assertThrows(BusinessException.class, () -> service.getRequestNoteInfo(noteId));
+        BusinessException be = assertThrows(BusinessException.class, () -> service.getRequestNoteInfo(noteId, roleType));
         assertThat(be.getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
     }
 }

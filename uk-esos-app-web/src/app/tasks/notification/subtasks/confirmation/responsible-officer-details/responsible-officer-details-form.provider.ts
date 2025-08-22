@@ -62,6 +62,7 @@ export const ResponsibleOfficerDetailsFormProvider: Provider = {
         [
           GovukValidators.required('Enter email address'),
           GovukValidators.maxLength(255, 'Email address should not be larger than 255 characters'),
+          GovukValidators.email('Enter an email address in the correct format, like name@example.com'),
         ],
       ],
       address: fb.group(CountyAddressInputComponent.controlsFactory(responsibleOfficerDetails?.address)),

@@ -19,10 +19,21 @@
   autoComplete="job-title"
   formControlName="jobTitle"
   govuk-text-input
-  label="Job Title"
+  label="Job title {{ isJobTitleOptional ? '(optional)' : '' }}"
   class="govuk-!-padding-top-3 govuk-!-padding-bottom-3"
   widthClass="govuk-!-width-three-quarters"
 ></div>
+
+<div *ngIf="!isNotification; else emailForNotification">
+  <div
+    autoComplete="email"
+    formControlName="email"
+    govuk-text-input
+    hint="System alerts, notices and communications will be sent by email as the preferred means of contact, but you may also be contacted by telephone or post."
+    label="Email address"
+    widthClass="govuk-!-width-three-quarters"
+  ></div>
+</div>
 
 <h3 class="govuk-heading-s">{{ isNotification ? 'Address' : 'Your address' }}</h3>
 
@@ -55,17 +66,6 @@
     ></div>
   </ng-container>
 </ng-container>
-
-<div *ngIf="!isNotification; else emailForNotification">
-  <div
-    autoComplete="email"
-    formControlName="email"
-    govuk-text-input
-    hint="All system alerts, notices and official communications will always be sent by email"
-    label="Email address"
-    widthClass="govuk-!-width-three-quarters"
-  ></div>
-</div>
 
 <ng-template #emailForNotification>
   <div

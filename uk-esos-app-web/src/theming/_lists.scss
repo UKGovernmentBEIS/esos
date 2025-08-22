@@ -1,10 +1,6 @@
-.unstyled-list {
-  list-style: none;
-
-  > li:not(:last-child) {
-    margin-bottom: govuk-spacing(3);
-  }
-}
+@use 'sass:map';
+@use 'base' as govuk;
+@import 'settings/all';
 
 .dl--no-bottom-border .govuk-summary-list__row:last-of-type dt,
 .dl--no-bottom-border .govuk-summary-list__row:last-of-type dd {
@@ -13,7 +9,12 @@
 
 .search-results-list_item {
   border-bottom: 1px solid $govuk-border-colour;
-  padding-bottom: 20px;
+  padding-block: 10px;
+  margin-bottom: 0;
+}
+
+.govuk-list > li.search-results-list_item {
+  margin-bottom: 0;
 }
 
 .status-tag {
@@ -22,4 +23,9 @@
 
 ul.no-list-style {
   list-style-type: none;
+}
+
+.app-related-items {
+  padding-top: govuk.govuk-spacing(2);
+  border-top: $govuk-border-width solid map.get($govuk-colours, 'blue');
 }

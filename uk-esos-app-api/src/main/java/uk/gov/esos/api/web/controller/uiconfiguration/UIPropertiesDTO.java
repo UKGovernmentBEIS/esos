@@ -11,5 +11,6 @@ import java.util.Map;
 @Builder
 public class UIPropertiesDTO {
 	private Map<String, Boolean> features;
+	private Long expirationTime;
 	private Map<String, String> analytics;
 }

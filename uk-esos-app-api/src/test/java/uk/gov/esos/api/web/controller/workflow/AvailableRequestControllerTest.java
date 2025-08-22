@@ -90,4 +90,22 @@ class AvailableRequestControllerTest {
 
         verify(availableRequestService, times(1)).getAvailableAccountWorkflows(accountId, pmrvUser);
     }
+
+    @Test
+    void getAvailableRelatedActionsWorkflows() throws Exception {
+        final String requestId = "NOC000001-P3";
+        final AppUser pmrvUser = AppUser.builder().userId("id").build();
+        final Map<RequestCreateActionType, RequestCreateValidationResult> results =
+                Map.of(RequestCreateActionType.NOTIFICATION_OF_COMPLIANCE_P3,
+                        RequestCreateValidationResult.builder().valid(true).build());
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(pmrvUser);
+        when(availableRequestService.getAvailableRequestWorkflows(requestId, pmrvUser)).thenReturn(results);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/reporting/related-actions/" + requestId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"NOTIFICATION_OF_COMPLIANCE_P3\":{\"valid\":true}}"));
+
+        verify(availableRequestService, times(1)).getAvailableRequestWorkflows(requestId, pmrvUser);
+    }
 }

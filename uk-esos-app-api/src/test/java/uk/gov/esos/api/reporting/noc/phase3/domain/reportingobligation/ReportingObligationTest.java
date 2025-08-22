@@ -27,7 +27,7 @@ class ReportingObligationTest {
         ReportingObligation reportingObligation = ReportingObligation.builder()
             .qualificationType(OrganisationQualificationType.QUALIFY)
             .reportingObligationDetails(ReportingObligationDetails.builder()
-                .qualificationReasonTypes(Set.of(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250))
+                .qualificationReasonType(OrganisationQualificationReasonType.STAFF_MEMBERS_MORE_THAN_250)
                 .energyResponsibilityType(OrganisationEnergyResponsibilityType.RESPONSIBLE)
                 .complianceRouteDistribution(ComplianceRouteDistribution.builder()
                     .iso50001Pct(10)

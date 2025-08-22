@@ -1,24 +1,16 @@
 package uk.gov.esos.api.user.operator.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import uk.gov.esos.api.user.core.domain.dto.InvitedUserInfoDTO;
-import uk.gov.esos.api.user.core.domain.enumeration.UserInvitationStatus;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@EqualsAndHashCode(callSuper = true)
-public class OperatorInvitedUserInfoDTO extends InvitedUserInfoDTO {
+@Builder
+public class OperatorInvitedUserInfoDTO {
 
-	private String firstName;
-	private String lastName;
-	private String roleCode;
-    private String accountInstallationName;
-    private UserInvitationStatus invitationStatus;
+    private String accountName;
 	
 }

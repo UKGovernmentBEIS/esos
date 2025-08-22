@@ -2,6 +2,10 @@
 Helper classes that were not covered through govuk-components
  */
 
+.govuk-phase-banner__text {
+  width: 100%;
+}
+
 .pre-wrap {
   white-space: pre-wrap;
 }
@@ -19,6 +23,18 @@ Helper classes that were not covered through govuk-components
   flex-wrap: wrap;
   margin-left: -(govuk-spacing(3));
   margin-right: -(govuk-spacing(3));
+}
+
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: column;
+
+  @include govuk-media-query($from: tablet) {
+    flex-direction: row;
+    gap: govuk-spacing(1);
+  }
 }
 
 .align-items-end {
@@ -39,7 +55,7 @@ Helper classes that were not covered through govuk-components
   padding: 0 govuk-spacing(3) 0 0;
 }
 
-a[role="button"] {
+a[role='button'] {
   @extend %govuk-link;
   color: $govuk-link-visited-colour;
   cursor: pointer;
@@ -48,4 +64,12 @@ a[role="button"] {
 .highlight-error {
   color: $govuk-error-colour;
   font-weight: bold;
+}
+
+.align-self-center {
+  align-self: center;
+}
+
+.align-self-end {
+  align-self: end;
 }

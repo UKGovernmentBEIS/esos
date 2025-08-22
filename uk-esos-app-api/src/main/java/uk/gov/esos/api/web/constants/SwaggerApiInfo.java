@@ -16,6 +16,7 @@ public final class SwaggerApiInfo {
     public static final String NOT_FOUND = "Not Found";
     public static final String FORBIDDEN = "Forbidden";
     public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
+    public static final String SERVICE_UNAVAILABLE = "Service unavailable";
     public static final String VALIDATION_ERROR_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
         "FORM1001 | Form validation failed";
     public static final String VALIDATION_PARAMETER_ERROR_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
@@ -36,18 +37,21 @@ public final class SwaggerApiInfo {
     public static final String ACCEPT_OPERATOR_INVITATION_TOKEN_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
             "EMAIL1001 | The verification link has expired \t\n " +
             "TOKEN1001 | Invalid Token \t\n " + 
+            "TOKEN1002 | Invalid Token - User is not the invitee \t\n " + 
             "USER1002 | User is deleted \t\n " +
             "NOTFOUND1001 | Resource not found \t\n " +
             "AUTHORITY1009 | User is not operator \t\n ";
     public static final String REQUEST_ACTION_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
         "FORM1001 | Form validation failed \t\n " +
-        "REQUEST_CREATE_ACTION1000 | Request create action not allowed \t\n ";
+        "REQUEST_CREATE_ACTION1000 | Request create action not allowed \t\n " +
+        "ACCOUNT1001 | Account registration number already exists \t\n "
+        ;
     public static final String REQUEST_TASK_ACTION_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
         "FORM1001 | Form validation failed \t\n " +
         "FORM1002 | Attachment not found \t\n " +
         "REQUEST_TASK_ACTION1000 | Request task action cannot proceed \t\n " +
         "REQUEST_TASK_ACTION1001 | User is not the assignee of the request task \t\n " +
-        "ACCOUNT1001 | Account name already exists for the user \t\n " +
+        "ACCOUNT1001 | Account registration number already exists \t\n " +
         "ACCOUNT1009 | Account status is not valid \t\n " +
         "PERMIT1001 | Permit is in invalid state \t\n " +
         "PERMIT1002 | Invalid Permit review \t\n " +
@@ -106,6 +110,7 @@ public final class SwaggerApiInfo {
     public static final String ACCEPT_REGULATOR_USER_INVITATION_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
         "EMAIL1001 | The verification link has expired \t\n " +
         "TOKEN1001 | Invalid Token \t\n " +
+        "TOKEN1002 | Invalid Token - User is not the invitee \t\n " +
         "USER1004 | User status is not valid ";
     public static final String ENABLE_REGULATOR_USER_FROM_INVITATION_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
         "FORM1001 | Form validation failed \t\n " +
@@ -218,4 +223,11 @@ public final class SwaggerApiInfo {
         "PAYMENT1003 | Payment id does not exist";
     public static final String MI_REPORT_REQUEST_TYPE_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
         "MIREPORT1000 | Invalid MI Report type";
+    public static final String GET_COMPANY_PROFILE_SERVICE_UNAVAILABLE = SERVICE_UNAVAILABLE + ERROR_CODES_HEADER +
+        "COMPANYINFO1001 | Companies House API is currently unavailable \t\n " +
+        "COMPANYINFO1002 | Companies House API authorization failed \t\n " +
+        "COMPANYINFO1003 | Companies House API rate limiting reached";
+    public static final String ONBOARDING_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "ONBOARDING1001 | Duplicate values exist in the provided list \t\n " +
+            "ONBOARDING1002 | Values already exist";
 }

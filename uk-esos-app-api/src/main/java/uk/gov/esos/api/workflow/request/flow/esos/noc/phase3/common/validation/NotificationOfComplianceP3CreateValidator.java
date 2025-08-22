@@ -10,6 +10,7 @@ import uk.gov.esos.api.workflow.request.core.service.RequestQueryService;
 import uk.gov.esos.api.workflow.request.flow.common.domain.dto.RequestCreateValidationResult;
 import uk.gov.esos.api.workflow.request.flow.common.service.RequestCreateAccountRelatedValidator;
 import uk.gov.esos.api.workflow.request.flow.common.service.RequestCreateValidatorService;
+import uk.gov.esos.api.workflowperiod.service.WorkFlowValidPeriodService;
 
 import java.util.Set;
 
@@ -18,10 +19,13 @@ public class NotificationOfComplianceP3CreateValidator extends RequestCreateAcco
 
     private final RequestQueryService requestQueryService;
 
+    private final WorkFlowValidPeriodService workFlowValidPeriodService;
+
     public NotificationOfComplianceP3CreateValidator(final RequestCreateValidatorService requestCreateValidatorService,
-                                                     final RequestQueryService requestQueryService) {
+                                                     final RequestQueryService requestQueryService, WorkFlowValidPeriodService workFlowValidPeriodService) {
         super(requestCreateValidatorService);
         this.requestQueryService = requestQueryService;
+        this.workFlowValidPeriodService = workFlowValidPeriodService;
     }
 
     @Override
@@ -32,6 +36,13 @@ public class NotificationOfComplianceP3CreateValidator extends RequestCreateAcco
                     .reportedRequestTypes(Set.of(RequestType.NOTIFICATION_OF_COMPLIANCE_P3))
                     .build();
         }
+
+        if (!workFlowValidPeriodService.isValidStartDate(RequestType.NOTIFICATION_OF_COMPLIANCE_P3)) {
+            return RequestCreateValidationResult.builder()
+                    .valid(false)
+                    .build();
+        }
+
         return super.validateAction(accountId);
     }
 

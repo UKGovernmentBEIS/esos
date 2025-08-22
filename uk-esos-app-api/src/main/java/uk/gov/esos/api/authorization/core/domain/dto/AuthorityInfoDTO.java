@@ -18,6 +18,7 @@ public class AuthorityInfoDTO {
     private String userId;
     private AuthorityStatus authorityStatus;
     private LocalDateTime creationDate;
+    private String createdBy;
     private Long accountId;
     private String code;
     private Long verificationBodyId;

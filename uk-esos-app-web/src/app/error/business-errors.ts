@@ -62,6 +62,7 @@ export type ErrorCode =
   | 'OTP1001'
   | 'REQUEST_TASK_ACTION1001'
   | 'TOKEN1001'
+  | 'TOKEN1002'
   | 'USER1001'
   | 'USER1004'
   | 'USER1005'
@@ -103,6 +104,7 @@ export class ErrorCodes {
   static OTP1001 = 'OTP1001';
   static REQUEST_TASK_ACTION1001 = 'REQUEST_TASK_ACTION1001';
   static TOKEN1001 = 'TOKEN1001';
+  static TOKEN1002 = 'TOKEN1002';
   static USER1001 = 'USER1001';
   static USER1004 = 'USER1004';
   static USER1005 = 'USER1005';

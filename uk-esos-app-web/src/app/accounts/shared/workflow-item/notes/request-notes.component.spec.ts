@@ -28,7 +28,7 @@ describe('RequestNotesComponent', () => {
     get notesContent() {
       return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
         .map((row) => [row.querySelectorAll('dd')[0]])
-        .map((pair) => pair.map((element) => element.textContent));
+        .map((pair) => pair.map((element) => element.textContent.trim()));
     }
   }
 
@@ -61,16 +61,12 @@ describe('RequestNotesComponent', () => {
     expect(page.notesContent).toEqual([
       ['Add a note'],
       [
-        `The note 1file 1Submitter 1, ${govukDatePipe.transform(
-          mockRequestNotesResults.requestNotes[0].lastUpdatedOn,
-          'datetime',
-        )}`,
+        `The note 1
+file 1Submitter 1, ${govukDatePipe.transform(mockRequestNotesResults.requestNotes[0].lastUpdatedOn, 'datetime')}`,
       ],
       [
-        `The note 2Submitter 2, ${govukDatePipe.transform(
-          mockRequestNotesResults.requestNotes[1].lastUpdatedOn,
-          'datetime',
-        )}`,
+        `The note 2
+Submitter 2, ${govukDatePipe.transform(mockRequestNotesResults.requestNotes[1].lastUpdatedOn, 'datetime')}`,
       ],
     ]);
   });

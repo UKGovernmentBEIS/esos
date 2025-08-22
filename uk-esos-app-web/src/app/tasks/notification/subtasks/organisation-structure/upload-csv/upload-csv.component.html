@@ -1,15 +1,17 @@
 <esos-csv-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  heading="Upload a list of all other active UK organisations covered by this notification"
+  heading="Upload a file with information on the organisations complying as one participant in the responsible undertaking's notification for its corporate group"
   caption="Organisation structure"
   submitText="Save and continue"
+  [showReturnLink]="true"
   [hideSubmit]="!parsedData()"
 >
   <p class="govuk-body">
     Download and complete the Active UK organisations template and upload it below.<br/><br/>
-    <a href="assets/files/Organisation_Structure_Template.xlsx" govukLink target="_self">Active UK organisations
-      template.xlsx</a>
+    <a href="assets/files/Organisation_Structure_Template.xlsx" govukLink target="_self"
+    >Active UK organisations template.xlsx</a
+    >
   </p>
   <p class="govuk-body govuk-!-margin-bottom-0">Upload a file</p>
   <p class="govuk-body govuk-!-margin-bottom-0">Your file must be:</p>
@@ -19,38 +21,44 @@
   </ul>
 
   <input type="file" (change)="onFileSelect($event)" style="display: none" #fileInput/>
-  <button type="button" govukSecondaryButton (click)="fileInput.click()">Choose file</button>
+  <div class="govuk-button-group">
+    <button type="button" govukSecondaryButton (click)="fileInput.click()">Choose file</button>
+    <p class="govuk-body" *ngIf="this.uploadedFile">{{ this.uploadedFile?.name }}</p>
+  </div>
 
   <govuk-details summary="Help me answer this question">
-    <p class="govuk-body">If you have multiple organisations that are associated with this responsible undertaking, you
-      have the option to upload a list instead of adding them manually.</p>
-    <p class="govuk-body">You need to download the template that can be found on this page. Once it is completed you
-      need to Upload it as a CSV file (max file size of 20MB).</p>
+    <p class="govuk-body">
+      If you have multiple organisations that are associated with this responsible undertaking, you have the option to
+      upload a list instead of adding them manually.
+    </p>
+    <p class="govuk-body">
+      You need to download the template that can be found on this page. Once it is completed you need to Upload it as a
+      CSV file (max file size of 20MB).
+    </p>
     <p class="govuk-body govuk-!-margin-bottom-0">We need the following details in the upload:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li>The organisation name</li>
       <li>The organisation registration number (if exists, otherwise leave the cell blank)</li>
-      <li>If this organisation is covered in this NOC?</li>
       <li>If this organisation is part of an arrangement where 2 or more highest UK parent groups are complying as one
         participant?
       </li>
+      <li>Has this organisation ceased to be part of the highest parent group or participant since the qualification
+        date but agreed to comply as if it were still a member?
+      </li>
+      <li>If this organisation is part of a franchise group?</li>
       <li>If this organisation is a parent of the responsible undertaking?</li>
       <li>If this organisation is a subsidiary of the responsible undertaking?</li>
-      <li>If this organisation is part of a franchise group?</li>
-      <li>If this organisation is a trust?</li>
-      <li>If this organisation has ceased to be a part of the corporate group between the qualification date of 31
-        December 2022 and the compliance date of 5 June 2024?
-      </li>
+      <li>What are the organisation’s activity codes?</li>
     </ul>
     <p class="govuk-body govuk-!-margin-bottom-0">You need to ensure that:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li>The file does not include the responsible undertaking</li>
       <li>There are no duplicated organisation registration numbers in the file</li>
-      <li>The mandatory fields should be completed</li>
+      <li>The mandatory fields have been completed</li>
       <li>The maximum length of each organisation name is up to 255 characters</li>
-      <li>The Company Registration Number must be either 8 digits, 1 letter followed by 7 digits or 2 letters followed
-        by 6 digits. If your Company Registration Number has less than 8 digits then you may need to add zeros at the
-        beginning.
+      <li>The Company Registration Number must be either 8 digits, 1 letter followed by 7 digits, 2 letters followed by
+        6 digits or 2 letters followed by 5 digits followed by a final letter. If your Company Registration Number has
+        less than 8 digits then you may need to add zeros at the beginning
       </li>
     </ul>
   </govuk-details>

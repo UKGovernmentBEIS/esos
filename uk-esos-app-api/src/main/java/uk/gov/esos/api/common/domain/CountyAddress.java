@@ -26,8 +26,7 @@ public class CountyAddress {
     @NotBlank
     private String city;
 
-    @Column(name = "county", nullable = false)
-    @NotBlank
+    @Column(name = "county")
     private String county;
 
     @Column(name = "postcode", nullable = false)

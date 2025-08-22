@@ -5,121 +5,111 @@ import {
   computed,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   Signal,
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 
-import { PaginationComponent } from '@shared/pagination/pagination.component';
+import { MoreLessComponent } from '@shared/more-less/more-less.component';
+import { ShowActivityCodesComponent } from '@shared/show-activity-codes/show-activity-codes.component';
 
-import { GovukTableColumn, LinkDirective, TableComponent } from 'govuk-components';
+import { GovukTableColumn, LinkDirective, PaginationComponent, TableComponent } from 'govuk-components';
 
-import { OrganisationStructure } from 'esos-api';
+import { OrganisationAssociatedWithRU, OrganisationStructure } from 'esos-api';
 
 import { sortOrganisations } from './organisations-structure-list-template.helper';
-import {
-  Organisation,
-  OrganisationStructureListTemplateViewModel,
-} from './organisations-structure-list-template.types';
+import { OrganisationStructureListTemplateViewModel } from './organisations-structure-list-template.types';
+
+/**
+ * Ensure a type with index so that we have a global index as reference
+ * and not the index displayed, starting from 0
+ */
+type OrganisationTableElement = Partial<OrganisationAssociatedWithRU> & { index: number };
 
 @Component({
   selector: 'esos-organisation-structure-list-table',
   standalone: true,
   imports: [
+    LinkDirective,
+    MoreLessComponent,
     NgIf,
     NgSwitch,
     NgSwitchCase,
     NgSwitchDefault,
-    PaginationComponent,
     RouterLink,
     TableComponent,
-    LinkDirective,
+    ShowActivityCodesComponent,
+    PaginationComponent,
   ],
   templateUrl: './organisations-structure-list-template.component.html',
+  styleUrls: ['./organisations-structure-list-template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrganisationStructureListTableComponent implements OnInit {
+export class OrganisationStructureListTableComponent {
   @Input() vm: OrganisationStructureListTemplateViewModel;
   @Input() organisationStructure: Signal<OrganisationStructure>;
   @Output() readonly removeOrganisation = new EventEmitter<number>();
   @Input() queryParams: Params;
+  @Input() allowPagination = true;
 
   readonly pageSize = 10;
 
-  organisations: Signal<Organisation[]>;
-  organisationsLength: number;
-  page = signal(this.route.snapshot.queryParams.page ?? 1);
+  page = signal(
+    this.route.snapshot.queryParamMap.has('page') ? Number(this.route.snapshot.queryParamMap.get('page')) : 1,
+  );
+  allOrganisations = computed(() => {
+    const sortedIndexedOrganisationsRU: OrganisationTableElement[] = sortOrganisations(
+      this.organisationStructure()?.organisationsAssociatedWithRU ?? [],
+    ).map((item, index) => ({
+      index: index + 1,
+      ...item,
+    }));
+
+    return [this.addResponsibleUndertaking(), ...sortedIndexedOrganisationsRU];
+  });
+  organisationsLength: Signal<number> = computed(() => this.allOrganisations().length);
+  organisations: Signal<OrganisationTableElement[]> = computed(() => {
+    const page = this.page();
+    const pageStart = (page - 1) * this.pageSize;
+    const pageEnd = page * this.pageSize;
+
+    return this.allowPagination
+      ? this.allOrganisations().filter((_, index) => index < pageEnd && index >= pageStart)
+      : this.allOrganisations();
+  });
 
   tableColumns: GovukTableColumn[] = [
-    { field: 'organisationDetails', header: 'Organisation' },
-    { field: 'isCoveredByThisNotification', header: 'Covered in this NOC' },
+    { field: 'organisationDetails', header: 'Organisation', widthClass: 'org-details-width' },
     { field: 'isPartOfArrangement', header: 'Co-parent organisation included' },
     { field: 'isParentOfResponsibleUndertaking', header: 'Parent of this RU' },
     { field: 'isSubsidiaryOfResponsibleUndertaking', header: 'Subsidiary of this RU' },
-    { field: 'isPartOfFranchise', header: 'Franchise' },
-    { field: 'isTrust', header: 'Trust' },
-    { field: 'hasCeasedToBePartOfGroup', header: 'Ceased trading 31/12/22 to 05/06/24' },
+    { field: 'isPartOfFranchise', header: 'Franchisee' },
+    { field: 'hasCeasedToBePartOfGroup', header: 'Ceased to be part of group' },
     { field: 'links', header: undefined },
   ];
 
   constructor(private readonly route: ActivatedRoute) {}
 
-  ngOnInit(): void {
-    this.organisationsLength = (this.organisationStructure()?.organisationsAssociatedWithRU ?? []).length;
-
-    this.organisations = computed(() => {
-      const page = this.page();
-      const pageStart = (page - 1) * this.pageSize;
-      const pageEnd = page * this.pageSize;
-      let organisationsList = [];
-
-      const organisationsAssociatedWithRU = sortOrganisations([
-        ...(this.organisationStructure()?.organisationsAssociatedWithRU ?? []),
-      ]);
-
-      organisationsList = [
-        ...organisationsList,
-        ...organisationsAssociatedWithRU.map((organisation) => ({
-          ...organisation,
-          organisationDetails: this.organisationDetailsColumn(organisation),
-        })),
-      ].filter((_, index) => index < pageEnd && index >= pageStart);
-
-      if (page === 1) {
-        organisationsList.unshift(this.addResponsibleUndertaking());
-      } else {
-        organisationsList.shift();
-      }
-
-      return organisationsList;
-    });
-  }
-
-  private addResponsibleUndertaking(): Organisation {
+  private addResponsibleUndertaking(): OrganisationTableElement {
     const ruOrganisationDetails = this.vm.organisationDetails;
 
     const { organisationsAssociatedWithRU, ...ruOrganisation } = this.organisationStructure() ?? {};
 
     return {
+      index: 0,
       ...ruOrganisation,
-      isCoveredByThisNotification: true,
-      organisationDetails: this.organisationDetailsColumn(ruOrganisationDetails),
+      organisationName: ruOrganisationDetails.name,
+      registrationNumber: ruOrganisationDetails.registrationNumber,
+      classificationCodesDetails: {
+        areSameAsRU: false,
+        codes: {
+          type: ruOrganisationDetails.type,
+          otherTypeName: ruOrganisationDetails.otherTypeName,
+          codes: ruOrganisationDetails.codes,
+        },
+      },
     };
-  }
-
-  private organisationDetailsColumn(organisation: Organisation) {
-    const { name, organisationName, registrationNumber, taxReferenceNumber } = organisation ?? {};
-
-    const orgName = name ?? organisationName;
-    const details = registrationNumber
-      ? '\n' + registrationNumber
-      : taxReferenceNumber
-      ? '\n' + taxReferenceNumber
-      : '';
-
-    return `${orgName} ${details}`;
   }
 
   removeOrganisationClicked(index: number) {

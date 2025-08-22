@@ -2,7 +2,6 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
   EventEmitter,
   Inject,
   Input,
@@ -14,7 +13,6 @@ import {
 import { BehaviorSubject, Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { ACCORDION, Accordion, isSessionStorageAvailable } from '../accordion';
-import { AccordionItemSummaryDirective } from '../directives/accordion-item-summary.directive';
 
 @Component({
   selector: 'govuk-accordion-item',
@@ -24,10 +22,9 @@ import { AccordionItemSummaryDirective } from '../directives/accordion-item-summ
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionItemComponent implements OnInit, OnDestroy {
-  @Input() header: string;
+  @Input({ required: true }) header: string;
+  @Input() summary: string;
   @Output() readonly expand = new EventEmitter<boolean>();
-
-  @ContentChild(AccordionItemSummaryDirective) accordionItemSummaryDirective: AccordionItemSummaryDirective;
 
   itemIndex: number;
   isFocused = false;
@@ -37,6 +34,14 @@ export class AccordionItemComponent implements OnInit, OnDestroy {
   readonly destroy$ = new Subject<void>();
 
   constructor(@Inject(ACCORDION) public accordion: Accordion) {}
+
+  get headingId(): string {
+    return `${this.accordion.id}-heading-${this.itemIndex}`;
+  }
+
+  get summaryId(): string {
+    return `${this.accordion.id}-summary-${this.itemIndex}`;
+  }
 
   get contentId(): string {
     return `${this.accordion.id}-content-${this.itemIndex}`;

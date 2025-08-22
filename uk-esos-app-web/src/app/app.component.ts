@@ -1,19 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
-import { combineLatest, filter, map, Observable, of, switchMap, takeUntil } from 'rxjs';
+import { combineLatest, map, Observable, of, switchMap, takeUntil } from 'rxjs';
 
-import { gtagIsAvailable, toggleAnalytics } from '@core/analytics';
-import { FeatureStore } from '@core/features/feature.store';
+import { AnalyticsService } from '@core/services/analytics.service';
 import { AuthService } from '@core/services/auth.service';
 import { DestroySubject } from '@core/services/destroy-subject.service';
 import { selectIsLoggedIn, selectUserState } from '@core/store/auth/auth.selectors';
 import { AuthStore } from '@core/store/auth/auth.store';
 import { hasNoAuthority, loginDisabled } from '@core/util/user-status-util';
-import { DocumentEventService } from '@shared/services/document-event.service';
-
-import { ScrollService } from 'govuk-components';
 
 import { CookiesService } from './cookies/cookies.service';
 
@@ -31,9 +25,7 @@ interface Permissions {
 export class AppComponent implements OnInit {
   permissions$: Observable<null | Permissions>;
   isLoggedIn$ = this.authStore.pipe(selectIsLoggedIn, takeUntil(this.destroy$));
-  showCookiesBanner$ = this.cookiesService.accepted$.pipe(
-    map((cookiesAccepted) => !cookiesAccepted && gtagIsAvailable()),
-  );
+  showCookiesBanner$ = this.cookiesService.accepted$.pipe(map((cookiesAccepted) => !cookiesAccepted));
   private readonly userState$ = this.authStore.pipe(selectUserState, takeUntil(this.destroy$));
   private readonly roleType$ = this.userState$.pipe(
     map((userState) => userState?.roleType),
@@ -42,13 +34,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     public readonly authStore: AuthStore,
-    private readonly featureStore: FeatureStore,
     public readonly authService: AuthService,
-    private readonly _scroll: ScrollService,
-    private readonly _documentEvent: DocumentEventService,
-    private readonly titleService: Title,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
+    private readonly analyticsService: AnalyticsService,
     private readonly destroy$: DestroySubject,
     private readonly cookiesService: CookiesService,
   ) {}
@@ -79,27 +66,8 @@ export class AppComponent implements OnInit {
       ),
     );
 
-    const appTitle = this.titleService.getTitle();
-
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        map(() => {
-          let child = this.route.firstChild;
-          while (child.firstChild) {
-            child = child.firstChild;
-          }
-          if (child.snapshot.data['pageTitle']) {
-            return child.snapshot.data['pageTitle'];
-          }
-          return appTitle;
-        }),
-        takeUntil(this.destroy$),
-      )
-      .subscribe((title: string) => this.titleService.setTitle(`${title} - GOV.UK`));
-
-    if (this.cookiesService.accepted$.getValue()) {
-      toggleAnalytics(true);
+    if (this.cookiesService.accepted$.getValue() && this.cookiesService.hasAnalyticsConsent()) {
+      this.analyticsService.enableGoogleTagManager();
     }
   }
 }

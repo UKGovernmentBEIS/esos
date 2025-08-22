@@ -299,7 +299,7 @@ class RegulatorUserManagementControllerTest {
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
 		doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(currentUser, new RoleType[] {RoleType.REGULATOR});
+            .evaluate(currentUser, new RoleType[] {RoleType.REGULATOR}, true);
 
 		//invoke
 		mockMvc.perform(MockMvcRequestBuilders.multipart(BASE_PATH)
@@ -382,7 +382,7 @@ class RegulatorUserManagementControllerTest {
 
 		verify(regulatorUserManagementService, never()).resetRegulator2Fa( any(), anyString());
 	}
-
+	
     private RegulatorUserUpdateDTO buildRegulatorUserUpdateDTO() {
 		return RegulatorUserUpdateDTO.builder()
 				.user(RegulatorUserDTO.builder()

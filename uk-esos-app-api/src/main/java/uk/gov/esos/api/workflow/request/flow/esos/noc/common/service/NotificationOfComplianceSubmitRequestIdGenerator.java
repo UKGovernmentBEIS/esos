@@ -2,7 +2,7 @@ package uk.gov.esos.api.workflow.request.flow.esos.noc.common.service;
 
 import org.springframework.stereotype.Service;
 
-import uk.gov.esos.api.reporting.noc.common.domain.Phase;
+import uk.gov.esos.api.reporting.common.domain.Phase;
 import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestType;
 import uk.gov.esos.api.workflow.request.flow.common.domain.dto.RequestParams;
 import uk.gov.esos.api.workflow.request.flow.common.service.RequestIdGenerator;

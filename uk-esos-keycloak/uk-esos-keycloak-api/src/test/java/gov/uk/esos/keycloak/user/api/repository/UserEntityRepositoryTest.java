@@ -1,12 +1,6 @@
 package gov.uk.esos.keycloak.user.api.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import com.google.common.collect.Iterables;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import gov.uk.esos.keycloak.user.api.AbstractContainerBaseTest;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -17,7 +11,15 @@ import org.junit.jupiter.api.Test;
 import org.keycloak.models.jpa.entities.UserAttributeEntity;
 import org.keycloak.models.jpa.entities.UserEntity;
 
-public class UserEntityRepositoryTest {
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class UserEntityRepositoryTest extends AbstractContainerBaseTest {
 
     private static EntityManagerFactory entityManagerFactory;
     private static EntityManager entityManager;
@@ -41,19 +43,18 @@ public class UserEntityRepositoryTest {
     }
 
     @Test
-    public void findUsers_two_users_one_attribute_each() {
+    void findUsers_two_users_one_attribute_each() {
         final String firstName1 = "firstName1";
         final String lastName1 = "lastName1";
         final String jobTitle = "jobTitle";
-        final String termsVersion = "1";
         final String firstName2 = "firstName2";
         final String lastName2 = "lastName2";
+        final String jobTitle2 = "jobTitle2";
 
         entityManager.getTransaction().begin();
 
         final String userId1 = createUser(firstName1, lastName1, Map.of("jobTitle", jobTitle));
-        final String userId2 = createUser(firstName2, lastName2, Map.of("termsVersion", termsVersion));
-
+        final String userId2 = createUser(firstName2, lastName2, Map.of("jobTitle2", jobTitle2));
         entityManager.flush();
         entityManager.clear();
 
@@ -68,15 +69,17 @@ public class UserEntityRepositoryTest {
         assertEquals(firstName1, user1.getFirstName());
         assertEquals(lastName1, user1.getLastName());
         assertEquals(1, user1.getAttributes().size());
-        assertEquals("jobTitle", Iterables.get(user1.getAttributes(), 0).getName());
-        assertEquals(jobTitle, Iterables.get(user1.getAttributes(), 0).getValue());
+        assertTrue(user1.getAttributes().stream()
+                .filter(userAttributeEntity -> "jobTitle".equals(userAttributeEntity.getName()))
+                .anyMatch(userAttributeEntity -> jobTitle.equals(userAttributeEntity.getValue())));
 
         UserEntity user2 = users.stream().filter(u -> u.getId().equals(userId2)).findFirst().get();
         assertEquals(userId2, user2.getId());
         assertEquals(firstName2, user2.getFirstName());
         assertEquals(lastName2, user2.getLastName());
-        assertEquals("termsVersion", Iterables.get(user2.getAttributes(), 0).getName());
-        assertEquals(termsVersion, Iterables.get(user2.getAttributes(), 0).getValue());
+        assertTrue(user2.getAttributes().stream()
+                .filter(userAttributeEntity -> "jobTitle2".equals(userAttributeEntity.getName()))
+                .anyMatch(userAttributeEntity -> jobTitle2.equals(userAttributeEntity.getValue())));
 
     }
 
@@ -89,11 +92,11 @@ public class UserEntityRepositoryTest {
         Collection<UserAttributeEntity> attributes = userEntity.getAttributes();
 
         attributeMap.entrySet().forEach(
-            (a -> {
-                UserAttributeEntity ua = createUserAttributeEntity(userEntity, a.getKey(), a.getValue());
-                attributes.add(ua);
-                entityManager.persist(ua);
-            }));
+                (a -> {
+                    UserAttributeEntity ua = createUserAttributeEntity(userEntity, a.getKey(), a.getValue());
+                    attributes.add(ua);
+                    entityManager.persist(ua);
+                }));
 
         entityManager.persist(userEntity);
 

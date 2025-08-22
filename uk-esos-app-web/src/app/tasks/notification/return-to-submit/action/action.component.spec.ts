@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { TaskService } from '@common/forms/services/task.service';
+import { TaskServiceExtended } from '@common/forms/services/task.service';
 import { NotificationService } from '@tasks/notification/services/notification.service';
 import { ActivatedRouteStub, BasePage, MockType } from '@testing';
 
@@ -27,7 +27,7 @@ describe('ActionComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        { provide: TaskService, useValue: taskService },
+        { provide: TaskServiceExtended, useValue: taskService },
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     });

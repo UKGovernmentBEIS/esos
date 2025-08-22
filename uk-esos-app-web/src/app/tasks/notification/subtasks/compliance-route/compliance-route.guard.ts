@@ -4,7 +4,7 @@ import { CanActivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 import { requestTaskQuery, RequestTaskStore } from '@common/request-task/+state';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 
-import { WizardStep } from './compliance-route.helper';
+import { showComplianceRouteQuestions, WizardStep } from './compliance-route.helper';
 import { isWizardCompleted } from './compliance-route-wizard-steps';
 
 export const canActivateComplianceRoute: CanActivateFn = (route) => {
@@ -14,9 +14,11 @@ export const canActivateComplianceRoute: CanActivateFn = (route) => {
   const complianceRoute = store.select(notificationQuery.selectComplianceRoute)();
   const isEditable = store.select(requestTaskQuery.selectIsEditable)();
   const category = store.select(notificationQuery.selectReportingObligationCategory)();
+  const energyAudits = store.select(notificationQuery.selectReportingObligation)().reportingObligationDetails
+    .complianceRouteDistribution.energyAuditsPct;
 
   return (
-    (isEditable && (!isWizardCompleted(complianceRoute, category) || change)) ||
+    (isEditable && (!isWizardCompleted(complianceRoute, category, energyAudits) || change)) ||
     createUrlTreeFromSnapshot(route, [WizardStep.SUMMARY])
   );
 };
@@ -28,13 +30,13 @@ export const canActivateRouteAOrRouteCOrRouteE: CanActivateFn = (route) => {
   const complianceRoute = store.select(notificationQuery.selectComplianceRoute)();
   const isEditable = store.select(requestTaskQuery.selectIsEditable)();
   const category = store.select(notificationQuery.selectReportingObligationCategory)();
+  const energyAudits = store.select(notificationQuery.selectReportingObligation)().reportingObligationDetails
+    .complianceRouteDistribution.energyAuditsPct;
 
   return (
     (isEditable &&
-      ['LESS_THAN_40000_KWH_PER_YEAR', 'ESOS_ENERGY_ASSESSMENTS_95_TO_100', 'PARTIAL_ENERGY_ASSESSMENTS'].includes(
-        category,
-      ) &&
-      (!isWizardCompleted(complianceRoute, category) || change)) ||
+      showComplianceRouteQuestions(category, energyAudits) &&
+      (!isWizardCompleted(complianceRoute, category, energyAudits) || change)) ||
     createUrlTreeFromSnapshot(route, [WizardStep.SUMMARY])
   );
 };
@@ -43,13 +45,13 @@ export const canEditEnergyAudit: CanActivateFn = (route) => {
   const store = inject(RequestTaskStore);
   const complianceRoute = store.select(notificationQuery.selectComplianceRoute)();
   const category = store.select(notificationQuery.selectReportingObligationCategory)();
+  const energyAudits = store.select(notificationQuery.selectReportingObligation)().reportingObligationDetails
+    .complianceRouteDistribution.energyAuditsPct;
   const isEditable = store.select(requestTaskQuery.selectIsEditable)();
   const index = +route.paramMap.get('index');
 
   const canEdit =
-    ['LESS_THAN_40000_KWH_PER_YEAR', 'ESOS_ENERGY_ASSESSMENTS_95_TO_100', 'PARTIAL_ENERGY_ASSESSMENTS'].includes(
-      category,
-    ) &&
+    showComplianceRouteQuestions(category, energyAudits) &&
     index &&
     complianceRoute.energyAudits?.length &&
     !!complianceRoute.energyAudits[index - 1];
@@ -62,10 +64,12 @@ export const canActivateComplianceRouteSummary: CanActivateFn = (route) => {
   const complianceRoute = store.select(notificationQuery.selectComplianceRoute)();
   const isEditable = store.select(requestTaskQuery.selectIsEditable)();
   const category = store.select(notificationQuery.selectReportingObligationCategory)();
+  const energyAudits = store.select(notificationQuery.selectReportingObligation)().reportingObligationDetails
+    .complianceRouteDistribution.energyAuditsPct;
 
   return (
     !isEditable ||
-    (isEditable && isWizardCompleted(complianceRoute, category)) ||
+    (isEditable && isWizardCompleted(complianceRoute, category, energyAudits)) ||
     createUrlTreeFromSnapshot(route, ['./', WizardStep.DATA_ESTIMATED])
   );
 };

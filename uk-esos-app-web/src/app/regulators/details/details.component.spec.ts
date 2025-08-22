@@ -1,8 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { firstValueFrom, of, throwError } from 'rxjs';
 
@@ -134,7 +133,7 @@ describe('RegulatorDetailsComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [DetailsComponent],
-      imports: [SharedModule, RouterTestingModule, SharedUserModule, BusinessTestingModule, PageHeadingComponent],
+      imports: [SharedModule, RouterModule.forRoot([]), SharedUserModule, BusinessTestingModule, PageHeadingComponent],
       providers: [
         FormBuilder,
         { provide: ActivatedRoute, useValue: activatedRoute },
@@ -182,6 +181,13 @@ describe('RegulatorDetailsComponent', () => {
       expect(component.form.get('permissions.ASSIGN_REASSIGN_TASKS').value).toEqual('NONE');
       expect(component.form.get('permissions.MANAGE_USERS_AND_CONTACTS').value).toEqual('NONE');
       expect(component.form.get('permissions.REVIEW_ORGANISATION_ACCOUNT').value).toEqual('VIEW_ONLY');
+      expect(component.form.get('permissions.MANAGE_VERIFIED_ORGANISATION_ACCOUNTS').value).toEqual('NONE');
+      expect(component.form.get('permissions.MANAGE_PARTICIPANT_USERS').value).toEqual('NONE');
+      expect(component.form.get('permissions.ACCOUNT_CLOSURE').value).toEqual('NONE');
+      expect(component.form.get('permissions.RETURN_NOC').value).toEqual('NONE');
+      expect(component.form.get('permissions.RETURN_ACTION_PLAN').value).toEqual('NONE');
+      expect(component.form.get('permissions.RETURN_PROGRESS_UPDATE_1').value).toEqual('NONE');
+      expect(component.form.get('permissions.RETURN_PROGRESS_UPDATE_2').value).toEqual('NONE');
       expect(component.form.get('user.email').disabled).toBeTruthy();
 
       await expect(firstValueFrom(component.allowEditPermissions$)).resolves.toBeTruthy();
@@ -327,6 +333,8 @@ describe('RegulatorDetailsComponent', () => {
       expect(element.querySelector('#check-ASSIGN_REASSIGN_TASKS-NONE')).toBeTruthy();
       expect(element.querySelector('#check-MANAGE_USERS_AND_CONTACTS-NONE')).toBeTruthy();
       expect(element.querySelector('#check-REVIEW_ORGANISATION_ACCOUNT-VIEW_ONLY')).toBeTruthy();
+      expect(element.querySelector('#check-MANAGE_VERIFIED_ORGANISATION_ACCOUNTS-NONE')).toBeTruthy();
+      expect(element.querySelector('#check-MANAGE_PARTICIPANT_USERS-NONE')).toBeTruthy();
     });
 
     it('should not display the 2fa link', async () => {
@@ -363,6 +371,8 @@ describe('RegulatorDetailsComponent', () => {
       expect(component.form.get('permissions.ASSIGN_REASSIGN_TASKS').value).toEqual('NONE');
       expect(component.form.get('permissions.MANAGE_USERS_AND_CONTACTS').value).toEqual('NONE');
       expect(component.form.get('permissions.REVIEW_ORGANISATION_ACCOUNT').value).toEqual('NONE');
+      expect(component.form.get('permissions.MANAGE_VERIFIED_ORGANISATION_ACCOUNTS').value).toEqual('NONE');
+      expect(component.form.get('permissions.MANAGE_PARTICIPANT_USERS').value).toEqual('NONE');
 
       page.submitButton.click();
       fixture.detectChanges();
@@ -387,6 +397,8 @@ describe('RegulatorDetailsComponent', () => {
       expect(component.form.get('permissions.ASSIGN_REASSIGN_TASKS').value).toEqual('NONE');
       expect(component.form.get('permissions.MANAGE_USERS_AND_CONTACTS').value).toEqual('NONE');
       expect(component.form.get('permissions.REVIEW_ORGANISATION_ACCOUNT').value).toEqual('NONE');
+      expect(component.form.get('permissions.MANAGE_VERIFIED_ORGANISATION_ACCOUNTS').value).toEqual('NONE');
+      expect(component.form.get('permissions.MANAGE_PARTICIPANT_USERS').value).toEqual('NONE');
 
       page.submitButton.click();
       fixture.detectChanges();
@@ -426,6 +438,8 @@ describe('RegulatorDetailsComponent', () => {
       expect(component.form.get('permissions.ASSIGN_REASSIGN_TASKS').value).toEqual('NONE');
       expect(component.form.get('permissions.MANAGE_USERS_AND_CONTACTS').value).toEqual('NONE');
       expect(component.form.get('permissions.REVIEW_ORGANISATION_ACCOUNT').value).toEqual('NONE');
+      expect(component.form.get('permissions.MANAGE_VERIFIED_ORGANISATION_ACCOUNTS').value).toEqual('NONE');
+      expect(component.form.get('permissions.MANAGE_PARTICIPANT_USERS').value).toEqual('NONE');
 
       fixture.detectChanges();
       page.submitButton.click();

@@ -14,4 +14,5 @@ import { AccountNoteDto } from './accountNoteDto';
 export interface AccountNoteResponse {
   accountNotes?: Array<AccountNoteDto>;
   totalItems?: number;
+  hasUserEditPermission?: boolean;
 }

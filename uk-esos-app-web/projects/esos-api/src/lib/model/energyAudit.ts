@@ -12,7 +12,7 @@
 
 export interface EnergyAudit {
   description: string;
-  numberOfSitesCovered: number;
+  numberOfSitesCovered?: number;
   numberOfSitesVisited: number;
   reason: string;
 }

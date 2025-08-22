@@ -16,6 +16,7 @@ import { GovukComponentsModule } from 'govuk-components';
       (click)="changeClick.emit($event)"
       govukLink
       class="govuk-!-font-size-19 govuk-!-font-weight-regular float-right"
+      [attr.aria-label]="ariaLabel"
     >
       Change
     </a>
@@ -24,6 +25,7 @@ import { GovukComponentsModule } from 'govuk-components';
 })
 export class SummaryHeaderComponent {
   @Input() changeRoute: string | any[];
+  @Input() ariaLabel: string;
   @Output() readonly changeClick = new EventEmitter<Event>();
 
   @HostBinding('class.govuk-clearfix') get clearfix() {

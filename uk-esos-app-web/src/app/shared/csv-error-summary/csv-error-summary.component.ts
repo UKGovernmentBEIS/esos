@@ -1,4 +1,4 @@
-import { AsyncPipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe, I18nPluralPipe, NgForOf, NgIf } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -20,15 +20,18 @@ import { DetailsComponent, FormService } from 'govuk-components';
 @Component({
   selector: 'esos-csv-error-summary',
   standalone: true,
-  imports: [AsyncPipe, DetailsComponent, NgIf, NgForOf, JsonPipe],
+  imports: [AsyncPipe, DetailsComponent, NgIf, NgForOf, I18nPluralPipe],
   templateUrl: './csv-error-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
   @Input() form: UntypedFormGroup | NgForm;
-
   @ViewChild('container', { read: ElementRef }) container: ElementRef<HTMLDivElement>;
 
+  columnsPluralMapping: { [k: string]: string } = {
+    '=1': 'column',
+    other: 'columns',
+  };
   errorList$: Observable<NestedMessageValidationError[]>;
 
   private formControl: UntypedFormGroup;

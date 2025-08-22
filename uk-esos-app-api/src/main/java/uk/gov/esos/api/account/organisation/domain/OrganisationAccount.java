@@ -1,5 +1,8 @@
 package uk.gov.esos.api.account.organisation.domain;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
 import jakarta.persistence.ConstructorResult;
@@ -7,6 +10,8 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
@@ -19,8 +24,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import uk.gov.esos.api.account.domain.Account;
-import uk.gov.esos.api.common.domain.CountyAddress;
 import uk.gov.esos.api.account.organisation.domain.dto.OrganisationAccountSearchResultsInfoDTO;
+import uk.gov.esos.api.common.domain.CountyAddress;
+import uk.gov.esos.api.competentauthority.CompetentAuthorityEnum;
 
 @Data
 @AllArgsConstructor
@@ -63,4 +69,13 @@ public class OrganisationAccount extends Account {
     @Enumerated(EnumType.STRING)
     @NotNull
     private OrganisationAccountStatus status;
+    
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Size(min = 1, max = 4)
+    private List<ClassificationCode> classificationCodes;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "location")
+    @NotNull
+    private CompetentAuthorityEnum location;
 }

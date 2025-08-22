@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
@@ -98,7 +97,7 @@ describe('RegulatorsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([{ path: 'add', component: RouterStubComponent }]),
+        RouterModule.forRoot([{ path: 'add', component: RouterStubComponent }]),
         SharedModule,
         SharedUserModule,
         BusinessTestingModule,
@@ -128,7 +127,7 @@ describe('RegulatorsComponent', () => {
 
   it('should render the title', () => {
     const element: HTMLElement = fixture.nativeElement;
-    const header = element.querySelector('h1[class="govuk-heading-xl"]');
+    const header = element.querySelector('h1.govuk-heading-xl');
 
     expect(header).toBeTruthy();
     expect(header.innerHTML.trim()).toEqual('Regulator users');

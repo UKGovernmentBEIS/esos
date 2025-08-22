@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+		logicalFilePath="v0.1.0/changelog_account_organisation_onboarding_registry.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+	<changeSet id="0_1_0_ACCOUNT_ORGANISATION_ONBOARDING_REGISTRY_CREATE_SEQUENCE" author="apostolouk@unisystems.gr">
+        <createSequence sequenceName="account_organisation_onboarding_registry_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS account_organisation_onboarding_registry_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+    	
+	<changeSet id="0_1_0_ACCOUNT_ORGANISATION_ONBOARDING_REGISTRY_CREATE_TABLE" author="apostolouk@unisystems.gr">
+		<createTable tableName="account_organisation_onboarding_registry" 
+        		remarks="A registry for all organisation accounts to be onboarded">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="account_organisation_onboarding_registry_pk" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)" remarks="The email address of the user to be onboarded">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="registration_number" type="varchar(255)" remarks="The registration number of the account to be onboarded">
+            	<constraints nullable="false" unique="true"/>
+            </column>
+            <column name="status" type="varchar(255)" remarks="The onboarding status of the account">
+                <constraints nullable="false" />
+            </column>
+            <column name="submitter_id" type="varchar(255)" remarks="The id of the regulator who submitted the entry">
+                <constraints nullable="false" />
+            </column>
+            <column name="submission_date" type="timestamp" remarks="When the entry was submitted">
+                <constraints nullable="false" />
+            </column>
+            <column name="competent_authority" type="varchar(255)" remarks="The competent authority the submitter belongs to">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <rollback>
+        	<sql>
+        		DROP TABLE IF EXISTS account_organisation_onboarding_registry CASCADE;
+        	</sql>
+        </rollback>
+	</changeSet>
+
+</databaseChangeLog>

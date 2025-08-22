@@ -296,148 +296,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/regulator-users/registration/enable-from-invitation:
-    put:
-      tags:
-        - Regulator users registration
-      summary: Enable a new regulator user from invitation
-      operationId: enableRegulatorInvitedUser
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/InvitedUserEnableDTO'
-        required: true
-      responses:
-        '204':
-          description: No Content
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n EMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n USER1004 | User status is not valid "
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security: []
-  /v1.0/operator-users/registration/register-from-invitation:
-    put:
-      tags:
-        - Operator users registration
-      summary: Registers a new operator user from invitation token
-      operationId: registerNewUserFromInvitationWithCredentials
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OperatorUserRegistrationWithCredentialsDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OperatorUserDTO'
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nAUTHORITY1005 | User status cannot be updated \t\n EMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n FORM1001 | Form validation failed"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security: []
-  /v1.0/operator-users/registration/register-from-invitation-no-credentials:
-    put:
-      tags:
-        - Operator users registration
-      summary: Registers a new operator user from invitation token without credentials
-      operationId: registerNewUserFromInvitation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OperatorUserRegistrationDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OperatorUserDTO'
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nAUTHORITY1005 | User status cannot be updated \t\n EMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n FORM1001 | Form validation failed"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security: []
-  /v1.0/operator-users/registration/enable-from-invitation:
-    put:
-      tags:
-        - Operator users registration
-      summary: Enables a new operator user from invitation
-      operationId: enableOperatorInvitedUser
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/InvitedUserEnableDTO'
-        required: true
-      responses:
-        '204':
-          description: No Content
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OperatorUserDTO'
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nUSER1004 | User status is not valid \t\n EMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n FORM1001 | Form validation failed"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      security: []
   /v1.0/notification-templates/{id}:
     get:
       tags:
@@ -1182,6 +1040,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/users/token/resolve-email:
+    post:
+      tags:
+        - User token
+      summary: Verifies the JWT token and returns the email
+      operationId: resolveEmailByToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvitationTokenDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailDTO'
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nUSER1001 | User is already registered \t\n EMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n FORM1001 | Form validation failed"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: []
   /v1.0/users/security-setup/2fa/request-change:
     post:
       tags:
@@ -1337,7 +1227,7 @@ paths:
         '204':
           description: No Content
         '400':
-          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n FORM1002 | Attachment not found \t\n REQUEST_TASK_ACTION1000 | Request task action cannot proceed \t\n REQUEST_TASK_ACTION1001 | User is not the assignee of the request task \t\n ACCOUNT1001 | Account name already exists for the user \t\n ACCOUNT1009 | Account status is not valid \t\n PERMIT1001 | Permit is in invalid state \t\n PERMIT1002 | Invalid Permit review \t\n PERMIT1003 | Invalid Permit \t\n PERMIT1004 | Invalid Permit Variation Review \t\n PERMITSURRENDER1001 | Invalid Permit surrender \t\n "
+          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n FORM1002 | Attachment not found \t\n REQUEST_TASK_ACTION1000 | Request task action cannot proceed \t\n REQUEST_TASK_ACTION1001 | User is not the assignee of the request task \t\n ACCOUNT1001 | Account registration number already exists \t\n ACCOUNT1009 | Account status is not valid \t\n PERMIT1001 | Permit is in invalid state \t\n PERMIT1002 | Invalid Permit review \t\n PERMIT1003 | Invalid Permit \t\n PERMIT1004 | Invalid Permit Variation Review \t\n PERMITSURRENDER1001 | Invalid Permit surrender \t\n "
           content:
             application/json:
               schema:
@@ -1356,6 +1246,12 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: "Service unavailable\t\n Error Code | Description \t\nCOMPANYINFO1001 | Companies House API is currently unavailable \t\n COMPANYINFO1002 | Companies House API authorization failed \t\n COMPANYINFO1003 | Companies House API rate limiting reached"
           content:
             application/json:
               schema:
@@ -1420,7 +1316,6 @@ paths:
                   type: string
                   description: The request task source file attachment
                   format: binary
-        required: true
       responses:
         '200':
           description: OK
@@ -1480,7 +1375,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RequestCreateActionProcessResponseDTO'
         '400':
-          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n REQUEST_CREATE_ACTION1000 | Request create action not allowed \t\n "
+          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n REQUEST_CREATE_ACTION1000 | Request create action not allowed \t\n ACCOUNT1001 | Account registration number already exists \t\n "
           content:
             application/json:
               schema:
@@ -1493,6 +1388,12 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: "Service unavailable\t\n Error Code | Description \t\nCOMPANYINFO1001 | Companies House API is currently unavailable \t\n COMPANYINFO1002 | Companies House API authorization failed \t\n COMPANYINFO1003 | Companies House API rate limiting reached"
           content:
             application/json:
               schema:
@@ -1639,7 +1540,6 @@ paths:
                   type: string
                   description: The note file
                   format: binary
-        required: true
       responses:
         '200':
           description: OK
@@ -1831,12 +1731,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/regulator-users/registration/accept-invitation:
+  /v1.0/regulator-users/registration/accept-invitation-and-register:
     post:
       tags:
         - Regulator users registration
-      summary: Accept invitation for regulator user
-      operationId: acceptRegulatorInvitation
+      summary: Accept invitation and register for regulator user
+      operationId: acceptRegulatorInvitationAndRegister
       requestBody:
         content:
           application/json:
@@ -1844,14 +1744,16 @@ paths:
               $ref: '#/components/schemas/TokenDTO'
         required: true
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nEMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n TOKEN1002 | Invalid Token - User is not the invitee \t\n USER1004 | User status is not valid "
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvitedUserInfoDTO'
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nEMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n USER1004 | User status is not valid "
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -1978,23 +1880,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/operator-users/registration/verification-email:
+  /v1.0/organisation/accounts/{id}:
     post:
       tags:
-        - Operator users registration
-      summary: Sends a verification email
-      operationId: sendVerificationEmail
+        - Organisation account update
+      summary: Update the organisation account
+      operationId: updateOrganisationAccount
+      parameters:
+        - name: id
+          in: path
+          description: The account id
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EmailDTO'
+              $ref: '#/components/schemas/OrganisationAccountUpdateDTO'
         required: true
       responses:
         '204':
           description: No Content
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -2005,18 +1921,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-      security: []
-  /v1.0/operator-users/registration/token-verification:
+  /v1.0/organisation/account-onboarding:
     post:
       tags:
-        - Operator users registration
-      summary: Verifies the JWT token provided in the email
-      operationId: verifyUserRegistrationToken
+        - Organisation account onboarding registries
+      summary: Adds list of verified organisation accounts in the onboarding registry
+      operationId: addOrganisationAccountOnboardingRegistries
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenDTO'
+              type: array
+              description: The verified accounts to be added
+              items:
+                $ref: '#/components/schemas/OrganisationAccountOnboardingRegistryDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/organisation/account-onboarding/registration-numbers:
+    post:
+      tags:
+        - Organisation account onboarding registries
+      summary: Retrieves registration numbers that already exist in onboarding registry
+      operationId: getExistingVerifiedRegistrationNumbers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingRegistrationNumbersDTO'
         required: true
       responses:
         '200':
@@ -2024,9 +1975,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmailDTO'
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nUSER1001 | User is already registered \t\n EMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n FORM1001 | Form validation failed"
+                $ref: '#/components/schemas/OnboardingRegistrationNumbersDTO'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -2037,18 +1988,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-      security: []
+  /v1.0/organisation/account-onboarding/emails:
+    post:
+      tags:
+        - Organisation account onboarding registries
+      summary: Retrieves email addresses that already exist in onboarding registry
+      operationId: getExistingVerifiedEmails
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingEmailsDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardingEmailsDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/operator-users/registration/register:
     post:
       tags:
         - Operator users registration
       summary: Register a new operator user
-      operationId: registerUser
+      operationId: registerCurrentOperatorUser
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OperatorUserRegistrationWithCredentialsDTO'
+              $ref: '#/components/schemas/OperatorUserRegistrationDTO'
         required: true
       responses:
         '200':
@@ -2090,7 +2071,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/OperatorInvitedUserInfoDTO'
         '400':
-          description: "Bad Request\t\n Error Code | Description \t\nEMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n USER1002 | User is deleted \t\n NOTFOUND1001 | Resource not found \t\n AUTHORITY1009 | User is not operator \t\n "
+          description: "Bad Request\t\n Error Code | Description \t\nEMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n TOKEN1002 | Invalid Token - User is not the invitee \t\n USER1002 | User is deleted \t\n NOTFOUND1001 | Resource not found \t\n AUTHORITY1009 | User is not operator \t\n "
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: []
+  /v1.0/operator-users/registration/accept-invitation-and-register:
+    post:
+      tags:
+        - Operator users registration
+      summary: Accept invitation and register for operator user
+      operationId: acceptOperatorInvitationAndRegister
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperatorUserInviteAndRegisterDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperatorInvitedUserInfoDTO'
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nEMAIL1001 | The verification link has expired \t\n TOKEN1001 | Invalid Token \t\n TOKEN1002 | Invalid Token - User is not the invitee \t\n USER1002 | User is deleted \t\n NOTFOUND1001 | Resource not found \t\n AUTHORITY1009 | User is not operator \t\n "
           content:
             application/json:
               schema:
@@ -2628,7 +2647,6 @@ paths:
                   type: string
                   description: The note file
                   format: binary
-        required: true
       responses:
         '200':
           description: OK
@@ -3292,12 +3310,60 @@ paths:
                     - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT
                     - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT
                     - NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT
+                    - ACTION_PLAN_P3_APPLICATION_SUBMIT
+                    - ACCOUNT_CLOSURE_SUBMIT
+                    - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT
+                    - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/{accountType}/mireports/noc/phase-3:
+    get:
+      tags:
+        - NOC Reports
+      summary: Retrieves the report for all submitted noc
+      operationId: generateNocP3Report
+      parameters:
+        - name: accountType
+          in: path
+          description: The account type
+          required: true
+          schema:
+            type: string
+            enum:
+              - ORGANISATION
+        - name: page
+          in: query
+          description: The page number starting from zero
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int64
+        - name: size
+          in: query
+          description: The page size
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationOfCompliancesP3MiReportResult'
         '500':
           description: Internal Server Error
           content:
@@ -3804,6 +3870,10 @@ paths:
               - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT
               - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT
               - NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT
+              - ACTION_PLAN_P3_APPLICATION_SUBMIT
+              - ACCOUNT_CLOSURE_SUBMIT
+              - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT
+              - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT
       responses:
         '200':
           description: OK
@@ -3899,6 +3969,46 @@ paths:
                 $ref: '#/components/schemas/RequestDetailsDTO'
         '403':
           description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/requests/available-workflows/reporting/related-actions/{requestId}:
+    get:
+      tags:
+        - Requests
+      summary: Get workflows to start a task
+      operationId: getAvailableRequestWorkflows
+      parameters:
+        - name: requestId
+          in: path
+          description: The request id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -4331,6 +4441,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/organisation/accounts/registration-number:
+    get:
+      tags:
+        - Organisation accounts
+      summary: Checks if exists active account with the provided registration number
+      operationId: isExistingAccountRegistrationNumber
+      parameters:
+        - name: reg_nbr
+          in: query
+          description: The registration number
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/organisation/account/{id}:
     get:
       tags:
@@ -4360,6 +4496,31 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/organisation/account-onboarding/registration-number:
+    get:
+      tags:
+        - Organisation account onboarding registries
+      summary: Retrieve the registration number that corresponds to the given email (if exists)
+      operationId: getCurrentUserVerifiedRegistrationNumber
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardingRegistrationNumberDTO'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -4643,6 +4804,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       security: []
+  /v1.0/company-information/{registrationNumber}:
+    get:
+      tags:
+        - Companies information
+      summary: Retrieves information about the company that corresponds to the provided registration number
+      operationId: getCompanyProfileByRegistrationNumber
+      parameters:
+        - name: registrationNumber
+          in: path
+          description: The registration number
+          required: true
+          schema:
+            maxLength: 8
+            minLength: 8
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyProfileDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: "Service unavailable\t\n Error Code | Description \t\nCOMPANYINFO1001 | Companies House API is currently unavailable \t\n COMPANYINFO1002 | Companies House API authorization failed \t\n COMPANYINFO1003 | Companies House API rate limiting reached"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/authorities/verifier-role-codes:
     get:
       tags:
@@ -5053,7 +5260,7 @@ components:
           type: string
         password:
           type: string
-      description: The operator user credentials
+      description: The verifier user
     ErrorResponse:
       type: object
       properties:
@@ -5061,6 +5268,8 @@ components:
           type: string
         message:
           type: string
+        security:
+          type: boolean
         data:
           type: array
           items:
@@ -5140,153 +5349,6 @@ components:
             type: string
             format: uuid
       description: The note request
-    CountyAddressDTO:
-      required:
-        - city
-        - county
-        - line1
-        - postcode
-      type: object
-      properties:
-        line1:
-          maxLength: 255
-          minLength: 0
-          type: string
-        line2:
-          maxLength: 255
-          minLength: 0
-          type: string
-        city:
-          maxLength: 255
-          minLength: 0
-          type: string
-        county:
-          type: string
-        postcode:
-          maxLength: 64
-          minLength: 0
-          type: string
-    OperatorUserRegistrationWithCredentialsDTO:
-      required:
-        - address
-        - emailToken
-        - firstName
-        - jobTitle
-        - lastName
-        - password
-      type: object
-      properties:
-        emailToken:
-          type: string
-        firstName:
-          maxLength: 255
-          minLength: 0
-          type: string
-        lastName:
-          maxLength: 255
-          minLength: 0
-          type: string
-        jobTitle:
-          maxLength: 255
-          minLength: 0
-          type: string
-        address:
-          $ref: '#/components/schemas/CountyAddressDTO'
-        phoneNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
-        mobileNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
-        termsVersion:
-          maximum: 255
-          type: integer
-          format: int32
-        password:
-          type: string
-      description: The userRegistrationDTO
-    PhoneNumberDTO:
-      type: object
-      properties:
-        countryCode:
-          type: string
-        number:
-          maxLength: 255
-          minLength: 0
-          type: string
-    OperatorUserDTO:
-      required:
-        - address
-        - email
-        - firstName
-        - jobTitle
-        - lastName
-      type: object
-      properties:
-        email:
-          maxLength: 255
-          minLength: 0
-          type: string
-        firstName:
-          maxLength: 255
-          minLength: 0
-          type: string
-        lastName:
-          maxLength: 255
-          minLength: 0
-          type: string
-        termsVersion:
-          maximum: 255
-          type: integer
-          format: int32
-        status:
-          type: string
-          enum:
-            - REGISTERED
-            - PENDING
-            - DELETED
-        address:
-          $ref: '#/components/schemas/CountyAddressDTO'
-        jobTitle:
-          maxLength: 255
-          minLength: 0
-          type: string
-        phoneNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
-        mobileNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
-    OperatorUserRegistrationDTO:
-      required:
-        - address
-        - emailToken
-        - firstName
-        - jobTitle
-        - lastName
-      type: object
-      properties:
-        emailToken:
-          type: string
-        firstName:
-          maxLength: 255
-          minLength: 0
-          type: string
-        lastName:
-          maxLength: 255
-          minLength: 0
-          type: string
-        jobTitle:
-          maxLength: 255
-          minLength: 0
-          type: string
-        address:
-          $ref: '#/components/schemas/CountyAddressDTO'
-        phoneNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
-        mobileNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
-        termsVersion:
-          maximum: 255
-          type: integer
-          format: int32
-      description: The operator user
     NotificationTemplateUpdateDTO:
       required:
         - subject
@@ -5351,7 +5413,11 @@ components:
             - REGULATOR_OUTSTANDING_REQUEST_TASKS
             - LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS
             - LIST_OF_VERIFICATION_BODY_USERS
+            - NOC_SUBMITTED_DATA_P3
             - CUSTOM
+            - ACTION_PLAN_SUBMITTED_DATA_P3
+            - PROGRESS_UPDATE_1_SUBMITTED_DATA_P3
+            - PROGRESS_UPDATE_2_SUBMITTED_DATA_P3
       discriminator:
         propertyName: reportType
     OutstandingRegulatorRequestTasksMiReportParams:
@@ -5370,6 +5436,10 @@ components:
                   - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT
                   - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT
                   - NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT
+                  - ACTION_PLAN_P3_APPLICATION_SUBMIT
+                  - ACCOUNT_CLOSURE_SUBMIT
+                  - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT
+                  - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT
             userIds:
               uniqueItems: true
               type: array
@@ -5410,7 +5480,7 @@ components:
       properties:
         userId:
           type: string
-        Account type:
+        Account registration number:
           type: string
         Account ID:
           type: string
@@ -5418,17 +5488,9 @@ components:
           type: string
         Account status:
           type: string
-        Permit ID:
-          type: string
-        Permit type/Account category:
-          type: string
         Is User Primary contact?:
           type: boolean
         Is User Secondary contact?:
-          type: boolean
-        Is User Financial contact?:
-          type: boolean
-        Is User Service contact?:
           type: boolean
         User status:
           type: string
@@ -5441,6 +5503,8 @@ components:
         Email:
           type: string
         User role:
+          type: string
+        Location of registered office:
           type: string
     AccountsUsersContactsMiReportResult:
       required:
@@ -5490,6 +5554,10 @@ components:
           enum:
             - ORGANISATION_ACCOUNT_OPENING
             - NOTIFICATION_OF_COMPLIANCE_P3
+            - ACTION_PLAN_P3
+            - ACCOUNT_CLOSURE
+            - PROGRESS_UPDATE_1_P3
+            - PROGRESS_UPDATE_2_P3
         Workflow status:
           type: string
           enum:
@@ -5501,15 +5569,18 @@ components:
             - REJECTED
             - CLOSED
             - EXEMPT
+            - TERMINATED
         Timeline event type:
           type: string
           enum:
             - ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED
             - ORGANISATION_ACCOUNT_OPENING_APPROVED
             - ORGANISATION_ACCOUNT_OPENING_REJECTED
+            - ORGANISATION_ACCOUNT_OPENING_CREATED
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SENT_TO_EDIT
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMITTED
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RETURNED_TO_SUBMIT
+            - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RE_INITIATED
             - RFI_SUBMITTED
             - RFI_CANCELLED
             - RFI_EXPIRED
@@ -5527,6 +5598,17 @@ components:
             - PAYMENT_CANCELLED
             - REQUEST_TERMINATED
             - VERIFICATION_STATEMENT_CANCELLED
+            - ACTION_PLAN_P3_APPLICATION_SUBMITTED
+            - ACTION_PLAN_P3_APPLICATION_RE_INITIATED
+            - ACTION_PLAN_APPLICATION_CANCELLED
+            - ACCOUNT_CLOSURE_APPLICATION_SUBMITTED
+            - ACCOUNT_CLOSURE_APPLICATION_CANCELLED
+            - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED
+            - PROGRESS_UPDATE_1_APPLICATION_CANCELLED
+            - PROGRESS_UPDATE_1_P3_APPLICATION_RE_INITIATED
+            - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED
+            - PROGRESS_UPDATE_2_APPLICATION_CANCELLED
+            - PROGRESS_UPDATE_2_P3_APPLICATION_RE_INITIATED
         Timeline event Completed by:
           type: string
         Timeline event Date Completed:
@@ -5559,7 +5641,11 @@ components:
             - REGULATOR_OUTSTANDING_REQUEST_TASKS
             - LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS
             - LIST_OF_VERIFICATION_BODY_USERS
+            - NOC_SUBMITTED_DATA_P3
             - CUSTOM
+            - ACTION_PLAN_SUBMITTED_DATA_P3
+            - PROGRESS_UPDATE_1_SUBMITTED_DATA_P3
+            - PROGRESS_UPDATE_2_SUBMITTED_DATA_P3
         columnNames:
           type: array
           items:
@@ -5594,6 +5680,10 @@ components:
           enum:
             - ORGANISATION_ACCOUNT_OPENING
             - NOTIFICATION_OF_COMPLIANCE_P3
+            - ACTION_PLAN_P3
+            - ACCOUNT_CLOSURE
+            - PROGRESS_UPDATE_1_P3
+            - PROGRESS_UPDATE_2_P3
         Workflow task name:
           type: string
           enum:
@@ -5601,6 +5691,10 @@ components:
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT
             - NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT
+            - ACTION_PLAN_P3_APPLICATION_SUBMIT
+            - ACCOUNT_CLOSURE_SUBMIT
+            - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT
+            - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT
         Workflow task assignee:
           type: string
         Workflow task due date:
@@ -5760,6 +5854,33 @@ components:
             - ACTIVE
             - PENDING
             - DISABLED
+    InvitationTokenDTO:
+      required:
+        - token
+        - type
+      type: object
+      properties:
+        token:
+          type: string
+        type:
+          type: string
+          enum:
+            - USER_REGISTRATION
+            - OPERATOR_INVITATION
+            - REGULATOR_INVITATION
+            - VERIFIER_INVITATION
+            - CHANGE_2FA
+            - GET_FILE
+            - RESET_PASSWORD
+      description: The verification token
+    EmailDTO:
+      type: object
+      properties:
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+      description: The user email
     OneTimePasswordDTO:
       required:
         - password
@@ -5768,13 +5889,6 @@ components:
         password:
           type: string
       description: The one time authenticator code
-    EmailDTO:
-      type: object
-      properties:
-        email:
-          maxLength: 255
-          minLength: 0
-          type: string
     ResetPasswordDTO:
       required:
         - otp
@@ -5883,6 +5997,23 @@ components:
           minLength: 0
           type: string
       description: The user feedback
+    AccountClosure:
+      required:
+        - reason
+      type: object
+      properties:
+        reason:
+          maxLength: 10000
+          minLength: 0
+          type: string
+    AccountClosureSaveApplicationRequestTaskActionPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestTaskActionPayload'
+        - type: object
+          properties:
+            accountClosure:
+              $ref: '#/components/schemas/AccountClosure'
     AccountOpeningDecisionPayload:
       required:
         - decision
@@ -5898,16 +6029,59 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+    ActionPlanEnergyEfficiencyMeasure:
+      required:
+        - haveEnergyEfficiencyMeasures
+      type: object
+      properties:
+        haveEnergyEfficiencyMeasures:
+          type: boolean
+        noMeasureContext:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        energyEfficiencyMeasures:
+          maxItems: 100
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/EnergyEfficiencyMeasure'
+    ActionPlanP3:
+      required:
+        - energyEfficiencyMeasure
+      type: object
+      properties:
+        energyEfficiencyMeasure:
+          $ref: '#/components/schemas/ActionPlanEnergyEfficiencyMeasure'
+        responsibleOfficerConfirmation:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - ESOS_ASSESSMENT_NOTIFICATION
+              - ESTIMATION_METHOD_DESCRIPTION
+    ActionPlanP3SaveApplicationRequestTaskActionPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestTaskActionPayload'
+        - type: object
+          properties:
+            actionPlanP3:
+              $ref: '#/components/schemas/ActionPlanP3'
+            actionPlanSectionsCompleted:
+              type: object
+              additionalProperties:
+                type: string
     AlternativeComplianceRoutes:
       type: object
       properties:
         totalEnergyConsumptionReduction:
-          type: integer
-          format: int32
+          $ref: '#/components/schemas/TotalEnergyConsumptionReduction'
         energyConsumptionReduction:
-          $ref: '#/components/schemas/EnergyConsumption'
+          $ref: '#/components/schemas/EnergyConsumptionPotentialReduction'
         energyConsumptionReductionCategories:
-          $ref: '#/components/schemas/EnergySavingsCategories'
+          $ref: '#/components/schemas/EnergySavingsCategoriesPotentialReduction'
         assets:
           $ref: '#/components/schemas/Assets'
         iso50001CertificateDetails:
@@ -5917,8 +6091,6 @@ components:
         gdaCertificatesDetails:
           $ref: '#/components/schemas/CertificatesDetails'
     AssessmentPersonnel:
-      required:
-        - personnel
       type: object
       properties:
         personnel:
@@ -5941,10 +6113,6 @@ components:
           minLength: 0
           type: string
     CertificateDetails:
-      required:
-        - certificateNumber
-        - validFrom
-        - validUntil
       type: object
       properties:
         certificateNumber:
@@ -5966,22 +6134,68 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CertificateDetails'
+    ClassificationCodes:
+      required:
+        - codes
+        - type
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - SIC
+            - OTHER
+        otherTypeName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        codes:
+          maxItems: 4
+          minItems: 1
+          type: array
+          items:
+            maxLength: 255
+            minLength: 0
+            type: string
+    ClassificationCodesDetails:
+      required:
+        - areSameAsRU
+      type: object
+      properties:
+        areSameAsRU:
+          type: boolean
+        codes:
+          $ref: '#/components/schemas/ClassificationCodes'
     ComplianceRoute:
       required:
-        - areDataEstimated
+        - areEstimationMethodsRecorded
+        - estimatedCalculationTypes
         - partsProhibitedFromDisclosingExist
       type: object
       properties:
-        areDataEstimated:
+        estimatedCalculationTypes:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION
+              - CONVERSION_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION
+              - AMOUNT_OF_TOTAL_OR_SIGNIFICANT_ENERGY_CONSUMPTION
+              - ENERGY_CONSUMPTION_OVER_TWELVE_MONTHS
+              - NONE_OF_THE_ABOVE
+        areTwelveMonthsVerifiableDataUsed:
           type: boolean
-        areEstimationMethodsRecordedInEvidencePack:
-          type: boolean
-        twelveMonthsVerifiableDataUsed:
+        twelveMonthsVerifiableDataUsedReason:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        areEstimationMethodsRecorded:
           type: string
           enum:
             - 'YES'
             - 'NO'
-            - NOT_APPLICABLE
+            - SKIP_QUESTION
         energyConsumptionProfilingUsed:
           type: string
           enum:
@@ -5989,7 +6203,17 @@ components:
             - 'NO'
             - NOT_APPLICABLE
         areEnergyConsumptionProfilingMethodsRecorded:
-          type: boolean
+          type: string
+          enum:
+            - 'YES'
+            - 'NO'
+            - SKIP_QUESTION
+        isEnergyConsumptionProfilingNotUsedRecorded:
+          type: string
+          enum:
+            - 'YES'
+            - 'NO'
+            - SKIP_QUESTION
         energyAudits:
           type: array
           items:
@@ -6055,7 +6279,6 @@ components:
           items:
             type: string
             enum:
-              - REVIEWED_THE_RECOMMENDATIONS
               - SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME
               - SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME
               - SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON
@@ -6068,6 +6291,7 @@ components:
             enum:
               - SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME
               - SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME
+              - SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON
               - SATISFIED_WITH_INFORMATION_PROVIDED
         responsibleOfficerDetails:
           $ref: '#/components/schemas/ContactPerson'
@@ -6080,7 +6304,6 @@ components:
           items:
             type: string
             enum:
-              - REVIEWED_THE_RECOMMENDATIONS
               - SATISFIED_WITH_ORGANISATION_WITHIN_SCOPE_OF_THE_SCHEME
               - SATISFIED_WITH_ORGANISATION_COMPLIANT_WITH_SCOPE_OF_THE_SCHEME
               - SATISFIED_WITH_INFORMATION_PROVIDED_UNLESS_THERE_IS_A_DECLARED_REASON
@@ -6090,10 +6313,8 @@ components:
     ContactPerson:
       required:
         - city
-        - county
         - email
         - firstName
-        - jobTitle
         - lastName
         - line1
         - postcode
@@ -6132,6 +6353,8 @@ components:
           minLength: 0
           type: string
         county:
+          maxLength: 255
+          minLength: 0
           type: string
         postcode:
           maxLength: 64
@@ -6149,10 +6372,36 @@ components:
           type: boolean
         secondaryContact:
           $ref: '#/components/schemas/ContactPerson'
+    CountyAddressDTO:
+      required:
+        - city
+        - line1
+        - postcode
+      type: object
+      properties:
+        line1:
+          maxLength: 255
+          minLength: 0
+          type: string
+        line2:
+          maxLength: 255
+          minLength: 0
+          type: string
+        city:
+          maxLength: 255
+          minLength: 0
+          type: string
+        county:
+          maxLength: 255
+          minLength: 0
+          type: string
+        postcode:
+          maxLength: 64
+          minLength: 0
+          type: string
     EnergyAudit:
       required:
         - description
-        - numberOfSitesCovered
         - numberOfSitesVisited
         - reason
       type: object
@@ -6172,33 +6421,27 @@ components:
           minLength: 0
           type: string
     EnergyConsumption:
-      required:
-        - buildings
-        - industrialProcesses
-        - otherProcesses
-        - total
-        - transport
       type: object
       properties:
         buildings:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         transport:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         industrialProcesses:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         otherProcesses:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         total:
           type: integer
-          format: int32
+          format: int64
     EnergyConsumptionDetails:
       required:
         - additionalInformationExists
@@ -6221,6 +6464,73 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
+    EnergyConsumptionPotentialReduction:
+      type: object
+      properties:
+        buildings:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        transport:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        industrialProcesses:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        otherProcesses:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        energyConsumptionTotal:
+          type: integer
+          format: int64
+        energyCostTotal:
+          type: string
+          format: decimal
+    EnergyEfficiencyMeasure:
+      required:
+        - energySavingsEstimateCalculatedType
+        - implementationDateForMeasure
+        - isEnergySavingsOpportunityReportedInAudit
+        - measureName
+      type: object
+      properties:
+        measureName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        isEnergySavingsOpportunityReportedInAudit:
+          type: boolean
+        measureScheme:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - CLIMATE_CHANGE_AGREEMENTS_CCA
+              - STREAMLINED_ENERGY_AND_CARBON_REPORTING_SECR
+              - UK_EMISSIONS_TRADING_SCHEME_ETS
+              - UN_RACE_TO_ZERO
+              - SCIENCE_BASED_TARGETS_INITIATIVE_SBTI
+              - CARBON_REDUCTION_PLANS
+              - OTHER
+        otherMeasureSchemeName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        totalEnergySavingsExpected:
+          $ref: '#/components/schemas/TotalEnergySavingsExpected'
+        implementationDateForMeasure:
+          type: string
+          format: date
+        energySavingsEstimateCalculatedType:
+          type: string
+          enum:
+            - ENERGY_AUDIT
+            - ALTERNATIVE_COMPLIANCE_METHOD
+            - OTHER_REASONABLE_ESTIMATION_METHOD
+        estimationMethodDescription:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        measureContext:
+          maxLength: 10000
+          minLength: 0
+          type: string
     EnergyIntensityRatio:
       required:
         - ratio
@@ -6236,17 +6546,13 @@ components:
           type: string
     EnergyIntensityRatioDetails:
       required:
-        - ratio
-        - unit
+        - energyIntensityRatios
       type: object
       properties:
-        ratio:
-          type: string
-          format: decimal
-        unit:
-          maxLength: 255
-          minLength: 0
-          type: string
+        energyIntensityRatios:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnergyIntensityRatio'
         additionalInformation:
           maxLength: 10000
           minLength: 0
@@ -6259,15 +6565,23 @@ components:
         energySavingsEstimation:
           $ref: '#/components/schemas/EnergyConsumption'
         energySavingCategoriesExist:
-          type: boolean
+          type: string
+          enum:
+            - 'YES'
+            - 'NO'
+            - SKIP_QUESTION
         energySavingsCategories:
           $ref: '#/components/schemas/EnergySavingsCategories'
         totalEnergySavingsEstimation:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         energySavingsRecommendationsExist:
-          type: boolean
+          type: string
+          enum:
+            - 'YES'
+            - 'NO'
+            - SKIP_QUESTION
         energySavingsRecommendations:
           $ref: '#/components/schemas/EnergySavingsRecommendations'
         details:
@@ -6275,64 +6589,66 @@ components:
           minLength: 0
           type: string
     EnergySavingsCategories:
-      required:
-        - behaviourChangeInterventions
-        - controlsImprovements
-        - energyManagementPractices
-        - longTermCapitalInvestments
-        - otherMeasures
-        - shortTermCapitalInvestments
-        - total
-        - training
       type: object
       properties:
         energyManagementPractices:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         behaviourChangeInterventions:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         training:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         controlsImprovements:
           minimum: 0
           type: integer
-          format: int32
-        shortTermCapitalInvestments:
+          format: int64
+        capitalInvestments:
           minimum: 0
           type: integer
-          format: int32
-        longTermCapitalInvestments:
-          minimum: 0
-          type: integer
-          format: int32
+          format: int64
         otherMeasures:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         total:
           type: integer
-          format: int32
-    EnergySavingsOpportunities:
-      required:
-        - energyConsumption
-        - energySavingsCategories
+          format: int64
+    EnergySavingsCategoriesPotentialReduction:
       type: object
       properties:
+        energyManagementPractices:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        behaviourChangeInterventions:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        training:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        controlsImprovements:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        capitalInvestments:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        otherMeasures:
+          $ref: '#/components/schemas/PotentialReductionPair'
+        energyConsumptionTotal:
+          type: integer
+          format: int64
+        energyCostTotal:
+          type: string
+          format: decimal
+    EnergySavingsOpportunities:
+      type: object
+      properties:
+        implementationEnergyConsumption:
+          $ref: '#/components/schemas/PotentialReductionPair'
         energyConsumption:
-          $ref: '#/components/schemas/EnergyConsumption'
+          $ref: '#/components/schemas/EnergyConsumptionPotentialReduction'
         energySavingsCategories:
-          $ref: '#/components/schemas/EnergySavingsCategories'
+          $ref: '#/components/schemas/EnergySavingsCategoriesPotentialReduction'
     EnergySavingsRecommendations:
-      required:
-        - alternativeComplianceRoutes
-        - energyAudits
-        - other
-        - total
       type: object
       properties:
         energyAudits:
@@ -6351,8 +6667,7 @@ components:
           type: integer
           format: int32
         total:
-          maximum: 100
-          minimum: 100
+          minimum: 0
           type: integer
           format: int32
     FirstCompliancePeriod:
@@ -6361,30 +6676,41 @@ components:
       type: object
       properties:
         informationExists:
-          type: boolean
+          type: string
+          enum:
+            - 'YES'
+            - 'NO'
+            - SKIP_QUESTION
         firstCompliancePeriodDetails:
           $ref: '#/components/schemas/FirstCompliancePeriodDetails'
     FirstCompliancePeriodDetails:
-      required:
-        - organisationalEnergyConsumption
-        - potentialReductionExists
-        - significantEnergyConsumptionExists
       type: object
       properties:
         organisationalEnergyConsumption:
+          minimum: 0
+          type: integer
+          format: int64
+        organisationalEnergyConsumptionBreakdown:
           $ref: '#/components/schemas/EnergyConsumption'
-        significantEnergyConsumptionExists:
-          type: boolean
         significantEnergyConsumption:
           $ref: '#/components/schemas/SignificantEnergyConsumption'
         explanation:
           maxLength: 10000
           minLength: 0
           type: string
-        potentialReductionExists:
-          type: boolean
         potentialReduction:
           $ref: '#/components/schemas/EnergyConsumption'
+    GroupChange:
+      type: object
+      properties:
+        otherResponsibleUndertakingName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        otherResponsibleUndertakingCrn:
+          maxLength: 255
+          minLength: 0
+          type: string
     LeadAssessor:
       required:
         - hasLeadAssessorConfirmation
@@ -6486,32 +6812,20 @@ components:
     OrganisationAccountOpeningAmendApplicationRequestTaskActionPayload:
       required:
         - city
-        - competentAuthority
-        - county
+        - codes
         - line1
         - name
         - postcode
+        - type
       type: object
       allOf:
         - $ref: '#/components/schemas/RequestTaskActionPayload'
         - type: object
           properties:
-            registrationNumber:
-              maxLength: 255
-              minLength: 0
-              type: string
             name:
               maxLength: 255
               minLength: 0
               type: string
-            competentAuthority:
-              type: string
-              enum:
-                - ENGLAND
-                - NORTHERN_IRELAND
-                - OPRED
-                - SCOTLAND
-                - WALES
             line1:
               maxLength: 255
               minLength: 0
@@ -6525,11 +6839,30 @@ components:
               minLength: 0
               type: string
             county:
+              maxLength: 255
+              minLength: 0
               type: string
             postcode:
               maxLength: 64
               minLength: 0
               type: string
+            type:
+              type: string
+              enum:
+                - SIC
+                - OTHER
+            otherTypeName:
+              maxLength: 255
+              minLength: 0
+              type: string
+            codes:
+              maxItems: 4
+              minItems: 1
+              type: array
+              items:
+                maxLength: 255
+                minLength: 0
+                type: string
     OrganisationAccountOpeningSubmitDecisionRequestTaskActionPayload:
       required:
         - decision
@@ -6548,76 +6881,27 @@ components:
               maxLength: 255
               minLength: 0
               type: string
-    OrganisationAccountPayload:
-      required:
-        - city
-        - competentAuthority
-        - county
-        - line1
-        - name
-        - postcode
-      type: object
-      properties:
-        registrationNumber:
-          maxLength: 255
-          minLength: 0
-          type: string
-        name:
-          maxLength: 255
-          minLength: 0
-          type: string
-        competentAuthority:
-          type: string
-          enum:
-            - ENGLAND
-            - NORTHERN_IRELAND
-            - OPRED
-            - SCOTLAND
-            - WALES
-        line1:
-          maxLength: 255
-          minLength: 0
-          type: string
-        line2:
-          maxLength: 255
-          minLength: 0
-          type: string
-        city:
-          maxLength: 255
-          minLength: 0
-          type: string
-        county:
-          type: string
-        postcode:
-          maxLength: 64
-          minLength: 0
-          type: string
     OrganisationAssociatedWithRU:
       required:
+        - classificationCodesDetails
         - hasCeasedToBePartOfGroup
-        - isCoveredByThisNotification
         - isParentOfResponsibleUndertaking
         - isPartOfArrangement
         - isPartOfFranchise
         - isSubsidiaryOfResponsibleUndertaking
-        - isTrust
         - organisationName
+        - registrationNumberExist
       type: object
       properties:
+        registrationNumberExist:
+          type: boolean
         registrationNumber:
-          maxLength: 255
-          minLength: 0
+          pattern: ^(?:\d{8}|[A-Z]\d{7}|[A-Z]{2}\d{5}[A-Z0-9])$
           type: string
         organisationName:
           maxLength: 255
           minLength: 0
           type: string
-        taxReferenceNumber:
-          maxLength: 255
-          minLength: 0
-          type: string
-        isCoveredByThisNotification:
-          type: boolean
         isPartOfArrangement:
           type: boolean
         isParentOfResponsibleUndertaking:
@@ -6626,10 +6910,10 @@ components:
           type: boolean
         isPartOfFranchise:
           type: boolean
-        isTrust:
-          type: boolean
         hasCeasedToBePartOfGroup:
           type: boolean
+        classificationCodesDetails:
+          $ref: '#/components/schemas/ClassificationCodesDetails'
     OrganisationContactDetails:
       required:
         - email
@@ -6644,67 +6928,51 @@ components:
           $ref: '#/components/schemas/PhoneNumberDTO'
     OrganisationStructure:
       required:
-        - hasCeasedToBePartOfGroup
-        - isPartOfArrangement
-        - isPartOfFranchise
-        - isTrust
+        - isGroupStructureChartProvided
+        - isHighestParent
+        - isNonComplyingUndertakingsIncluded
       type: object
       properties:
-        isPartOfArrangement:
+        isHighestParent:
           type: boolean
-        isPartOfFranchise:
+        isNonComplyingUndertakingsIncluded:
           type: boolean
-        isTrust:
-          type: boolean
-        hasCeasedToBePartOfGroup:
-          type: boolean
+        organisationUndertakingDetails:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganisationUndertakingDetails'
         organisationsAssociatedWithRU:
           uniqueItems: true
           type: array
           items:
             $ref: '#/components/schemas/OrganisationAssociatedWithRU'
+        isGroupStructureChartProvided:
+          type: boolean
+    OrganisationUndertakingDetails:
+      required:
+        - organisationName
+      type: object
+      properties:
+        organisationName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        registrationNumber:
+          maxLength: 255
+          minLength: 0
+          type: string
     OrganisationalEnergyIntensityRatioData:
-      required:
-        - buildingsIntensityRatio
-        - freightsIntensityRatio
-        - industrialProcessesIntensityRatio
-        - passengersIntensityRatio
       type: object
       properties:
-        buildingsIntensityRatio:
+        buildings:
           $ref: '#/components/schemas/EnergyIntensityRatioDetails'
-        freightsIntensityRatio:
-          $ref: '#/components/schemas/EnergyIntensityRatio'
-        passengersIntensityRatio:
+        transport:
           $ref: '#/components/schemas/EnergyIntensityRatioDetails'
-        industrialProcessesIntensityRatio:
+        industrialProcesses:
           $ref: '#/components/schemas/EnergyIntensityRatioDetails'
-        otherProcessesIntensityRatios:
-          type: array
-          items:
-            $ref: '#/components/schemas/OtherProcessEnergyIntensityRatioDetails'
-    OtherProcessEnergyIntensityRatioDetails:
-      required:
-        - name
-        - ratio
-        - unit
-      type: object
-      properties:
-        ratio:
-          type: string
-          format: decimal
-        unit:
-          maxLength: 255
-          minLength: 0
-          type: string
-        additionalInformation:
-          maxLength: 10000
-          minLength: 0
-          type: string
-        name:
-          maxLength: 255
-          minLength: 0
-          type: string
+        otherProcesses:
+          $ref: '#/components/schemas/EnergyIntensityRatioDetails'
     OverseasParentDetails:
       required:
         - name
@@ -6759,6 +7027,281 @@ components:
           enum:
             - INTERNAL
             - EXTERNAL
+    PhoneNumberDTO:
+      type: object
+      properties:
+        countryCode:
+          type: string
+        number:
+          maxLength: 255
+          minLength: 0
+          type: string
+    PotentialReductionPair:
+      type: object
+      properties:
+        energyConsumption:
+          type: integer
+          format: int64
+        energyCost:
+          type: string
+          format: decimal
+    ProgressUpdate1P3AddedMeasure:
+      required:
+        - estimationMethodType
+        - measureName
+        - reductionEnergyConsumption2024To2025
+      type: object
+      properties:
+        measureName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        measureScheme:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - CLIMATE_CHANGE_AGREEMENTS_CCA
+              - STREAMLINED_ENERGY_AND_CARBON_REPORTING_SECR
+              - UK_EMISSIONS_TRADING_SCHEME_ETS
+              - UN_RACE_TO_ZERO
+              - SCIENCE_BASED_TARGETS_INITIATIVE_SBTI
+              - CARBON_REDUCTION_PLANS
+              - OTHER
+        otherMeasureSchemeName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        reductionEnergyConsumption2024To2025:
+          type: integer
+          format: int64
+        reductionEnergyConsumption2023To2024:
+          type: integer
+          format: int64
+        estimationMethodType:
+          type: string
+          enum:
+            - ENERGY_AUDIT
+            - OTHER_METHOD
+            - NO_METHOD_USED
+        estimationMethodDescription:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        measureContext:
+          maxLength: 10000
+          minLength: 0
+          type: string
+    ProgressUpdate1P3EnergyEfficiencyMeasure:
+      type: object
+      properties:
+        measureIsImplemented:
+          type: boolean
+        measureImplementedByTheDateInActionPlan:
+          type: boolean
+        reductionEnergyConsumption2024To2025:
+          type: integer
+          format: int64
+        reductionEnergyConsumption2023To2024:
+          type: integer
+          format: int64
+        estimationMethodType:
+          type: string
+          enum:
+            - ENERGY_AUDIT
+            - ACTION_PLAN_ESTIMATE
+            - OTHER_METHOD
+            - NO_METHOD_USED
+        estimationMethodDescription:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        providedContext:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        reportReduction2024To2025:
+          type: boolean
+        reportReduction2023To2024:
+          type: boolean
+    ProgressUpdate1P3MeasuresUpdatePayload:
+      type: object
+      properties:
+        progressUpdate1P3Measures:
+          maxItems: 100
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressUpdate1P3UpdatedMeasurePayload'
+        progressUpdate1P3AddedMeasure:
+          maxItems: 50
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressUpdate1P3AddedMeasure'
+    ProgressUpdate1P3Payload:
+      type: object
+      properties:
+        groupChange:
+          $ref: '#/components/schemas/GroupChange'
+        progressUpdate1P3MeasuresUpdate:
+          $ref: '#/components/schemas/ProgressUpdate1P3MeasuresUpdatePayload'
+        responsibleOfficerConfirmation:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - ESOS_ACTION_PLAN_COMPLIANCE
+              - ESTIMATION_METHOD_DOCUMENTED
+    ProgressUpdate1P3SaveApplicationRequestTaskActionPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestTaskActionPayload'
+        - type: object
+          properties:
+            progressUpdate1P3:
+              $ref: '#/components/schemas/ProgressUpdate1P3Payload'
+            progressUpdate1P3SectionsCompleted:
+              type: object
+              additionalProperties:
+                type: string
+    ProgressUpdate1P3UpdatedMeasurePayload:
+      required:
+        - progressUpdate1P3EnergyEfficiencyMeasure
+        - uuId
+      type: object
+      properties:
+        uuId:
+          type: string
+          format: uuid
+        progressUpdate1P3EnergyEfficiencyMeasure:
+          $ref: '#/components/schemas/ProgressUpdate1P3EnergyEfficiencyMeasure'
+    ProgressUpdate2P3AddedMeasure:
+      required:
+        - estimationMethodType
+        - measureName
+        - reductionEnergyConsumption2025To2026
+      type: object
+      properties:
+        measureName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        measureScheme:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - CLIMATE_CHANGE_AGREEMENTS_CCA
+              - STREAMLINED_ENERGY_AND_CARBON_REPORTING_SECR
+              - UK_EMISSIONS_TRADING_SCHEME_ETS
+              - UN_RACE_TO_ZERO
+              - SCIENCE_BASED_TARGETS_INITIATIVE_SBTI
+              - CARBON_REDUCTION_PLANS
+              - OTHER
+        otherMeasureSchemeName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        reductionEnergyConsumption2025To2026:
+          type: integer
+          format: int64
+        estimationMethodType:
+          type: string
+          enum:
+            - ENERGY_AUDIT
+            - OTHER_METHOD
+            - NO_METHOD_USED
+        estimationMethodDescription:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        measureContext:
+          maxLength: 10000
+          minLength: 0
+          type: string
+    ProgressUpdate2P3EnergyEfficiencyMeasure:
+      type: object
+      properties:
+        measureIsImplemented:
+          type: boolean
+        measureImplementedByTheDateInActionPlan:
+          type: boolean
+        reportReduction2025To2026:
+          type: boolean
+        reductionEnergyConsumption2025To2026:
+          type: integer
+          format: int64
+        estimationMethodType:
+          type: string
+          enum:
+            - ENERGY_AUDIT
+            - ACTION_PLAN_ESTIMATE
+            - OTHER_METHOD
+            - NO_METHOD_USED
+        estimationMethodDescription:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        providedContext:
+          maxLength: 10000
+          minLength: 0
+          type: string
+    ProgressUpdate2P3MeasuresUpdatePayload:
+      type: object
+      properties:
+        progressUpdate2P3Measures:
+          maxItems: 100
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressUpdate2P3UpdatedMeasurePayload'
+        progressUpdate2P3AddedMeasure:
+          maxItems: 50
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressUpdate2P3AddedMeasure'
+    ProgressUpdate2P3Payload:
+      type: object
+      properties:
+        groupChange:
+          $ref: '#/components/schemas/GroupChange'
+        progressUpdate2P3MeasuresUpdate:
+          $ref: '#/components/schemas/ProgressUpdate2P3MeasuresUpdatePayload'
+        responsibleOfficerConfirmation:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - ESOS_ACTION_PLAN_COMPLIANCE
+              - ESTIMATION_METHOD_DOCUMENTED
+    ProgressUpdate2P3SaveApplicationRequestTaskActionPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestTaskActionPayload'
+        - type: object
+          properties:
+            progressUpdate2P3:
+              $ref: '#/components/schemas/ProgressUpdate2P3Payload'
+            progressUpdate2P3SectionsCompleted:
+              type: object
+              additionalProperties:
+                type: string
+    ProgressUpdate2P3UpdatedMeasurePayload:
+      required:
+        - uuId
+      type: object
+      properties:
+        uuId:
+          type: string
+          format: uuid
+        progressUpdate2P3EnergyEfficiencyMeasure:
+          $ref: '#/components/schemas/ProgressUpdate2P3EnergyEfficiencyMeasure'
     RdeDecisionPayload:
       required:
         - decision
@@ -6863,17 +7406,16 @@ components:
     ReportingObligationDetails:
       required:
         - energyResponsibilityType
-        - qualificationReasonTypes
+        - qualificationReasonType
       type: object
       properties:
-        qualificationReasonTypes:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-            enum:
-              - TURNOVER_MORE_THAN_44M
-              - STAFF_MEMBERS_MORE_THAN_250
+        qualificationReasonType:
+          type: string
+          enum:
+            - TURNOVER_MORE_THAN_44M
+            - STAFF_MEMBERS_MORE_THAN_250
+            - TURNOVER_MORE_THAN_44M_AND_STAFF_MEMBERS_MORE_THAN_250
+            - CONDITIONS_NOT_MET
         energyResponsibilityType:
           type: string
           enum:
@@ -6904,6 +7446,10 @@ components:
             - RDE_FORCE_DECISION_PAYLOAD
             - PAYMENT_MARK_AS_RECEIVED_PAYLOAD
             - PAYMENT_CANCEL_PAYLOAD
+            - ACTION_PLAN_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD
+            - ACCOUNT_CLOSURE_SAVE_APPLICATION_SUBMIT_PAYLOAD
+            - PROGRESS_UPDATE_1_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD
+            - PROGRESS_UPDATE_2_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD
             - EMPTY_PAYLOAD
       discriminator:
         propertyName: payloadType
@@ -6937,13 +7483,29 @@ components:
             - PAYMENT_MARK_AS_RECEIVED
             - PAYMENT_PAY_BY_CARD
             - PAYMENT_CANCEL
+            - ACTION_PLAN_P3_SUBMIT_APPLICATION
+            - ACTION_PLAN_P3_SAVE_APPLICATION_SUBMIT
+            - ACTION_PLAN_CANCEL_APPLICATION
+            - ACCOUNT_CLOSURE_SUBMIT_APPLICATION
+            - ACCOUNT_CLOSURE_SAVE_APPLICATION_SUBMIT
+            - ACCOUNT_CLOSURE_CANCEL_APPLICATION
+            - PROGRESS_UPDATE_1_P3_SUBMIT_APPLICATION
+            - PROGRESS_UPDATE_1_P3_SAVE_APPLICATION_SUBMIT
+            - PROGRESS_UPDATE_1_CANCEL_APPLICATION
+            - PROGRESS_UPDATE_2_P3_SUBMIT_APPLICATION
+            - PROGRESS_UPDATE_2_P3_SAVE_APPLICATION_SUBMIT
+            - PROGRESS_UPDATE_2_CANCEL_APPLICATION
         requestTaskActionPayload:
           oneOf:
+            - $ref: '#/components/schemas/AccountClosureSaveApplicationRequestTaskActionPayload'
+            - $ref: '#/components/schemas/ActionPlanP3SaveApplicationRequestTaskActionPayload'
             - $ref: '#/components/schemas/NotificationOfComplianceP3SaveApplicationRequestTaskActionPayload'
             - $ref: '#/components/schemas/OrganisationAccountOpeningAmendApplicationRequestTaskActionPayload'
             - $ref: '#/components/schemas/OrganisationAccountOpeningSubmitDecisionRequestTaskActionPayload'
             - $ref: '#/components/schemas/PaymentCancelRequestTaskActionPayload'
             - $ref: '#/components/schemas/PaymentMarkAsReceivedRequestTaskActionPayload'
+            - $ref: '#/components/schemas/ProgressUpdate1P3SaveApplicationRequestTaskActionPayload'
+            - $ref: '#/components/schemas/ProgressUpdate2P3SaveApplicationRequestTaskActionPayload'
             - $ref: '#/components/schemas/RdeForceDecisionRequestTaskActionPayload'
             - $ref: '#/components/schemas/RdeResponseSubmitRequestTaskActionPayload'
             - $ref: '#/components/schemas/RdeSubmitRequestTaskActionPayload'
@@ -6958,6 +7520,7 @@ components:
     ResponsibleUndertaking:
       required:
         - hasOverseasParentDetails
+        - isBehalfOfTrust
         - organisationContactDetails
         - organisationDetails
         - tradingDetails
@@ -6969,6 +7532,12 @@ components:
           $ref: '#/components/schemas/TradingDetails'
         organisationContactDetails:
           $ref: '#/components/schemas/OrganisationContactDetails'
+        isBehalfOfTrust:
+          type: boolean
+        trustName:
+          maxLength: 255
+          minLength: 0
+          type: string
         hasOverseasParentDetails:
           type: boolean
         overseasParentDetails:
@@ -6976,16 +7545,20 @@ components:
     ReviewOrganisationDetails:
       required:
         - city
-        - county
+        - codes
         - line1
         - name
         - postcode
+        - registrationNumberExist
+        - type
       type: object
       properties:
         name:
           maxLength: 255
           minLength: 0
           type: string
+        registrationNumberExist:
+          type: boolean
         registrationNumber:
           maxLength: 255
           minLength: 0
@@ -7003,11 +7576,30 @@ components:
           minLength: 0
           type: string
         county:
+          maxLength: 255
+          minLength: 0
           type: string
         postcode:
           maxLength: 64
           minLength: 0
           type: string
+        type:
+          type: string
+          enum:
+            - SIC
+            - OTHER
+        otherTypeName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        codes:
+          maxItems: 4
+          minItems: 1
+          type: array
+          items:
+            maxLength: 255
+            minLength: 0
+            type: string
     RfiQuestionPayload:
       required:
         - questions
@@ -7097,11 +7689,13 @@ components:
       type: object
       properties:
         informationExists:
-          type: boolean
+          type: string
+          enum:
+            - 'YES'
+            - 'NO'
+            - SKIP_QUESTION
         firstCompliancePeriodDetails:
           $ref: '#/components/schemas/FirstCompliancePeriodDetails'
-        reductionAchievedExists:
-          type: boolean
         reductionAchieved:
           $ref: '#/components/schemas/EnergyConsumption'
     SendToEditRequestTaskActionPayload:
@@ -7115,39 +7709,62 @@ components:
             supportingOperator:
               type: string
     SignificantEnergyConsumption:
-      required:
-        - buildings
-        - industrialProcesses
-        - otherProcesses
-        - significantEnergyConsumptionPct
-        - total
-        - transport
       type: object
       properties:
         buildings:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         transport:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         industrialProcesses:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         otherProcesses:
           minimum: 0
           type: integer
-          format: int32
+          format: int64
         total:
           type: integer
-          format: int32
+          format: int64
         significantEnergyConsumptionPct:
-          maximum: 100
-          minimum: 95
+          minimum: 0
           type: integer
-          format: int32
+          format: int64
+    TotalEnergyConsumptionReduction:
+      type: object
+      properties:
+        energyConsumption:
+          type: integer
+          format: int64
+        energyCost:
+          type: string
+          format: decimal
+    TotalEnergySavingsExpected:
+      type: object
+      properties:
+        buildings:
+          minimum: 0
+          type: integer
+          format: int64
+        transport:
+          minimum: 0
+          type: integer
+          format: int64
+        industrialProcesses:
+          minimum: 0
+          type: integer
+          format: int64
+        otherProcesses:
+          minimum: 0
+          type: integer
+          format: int64
+        total:
+          type: integer
+          format: int64
     TradingDetails:
       required:
         - exist
@@ -7203,6 +7820,18 @@ components:
             - PAYMENT_MARK_AS_RECEIVED
             - PAYMENT_PAY_BY_CARD
             - PAYMENT_CANCEL
+            - ACTION_PLAN_P3_SUBMIT_APPLICATION
+            - ACTION_PLAN_P3_SAVE_APPLICATION_SUBMIT
+            - ACTION_PLAN_CANCEL_APPLICATION
+            - ACCOUNT_CLOSURE_SUBMIT_APPLICATION
+            - ACCOUNT_CLOSURE_SAVE_APPLICATION_SUBMIT
+            - ACCOUNT_CLOSURE_CANCEL_APPLICATION
+            - PROGRESS_UPDATE_1_P3_SUBMIT_APPLICATION
+            - PROGRESS_UPDATE_1_P3_SAVE_APPLICATION_SUBMIT
+            - PROGRESS_UPDATE_1_CANCEL_APPLICATION
+            - PROGRESS_UPDATE_2_P3_SUBMIT_APPLICATION
+            - PROGRESS_UPDATE_2_P3_SAVE_APPLICATION_SUBMIT
+            - PROGRESS_UPDATE_2_CANCEL_APPLICATION
       description: The request task attachment properties
     FileUuidDTO:
       type: object
@@ -7212,11 +7841,12 @@ components:
     OrganisationAccountOpeningSubmitApplicationCreateActionPayload:
       required:
         - city
+        - codes
         - competentAuthority
-        - county
         - line1
         - name
         - postcode
+        - type
       type: object
       allOf:
         - $ref: '#/components/schemas/RequestCreateActionPayload'
@@ -7251,11 +7881,114 @@ components:
               minLength: 0
               type: string
             county:
+              maxLength: 255
+              minLength: 0
               type: string
             postcode:
               maxLength: 64
               minLength: 0
               type: string
+            type:
+              type: string
+              enum:
+                - SIC
+                - OTHER
+            otherTypeName:
+              maxLength: 255
+              minLength: 0
+              type: string
+            codes:
+              maxItems: 4
+              minItems: 1
+              type: array
+              items:
+                maxLength: 255
+                minLength: 0
+                type: string
+    OrganisationAccountPayload:
+      required:
+        - city
+        - codes
+        - competentAuthority
+        - line1
+        - name
+        - postcode
+        - type
+      type: object
+      properties:
+        registrationNumber:
+          maxLength: 255
+          minLength: 0
+          type: string
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+        competentAuthority:
+          type: string
+          enum:
+            - ENGLAND
+            - NORTHERN_IRELAND
+            - OPRED
+            - SCOTLAND
+            - WALES
+        line1:
+          maxLength: 255
+          minLength: 0
+          type: string
+        line2:
+          maxLength: 255
+          minLength: 0
+          type: string
+        city:
+          maxLength: 255
+          minLength: 0
+          type: string
+        county:
+          maxLength: 255
+          minLength: 0
+          type: string
+        postcode:
+          maxLength: 64
+          minLength: 0
+          type: string
+        type:
+          type: string
+          enum:
+            - SIC
+            - OTHER
+        otherTypeName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        codes:
+          maxItems: 4
+          minItems: 1
+          type: array
+          items:
+            maxLength: 255
+            minLength: 0
+            type: string
+    ProgressUpdate1RequestCreateActionPayload:
+      required:
+        - isDisaggregateUndertaking
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestCreateActionPayload'
+        - type: object
+          properties:
+            isDisaggregateUndertaking:
+              type: boolean
+    ProgressUpdate2RequestCreateActionPayload:
+      required:
+        - isDisaggregateUndertaking
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestCreateActionPayload'
+        - type: object
+          properties:
+            isDisaggregateUndertaking:
+              type: boolean
     ReportRelatedRequestCreateActionPayload:
       required:
         - requestId
@@ -7279,6 +8012,8 @@ components:
             - ORGANISATION_ACCOUNT_OPENING_SUBMIT_APPLICATION_PAYLOAD
             - REPORT_RELATED_REQUEST_CREATE_ACTION_PAYLOAD
             - EMPTY_PAYLOAD
+            - PROGRESS_UPDATE_1_CREATE_ACTION_PAYLOAD
+            - PROGRESS_UPDATE_2_CREATE_ACTION_PAYLOAD
       discriminator:
         propertyName: payloadType
     RequestCreateActionProcessDTO:
@@ -7292,9 +8027,19 @@ components:
           enum:
             - ORGANISATION_ACCOUNT_OPENING_SUBMIT_APPLICATION
             - NOTIFICATION_OF_COMPLIANCE_P3
+            - RE_INITIATE_NOTIFICATION_OF_COMPLIANCE_P3
+            - ACTION_PLAN_P3
+            - RE_INITIATE_ACTION_PLAN_P3
+            - ACCOUNT_CLOSURE
+            - PROGRESS_UPDATE_1_P3
+            - RE_INITIATE_PROGRESS_UPDATE_1_P3
+            - PROGRESS_UPDATE_2_P3
+            - RE_INITIATE_PROGRESS_UPDATE_2_P3
         requestCreateActionPayload:
           oneOf:
             - $ref: '#/components/schemas/OrganisationAccountOpeningSubmitApplicationCreateActionPayload'
+            - $ref: '#/components/schemas/ProgressUpdate1RequestCreateActionPayload'
+            - $ref: '#/components/schemas/ProgressUpdate2RequestCreateActionPayload'
             - $ref: '#/components/schemas/ReportRelatedRequestCreateActionPayload'
             - $ref: '#/components/schemas/RequestCreateActionEmptyPayload'
       description: The request create action body
@@ -7322,6 +8067,10 @@ components:
             enum:
               - ORGANISATION_ACCOUNT_OPENING
               - NOTIFICATION_OF_COMPLIANCE_P3
+              - ACTION_PLAN_P3
+              - ACCOUNT_CLOSURE
+              - PROGRESS_UPDATE_1_P3
+              - PROGRESS_UPDATE_2_P3
         requestStatuses:
           uniqueItems: true
           type: array
@@ -7336,6 +8085,7 @@ components:
               - REJECTED
               - CLOSED
               - EXEMPT
+              - TERMINATED
         category:
           type: string
           enum:
@@ -7351,7 +8101,37 @@ components:
           type: integer
           format: int64
       description: The search criteria
+    ActionPlanP3RequestMetadata:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestMetadata'
+        - type: object
+          properties:
+            phase:
+              type: string
+              enum:
+                - PHASE_3
     NotificationOfComplianceP3RequestMetadata:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestMetadata'
+        - type: object
+          properties:
+            phase:
+              type: string
+              enum:
+                - PHASE_3
+    ProgressUpdate1P3RequestMetadata:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestMetadata'
+        - type: object
+          properties:
+            phase:
+              type: string
+              enum:
+                - PHASE_3
+    ProgressUpdate2P3RequestMetadata:
       type: object
       allOf:
         - $ref: '#/components/schemas/RequestMetadata'
@@ -7371,6 +8151,10 @@ components:
           enum:
             - ORGANISATION_ACCOUNT_OPENING
             - NOTIFICATION_OF_COMPLIANCE_P3
+            - ACTION_PLAN_P3
+            - ACCOUNT_CLOSURE
+            - PROGRESS_UPDATE_1_P3
+            - PROGRESS_UPDATE_2_P3
         requestStatus:
           type: string
           enum:
@@ -7382,6 +8166,7 @@ components:
             - REJECTED
             - CLOSED
             - EXEMPT
+            - TERMINATED
         creationDate:
           type: string
           format: date
@@ -7404,10 +8189,16 @@ components:
           type: string
           enum:
             - NOTIFICATION_OF_COMPLIANCE_P3
+            - ACTION_PLAN_P3
+            - PROGRESS_UPDATE_1_P3
+            - PROGRESS_UPDATE_2_P3
       discriminator:
         propertyName: type
         mapping:
           NOTIFICATION_OF_COMPLIANCE_P3: '#/components/schemas/NotificationOfComplianceP3RequestMetadata'
+          ACTION_PLAN_P3: '#/components/schemas/ActionPlanP3RequestMetadata'
+          PROGRESS_UPDATE_1_P3: '#/components/schemas/ProgressUpdate1P3RequestMetadata'
+          PROGRESS_UPDATE_2_P3: '#/components/schemas/ProgressUpdate2P3RequestMetadata'
     RequestNoteRequest:
       required:
         - note
@@ -7464,7 +8255,6 @@ components:
           enum:
             - REGISTERED
             - PENDING
-            - DELETED
         jobTitle:
           maxLength: 255
           minLength: 0
@@ -7555,26 +8345,171 @@ components:
             - DISABLED
             - ACCEPTED
             - TEMP_DISABLED
-    OperatorInvitedUserInfoDTO:
+    OrganisationAccountUpdateDTO:
+      required:
+        - city
+        - codes
+        - line1
+        - name
+        - postcode
+        - type
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+        type:
+          type: string
+          enum:
+            - SIC
+            - OTHER
+        otherTypeName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        codes:
+          maxItems: 4
+          minItems: 1
+          type: array
+          items:
+            maxLength: 255
+            minLength: 0
+            type: string
+        line1:
+          maxLength: 255
+          minLength: 0
+          type: string
+        line2:
+          maxLength: 255
+          minLength: 0
+          type: string
+        city:
+          maxLength: 255
+          minLength: 0
+          type: string
+        county:
+          maxLength: 255
+          minLength: 0
+          type: string
+        postcode:
+          maxLength: 64
+          minLength: 0
+          type: string
+      description: The organisation account fields
+    OrganisationAccountOnboardingRegistryDTO:
+      required:
+        - email
+        - registrationNumber
       type: object
       properties:
         email:
           type: string
+        registrationNumber:
+          type: string
+    OnboardingRegistrationNumbersDTO:
+      required:
+        - registrationNumbers
+      type: object
+      properties:
+        registrationNumbers:
+          type: array
+          items:
+            type: string
+    OnboardingEmailsDTO:
+      required:
+        - emails
+      type: object
+      properties:
+        emails:
+          type: array
+          items:
+            type: string
+    OperatorUserRegistrationDTO:
+      required:
+        - address
+        - firstName
+        - lastName
+      type: object
+      properties:
         firstName:
+          maxLength: 255
+          minLength: 0
           type: string
         lastName:
+          maxLength: 255
+          minLength: 0
           type: string
-        roleCode:
+        jobTitle:
+          maxLength: 255
+          minLength: 0
           type: string
-        accountInstallationName:
+        address:
+          $ref: '#/components/schemas/CountyAddressDTO'
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+        mobileNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+        termsVersion:
+          maximum: 255
+          type: integer
+          format: int32
+      description: The userRegistrationDTO
+    OperatorUserDTO:
+      required:
+        - address
+        - email
+        - firstName
+        - lastName
+      type: object
+      properties:
+        email:
+          maxLength: 255
+          minLength: 0
           type: string
-        invitationStatus:
+        firstName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        termsVersion:
+          maximum: 255
+          type: integer
+          format: int32
+        status:
           type: string
           enum:
-            - ACCEPTED
-            - PENDING_USER_REGISTRATION
-            - PENDING_USER_REGISTRATION_NO_PASSWORD
-            - PENDING_USER_ENABLE
+            - REGISTERED
+            - PENDING
+        address:
+          $ref: '#/components/schemas/CountyAddressDTO'
+        jobTitle:
+          maxLength: 255
+          minLength: 0
+          type: string
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+        mobileNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+    OperatorInvitedUserInfoDTO:
+      type: object
+      properties:
+        accountName:
+          type: string
+    OperatorUserInviteAndRegisterDTO:
+      required:
+        - invitationTokenDTO
+        - operatorUserRegistrationDTO
+      type: object
+      properties:
+        operatorUserRegistrationDTO:
+          $ref: '#/components/schemas/OperatorUserRegistrationDTO'
+        invitationTokenDTO:
+          $ref: '#/components/schemas/TokenDTO'
+      description: The userRegistrationDTO
     OperatorUserInvitationDTO:
       required:
         - email
@@ -7709,7 +8644,6 @@ components:
           enum:
             - REGISTERED
             - PENDING
-            - DELETED
         phoneNumber:
           maxLength: 255
           minLength: 0
@@ -7802,7 +8736,63 @@ components:
             - REGULATOR_OUTSTANDING_REQUEST_TASKS
             - LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS
             - LIST_OF_VERIFICATION_BODY_USERS
+            - NOC_SUBMITTED_DATA_P3
             - CUSTOM
+            - ACTION_PLAN_SUBMITTED_DATA_P3
+            - PROGRESS_UPDATE_1_SUBMITTED_DATA_P3
+            - PROGRESS_UPDATE_2_SUBMITTED_DATA_P3
+    NocP3SearchResultsInfoDto:
+      type: object
+      properties:
+        id:
+          type: string
+        organisationName:
+          type: string
+        registrationNumber:
+          type: string
+        location:
+          type: string
+          enum:
+            - ENGLAND
+            - NORTHERN_IRELAND
+            - OPRED
+            - SCOTLAND
+            - WALES
+        noc:
+          $ref: '#/components/schemas/NocP3'
+        status:
+          type: string
+          enum:
+            - AWAITING_APPROVAL
+            - LIVE
+            - DENIED
+            - CLOSED
+    NotificationOfCompliancesP3MiReportResult:
+      required:
+        - reportType
+        - total
+      type: object
+      properties:
+        reportType:
+          type: string
+          enum:
+            - LIST_OF_ACCOUNTS_USERS_CONTACTS
+            - COMPLETED_WORK
+            - REGULATOR_OUTSTANDING_REQUEST_TASKS
+            - LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS
+            - LIST_OF_VERIFICATION_BODY_USERS
+            - NOC_SUBMITTED_DATA_P3
+            - CUSTOM
+            - ACTION_PLAN_SUBMITTED_DATA_P3
+            - PROGRESS_UPDATE_1_SUBMITTED_DATA_P3
+            - PROGRESS_UPDATE_2_SUBMITTED_DATA_P3
+        results:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/NocP3SearchResultsInfoDto'
+        total:
+          type: integer
+          format: int64
     ItemDTO:
       type: object
       properties:
@@ -7816,6 +8806,10 @@ components:
           enum:
             - ORGANISATION_ACCOUNT_OPENING
             - NOTIFICATION_OF_COMPLIANCE_P3
+            - ACTION_PLAN_P3
+            - ACCOUNT_CLOSURE
+            - PROGRESS_UPDATE_1_P3
+            - PROGRESS_UPDATE_2_P3
         taskId:
           type: integer
           format: int64
@@ -7834,6 +8828,10 @@ components:
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT
             - NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT
+            - ACTION_PLAN_P3_APPLICATION_SUBMIT
+            - ACCOUNT_CLOSURE_SUBMIT
+            - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT
+            - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT
         daysRemaining:
           type: integer
           format: int64
@@ -7864,6 +8862,10 @@ components:
           enum:
             - ORGANISATION_ACCOUNT_OPENING
             - NOTIFICATION_OF_COMPLIANCE_P3
+            - ACTION_PLAN_P3
+            - ACCOUNT_CLOSURE
+            - PROGRESS_UPDATE_1_P3
+            - PROGRESS_UPDATE_2_P3
         taskId:
           type: integer
           format: int64
@@ -7882,6 +8884,10 @@ components:
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT
             - NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT
+            - ACTION_PLAN_P3_APPLICATION_SUBMIT
+            - ACCOUNT_CLOSURE_SUBMIT
+            - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT
+            - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT
         daysRemaining:
           type: integer
           format: int64
@@ -8048,6 +9054,14 @@ components:
         version:
           type: integer
           format: int32
+    AccountClosureApplicationRequestTaskPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestTaskPayload'
+        - type: object
+          properties:
+            accountClosure:
+              $ref: '#/components/schemas/AccountClosure'
     AccountOriginatedData:
       type: object
       properties:
@@ -8057,6 +9071,22 @@ components:
           $ref: '#/components/schemas/ContactPerson'
         secondaryContact:
           $ref: '#/components/schemas/ContactPerson'
+    ActionPlanP3ApplicationSubmitRequestTaskPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestTaskPayload'
+        - type: object
+          properties:
+            actionPlanP3:
+              $ref: '#/components/schemas/ActionPlanP3'
+            actionPlanSectionsCompleted:
+              type: object
+              additionalProperties:
+                type: string
+            actionPlanAttachments:
+              type: object
+              additionalProperties:
+                type: string
     BankAccountDetailsDTO:
       type: object
       properties:
@@ -8119,15 +9149,33 @@ components:
     OrganisationDetails:
       required:
         - city
-        - county
+        - codes
         - line1
         - postcode
+        - type
       type: object
       properties:
         name:
           type: string
         registrationNumber:
           type: string
+        type:
+          type: string
+          enum:
+            - SIC
+            - OTHER
+        otherTypeName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        codes:
+          maxItems: 4
+          minItems: 1
+          type: array
+          items:
+            maxLength: 255
+            minLength: 0
+            type: string
         line1:
           maxLength: 255
           minLength: 0
@@ -8141,6 +9189,8 @@ components:
           minLength: 0
           type: string
         county:
+          maxLength: 255
+          minLength: 0
           type: string
         postcode:
           maxLength: 64
@@ -8149,7 +9199,6 @@ components:
     OrganisationParticipantDetails:
       required:
         - city
-        - county
         - line1
         - postcode
       type: object
@@ -8179,6 +9228,8 @@ components:
           minLength: 0
           type: string
         county:
+          maxLength: 255
+          minLength: 0
           type: string
         postcode:
           maxLength: 64
@@ -8249,6 +9300,160 @@ components:
               format: decimal
             paymentRefNum:
               type: string
+    ProgressUpdate1P3:
+      required:
+        - progressUpdate1P3MeasuresUpdate
+      type: object
+      properties:
+        groupChange:
+          $ref: '#/components/schemas/GroupChange'
+        progressUpdate1P3MeasuresUpdate:
+          $ref: '#/components/schemas/ProgressUpdate1P3MeasuresUpdate'
+        responsibleOfficerConfirmation:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - ESOS_ACTION_PLAN_COMPLIANCE
+              - ESTIMATION_METHOD_DOCUMENTED
+    ProgressUpdate1P3ApplicationSubmitRequestTaskPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestTaskPayload'
+        - type: object
+          properties:
+            isDisaggregateUndertaking:
+              type: boolean
+            progressUpdate1P3:
+              $ref: '#/components/schemas/ProgressUpdate1P3'
+            progressUpdate1P3SectionsCompleted:
+              type: object
+              additionalProperties:
+                type: string
+            progressUpdate1P3Attachments:
+              type: object
+              additionalProperties:
+                type: string
+    ProgressUpdate1P3MeasuresUpdate:
+      type: object
+      properties:
+        progressUpdate1P3Measures:
+          maxItems: 100
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressUpdate1P3UpdatedMeasure'
+        progressUpdate1P3AddedMeasure:
+          maxItems: 50
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressUpdate1P3AddedMeasure'
+    ProgressUpdate1P3UpdatedMeasure:
+      required:
+        - actionPlanEnergyEfficiencyMeasure
+        - measureImplType
+        - progressUpdate1P3EnergyEfficiencyMeasure
+        - uuId
+      type: object
+      properties:
+        uuId:
+          type: string
+          format: uuid
+        measureImplType:
+          type: string
+          enum:
+            - MEASURE_IMPL_BEFORE_SUBMIT_ACTION_PLAN
+            - MEASURE_IMPL_AFTER_SUBMIT_ACTION_PLAN
+        actionPlanEnergyEfficiencyMeasure:
+          $ref: '#/components/schemas/EnergyEfficiencyMeasure'
+        progressUpdate1P3EnergyEfficiencyMeasure:
+          $ref: '#/components/schemas/ProgressUpdate1P3EnergyEfficiencyMeasure'
+    ProgressUpdate2P3:
+      required:
+        - progressUpdate2P3MeasuresUpdate
+      type: object
+      properties:
+        groupChange:
+          $ref: '#/components/schemas/GroupChange'
+        progressUpdate2P3MeasuresUpdate:
+          $ref: '#/components/schemas/ProgressUpdate2P3MeasuresUpdate'
+        responsibleOfficerConfirmation:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - ESOS_ACTION_PLAN_COMPLIANCE
+              - ESTIMATION_METHOD_DOCUMENTED
+    ProgressUpdate2P3ApplicationSubmitRequestTaskPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestTaskPayload'
+        - type: object
+          properties:
+            isDisaggregateUndertaking:
+              type: boolean
+            progressUpdate2P3:
+              $ref: '#/components/schemas/ProgressUpdate2P3'
+            progressUpdate2P3SectionsCompleted:
+              type: object
+              additionalProperties:
+                type: string
+            progressUpdate2P3Attachments:
+              type: object
+              additionalProperties:
+                type: string
+    ProgressUpdate2P3MeasuresUpdate:
+      type: object
+      properties:
+        progressUpdate2P3Measures:
+          maxItems: 100
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressUpdate2P3UpdatedMeasure'
+        progressUpdate2P3UpdatedAddedMeasures:
+          maxItems: 100
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressUpdate2P3UpdatedAddedMeasure'
+        progressUpdate2P3AddedMeasure:
+          maxItems: 50
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressUpdate2P3AddedMeasure'
+    ProgressUpdate2P3UpdatedAddedMeasure:
+      required:
+        - progressUpdate1P3AddedMeasure
+        - progressUpdate2P3EnergyEfficiencyMeasure
+        - uuId
+      type: object
+      properties:
+        uuId:
+          type: string
+          format: uuid
+        progressUpdate1P3AddedMeasure:
+          $ref: '#/components/schemas/ProgressUpdate1P3AddedMeasure'
+        progressUpdate2P3EnergyEfficiencyMeasure:
+          $ref: '#/components/schemas/ProgressUpdate2P3EnergyEfficiencyMeasure'
+    ProgressUpdate2P3UpdatedMeasure:
+      required:
+        - uuId
+      type: object
+      properties:
+        uuId:
+          type: string
+          format: uuid
+        actionPlanEnergyEfficiencyMeasure:
+          $ref: '#/components/schemas/EnergyEfficiencyMeasure'
+        progressUpdate1P3EnergyEfficiencyMeasure:
+          $ref: '#/components/schemas/ProgressUpdate1P3EnergyEfficiencyMeasure'
+        progressUpdate2P3EnergyEfficiencyMeasure:
+          $ref: '#/components/schemas/ProgressUpdate2P3EnergyEfficiencyMeasure'
     RdeForceDecisionRequestTaskPayload:
       required:
         - rdeForceDecisionPayload
@@ -8298,6 +9503,10 @@ components:
           enum:
             - ORGANISATION_ACCOUNT_OPENING
             - NOTIFICATION_OF_COMPLIANCE_P3
+            - ACTION_PLAN_P3
+            - ACCOUNT_CLOSURE
+            - PROGRESS_UPDATE_1_P3
+            - PROGRESS_UPDATE_2_P3
         competentAuthority:
           type: string
           enum:
@@ -8329,6 +9538,10 @@ components:
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT
             - NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT
+            - ACTION_PLAN_P3_APPLICATION_SUBMIT
+            - ACCOUNT_CLOSURE_SUBMIT
+            - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT
+            - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT
         payload:
           $ref: '#/components/schemas/RequestTaskPayload'
         assignable:
@@ -8373,6 +9586,18 @@ components:
               - PAYMENT_MARK_AS_RECEIVED
               - PAYMENT_PAY_BY_CARD
               - PAYMENT_CANCEL
+              - ACTION_PLAN_P3_SUBMIT_APPLICATION
+              - ACTION_PLAN_P3_SAVE_APPLICATION_SUBMIT
+              - ACTION_PLAN_CANCEL_APPLICATION
+              - ACCOUNT_CLOSURE_SUBMIT_APPLICATION
+              - ACCOUNT_CLOSURE_SAVE_APPLICATION_SUBMIT
+              - ACCOUNT_CLOSURE_CANCEL_APPLICATION
+              - PROGRESS_UPDATE_1_P3_SUBMIT_APPLICATION
+              - PROGRESS_UPDATE_1_P3_SAVE_APPLICATION_SUBMIT
+              - PROGRESS_UPDATE_1_CANCEL_APPLICATION
+              - PROGRESS_UPDATE_2_P3_SUBMIT_APPLICATION
+              - PROGRESS_UPDATE_2_P3_SAVE_APPLICATION_SUBMIT
+              - PROGRESS_UPDATE_2_CANCEL_APPLICATION
         userAssignCapable:
           type: boolean
         requestInfo:
@@ -8392,6 +9617,10 @@ components:
             - PAYMENT_MAKE_PAYLOAD
             - PAYMENT_TRACK_PAYLOAD
             - PAYMENT_CONFIRM_PAYLOAD
+            - ACTION_PLAN_P3_APPLICATION_SUBMIT_PAYLOAD
+            - ACCOUNT_CLOSURE_APPLICATION_SUBMIT_PAYLOAD
+            - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT_PAYLOAD
+            - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT_PAYLOAD
       discriminator:
         propertyName: payloadType
         mapping:
@@ -8404,6 +9633,10 @@ components:
           PAYMENT_MAKE_PAYLOAD: '#/components/schemas/PaymentMakeRequestTaskPayload'
           PAYMENT_TRACK_PAYLOAD: '#/components/schemas/PaymentTrackRequestTaskPayload'
           PAYMENT_CONFIRM_PAYLOAD: '#/components/schemas/PaymentConfirmRequestTaskPayload'
+          ACTION_PLAN_P3_APPLICATION_SUBMIT_PAYLOAD: '#/components/schemas/ActionPlanP3ApplicationSubmitRequestTaskPayload'
+          ACCOUNT_CLOSURE_APPLICATION_SUBMIT_PAYLOAD: '#/components/schemas/AccountClosureApplicationRequestTaskPayload'
+          PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT_PAYLOAD: '#/components/schemas/ProgressUpdate1P3ApplicationSubmitRequestTaskPayload'
+          PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT_PAYLOAD: '#/components/schemas/ProgressUpdate2P3ApplicationSubmitRequestTaskPayload'
     RfiResponseSubmitRequestTaskPayload:
       required:
         - rfiQuestionPayload
@@ -8455,6 +9688,10 @@ components:
             enum:
               - ORGANISATION_ACCOUNT_OPENING
               - NOTIFICATION_OF_COMPLIANCE_P3
+              - ACTION_PLAN_P3
+              - ACCOUNT_CLOSURE
+              - PROGRESS_UPDATE_1_P3
+              - PROGRESS_UPDATE_2_P3
     NotePayload:
       required:
         - note
@@ -8483,6 +9720,8 @@ components:
           format: date-time
         requestId:
           type: string
+        editable:
+          type: boolean
     RequestNoteResponse:
       type: object
       properties:
@@ -8505,9 +9744,11 @@ components:
             - ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED
             - ORGANISATION_ACCOUNT_OPENING_APPROVED
             - ORGANISATION_ACCOUNT_OPENING_REJECTED
+            - ORGANISATION_ACCOUNT_OPENING_CREATED
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SENT_TO_EDIT
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMITTED
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RETURNED_TO_SUBMIT
+            - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RE_INITIATED
             - RFI_SUBMITTED
             - RFI_CANCELLED
             - RFI_EXPIRED
@@ -8525,11 +9766,45 @@ components:
             - PAYMENT_CANCELLED
             - REQUEST_TERMINATED
             - VERIFICATION_STATEMENT_CANCELLED
+            - ACTION_PLAN_P3_APPLICATION_SUBMITTED
+            - ACTION_PLAN_P3_APPLICATION_RE_INITIATED
+            - ACTION_PLAN_APPLICATION_CANCELLED
+            - ACCOUNT_CLOSURE_APPLICATION_SUBMITTED
+            - ACCOUNT_CLOSURE_APPLICATION_CANCELLED
+            - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED
+            - PROGRESS_UPDATE_1_APPLICATION_CANCELLED
+            - PROGRESS_UPDATE_1_P3_APPLICATION_RE_INITIATED
+            - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED
+            - PROGRESS_UPDATE_2_APPLICATION_CANCELLED
+            - PROGRESS_UPDATE_2_P3_APPLICATION_RE_INITIATED
         submitter:
           type: string
         creationDate:
           type: string
           format: date-time
+    AccountClosureApplicationRequestActionPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestActionPayload'
+        - type: object
+          properties:
+            accountClosure:
+              $ref: '#/components/schemas/AccountClosure'
+            submitDate:
+              type: string
+              format: date-time
+    ActionPlanP3ApplicationRequestActionPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestActionPayload'
+        - type: object
+          properties:
+            actionPlan:
+              $ref: '#/components/schemas/ActionPlanP3'
+            actionPlanAttachments:
+              type: object
+              additionalProperties:
+                type: string
     NotificationOfComplianceP3ApplicationRequestActionPayload:
       type: object
       allOf:
@@ -8619,6 +9894,34 @@ components:
             receivedDate:
               type: string
               format: date
+    ProgressUpdate1P3ApplicationRequestActionPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestActionPayload'
+        - type: object
+          properties:
+            isDisaggregateUndertaking:
+              type: boolean
+            progressUpdate1P3:
+              $ref: '#/components/schemas/ProgressUpdate1P3'
+            progressUpdate1Attachments:
+              type: object
+              additionalProperties:
+                type: string
+    ProgressUpdate2P3ApplicationRequestActionPayload:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RequestActionPayload'
+        - type: object
+          properties:
+            isDisaggregateUndertaking:
+              type: boolean
+            progressUpdate2P3:
+              $ref: '#/components/schemas/ProgressUpdate2P3'
+            progressUpdate2Attachments:
+              type: object
+              additionalProperties:
+                type: string
     RdeDecisionForcedRequestActionPayload:
       required:
         - rdeForceDecisionPayload
@@ -8677,9 +9980,11 @@ components:
             - ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED
             - ORGANISATION_ACCOUNT_OPENING_APPROVED
             - ORGANISATION_ACCOUNT_OPENING_REJECTED
+            - ORGANISATION_ACCOUNT_OPENING_CREATED
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SENT_TO_EDIT
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMITTED
             - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RETURNED_TO_SUBMIT
+            - NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_RE_INITIATED
             - RFI_SUBMITTED
             - RFI_CANCELLED
             - RFI_EXPIRED
@@ -8697,6 +10002,17 @@ components:
             - PAYMENT_CANCELLED
             - REQUEST_TERMINATED
             - VERIFICATION_STATEMENT_CANCELLED
+            - ACTION_PLAN_P3_APPLICATION_SUBMITTED
+            - ACTION_PLAN_P3_APPLICATION_RE_INITIATED
+            - ACTION_PLAN_APPLICATION_CANCELLED
+            - ACCOUNT_CLOSURE_APPLICATION_SUBMITTED
+            - ACCOUNT_CLOSURE_APPLICATION_CANCELLED
+            - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED
+            - PROGRESS_UPDATE_1_APPLICATION_CANCELLED
+            - PROGRESS_UPDATE_1_P3_APPLICATION_RE_INITIATED
+            - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED
+            - PROGRESS_UPDATE_2_APPLICATION_CANCELLED
+            - PROGRESS_UPDATE_2_P3_APPLICATION_RE_INITIATED
         payload:
           $ref: '#/components/schemas/RequestActionPayload'
         requestId:
@@ -8706,6 +10022,10 @@ components:
           enum:
             - ORGANISATION_ACCOUNT_OPENING
             - NOTIFICATION_OF_COMPLIANCE_P3
+            - ACTION_PLAN_P3
+            - ACCOUNT_CLOSURE
+            - PROGRESS_UPDATE_1_P3
+            - PROGRESS_UPDATE_2_P3
         requestAccountId:
           type: integer
           format: int64
@@ -8742,6 +10062,10 @@ components:
             - PAYMENT_MARKED_AS_RECEIVED_PAYLOAD
             - PAYMENT_COMPLETED_PAYLOAD
             - PAYMENT_CANCELLED_PAYLOAD
+            - ACTION_PLAN_P3_APPLICATION_SUBMITTED_PAYLOAD
+            - ACCOUNT_CLOSURE_APPLICATION_SUBMITTED_PAYLOAD
+            - PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED_PAYLOAD
+            - PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED_PAYLOAD
       discriminator:
         propertyName: payloadType
         mapping:
@@ -8759,6 +10083,10 @@ components:
           PAYMENT_MARKED_AS_RECEIVED_PAYLOAD: '#/components/schemas/PaymentProcessedRequestActionPayload'
           PAYMENT_COMPLETED_PAYLOAD: '#/components/schemas/PaymentProcessedRequestActionPayload'
           PAYMENT_CANCELLED_PAYLOAD: '#/components/schemas/PaymentCancelledRequestActionPayload'
+          ACTION_PLAN_P3_APPLICATION_SUBMITTED_PAYLOAD: '#/components/schemas/ActionPlanP3ApplicationRequestActionPayload'
+          ACCOUNT_CLOSURE_APPLICATION_SUBMITTED_PAYLOAD: '#/components/schemas/AccountClosureApplicationRequestActionPayload'
+          PROGRESS_UPDATE_1_P3_APPLICATION_SUBMITTED_PAYLOAD: '#/components/schemas/ProgressUpdate1P3ApplicationRequestActionPayload'
+          PROGRESS_UPDATE_2_P3_APPLICATION_SUBMITTED_PAYLOAD: '#/components/schemas/ProgressUpdate2P3ApplicationRequestActionPayload'
     RequestActionUserInfo:
       required:
         - name
@@ -8871,18 +10199,36 @@ components:
         accounts:
           type: array
           items:
-            type: object
+            $ref: '#/components/schemas/OrganisationAccountSearchResultsInfoDTO'
         total:
           type: integer
           format: int64
+    OrganisationAccountSearchResultsInfoDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        organisationId:
+          type: string
+        status:
+          type: string
+          enum:
+            - AWAITING_APPROVAL
+            - LIVE
+            - DENIED
+            - CLOSED
     OrganisationAccountDTO:
       required:
         - city
+        - codes
         - competentAuthority
-        - county
         - line1
         - name
         - postcode
+        - type
       type: object
       properties:
         id:
@@ -8892,6 +10238,23 @@ components:
           type: string
         name:
           type: string
+        type:
+          type: string
+          enum:
+            - SIC
+            - OTHER
+        otherTypeName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        codes:
+          maxItems: 4
+          minItems: 1
+          type: array
+          items:
+            maxLength: 255
+            minLength: 0
+            type: string
         line1:
           maxLength: 255
           minLength: 0
@@ -8905,6 +10268,8 @@ components:
           minLength: 0
           type: string
         county:
+          maxLength: 255
+          minLength: 0
           type: string
         postcode:
           maxLength: 64
@@ -8923,9 +10288,17 @@ components:
         status:
           type: string
           enum:
-            - UNAPPROVED
+            - AWAITING_APPROVAL
             - LIVE
             - DENIED
+            - CLOSED
+        editable:
+          type: boolean
+    OnboardingRegistrationNumberDTO:
+      type: object
+      properties:
+        registrationNumber:
+          type: string
     AccountOperatorsUsersAuthoritiesInfoDTO:
       type: object
       properties:
@@ -8987,6 +10360,19 @@ components:
             $ref: '#/components/schemas/TemplateInfoDTO'
     ReferenceDataDTO:
       type: object
+    CompanyProfileDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        registrationNumber:
+          type: string
+        address:
+          $ref: '#/components/schemas/CountyAddressDTO'
+        sicCodes:
+          type: array
+          items:
+            type: string
     CaExternalContactDTO:
       type: object
       properties:
@@ -9050,8 +10436,6 @@ components:
             - ENABLED
             - DISABLED
             - ACCEPTED
-            - TEMP_DISABLED
-            - DELETED
             - NO_AUTHORITY
     VerificationBodyNameInfoDTO:
       type: object
@@ -9077,6 +10461,8 @@ components:
         accountId:
           type: integer
           format: int64
+        editable:
+          type: boolean
     AccountNoteResponse:
       type: object
       properties:
@@ -9087,6 +10473,8 @@ components:
         totalItems:
           type: integer
           format: int64
+        hasUserEditPermission:
+          type: boolean
     UIPropertiesDTO:
       type: object
       properties:
@@ -9094,6 +10482,9 @@ components:
           type: object
           additionalProperties:
             type: boolean
+        expirationTime:
+          type: integer
+          format: int64
         analytics:
           type: object
           additionalProperties:

@@ -1,72 +1,29 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="Did this organisation use 12 months verifiable data for the purpose of calculating energy consumption in all of its ESOS energy audits?"
+  heading="Did all your energy audits use 12 months of verifiable data?"
   caption="Compliance route"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <div formControlName="twelveMonthsVerifiableDataUsed" govuk-radio>
-    <govuk-radio-option [value]="'YES'" label="Yes"></govuk-radio-option>
-    <govuk-radio-option [value]="'NO'" label="No"></govuk-radio-option>
-    <govuk-radio-option [value]="'NOT_APPLICABLE'" label="Not applicable">
-      <div govukConditionalContent>
-        <p class="govuk-body">
-          All significant energy consumption is covered by ISO 50001 certification, Display Energy Certificates or Green
-          Deal Assessments
-        </p>
-      </div>
+  <p class="govuk-hint">
+    Where applicable, you must provide details of the extent to which and the reasons why 12 months’ verifiable data was
+    not used as required to be recorded under regulation 26(9)(g) of the ESOS Regulations 2014 as amended by the ESOS
+    (Amendment) Regulations 2023.
+  </p>
+
+  <div formControlName="areTwelveMonthsVerifiableDataUsed" govuk-radio>
+    <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>
+    <govuk-radio-option [value]="false" label="No">
+      <ng-container govukConditionalContent>
+        <div
+          formControlName="twelveMonthsVerifiableDataUsedReason"
+          label="Provide details of the extent to which and reasons why your energy audits did not use 12 months of verifiable data"
+          govuk-textarea
+          [maxLength]="10000"
+        ></div>
+      </ng-container>
     </govuk-radio-option>
   </div>
-
-  <govuk-details summary="Help me answer this question">
-    <p class="govuk-body govuk-!-font-weight-bold">What is verifiable data?</p>
-    <p class="govuk-body">Verifiable data is data you can prove, for example:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>an invoice or delivery note</li>
-      <li>meter reading records and schedules for electricity or natural gas</li>
-      <li>stock records and readings for stored liquid, solid fuels and waste</li>
-      <li>automatic meter reading or smart and half hourly meter data outputs, for electricity and natural gas</li>
-    </ul>
-    <p class="govuk-body govuk-!-font-weight-bold">How should a 12 month period be measured?</p>
-    <p class="govuk-body">The data used in any ESOS energy audits must:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>detail a period of 12 consecutive months' energy use for the asset or activity</li>
-      <li>
-        begin no earlier than 12 months before the start of the compliance period (for the second compliance period they
-        must begin no earlier than 6 December 2014)
-      </li>
-      <li>
-        begin no earlier than 24 months before the start of the ESOS energy audit by the participant in the compliance
-        period (for example, for an ESOS energy audit on say 1 April 2019, data must begin no earlier than 1 April 2017)
-      </li>
-      <li>
-        not extend beyond the compliance date (that is, not extend beyond 5 December 2019 for the second compliance
-        period)
-      </li>
-      <li>not have been included in energy audits for a previous compliance period</li>
-    </ul>
-    <p class="govuk-body">
-      Where you are unable to use 12 months' data for your audits, please provide justification in your evidence pack
-      (see
-      <a
-        govukLink
-        href="https://www.gov.uk/government/publications/comply-with-the-energy-savings-opportunity-scheme-esos/complying-with-the-energy-savings-opportunity-scheme-esos#section-8-4"
-      >
-        section 8.4 </a
-      >) and make a reasonable estimate (see
-      <a
-        govukLink
-        href="https://www.gov.uk/government/publications/comply-with-the-energy-savings-opportunity-scheme-esos/complying-with-the-energy-savings-opportunity-scheme-esos#section-8-4"
-      >
-        section 3.9 </a
-      >) of the missing data.
-    </p>
-    <p class="govuk-body">
-      While your assessment of total consumption must use data for 12 months including the qualification date and be the
-      same period for all assets and activities, you can use 12 months' data from other periods for the energy audits.
-      The data used for the audits does not need to cover the same 12 month period for all the assets or activities
-      being audited.
-    </p>
-  </govuk-details>
 </esos-wizard-step>

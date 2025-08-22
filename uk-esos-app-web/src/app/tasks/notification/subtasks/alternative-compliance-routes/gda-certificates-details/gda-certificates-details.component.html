@@ -5,19 +5,34 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
+  <p class="govuk-body">For the third ESOS compliance period, the certificate must remain valid on either:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>the original compliance date of 5 December 2023</li>
+    <li>the new compliance date of 5 June 2024</li>
+  </ul>
+
   <ng-container formArrayName="certificateDetails">
     <ng-container
       *ngFor="let question of certificateDetailsFormArray.controls; index as i; last as isLast; first as isFirst"
-      [formGroupName]="i">
-      <div formControlName="certificateNumber" govuk-text-input label="Certificate number"
-           hint="This can be found at the top of your certificate" widthClass="govuk-!-width-one-third"></div>
-      <div formControlName="validFrom" govuk-date-input label="Valid from" [hint]="dateHint" [max]="dateMax"></div>
+      [formGroupName]="i"
+    >
+      <div
+        formControlName="certificateNumber"
+        govuk-text-input
+        label="Report reference number"
+        hint="This can be found at the top of your certificate"
+        widthClass="govuk-!-width-one-third"
+      ></div>
+      <div formControlName="validFrom" govuk-date-input label="Valid from" [hint]="dateHint"></div>
       <div formControlName="validUntil" govuk-date-input label="Valid until" [hint]="dateHint"></div>
       <!--eslint-disable-next-line @angular-eslint/template/click-events-have-key-events-->
-      <a govukLink (click)="removeCertificateDetails(i)" role="button" tabindex="0" *ngIf="!isFirst">Remove
-        certificate</a>
-      <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" *ngIf="!isLast"/>
+      <a govukLink (click)="removeCertificateDetails(i)" role="button" tabindex="0" *ngIf="!isFirst"
+        >Remove certificate</a
+      >
+      <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" *ngIf="!isLast" />
     </ng-container>
   </ng-container>
   <div class="govuk-button-group govuk-!-static-margin-top-6">

@@ -15,6 +15,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +55,7 @@ import static uk.gov.esos.api.web.constants.SwaggerApiInfo.OK;
 @RequestMapping(path = "/v1.0/request-notes")
 @Tag(name = "Request Notes")
 @RequiredArgsConstructor
+@Validated
 public class RequestNoteController {
 
     private final RequestNoteService requestNoteService;
@@ -68,6 +70,7 @@ public class RequestNoteController {
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#requestId")
     public ResponseEntity<RequestNoteResponse> getNotesByRequestId(
+    		@Parameter(hidden = true) AppUser appUser,
             @RequestParam("requestId") @Parameter(name = "requestId", description = "The request id") String requestId,
             @RequestParam("page") @Parameter(name = "page", description = "The page number starting from zero")
             @Min(value = 0, message = "{parameter.page.typeMismatch}")
@@ -77,7 +80,7 @@ public class RequestNoteController {
             @NotNull(message = "{parameter.pageSize.typeMismatch}") Integer pageSize) {
 
         return new ResponseEntity<>(
-                requestNoteService.getRequestNotesByRequestId(requestId, page, pageSize),
+                requestNoteService.getRequestNotesByRequestId(appUser, requestId, page, pageSize),
                 HttpStatus.OK
         );
     }
@@ -89,9 +92,11 @@ public class RequestNoteController {
     @ApiResponse(responseCode = "404", description = NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#id")
-    public ResponseEntity<RequestNoteDto> getRequestNote(@PathVariable("id") @Parameter(description = "The note id") Long id) {
+    public ResponseEntity<RequestNoteDto> getRequestNote(
+    		@PathVariable("id") @Parameter(description = "The note id") Long id,
+    		@Parameter(hidden = true) AppUser appUser) {
 
-        final RequestNoteDto requestNoteDto = requestNoteService.getNote(id);
+        final RequestNoteDto requestNoteDto = requestNoteService.getNote(appUser, id);
         return new ResponseEntity<>(requestNoteDto, HttpStatus.OK);
     }
 
@@ -122,7 +127,7 @@ public class RequestNoteController {
     public ResponseEntity<FileUuidDTO> uploadRequestNoteFile(
             @Parameter(hidden = true) AppUser authUser,
             @PathVariable("requestId") @Parameter(description = "The request id") String requestId,
-            @RequestPart("file") @Valid @NotBlank @Parameter(description = "The note file", required = true)
+            @RequestPart("file") @Parameter(description = "The note file", required = true)
                     MultipartFile file) throws IOException {
 
         final FileDTO fileDTO = fileDtoMapper.toFileDTO(file);

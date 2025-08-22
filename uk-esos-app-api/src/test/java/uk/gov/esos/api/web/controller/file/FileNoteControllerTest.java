@@ -25,6 +25,8 @@ import uk.gov.esos.api.files.common.domain.dto.FileDTO;
 import uk.gov.esos.api.files.notes.service.FileNoteTokenService;
 import uk.gov.esos.api.web.controller.exception.ExceptionControllerAdvice;
 
+import java.nio.charset.StandardCharsets;
+
 @ExtendWith(MockitoExtension.class)
 class FileNoteControllerTest {
 
@@ -73,7 +75,7 @@ class FileNoteControllerTest {
         assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_PDF.toString());
         assertThat(response.getContentAsByteArray()).isEqualTo(fileContent);
         assertThat(response.getHeader(HttpHeaders.CONTENT_DISPOSITION)).isEqualTo(
-            ContentDisposition.builder("note").filename(name).build().toString());
+            ContentDisposition.builder("note").filename(name, StandardCharsets.UTF_8).build().toString());
 
         verify(fileNoteTokenService, times(1)).getFileDTOByToken(token);
     }

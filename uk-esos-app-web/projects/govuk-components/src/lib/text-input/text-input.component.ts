@@ -17,8 +17,7 @@ import { ControlContainer, ControlValueAccessor, NgControl } from '@angular/form
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs';
 
 import { LabelDirective } from '../directives';
-import { ErrorMessageComponent } from '../error-message';
-import { GovukValidators } from '../error-message';
+import { ErrorMessageComponent, GovukValidators } from '../error-message';
 import { FormService } from '../form';
 import { FormInput } from '../form/form-input';
 import { LabelSizeType } from './label-size.type';
@@ -47,11 +46,11 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
   @Input() widthClass: GovukTextWidthClass = 'govuk-!-width-full';
   @Input() prefix?: string;
   @Input() suffix?: string;
+  @Input() isLabelHidden = true;
   @ContentChild(LabelDirective) templateLabel: LabelDirective;
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   currentLabel = 'Insert text';
   currentLabelSize = 'govuk-label';
-  isLabelHidden = true;
   disabled: boolean;
   onChange: (_: any) => any;
   onBlur: (_: any) => any;

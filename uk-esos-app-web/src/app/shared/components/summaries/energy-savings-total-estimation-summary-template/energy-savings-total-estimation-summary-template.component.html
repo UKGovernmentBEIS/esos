@@ -3,9 +3,9 @@
 </h2>
 
 <dl govuk-summary-list>
-  <div govukSummaryListRow>
-    <dd govukSummaryListRowValue>{{ totalEnergySavingsEstimation }} kWh</dd>
-    <dd *ngIf="isEditable" govukSummaryListRowActions>
+  <div govukSummaryListColumn>
+    <dd govukSummaryListColumnValue>{{ totalEnergySavingsEstimation }} kWh</dd>
+    <dd *ngIf="isEditable" govukSummaryListColumnActions>
       <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
     </dd>
   </div>

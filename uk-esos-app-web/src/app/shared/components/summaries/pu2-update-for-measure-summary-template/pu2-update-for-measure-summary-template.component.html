@@ -1,0 +1,68 @@
+<dl class="govuk-summary-list">
+  @if (!isNullOrUndefined(updateForMeasure?.measureIsImplemented)) {
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>{{ contentMap.measureIsImplemented.title }}</dt>
+      <dd govukSummaryListRowValue>{{ updateForMeasure?.measureIsImplemented | booleanToText }}</dd>
+      <ng-container *ngTemplateOutlet="changeLink; context: { fragment: 'l.measureIsImplemented' }" />
+    </div>
+  }
+  @if (!isNullOrUndefined(updateForMeasure?.measureImplementedByTheDateInActionPlan)) {
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>{{ contentMap.measureImplementedByTheDateInActionPlan.title }}</dt>
+      <dd govukSummaryListRowValue>{{ updateForMeasure?.measureImplementedByTheDateInActionPlan | booleanToText }}</dd>
+      <ng-container
+        *ngTemplateOutlet="changeLink; context: { fragment: 'l.measureImplementedByTheDateInActionPlan' }"
+      />
+    </div>
+  }
+
+  @if (!isNullOrUndefined(updateForMeasure?.reportReduction2025To2026)) {
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>{{ contentMap.reportReduction2025To2026.title }}</dt>
+      <dd govukSummaryListRowValue>{{ updateForMeasure?.reportReduction2025To2026 | booleanToText }}</dd>
+      <ng-container *ngTemplateOutlet="changeLink; context: { fragment: 'l.reportReduction2025To2026' }" />
+    </div>
+  }
+  @if (!isNullOrUndefined(updateForMeasure?.reductionEnergyConsumption2025To2026)) {
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>{{ contentMap.reductionEnergyConsumption2025To2026.title }}</dt>
+      <dd govukSummaryListRowValue>{{ updateForMeasure?.reductionEnergyConsumption2025To2026 }} kWh</dd>
+      <ng-container *ngTemplateOutlet="changeLink; context: { fragment: 'l.reductionEnergyConsumption2025To2026' }" />
+    </div>
+  }
+
+  @if (!isNullOrUndefined(updateForMeasure?.estimationMethodType)) {
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>{{ contentMap.estimationMethodType.title }}</dt>
+      <dd govukSummaryListRowValue>
+        {{ updateForMeasure.estimationMethodType | estimationMethodType: 'summary' }}
+        @if (updateForMeasure.estimationMethodType === 'OTHER_METHOD') {
+          <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+            {{ updateForMeasure.estimationMethodDescription }}
+          </p>
+        }
+      </dd>
+      <ng-container *ngTemplateOutlet="changeLink; context: { fragment: 'l.estimationMethodType' }" />
+    </div>
+  }
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>{{ contentMap.providedContext.title }}</dt>
+    <dd govukSummaryListRowValue>{{ updateForMeasure?.providedContext }}</dd>
+    <ng-container *ngTemplateOutlet="changeLink; context: { fragment: 'l.providedContext' }" />
+  </div>
+</dl>
+
+<ng-template #changeLink let-fragment="fragment">
+  @if (isEditable) {
+    <dd govukSummaryListRowActions>
+      <a
+        govukLink
+        class="govuk-link--no-visited-state"
+        [routerLink]="[measureIndex + '/' + stepUrls.EDIT_UPDATE_FOR_MEASURE]"
+        [fragment]="fragment"
+        >Change</a
+      >
+    </dd>
+  }
+</ng-template>

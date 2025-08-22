@@ -35,4 +35,40 @@
         	referencedTableName="user_entity" 
         	referencedColumnNames="id"/>
     </changeSet>
+    
+    
+    <changeSet id="update_enabled_property_to_true_for_users_with_autority_deleted" author="P35066">
+    	<sql>
+            UPDATE user_entity ue
+			SET enabled = true
+			WHERE ue.id IN (
+			    SELECT ua.user_id
+			    FROM user_attribute ua
+			    JOIN credential uc ON uc.user_id = ua.user_id
+			    WHERE ua.name = 'status'
+			    AND ua.value = 'DELETED'
+			);
+        </sql>
+        <rollback />
+    </changeSet>
+    
+    <changeSet id="update_replace_status_attribute_for_users_with_status_DELETED" author="P35066">
+    	<sql>
+            UPDATE user_attribute ua
+			SET value = CASE
+			              WHEN ue.enabled = true AND uc.user_id IS NOT NULL THEN 'REGISTERED'
+			              ELSE 'PENDING'
+			           END
+			FROM user_entity ue
+			LEFT JOIN (
+			    SELECT DISTINCT user_id
+			    FROM credential
+			) uc ON uc.user_id = ue.id
+			WHERE ua.name = 'status'
+			  AND ua.value = 'DELETED'
+			  AND ua.user_id = ue.id;
+        </sql>
+        <rollback />
+    </changeSet>
+    
 </databaseChangeLog>

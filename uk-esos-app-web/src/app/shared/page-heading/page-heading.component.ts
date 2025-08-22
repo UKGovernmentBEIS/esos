@@ -1,19 +1,22 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+
+import { GovukSpacingUnit } from 'govuk-components';
 
 @Component({
   selector: 'esos-page-heading',
   standalone: true,
   template: `
-    <span [class]="'govuk-caption-' + size" *ngIf="caption">{{ caption }}</span>
-    <h1 [class]="'govuk-heading-' + size">
+    @if (caption) {
+      <span [class]="'govuk-caption-' + size">{{ caption }}</span>
+    }
+    <h1 [class]="'govuk-heading-' + size + ' govuk-!-margin-bottom-' + bottomSpacing">
       <ng-content></ng-content>
     </h1>
   `,
-  imports: [NgIf],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageHeadingComponent {
   @Input() caption: string;
   @Input() size: 'l' | 'xl' = 'l';
+  @Input() bottomSpacing: GovukSpacingUnit = 6;
 }

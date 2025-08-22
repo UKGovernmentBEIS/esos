@@ -38,11 +38,5 @@ export class CertificateDetailsListSummaryTemplateComponent {
   @Input() changeLink: string;
   @Input() isEditable = false;
   @Input() queryParams: Params = {};
-
-  columns: GovukTableColumn[] = [
-    { field: 'certificateNumber', header: 'Certificate number' },
-    { field: 'validFrom', header: 'Valid from' },
-    { field: 'validUntil', header: 'Valid until' },
-    { field: 'change', header: '', widthClass: 'govuk-input--width-20' },
-  ];
+  @Input() columns: GovukTableColumn[];
 }

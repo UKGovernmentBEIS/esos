@@ -5,7 +5,7 @@ Design details can be found at [GOV.UK Design System](https://design-system.serv
 
 The accordion component **must** contain at least one `<govuk-accordion-item>`.
 
-Adding a summary below the title of an accordion item can be achieved with the `[govukAccordionItemSummary]` directive.
+Adding a summary below the title of an accordion item can be achieved with the `[summary]` input.
 
 ### Inputs
 
@@ -22,16 +22,14 @@ Accordion item component:
 
 ```angular2html
 <govuk-accordion id="accordion">
-  <govuk-accordion-item header="Something">
-    <div govukAccordionItemSummary>More info</div>
+  <govuk-accordion-item header="Something" summary="More info">
     <p class="govuk-body">Content</p>
   </govuk-accordion-item>
 </govuk-accordion>
 
 <govuk-accordion id="async-accordion">
   <govuk-accordion-item *ngFor="let item of items$ | async"
-                        [header]="item.header">
-    <div govukAccordionItemSummary>{{ item.summary }}</div>
+                        [header]="item.header" [summary]="item.summary">
     <p class="govuk-body">{{ item.content }}</p>
   </govuk-accordion-item>
 </govuk-accordion>

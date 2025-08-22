@@ -35,7 +35,7 @@ describe('PersonListTemplateComponent', () => {
 
   it('should display heading text', () => {
     const headingElement = fixture.debugElement.query(By.css('.govuk-heading-m'));
-    expect(headingElement.nativeElement.textContent).toBe('Persons added');
+    expect(headingElement.nativeElement.textContent).toBe('Add the assessment personnel (optional)');
   });
 
   it('should display the table with added persons', () => {

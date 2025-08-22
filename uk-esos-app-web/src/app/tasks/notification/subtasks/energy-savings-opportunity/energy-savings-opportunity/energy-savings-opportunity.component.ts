@@ -1,11 +1,19 @@
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, Inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
-import { getTotalSum } from '@shared/components/energy-consumption-input/energy-consumption-input';
-import { EnergyConsumptionInputComponent } from '@shared/components/energy-consumption-input/energy-consumption-input.component';
+import {
+  getTotalConsumptionPotentialCostOptional,
+  getTotalConsumptionPotentialOptional,
+} from '@shared/components/energy-consumption-input-with-cost/energy-consumption-input-with-cost';
+import { EnergyConsumptionInputWithCostComponent } from '@shared/components/energy-consumption-input-with-cost/energy-consumption-input-with-cost.component';
+import { NoDataEnteredPipe } from '@shared/pipes/no-data-entered.pipe';
+import { NoDataEnteredForCostPipe } from '@shared/pipes/no-data-entered-for-cost.pipe';
+import { energySavingsOpportunityMap } from '@shared/subtask-list-maps/subtask-list-maps';
+import { getFixedCostOptional } from '@shared/utils/bignumber.utils';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import { TASK_FORM } from '@tasks/task-form.token';
@@ -13,23 +21,39 @@ import produce from 'immer';
 
 import { DetailsComponent } from 'govuk-components';
 
-import { EnergyConsumption } from 'esos-api';
+import { EnergyConsumptionPotentialReduction } from 'esos-api';
 
-import { CurrentStep, ENERGY_SAVINGS_OPPORTUNITIES_SUB_TASK } from '../energy-savings-opportunity.helper';
+import {
+  ENERGY_SAVINGS_OPPORTUNITIES_SUB_TASK,
+  EnergySavingsOpportunitiesCurrentStep,
+} from '../energy-savings-opportunity.helper';
 import { energySavingsOpportunityFormProvider } from './energy-savings-opportunity-form.provider';
 
 @Component({
   selector: 'esos-energy-savings-opportunity',
   standalone: true,
-  imports: [WizardStepComponent, DetailsComponent, EnergyConsumptionInputComponent, ReactiveFormsModule],
+  imports: [
+    WizardStepComponent,
+    DetailsComponent,
+    EnergyConsumptionInputWithCostComponent,
+    ReactiveFormsModule,
+    CurrencyPipe,
+    NoDataEnteredPipe,
+    NoDataEnteredForCostPipe,
+  ],
   templateUrl: './energy-savings-opportunity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [energySavingsOpportunityFormProvider],
 })
-export class EnergySavingsOpportunityComponent {
-  private formData: Signal<EnergyConsumption> = toSignal(this.form.valueChanges, { initialValue: this.form.value });
+export default class EnergySavingsOpportunityComponent {
+  protected readonly energySavingsOpportunityMap = energySavingsOpportunityMap;
+  private formData: Signal<EnergyConsumptionPotentialReduction> = toSignal(this.form.valueChanges, {
+    initialValue: this.form.value,
+  });
 
-  totalkWh: Signal<number> = computed(() => getTotalSum(this.formData()));
+  totalConsumption: Signal<number> = computed(() => getTotalConsumptionPotentialOptional(this.formData()));
+
+  totalCost: Signal<number> = computed(() => getTotalConsumptionPotentialCostOptional(this.formData()));
 
   constructor(
     @Inject(TASK_FORM) readonly form: UntypedFormGroup,
@@ -40,17 +64,30 @@ export class EnergySavingsOpportunityComponent {
   submit() {
     this.service.saveSubtask({
       subtask: ENERGY_SAVINGS_OPPORTUNITIES_SUB_TASK,
-      currentStep: CurrentStep.STEP1,
+      currentStep: EnergySavingsOpportunitiesCurrentStep.STEP2,
       route: this.route,
       payload: produce(this.service.payload, (payload) => {
         payload.noc.energySavingsOpportunities = {
           ...payload.noc.energySavingsOpportunities,
           energyConsumption: {
-            buildings: +this.form.get('buildings').value,
-            transport: +this.form.get('transport').value,
-            industrialProcesses: +this.form.get('industrialProcesses').value,
-            otherProcesses: +this.form.get('otherProcesses').value,
-            total: this.totalkWh(),
+            buildings: {
+              energyConsumption: this.form.get('buildings').value.energyConsumption ?? null,
+              energyCost: getFixedCostOptional(this.form.get('buildings').value.energyCost),
+            },
+            transport: {
+              energyConsumption: this.form.get('transport').value.energyConsumption ?? null,
+              energyCost: getFixedCostOptional(this.form.get('transport').value.energyCost),
+            },
+            industrialProcesses: {
+              energyConsumption: this.form.get('industrialProcesses').value.energyConsumption ?? null,
+              energyCost: getFixedCostOptional(this.form.get('industrialProcesses').value.energyCost),
+            },
+            otherProcesses: {
+              energyConsumption: this.form.get('otherProcesses').value.energyConsumption ?? null,
+              energyCost: getFixedCostOptional(this.form.get('otherProcesses').value.energyCost),
+            },
+            energyConsumptionTotal: this.totalConsumption(),
+            energyCostTotal: getFixedCostOptional(this.totalCost()),
           },
         };
       }),

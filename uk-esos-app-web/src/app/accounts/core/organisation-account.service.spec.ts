@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
 import { OrganisationAccountStore } from '@accounts/organisation-account-application/+state';
+import { OrganisationAccountOpeningApplicationState } from '@accounts/organisation-account-application/+state';
 import { PendingRequestService } from '@core/guards/pending-request.service';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 
 import { RequestsService } from 'esos-api';
 
-import { OrganisationAccountOpeningApplicationState } from '../organisation-account-application/+state/organisation-account.state';
 import { OrganisationAccountService } from './organisation-account.service';
 
 describe('OrganisationAccountService', () => {
@@ -58,6 +58,9 @@ describe('OrganisationAccountService', () => {
           postcode: '12345',
         },
         competentAuthority: 'ENGLAND',
+        type: 'OTHER',
+        otherTypeName: 'some classification name',
+        codes: ['CodeA', 'CodeB', 'CodeC'],
       };
 
       const result = service['mapApplication'](state, 'ORGANISATION_ACCOUNT_CREATION_REQUEST_CREATE_ACTION_PAYLOAD');
@@ -71,6 +74,9 @@ describe('OrganisationAccountService', () => {
         city: 'Anytown',
         county: 'West Sussex',
         postcode: '12345',
+        type: 'OTHER',
+        otherTypeName: 'some classification name',
+        codes: ['CodeA', 'CodeB', 'CodeC'],
       });
     });
   });

@@ -13,7 +13,7 @@ import { GovukValidators } from 'govuk-components';
 import { CustomMiReportParams, MiReportsService } from 'esos-api';
 
 import { ExtendedMiReportResult } from '../core/mi-interfaces';
-import { manipulateResultsAndExportToExcel } from '../core/mi-report';
+import { MiReportsExportService } from '../core/mi-reports-export.service';
 
 @Component({
   selector: 'esos-custom',
@@ -31,6 +31,7 @@ export class CustomReportComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly miReportsService: MiReportsService,
+    private readonly miReportsExportService: MiReportsExportService,
     readonly pendingRequest: PendingRequestService,
   ) {}
 
@@ -50,7 +51,7 @@ export class CustomReportComponent {
         )
         .pipe(
           map((results: ExtendedMiReportResult) => {
-            manipulateResultsAndExportToExcel(results, 'Custom sql report');
+            this.miReportsExportService.manipulateResultsAndExportToExcel(results, 'Custom sql report');
           }),
         )
         .subscribe({

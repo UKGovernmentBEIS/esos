@@ -51,10 +51,10 @@ class OrganisationAccountAssignedRegulatorSiteContactsRepositoryIT extends Abstr
                 AccountContactType.PRIMARY, userId1,
                 AccountContactType.CA_SITE, userId2);
 
-        OrganisationAccount account1 = createAccount(1L, "accountName1", CompetentAuthorityEnum.ENGLAND, contacts);
+        OrganisationAccount account1 = createAccount(1L, "accountName1", CompetentAuthorityEnum.ENGLAND, contacts, CompetentAuthorityEnum.WALES);
         Authority authority1 = createAuthority(userId2,"code1", AuthorityStatus.ACTIVE, CompetentAuthorityEnum.ENGLAND);
 
-        OrganisationAccount account2 = createAccount(2L, "accountName2", CompetentAuthorityEnum.ENGLAND, new HashMap<>());
+        OrganisationAccount account2 = createAccount(2L, "accountName2", CompetentAuthorityEnum.ENGLAND, new HashMap<>(), CompetentAuthorityEnum.WALES);
         createAuthority(userId3, "code2", AuthorityStatus.ACTIVE, CompetentAuthorityEnum.ENGLAND);
 
         List<AccountAssignedRegulatorSiteContact> assignedRegulatorSiteContacts =
@@ -81,7 +81,7 @@ class OrganisationAccountAssignedRegulatorSiteContactsRepositoryIT extends Abstr
     }
 
     private OrganisationAccount createAccount(Long id, String name, CompetentAuthorityEnum competentAuthority,
-                                              Map<AccountContactType, String> contacts) {
+                                              Map<AccountContactType, String> contacts, CompetentAuthorityEnum location) {
 
         OrganisationAccount account = OrganisationAccount.builder()
                 .id(id)
@@ -99,6 +99,7 @@ class OrganisationAccountAssignedRegulatorSiteContactsRepositoryIT extends Abstr
                 .emissionTradingScheme(EmissionTradingScheme.UK_ETS_INSTALLATIONS)
                 .contacts(contacts)
                 .emissionTradingScheme(EmissionTradingScheme.UK_ETS_INSTALLATIONS)
+                .location(location)
                 .build();
 
         entityManager.persist(account);

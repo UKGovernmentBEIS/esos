@@ -23,6 +23,7 @@ import { requestTaskReassignedError } from '@shared/errors/request-task-error';
 import { FileUploadService } from '@shared/file-input/file-upload.service';
 import { createCommonFileAsyncValidators } from '@shared/file-input/file-validators';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
+import { PendingButtonDirective } from '@shared/pending-button.directive';
 import { SharedModule } from '@shared/shared.module';
 
 import { GovukValidators } from 'govuk-components';
@@ -35,7 +36,7 @@ import { WorkflowItemAbstractComponent } from '../../workflow-item-abstract.comp
   selector: 'esos-request-note',
   templateUrl: './request-note.component.html',
   standalone: true,
-  imports: [PageHeadingComponent, SharedModule],
+  imports: [PageHeadingComponent, SharedModule, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DestroySubject],
 })
@@ -48,7 +49,7 @@ export class RequestNoteComponent extends WorkflowItemAbstractComponent implemen
     map((result) => result.payload),
   );
 
-  fileDowloadUrl$: Observable<string>;
+  fileDownloadUrl$: Observable<string>;
 
   form = this.fb.group({
     note: [
@@ -84,7 +85,7 @@ export class RequestNoteComponent extends WorkflowItemAbstractComponent implemen
   }
 
   ngOnInit(): void {
-    this.fileDowloadUrl$ = this.prefixUrl$.pipe(
+    this.fileDownloadUrl$ = this.prefixUrl$.pipe(
       withLatestFrom(this.accountId$, this.requestId$),
       takeUntil(this.destroy$),
       map(([prefixUrl, accountId, requestId]) =>

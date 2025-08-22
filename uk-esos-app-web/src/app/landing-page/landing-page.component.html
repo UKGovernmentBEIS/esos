@@ -2,63 +2,104 @@
   <div *ngIf="vm.isLoggedIn === false; else welcome">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <esos-page-heading>Manage your Energy Savings Opportunity Scheme reporting</esos-page-heading>
-
+        <govuk-notification-banner heading="Important">
+          <p class="govuk-notification-banner__heading">
+            The deadlines for the submission of a Notification of Compliance and Action Plans have now passed. The
+            Environment Agency will be communicating to all organisations who qualify for ESOS and have yet to complete
+            these requirements.
+          </p>
+          <p class="govuk-notification-banner__heading">
+            MESOS will still accept these submissions. Late submissions will be reviewed by your regulator and may be
+            subject to enforcement related activity.
+          </p>
+          <p class="govuk-notification-banner__heading">
+            You must ensure you respond promptly to any communications you receive from the Environment Agency or your
+            regulator.
+          </p>
+        </govuk-notification-banner>
+        <esos-page-heading>Manage your Energy Savings Opportunity Scheme Reporting</esos-page-heading>
         <div class="govuk-body">
           <p>
             The Energy Savings Opportunity Scheme (ESOS) is an energy assessment and energy saving scheme that applies
             to large undertakings and groups containing large undertakings in the UK. This includes:
           </p>
 
-          <ul class="govuk-list govuk-list--bullet">
+          <ul class="govuk-list govuk-list--bullet govuk-!-margin-left-3">
             <li>corporate bodies or partnerships</li>
             <li>unincorporated associations carrying on a trade or business, with or without a view to profit</li>
             <li>partnerships and limited liability partnerships</li>
             <li>joint ventures</li>
-            <li>charities</li>
           </ul>
 
           <h2 class="govuk-heading-m">Who qualifies for ESOS</h2>
 
           <p>
             You must take part in ESOS if your organisation, or any UK undertakings in your organisation’s group,
-            qualifies as a large undertaking on the qualification date. The qualification date for the third compliance
-            period is 31 December 2026.
+            qualifies as a large undertaking on the qualification date.
           </p>
+
+          <p>The qualification date for the third compliance period is 31 December 2022.</p>
 
           <p>A large undertaking is any UK undertaking that meets one or both of the following conditions:</p>
 
-          <ol class="govuk-list govuk-list--number">
-            <li>
-              Employs 250 or more people. For a UK registered undertaking, this includes all employees contracted to the
-              undertaking either in the UK or abroad, irrespective of the number of hours for which they are employed.
-              For ESOS purposes, the definition of an employee for a non-UK registered undertaking with a UK registered
-              establishment is someone directly contracted to the undertaking who is subject to income tax in the UK.
-            </li>
+          <ol class="govuk-list govuk-list--number govuk-list--spaced govuk-!-margin-left-3">
+            <li>employs 250 or more people</li>
 
             <li>
-              Has an annual turnover in excess of £44 million and an annual balance sheet total in excess of £38
-              million.
+              has an annual turnover in excess of £44 million and an annual balance sheet total in excess of £38 million
             </li>
           </ol>
+
+          <h2 class="govuk-heading-m">How do I notify compliance with ESOS?</h2>
+
+          <p>
+            A representative from the responsible undertaking must set up a sign in to create an account on the online
+            notification system and fill in the notification requirements. The representative can add an external lead
+            assessor to the account to assist with filling in information, but only the responsible undertaking can
+            submit the completed notification.
+          </p>
+
+          <p>
+            Responsible undertakings are by default the highest UK parent in a group acting on behalf of a group of
+            qualifying undertakings unless other agreements apply.
+          </p>
+
+          <p class="govuk-!-font-weight-bold">
+            The wording in the online notification system is for information only and should be read in conjunction with
+            the ESOS guidance on
+            <a govukLink rel="noreferrer noopener" href="https://www.gov.uk"> gov.uk </a>
+            and the regulations on ESOS. In the event of any inconsistency or doubt the regulations should be followed.
+          </p>
+
+          <h3 class="govuk-heading-s">Adding an external lead assessor</h3>
+
+          <p>
+            An external lead assessor can provide their email address to a responsible undertaking in order to be added
+            to the responsible undertaking’s account. This generates an activation email containing a link which the
+            lead assessor will use to set up a sign in to create their own account and add it to the responsible
+            undertaking’s account.
+          </p>
+
+          <p>
+            The lead assessor can also create their own account first, and provide the responsible undertaking with
+            their email address in order to be added to the responsible undertaking’s account. The lead assessor will
+            receive an activation email each time a new responsible undertaking adds the lead assessor to their account.
+            Using the same sign in details, the lead assessor will be able to access the new responsible undertaking
+            account, and those of all other responsible undertakings to which they have been added.
+          </p>
           <br />
 
-          <h2 class="govuk-heading-s">I already have a sign in</h2>
-          <p>You'll need your password and two-factor authentication app to sign in to the service.</p>
+          <h3 class="govuk-heading-s">Sign in or register with ESOS</h3>
+          <p>
+            You'll need to sign in to use this service. if you do not already have sign in details, you will be able to
+            create them. You can save your application and come back to it at any time.
+          </p>
 
-          <a class="govuk-button govuk-button--start" routerLink="." (click)="authService.login()" draggable="false">
-            Sign in
+          <a class="govuk-button govuk-button--start" routerLink="/start-login" draggable="false">
+            Start now
             <img class="govuk-button__start-icon" src="/assets/images/start-button-arrow.svg" alt="" />
           </a>
           <br />
-
-          <h2 class="govuk-heading-s">I need to create a sign in</h2>
-          <p>You can apply online for a sign in if you qualify for ESOS.</p>
-
-          <a class="govuk-button govuk-button--start" routerLink="/registration" draggable="false">
-            Create a sign in
-            <img class="govuk-button__start-icon" src="/assets/images/start-button-arrow.svg" alt="" />
-          </a>
         </div>
       </div>
 
@@ -107,7 +148,7 @@
   </ng-template>
 
   <ng-template #userActivation>
-    <esos-page-heading> Your user account needs to be activated. </esos-page-heading>
+    <esos-page-heading> Your user account needs to be activated.</esos-page-heading>
 
     <p class="govuk-body">
       Your user account must be activated before you can sign in to the Manage your Energy Savings Opportunity Scheme

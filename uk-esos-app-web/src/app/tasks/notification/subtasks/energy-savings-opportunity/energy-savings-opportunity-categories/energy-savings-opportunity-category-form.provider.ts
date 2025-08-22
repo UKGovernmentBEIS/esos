@@ -5,32 +5,87 @@ import { RequestTaskStore } from '@common/request-task/+state';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { TASK_FORM } from '@tasks/task-form.token';
 
-import { numberValidators, sumValidationEqualToOpportunity } from '../energy-savings-opportunity.validators';
+import { integerValidator, numberWithDecimalsValidators } from '../energy-savings-opportunity.validators';
 
 export const energySavingsOpportunityCategoryFormProvider: Provider = {
   provide: TASK_FORM,
   deps: [UntypedFormBuilder, RequestTaskStore],
   useFactory: (fb: UntypedFormBuilder, store: RequestTaskStore) => {
-    const energyConsumptionTotal = store.select(notificationQuery.selectEnergySavingsOpportunities)()?.energyConsumption
-      .total;
-
     const energySavingsCategories = store.select(notificationQuery.selectEnergySavingsOpportunities)()
       ?.energySavingsCategories;
 
     return fb.group(
       {
-        energyManagementPractices: [energySavingsCategories?.energyManagementPractices ?? 0, numberValidators],
-        behaviourChangeInterventions: [energySavingsCategories?.behaviourChangeInterventions ?? 0, numberValidators],
-        training: [energySavingsCategories?.training ?? 0, numberValidators],
-        controlsImprovements: [energySavingsCategories?.controlsImprovements ?? 0, numberValidators],
-        shortTermCapitalInvestments: [energySavingsCategories?.shortTermCapitalInvestments ?? 0, numberValidators],
-        longTermCapitalInvestments: [energySavingsCategories?.longTermCapitalInvestments ?? 0, numberValidators],
-        otherMeasures: [energySavingsCategories?.otherMeasures ?? 0, numberValidators],
+        energyManagementPractices: fb.group(
+          {
+            energyConsumption: [
+              energySavingsCategories?.energyManagementPractices?.energyConsumption ?? null,
+              integerValidator,
+            ],
+            energyCost: [
+              energySavingsCategories?.energyManagementPractices?.energyCost ?? null,
+              numberWithDecimalsValidators,
+            ],
+          },
+          { updateOn: 'change' },
+        ),
+
+        behaviourChangeInterventions: fb.group(
+          {
+            energyConsumption: [
+              energySavingsCategories?.behaviourChangeInterventions?.energyConsumption ?? null,
+              integerValidator,
+            ],
+            energyCost: [
+              energySavingsCategories?.behaviourChangeInterventions?.energyCost ?? null,
+              numberWithDecimalsValidators,
+            ],
+          },
+          { updateOn: 'change' },
+        ),
+
+        training: fb.group(
+          {
+            energyConsumption: [energySavingsCategories?.training?.energyConsumption ?? null, integerValidator],
+            energyCost: [energySavingsCategories?.training?.energyCost ?? null, numberWithDecimalsValidators],
+          },
+          { updateOn: 'change' },
+        ),
+
+        controlsImprovements: fb.group(
+          {
+            energyConsumption: [
+              energySavingsCategories?.controlsImprovements?.energyConsumption ?? null,
+              integerValidator,
+            ],
+            energyCost: [
+              energySavingsCategories?.controlsImprovements?.energyCost ?? null,
+              numberWithDecimalsValidators,
+            ],
+          },
+          { updateOn: 'change' },
+        ),
+
+        capitalInvestments: fb.group(
+          {
+            energyConsumption: [
+              energySavingsCategories?.capitalInvestments?.energyConsumption ?? null,
+              integerValidator,
+            ],
+            energyCost: [energySavingsCategories?.capitalInvestments?.energyCost ?? null, numberWithDecimalsValidators],
+          },
+          { updateOn: 'change' },
+        ),
+
+        otherMeasures: fb.group(
+          {
+            energyConsumption: [energySavingsCategories?.otherMeasures?.energyConsumption, integerValidator],
+            energyCost: [energySavingsCategories?.otherMeasures?.energyCost, numberWithDecimalsValidators],
+          },
+          { updateOn: 'change' },
+        ),
       },
-      {
-        updateOn: 'change',
-        validators: [sumValidationEqualToOpportunity(energyConsumptionTotal)],
-      },
+      { updateOn: 'change' },
     );
   },
 };

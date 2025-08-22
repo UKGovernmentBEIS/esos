@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_progress_update_1.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_CREATE_PROGRESS_UPDATE_1_TABLE" author="pmpountas@unisystems.gr">
+        <comment>Create PU1 table</comment>
+        <createTable tableName="progress_update_1" remarks="Represents a progress update">
+            <column name="id" type="varchar(20)" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="pu1_pk" nullable="false"/>
+            </column>
+            <column name="data" type="jsonb" remarks="The pu1 data">
+                <constraints nullable="false" />
+            </column>
+            <column name="account_id" type="bigint" remarks="The account id">
+                <constraints nullable="false" />
+            </column>
+            <column name="phase" type="varchar(255)" remarks="The pu1 phase">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS progress_update_1 CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_isDisaggregateUndertaking_COLUMN" author="pmpountas@unisystems.gr">
+        <addColumn tableName="progress_update_1">
+            <column name="is_disaggregate_undertaking" type="boolean" defaultValueBoolean="false" remarks="If pu1 is from disaggregated account">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <rollback>
+            <sql>
+                ALTER TABLE progress_update_1
+                DROP COLUMN IF EXISTS is_disaggregate_undertaking;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

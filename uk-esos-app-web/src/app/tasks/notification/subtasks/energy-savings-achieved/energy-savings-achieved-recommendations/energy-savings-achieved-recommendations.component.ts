@@ -4,6 +4,7 @@ import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
+import { NoDataEnteredPipe } from '@shared/pipes/no-data-entered.pipe';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import { TASK_FORM } from '@tasks/task-form.token';
@@ -24,7 +25,7 @@ import { energySavingsAchievedRecommendationsFormProvider } from './energy-savin
   selector: 'esos-energy-savings-achieved-recommendations',
   templateUrl: './energy-savings-achieved-recommendations.component.html',
   standalone: true,
-  imports: [GovukComponentsModule, ReactiveFormsModule, WizardStepComponent],
+  imports: [GovukComponentsModule, NoDataEnteredPipe, ReactiveFormsModule, WizardStepComponent],
   providers: [energySavingsAchievedRecommendationsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

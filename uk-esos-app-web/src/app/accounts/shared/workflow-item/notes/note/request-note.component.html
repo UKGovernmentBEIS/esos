@@ -1,5 +1,5 @@
-<ng-container *ngIf="(route.data | async)?.pageTitle as pageTitle">
-  <esos-page-heading size="l">{{ pageTitle }}</esos-page-heading>
+<ng-container *ngIf="(route.data | async)?.heading as heading">
+  <esos-page-heading size="l">{{ heading }}</esos-page-heading>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form">
     <govuk-error-summary *ngIf="isErrorSummaryDisplayed$ | async" [form]="form"></govuk-error-summary>
@@ -13,7 +13,7 @@
     ></div>
 
     <esos-multiple-file-input
-      [baseDownloadUrl]="fileDowloadUrl$ | async"
+      [baseDownloadUrl]="fileDownloadUrl$ | async"
       [listTitle]="'Uploaded files'"
       label="Upload a file"
       formControlName="files"

@@ -1,0 +1,24 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+
+<h2 class="govuk-heading-m">{{ header }}</h2>
+<div class="overflow-auto overflow-auto-table">
+  <govuk-table [columns]="tableColumns" [data]="data">
+    <ng-template let-column="column" let-row="row" let-index="index">
+      <ng-container [ngSwitch]="column.field">
+        <ng-container *ngSwitchCase="'organisationName'">{{ row.organisationName }}</ng-container>
+        <ng-container *ngSwitchCase="'registrationNumber'">{{ row.registrationNumber }}</ng-container>
+        <ng-container *ngSwitchCase="'links'">
+          <ng-container *ngIf="isEditable">
+            <div class="govuk-!-text-align-right">
+              <a govukLink [routerLink]="changeLink" [queryParams]="queryParams">Change</a>
+              <a class="govuk-!-padding-left-3" govukLink [routerLink]="[]" (click)="onRemove(index)">Remove</a>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-template>
+  </govuk-table>
+</div>
+
+<a govukSecondaryButton *ngIf="isEditable" [routerLink]="['./', changeLink]"> Add organisation name </a>

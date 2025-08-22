@@ -14,12 +14,16 @@ export interface OrganisationAccountDTO {
   id?: number;
   registrationNumber?: string;
   name: string;
+  type: 'SIC' | 'OTHER';
+  otherTypeName?: string;
+  codes: Array<string>;
   line1: string;
   line2?: string;
   city: string;
-  county: string;
+  county?: string;
   postcode: string;
   competentAuthority: 'ENGLAND' | 'NORTHERN_IRELAND' | 'OPRED' | 'SCOTLAND' | 'WALES';
   organisationId?: string;
-  status?: 'UNAPPROVED' | 'LIVE' | 'DENIED';
+  status?: 'AWAITING_APPROVAL' | 'LIVE' | 'DENIED' | 'CLOSED';
+  editable?: boolean;
 }

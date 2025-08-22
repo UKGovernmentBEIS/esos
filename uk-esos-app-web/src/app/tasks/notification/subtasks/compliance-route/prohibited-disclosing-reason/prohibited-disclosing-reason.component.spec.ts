@@ -79,7 +79,7 @@ describe('ProhibitedDisclosingReasonComponent', () => {
     expect(page.errorSummary).toBeFalsy();
     expect(page.heading).toBeTruthy();
     expect(page.heading.textContent.trim()).toEqual(
-      'Explain why the disclosure of these parts of the ESOS report, or supporting information, is prohibited by law.',
+      'Why is disclosure of these parts of the ESOS report or supporting information prohibited by law?',
     );
     expect(page.submitButton).toBeTruthy();
   });
@@ -91,7 +91,7 @@ describe('ProhibitedDisclosingReasonComponent', () => {
 
     expect(page.errorSummary).toBeTruthy();
     expect(page.errors.map((error) => error.textContent.trim())).toEqual([
-      'Explain why disclosure of parts of the ESOS report or supplying information is prohibited by law',
+      'Enter the reason that disclosure of this information is prohibited',
     ]);
     expect(taskServiceSpy).not.toHaveBeenCalled();
   });

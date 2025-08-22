@@ -1,4 +1,5 @@
 <esos-page-heading size="xl">Enter a query</esos-page-heading>
+
 <p class="govuk-body">
   To see all SQL queries needed to execute the relevant MI reports,
   <a
@@ -10,12 +11,14 @@
     access the SQL query list.
   </a>
 </p>
+
 <div *ngIf="errorMessage$ | async as errorMessage">
   <p class="govuk-error-message">{{ errorMessage }}</p>
 </div>
 
 <form (ngSubmit)="exportToExcel()" [formGroup]="reportOptionsForm">
   <div govuk-textarea formControlName="query" label="Enter a query"></div>
+
   <div class="govuk-button-group">
     <button govukButton type="submit">Export to excel</button>
   </div>

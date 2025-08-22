@@ -1,15 +1,16 @@
 <esos-wizard-step
   (formSubmit)="submit()"
   [formGroup]="form"
-  heading="What is the breakdown of the energy savings achieved during the compliance period against the following energy saving categories?"
+  heading="What is the breakdown of the energy savings achieved during the compliance period against the following energy saving categories? (optional)"
   caption="Energy savings achieved"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
   <esos-energy-savings-categories-input></esos-energy-savings-categories-input>
 
   <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
   <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Total</h2>
-  <p class="govuk-body">{{ totalkWh() }} kWh</p>
+  <p class="govuk-body">{{ totalkWh() | noDataEntered : 'kWh' }}</p>
 </esos-wizard-step>

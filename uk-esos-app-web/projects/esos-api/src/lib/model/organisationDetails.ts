@@ -13,9 +13,12 @@
 export interface OrganisationDetails {
   name?: string;
   registrationNumber?: string;
+  type: 'SIC' | 'OTHER';
+  otherTypeName?: string;
+  codes: Array<string>;
   line1: string;
   line2?: string;
   city: string;
-  county: string;
+  county?: string;
   postcode: string;
 }

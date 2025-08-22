@@ -16,4 +16,5 @@ public class NoteDto {
     private NotePayload payload;
     private String submitter;
     private LocalDateTime lastUpdatedOn;
+    private boolean isEditable;
 }

@@ -125,7 +125,7 @@ class AccountNoteControllerTest {
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(accountNoteService.getAccountNotesByAccountId(accountId, 0, 2)).thenReturn(response);
+        when(accountNoteService.getAccountNotesByAccountId(user, accountId, 0, 2)).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.get(ACCOUNT_NOTE_CONTROLLER_PATH + "?accountId=1&page=0&size=2")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -137,7 +137,7 @@ class AccountNoteControllerTest {
             .andExpect(jsonPath("$.accountNotes[1].payload.note").value("note 2"));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(accountNoteService, times(1)).getAccountNotesByAccountId(accountId, 0, 2);
+        verify(accountNoteService, times(1)).getAccountNotesByAccountId(user, accountId, 0, 2);
     }
 
     @Test
@@ -149,7 +149,7 @@ class AccountNoteControllerTest {
         final AccountNoteDto accountNoteDto = AccountNoteDto.builder().accountId(2L).payload(NotePayload.builder().note("the note").build()).build();
         
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(accountNoteService.getNote(noteId)).thenReturn(accountNoteDto);
+        when(accountNoteService.getNote(user, noteId)).thenReturn(accountNoteDto);
 
         mockMvc.perform(MockMvcRequestBuilders.get(ACCOUNT_NOTE_CONTROLLER_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -159,7 +159,7 @@ class AccountNoteControllerTest {
             .andExpect(jsonPath("$.payload.note").value("the note"));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(accountNoteService, times(1)).getNote(noteId);
+        verify(accountNoteService, times(1)).getNote(user, noteId);
     }
 
     @Test
@@ -178,7 +178,7 @@ class AccountNoteControllerTest {
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(accountNoteService, never()).getAccountNotesByAccountId(anyLong(), anyInt(), anyInt());
+        verify(accountNoteService, never()).getAccountNotesByAccountId(any(), anyLong(), anyInt(), anyInt());
     }
 
     @Test

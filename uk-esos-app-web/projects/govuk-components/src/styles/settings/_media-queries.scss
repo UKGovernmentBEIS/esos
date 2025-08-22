@@ -1,5 +1,5 @@
 ////
-/// @group settings/media-queries
+/// @group settings/layout
 ////
 
 /// Breakpoint definitions
@@ -8,9 +8,9 @@
 /// @access public
 
 $govuk-breakpoints: (
-  mobile:  320px,
-  tablet:  641px,
-  desktop: 769px
+  mobile: 320px,
+  tablet: 641px,
+  desktop: 769px,
 ) !default;
 
 /// Show active breakpoint in top-right corner.
@@ -21,3 +21,5 @@ $govuk-breakpoints: (
 /// @access public
 
 $govuk-show-breakpoints: false !default;
+
+/*# sourceMappingURL=_media-queries.scss.map */

@@ -7,25 +7,38 @@ import { NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload } from 'e
 export class FirstCompliancePeriodSideEffect extends SideEffect {
   override subtask = SUB_TASK_FIRST_COMPLIANCE_PERIOD;
 
-  override apply(
-    currentPayload: NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload,
-  ): NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload {
+  apply<T extends NotificationOfComplianceP3ApplicationSubmitRequestTaskPayload>(currentPayload: T): T {
     return produce(currentPayload, (payload) => {
       const informationExists = payload?.noc?.firstCompliancePeriod.informationExists;
-      if (informationExists === false) {
+      if (['NO', 'SKIP_QUESTION'].includes(informationExists)) {
         delete payload?.noc?.firstCompliancePeriod?.firstCompliancePeriodDetails;
-      }
-
-      const significantEnergyConsumptionExists =
-        payload?.noc?.firstCompliancePeriod?.firstCompliancePeriodDetails?.significantEnergyConsumptionExists;
-      if (significantEnergyConsumptionExists === false) {
-        delete payload?.noc?.firstCompliancePeriod?.firstCompliancePeriodDetails?.significantEnergyConsumption;
-      }
-
-      const potentialReductionExists =
-        payload?.noc?.firstCompliancePeriod?.firstCompliancePeriodDetails?.potentialReductionExists;
-      if (potentialReductionExists === false) {
-        delete payload?.noc?.firstCompliancePeriod?.firstCompliancePeriodDetails?.potentialReduction;
+      } else if (informationExists && payload?.noc?.firstCompliancePeriod?.firstCompliancePeriodDetails == null) {
+        payload.noc.firstCompliancePeriod.firstCompliancePeriodDetails = {
+          organisationalEnergyConsumption: null,
+          organisationalEnergyConsumptionBreakdown: {
+            buildings: null,
+            industrialProcesses: null,
+            transport: null,
+            otherProcesses: null,
+            total: null,
+          },
+          potentialReduction: {
+            buildings: null,
+            industrialProcesses: null,
+            transport: null,
+            otherProcesses: null,
+            total: null,
+          },
+          significantEnergyConsumption: {
+            buildings: null,
+            industrialProcesses: null,
+            transport: null,
+            otherProcesses: null,
+            total: null,
+            significantEnergyConsumptionPct: null,
+          },
+          explanation: null,
+        };
       }
     });
   }

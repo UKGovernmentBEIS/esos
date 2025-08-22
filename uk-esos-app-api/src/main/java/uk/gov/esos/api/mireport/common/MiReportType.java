@@ -15,7 +15,12 @@ public enum MiReportType {
     REGULATOR_OUTSTANDING_REQUEST_TASKS("Regulator outstanding request tasks"),
     LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS("List of Accounts and Assigned Regulator Site Contacts"),
     LIST_OF_VERIFICATION_BODY_USERS("List of Verification bodies and Users"),
-    CUSTOM("Custom");
+    NOC_SUBMITTED_DATA_P3("NOC Submitted Data - Phase 3"),
+    CUSTOM("Custom"),
+
+    ACTION_PLAN_SUBMITTED_DATA_P3("AP Submitted Data - Phase 3"),
+    PROGRESS_UPDATE_1_SUBMITTED_DATA_P3("PU1 Submitted Data - Phase 3"),
+    PROGRESS_UPDATE_2_SUBMITTED_DATA_P3("PU2 Submitted Data - Phase 3");
 
     private final String description;
 

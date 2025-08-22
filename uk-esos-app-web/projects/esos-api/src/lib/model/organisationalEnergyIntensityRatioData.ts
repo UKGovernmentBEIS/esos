@@ -9,14 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EnergyIntensityRatio } from './energyIntensityRatio';
 import { EnergyIntensityRatioDetails } from './energyIntensityRatioDetails';
-import { OtherProcessEnergyIntensityRatioDetails } from './otherProcessEnergyIntensityRatioDetails';
 
 export interface OrganisationalEnergyIntensityRatioData {
-  buildingsIntensityRatio: EnergyIntensityRatioDetails;
-  freightsIntensityRatio: EnergyIntensityRatio;
-  passengersIntensityRatio: EnergyIntensityRatioDetails;
-  industrialProcessesIntensityRatio: EnergyIntensityRatioDetails;
-  otherProcessesIntensityRatios?: Array<OtherProcessEnergyIntensityRatioDetails>;
+  buildings?: EnergyIntensityRatioDetails;
+  transport?: EnergyIntensityRatioDetails;
+  industrialProcesses?: EnergyIntensityRatioDetails;
+  otherProcesses?: EnergyIntensityRatioDetails;
 }

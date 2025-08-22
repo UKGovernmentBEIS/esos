@@ -5,67 +5,39 @@
   caption="Compliance route"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <p class="govuk-body govuk-!-font-weight-bold">The evidence pack must contain:</p>
+  <p class="govuk-body govuk-!-font-weight-bold">The evidence pack needs to contain:</p>
   <ul class="govuk-list govuk-list--bullet">
-    <li>details of the methods used and the extent to which they were used</li>
-    <li>the reason why actual data was not used</li>
+    <li>Details of the methods used and the extent to which it was used.</li>
+    <li>The reasons why actual data was not used.</li>
   </ul>
   <p class="govuk-body">
-    The methods used for estimated data would have been added to the evidence pack by the Lead Assessor.
+    This would have been carried out by the lead assessor, who may be part of your organisation or external.
   </p>
-  <p class="govuk-body">
-    If you are not sure whether this information is in the evidence pack, contact your Lead Assessor.
-  </p>
+  <p class="govuk-body">If you are unsure if this information is in the evidence pack, speak to your lead assessor.</p>
 
   <div formControlName="areEstimationMethodsRecorded" govuk-radio>
-    <govuk-radio-option [value]="true" label="Yes"></govuk-radio-option>
-    <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
+    <govuk-radio-option [value]="'YES'" [label]="'YES' | skipQuestion"></govuk-radio-option>
+    <govuk-radio-option [value]="'NO'" [label]="'NO' | skipQuestion"></govuk-radio-option>
+    <govuk-radio-option
+      [value]="'SKIP_QUESTION'"
+      [label]="'SKIP_QUESTION' | skipQuestion"
+      [divider]="true"
+    ></govuk-radio-option>
   </div>
 
   <govuk-details summary="Help me answer this question">
-    <p class="govuk-body">
-      ESOS evidence pack is an information pack that shows how the assessors carried out the assessment and audit.
-      Ensure this has been given to you by your Lead Assessor.
-    </p>
-    <p class="govuk-body govuk-!-font-weight-bold">The ESOS evidence pack should include:</p>
+    <p class="govuk-body">The evidence pack must contain:</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>contact details of the participating undertakings and the responsible undertaking</li>
-      <li>details of any board level directors or equivalents who've reviewed the ESOS assessment findings</li>
-      <li>written confirmation from the directors to evidence that they reviewed the ESOS assessment</li>
-      <li>contact details of your Lead Assessor and the name of the approved register which they are a member of</li>
-      <li>written confirmation from the Lead Assessor to evidence that they reviewed the ESOS assessment</li>
-      <li>the calculation for your total energy consumption</li>
-      <li>a list of your identified areas of significant energy consumption</li>
-      <li>details of the energy audits undertaken including the audit methodology used in your ESOS energy audits</li>
-      <li>details of the energy saving opportunities identified</li>
-      <li>
-        details of the routes to compliance used to cover each area of significant energy consumption and where
-        applicable evidence (for example certificates) of the alternative routes to compliance
-      </li>
-      <li>written agreements to support any disaggregation or aggregation of group members</li>
-      <li>
-        written agreements to support any alternative responsible undertaking chosen (other than the default highest UK
-        parent)
-      </li>
-      <li>
-        reasons for using less than 12 months of data for the measurement of total energy consumption, if you could not
-        do this
-      </li>
-      <li>reasons for using less than 12 months of data to support an ESOS energy audit, if you could not do this</li>
-      <li>
-        reasons for being unable to use verifiable data on energy use or energy expenditure to support your calculation
-        of total energy use
-      </li>
-      <li>the methodology you used for any estimates you've made for energy use or energy expenditure</li>
-      <li>
-        justification, where applicable, where your Lead Assessor has not used an energy consumption profile in your
-        audit of an area of significant energy use
-      </li>
+      <li>details of the methods used and the extent to which they were used</li>
+      <li>the reason why actual data was not used</li>
     </ul>
     <p class="govuk-body">
-      You must keep the evidence pack for the compliance period to which it relates and the two subsequent compliance
-      periods.
+      The methods used for estimated data would have been added to the evidence pack by the lead assessor.
+    </p>
+    <p class="govuk-body">
+      If you are not sure whether this information is in the evidence pack, contact your lead assessor.
     </p>
   </govuk-details>
 </esos-wizard-step>

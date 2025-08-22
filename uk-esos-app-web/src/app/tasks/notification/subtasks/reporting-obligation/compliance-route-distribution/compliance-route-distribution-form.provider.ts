@@ -44,7 +44,7 @@ export const complianceRouteDistributionFormProvider: Provider = {
         energyNotAuditedPct: new FormControl(cdr?.energyNotAuditedPct ?? 0, [
           GovukValidators.required('The field cannot be empty'),
           GovukValidators.wholeNumber('Percentage must be a positive integer number'),
-          GovukValidators.max(5, 'The "Energy use not audited" must be up to 5 percent'),
+          GovukValidators.max(5, 'The Energy use  not covered by any compliance route must be up to 5 percent'),
         ]),
       },
       {

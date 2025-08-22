@@ -2,20 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { TotalEnergyConsumptionReductionSummaryTemplateComponent } from '@shared/components/summaries';
-import { ActivatedRouteStub, BasePage } from '@testing';
+import { ActivatedRouteStub } from '@testing';
 
 describe('TotalEnergyConsumptionReductionSummaryTemplateComponent', () => {
   let component: TotalEnergyConsumptionReductionSummaryTemplateComponent;
   let fixture: ComponentFixture<TotalEnergyConsumptionReductionSummaryTemplateComponent>;
-  let page: Page;
 
   const route = new ActivatedRouteStub();
-
-  class Page extends BasePage<TotalEnergyConsumptionReductionSummaryTemplateComponent> {
-    get summaries() {
-      return this.queryAll<HTMLDListElement>('dl dt, dl dd').map((dd) => dd.textContent.trim());
-    }
-  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,8 +17,7 @@ describe('TotalEnergyConsumptionReductionSummaryTemplateComponent', () => {
     fixture = TestBed.createComponent(TotalEnergyConsumptionReductionSummaryTemplateComponent);
     component = fixture.componentInstance;
     component.isEditable = true;
-    component.totalEnergyConsumptionReduction = 10;
-    page = new Page(fixture);
+    component.totalEnergyConsumptionReduction = { energyConsumption: 10, energyCost: null };
     fixture.detectChanges();
   });
 
@@ -34,6 +26,10 @@ describe('TotalEnergyConsumptionReductionSummaryTemplateComponent', () => {
   });
 
   it('should display all HTMLElements', () => {
-    expect(page.summaries).toEqual(['10 kWh', 'Change']);
+    const cells = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('td'));
+
+    expect(cells.map((cell) => cell.textContent.trim())).toEqual([
+      ...['Total annual reduction', '10', 'No data entered', 'Change'],
+    ]);
   });
 });

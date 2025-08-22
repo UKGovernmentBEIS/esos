@@ -5,7 +5,5 @@ public enum LoginStatus {
     ENABLED,
     DISABLED,
     ACCEPTED,
-    TEMP_DISABLED,
-    DELETED,
     NO_AUTHORITY
 }

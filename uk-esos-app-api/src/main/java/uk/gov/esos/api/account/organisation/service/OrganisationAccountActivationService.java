@@ -19,9 +19,12 @@ public class OrganisationAccountActivationService {
     private final OperatorAuthorityService operatorauthorityService;
     private final OrganisationAccountStatusUpdateService organisationAccountStatusUpdateService;
     private final AccountContactUpdateService accountContactUpdateService;
+    private final OrganisationAccountValidationService organisationAccountValidationService;
+
     @Transactional
     public void activateAccount(Long accountId, String user) {
         OrganisationAccount account = organisationAccountQueryService.getAccountById(accountId);
+        organisationAccountValidationService.validateActiveAccountRegistrationNumberExistenceForUpdate(account.getRegistrationNumber());
 
         account.setAcceptedDate(LocalDateTime.now());
 

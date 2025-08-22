@@ -14,7 +14,13 @@ import { UserInfoDTO } from './userInfoDTO';
 export interface ItemOrganisationDTO {
   creationDate?: string;
   requestId?: string;
-  requestType?: 'ORGANISATION_ACCOUNT_OPENING' | 'NOTIFICATION_OF_COMPLIANCE_P3';
+  requestType?:
+    | 'ORGANISATION_ACCOUNT_OPENING'
+    | 'NOTIFICATION_OF_COMPLIANCE_P3'
+    | 'ACTION_PLAN_P3'
+    | 'ACCOUNT_CLOSURE'
+    | 'PROGRESS_UPDATE_1_P3'
+    | 'PROGRESS_UPDATE_2_P3';
   taskId?: number;
   taskAssignee?: UserInfoDTO;
   taskAssigneeType?: 'OPERATOR' | 'VERIFIER' | 'REGULATOR';
@@ -22,7 +28,11 @@ export interface ItemOrganisationDTO {
     | 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_REVIEW'
     | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_SUBMIT'
     | 'NOTIFICATION_OF_COMPLIANCE_P3_APPLICATION_EDIT'
-    | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT';
+    | 'NOTIFICATION_OF_COMPLIANCE_P3_WAIT_FOR_EDIT'
+    | 'ACTION_PLAN_P3_APPLICATION_SUBMIT'
+    | 'ACCOUNT_CLOSURE_SUBMIT'
+    | 'PROGRESS_UPDATE_1_P3_APPLICATION_SUBMIT'
+    | 'PROGRESS_UPDATE_2_P3_APPLICATION_SUBMIT';
   daysRemaining?: number;
   accountId?: number;
   accountName?: string;

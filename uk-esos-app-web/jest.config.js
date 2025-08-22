@@ -15,7 +15,7 @@ module.exports = {
   modulePathIgnorePatterns: ['<rootDir>/dist'],
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
   moduleFileExtensions: ['ts', 'html', 'js', 'json', 'mjs'],
-  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
+  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$|keycloak-angular|keycloak-js)'],
   transform: {
     '^.+\\.(ts|js|mjs|html|svg)$': [
       'jest-preset-angular',

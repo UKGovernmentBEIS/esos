@@ -25,6 +25,14 @@ describe('OrganisationStructureComponent', () => {
         ])
         .map((pair) => pair.map((element) => element?.textContent?.trim()));
     }
+    get summaryListColumnValues() {
+      return this.queryAll<HTMLDivElement>('.govuk-summary-list__column')
+        .map((row) => [row.querySelectorAll('dd')[0]])
+        .map((pair) => pair.map((element) => element?.textContent?.trim()));
+    }
+    get table() {
+      return this.queryAll('.govuk-table');
+    }
   }
 
   beforeEach(() => {
@@ -50,15 +58,13 @@ describe('OrganisationStructureComponent', () => {
   it('should show summary values', () => {
     expect(page.summaryListValues).toEqual([
       [
-        'Is the responsible undertaking part of an arrangement where 2 or more highest UK parent groups are complying as 1 participant?',
+        'Do you also wish to provide a corporate group structure chart or other information setting out the relationship between the RU and relevant undertakings complying with the scheme as one participant?',
         'Yes',
       ],
-      ['Is the responsible undertaking part of a franchise group?', 'No'],
-      ['Is the responsible undertaking a trust?', 'Yes'],
-      [
-        'Has the responsible undertaking ceased to be a part of the corporate group between 31 December 2022 and 5 June 2024?',
-        'No',
-      ],
     ]);
+
+    expect(page.summaryListColumnValues).toEqual([['Yes'], ['Yes']]);
+
+    expect(page.table.length).toEqual(2);
   });
 });

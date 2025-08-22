@@ -16,8 +16,9 @@ import {
   selectTotal,
 } from '@accounts/index';
 import { DestroySubject } from '@core/services/destroy-subject.service';
-import { selectUserRoleType } from '@core/store/auth';
+import { selectRegulatorRelatedActions, selectUserRoleType } from '@core/store/auth';
 import { AuthStore } from '@core/store/auth/auth.store';
+import { TextLinkItem } from '@shared/interfaces';
 
 import { GovukValidators } from 'govuk-components';
 
@@ -25,6 +26,7 @@ import { OrganisationAccountsService, UserStateDTO } from 'esos-api';
 
 interface ViewModel {
   userRoleType: UserStateDTO['roleType'];
+  regulatorRelatedActions: TextLinkItem[];
   searchTerm: string;
   accounts: AccountSearchResult[];
   total: number;
@@ -42,6 +44,7 @@ interface ViewModel {
 export class AccountsPageComponent implements OnInit {
   vm$: Observable<ViewModel> = combineLatest([
     this.authStore.pipe(selectUserRoleType),
+    this.authStore.pipe(selectRegulatorRelatedActions),
     this.store.pipe(selectSearchTerm),
     this.store.pipe(selectAccounts),
     this.store.pipe(selectTotal),
@@ -49,8 +52,9 @@ export class AccountsPageComponent implements OnInit {
     this.store.pipe(selectPageSize),
     this.store.pipe(selectSearchErrorSummaryVisible),
   ]).pipe(
-    map(([role, searchTerm, accounts, total, page, pageSize, searchErrorSummaryVisible]) => ({
+    map(([role, regulatorRelatedActions, searchTerm, accounts, total, page, pageSize, searchErrorSummaryVisible]) => ({
       userRoleType: role,
+      regulatorRelatedActions,
       searchTerm,
       accounts,
       total,

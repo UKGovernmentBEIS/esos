@@ -23,6 +23,8 @@ import uk.gov.esos.api.web.controller.exception.ErrorResponse;
 
 import jakarta.validation.constraints.NotEmpty;
 
+import java.nio.charset.StandardCharsets;
+
 import static uk.gov.esos.api.web.constants.SwaggerApiInfo.BAD_REQUEST;
 import static uk.gov.esos.api.web.constants.SwaggerApiInfo.INTERNAL_SERVER_ERROR;
 import static uk.gov.esos.api.web.constants.SwaggerApiInfo.NOT_FOUND;
@@ -49,7 +51,7 @@ public class FileNoteController {
         final FileDTO file = fileNoteTokenService.getFileDTOByToken(token);
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION,
-                ContentDisposition.builder("note").filename(file.getFileName()).build().toString())
+                ContentDisposition.builder("note").filename(file.getFileName(), StandardCharsets.UTF_8).build().toString())
             .contentType(MediaType.parseMediaType(file.getFileType()))
             .body(new ByteArrayResource(file.getFileContent()));
     }

@@ -89,7 +89,7 @@ describe('OverseasParentDetailsQuestionComponent', () => {
       expect(page.errorSummary).toBeFalsy();
       expect(page.heading1).toBeTruthy();
       expect(page.heading1.textContent.trim()).toEqual(
-        'Does the organisation have a parent company based outside of the UK?',
+        'Does your organisation have a parent company to which the ESOS regulations do not extend?',
       );
       expect(page.submitButton).toBeTruthy();
     });
@@ -149,7 +149,7 @@ describe('OverseasParentDetailsQuestionComponent', () => {
       expect(page.errorSummary).toBeFalsy();
       expect(page.heading1).toBeTruthy();
       expect(page.heading1.textContent.trim()).toEqual(
-        'Does the organisation have a parent company based outside of the UK?',
+        'Does your organisation have a parent company to which the ESOS regulations do not extend?',
       );
       expect(page.hasOverseasParentDetailsButtons[0].checked).toBeTruthy();
       expect(page.submitButton).toBeTruthy();

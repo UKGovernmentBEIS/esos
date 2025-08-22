@@ -18,21 +18,21 @@ export const LeadAssessorProvideDetailsFormProvider: Provider = {
       firstName: [
         leadAssessorDetails?.firstName ?? null,
         [
-          GovukValidators.required(`Enter the first name`),
+          GovukValidators.required(`Enter a first name`),
           GovukValidators.maxLength(255, 'First name should not be more than 255 characters'),
         ],
       ],
       lastName: [
         leadAssessorDetails?.lastName ?? null,
         [
-          GovukValidators.required(`Enter the last name`),
+          GovukValidators.required(`Enter a last name`),
           GovukValidators.maxLength(255, 'Last name should not be more than 255 characters'),
         ],
       ],
       email: [
         leadAssessorDetails?.email ?? null,
         [
-          GovukValidators.required(`Enter the email address`),
+          GovukValidators.required(`Enter an email address`),
           GovukValidators.email('Enter an email address in the correct format, like name@example.com'),
           GovukValidators.maxLength(255, 'Email should not be more than 255 characters'),
         ],
@@ -44,7 +44,7 @@ export const LeadAssessorProvideDetailsFormProvider: Provider = {
       membershipNumber: [
         leadAssessorDetails?.membershipNumber ?? null,
         [
-          GovukValidators.required(`Enter the Membership Number`),
+          GovukValidators.required(`Enter the membership Number`),
           GovukValidators.maxLength(255, 'Membership Number should not be more than 255 characters'),
         ],
       ],

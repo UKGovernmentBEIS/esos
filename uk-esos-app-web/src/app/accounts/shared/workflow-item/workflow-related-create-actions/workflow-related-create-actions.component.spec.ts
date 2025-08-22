@@ -6,7 +6,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Observable, of } from 'rxjs';
 
 import { ItemLinkPipe } from '@shared/pipes/item-link.pipe';
-import { SharedModule } from '@shared/shared.module';
 import { BasePage, mockClass } from '@testing';
 
 import { RequestCreateActionProcessDTO, RequestItemsService, RequestsService } from 'esos-api';
@@ -45,7 +44,7 @@ describe('WorkflowRelatedCreateActionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, SharedModule, WorkflowRelatedCreateActionsComponent],
+      imports: [RouterTestingModule, WorkflowRelatedCreateActionsComponent],
       declarations: [TestComponent],
       providers: [
         { provide: RequestsService, useValue: requestService },

@@ -18,6 +18,8 @@ export interface ResponsibleUndertaking {
   organisationDetails: ReviewOrganisationDetails;
   tradingDetails: TradingDetails;
   organisationContactDetails: OrganisationContactDetails;
+  isBehalfOfTrust: boolean;
+  trustName?: string;
   hasOverseasParentDetails: boolean;
   overseasParentDetails?: OverseasParentDetails;
 }

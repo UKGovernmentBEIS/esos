@@ -39,7 +39,7 @@ class ApprovedOrganisationAccountQueryServiceTest {
         List<Long> expected = List.of(1L, 2L);
 
         when(organisationAccountRepository
-            .findAccountIdsByCaAndStatusNotIn(competentAuthority, List.of(OrganisationAccountStatus.UNAPPROVED)))
+            .findAccountIdsByCaAndStatusNotIn(competentAuthority, List.of(OrganisationAccountStatus.AWAITING_APPROVAL)))
             .thenReturn(expected);
 
         List<Long> actual = service.getAllApprovedAccountIdsByCa(competentAuthority);
@@ -59,7 +59,7 @@ class ApprovedOrganisationAccountQueryServiceTest {
 
         when(organisationAccountRepository
             .findAccountContactsByCaAndContactTypeAndStatusNotIn(PageRequest.of(page, pageSize), competentAuthority,
-                caSiteContactType, List.of(OrganisationAccountStatus.UNAPPROVED)))
+                caSiteContactType, List.of(OrganisationAccountStatus.AWAITING_APPROVAL)))
             .thenReturn(pagedAccountContacts);
 
         Page<AccountContactInfoDTO> actual =
@@ -70,7 +70,7 @@ class ApprovedOrganisationAccountQueryServiceTest {
 
     @Test
     void isAccountApproved() {
-        OrganisationAccount account = OrganisationAccount.builder().status(OrganisationAccountStatus.UNAPPROVED).build();
+        OrganisationAccount account = OrganisationAccount.builder().status(OrganisationAccountStatus.AWAITING_APPROVAL).build();
         assertFalse(service.isAccountApproved(account));
 
         account.setStatus(OrganisationAccountStatus.LIVE);

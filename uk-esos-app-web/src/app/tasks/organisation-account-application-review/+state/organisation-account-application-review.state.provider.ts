@@ -29,4 +29,16 @@ export class OrganisationAccountApplicationReviewStateProvider implements Organi
   get registrationNumber(): string {
     return this.store.select(organisationAccountReviewQuery.selectRegistrationNumber)();
   }
+
+  get type(): OrganisationAccountDTO['type'] {
+    return this.store.select(organisationAccountReviewQuery.selectType)();
+  }
+
+  get otherTypeName(): OrganisationAccountDTO['otherTypeName'] {
+    return this.store.select(organisationAccountReviewQuery.selectOtherTypeName)();
+  }
+
+  get codes(): OrganisationAccountDTO['codes'] {
+    return this.store.select(organisationAccountReviewQuery.selectCodes)();
+  }
 }

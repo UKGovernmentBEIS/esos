@@ -1,4 +1,4 @@
-import { AsyncPipe, NgComponentOutlet, NgFor, NgIf } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,7 +10,6 @@ import {
   Type,
   ViewEncapsulation,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { RelatedActionsComponent } from '@shared/components/related-actions/related-actions.component';
 import { RelatedTasksComponent } from '@shared/components/related-tasks/related-tasks.component';
@@ -19,6 +18,8 @@ import { TimelineComponent } from '@shared/components/timeline/timeline.componen
 import { TimelineItemComponent } from '@shared/components/timeline/timeline-item.component';
 import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
 import { TimelineItemLinkPipe } from '@shared/pipes/timeline-item-link.pipe';
+
+import { WarningTextComponent } from 'govuk-components';
 
 import { ItemDTO, RequestActionInfoDTO, RequestTaskDTO, RequestTaskItemDTO } from 'esos-api';
 
@@ -42,6 +43,7 @@ type ViewModel = {
   isAssignable: boolean;
   relatedActions: RequestTaskItemDTO['allowedRequestTaskActions'];
   hasRelatedActions: boolean;
+  warningMessage?: string;
 };
 
 /* eslint-disable @angular-eslint/use-component-view-encapsulation */
@@ -52,19 +54,16 @@ type ViewModel = {
   standalone: true,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    RouterLink,
     PageHeadingComponent,
-    NgIf,
-    AsyncPipe,
     TaskHeaderInfoComponent,
     NgComponentOutlet,
     RelatedTasksComponent,
     TimelineComponent,
     TimelineItemComponent,
-    NgFor,
     TimelineItemLinkPipe,
     RelatedActionsComponent,
     TaskListComponent,
+    WarningTextComponent,
   ],
 })
 export class RequestTaskPageComponent {
@@ -78,13 +77,13 @@ export class RequestTaskPageComponent {
     const timeline = this.store.select(requestTaskQuery.selectTimeline)();
     const isAssignable = this.store.select(requestTaskQuery.selectUserAssignCapable)();
     const relatedActions = this.store.select(requestTaskQuery.selectRelatedActions)();
-    const { header, sections, contentComponent, preContentComponent, postContentComponent } = this.contentFactoryMap[
-      requestTask.type
-    ](this.injector);
+    const { header, warningMessage, sections, contentComponent, preContentComponent, postContentComponent } =
+      this.contentFactoryMap[requestTask.type](this.injector);
 
     return {
       requestTask,
       header,
+      warningMessage,
       sections,
       contentComponent,
       preContentComponent,

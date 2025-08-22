@@ -2,6 +2,7 @@ package uk.gov.esos.api.reporting.noc.phase3.domain.alternativecomplianceroutes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +12,10 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import uk.gov.esos.api.reporting.noc.phase3.domain.EnergyConsumption;
-import uk.gov.esos.api.reporting.noc.phase3.domain.EnergySavingsCategories;
+
+import uk.gov.esos.api.reporting.noc.phase3.domain.EnergyConsumptionPotentialReduction;
+import uk.gov.esos.api.reporting.noc.phase3.domain.EnergySavingsCategoriesPotentialReduction;
+import uk.gov.esos.api.reporting.noc.phase3.domain.PotentialReductionPair;
 
 class AlternativeComplianceRoutesTest {
 
@@ -51,7 +54,12 @@ class AlternativeComplianceRoutesTest {
     @Test
     void validate_when_only_totalEnergyConsumptionReduction_exists_valid() {
     	AlternativeComplianceRoutes altRoutes = AlternativeComplianceRoutes.builder()
-            .totalEnergyConsumptionReduction(100000)
+				.totalEnergyConsumptionReduction(TotalEnergyConsumptionReduction.builder()
+						.potentialReductionPair(PotentialReductionPair.builder()
+								.energyConsumption(10000L)
+								.energyCost(BigDecimal.valueOf(11.11))
+								.build())
+						.build())
             .build();
 
         final Set<ConstraintViolation<AlternativeComplianceRoutes>> violations = validator.validate(altRoutes);
@@ -60,23 +68,7 @@ class AlternativeComplianceRoutesTest {
     }
     
     @Test
-    void validate_when_totals_not_equal_invalid() {
-    	EnergySavingsCategories esc = buildEnergySavingsCategories();
-    	esc.setControlsImprovements(201);
-    	esc.setTotal(401);
-    	AlternativeComplianceRoutes altRoutes = AlternativeComplianceRoutes.builder()
-            .energyConsumptionReduction(buildEnergyConsumption())
-            .energyConsumptionReductionCategories(esc)
-            .build();
-
-        final Set<ConstraintViolation<AlternativeComplianceRoutes>> violations = validator.validate(altRoutes);
-
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).extracting(ConstraintViolation::getMessage).containsExactly("{noc.energyconsumption.totals.equal}");
-    }
-    
-    @Test
-    void validate_when_total_zero_invalid() {
+    void validate_when_total_zero_valid() {
     	AlternativeComplianceRoutes altRoutes = AlternativeComplianceRoutes.builder()
             .energyConsumptionReduction(buildEnergyConsumptionZeroTotal())
             .energyConsumptionReductionCategories(buildEnergySavingsCategoriesZeroTotal())
@@ -84,54 +76,104 @@ class AlternativeComplianceRoutesTest {
 
         final Set<ConstraintViolation<AlternativeComplianceRoutes>> violations = validator.validate(altRoutes);
 
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).extracting(ConstraintViolation::getMessage)
-        	.containsExactly("{noc.energyconsumption.total}", "{noc.energyconsumption.total}");
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void validate_null_values_valid() {
+    	AlternativeComplianceRoutes altRoutes = AlternativeComplianceRoutes.builder()
+			.totalEnergyConsumptionReduction(TotalEnergyConsumptionReduction.builder()
+						.build())
+            .energyConsumptionReduction(null)
+            .energyConsumptionReductionCategories(null)
+            .build();
+
+        final Set<ConstraintViolation<AlternativeComplianceRoutes>> violations = validator.validate(altRoutes);
+
+        assertThat(violations).isEmpty();
     }
     
-    private EnergySavingsCategories buildEnergySavingsCategories() {
-		return EnergySavingsCategories.builder()
-				.energyManagementPractices(0)
-				.behaviourChangeInterventions(0)
-				.training(0)
-				.controlsImprovements(200)
-				.shortTermCapitalInvestments(0)
-				.longTermCapitalInvestments(0)
-				.otherMeasures(200)
-				.total(400)
+    private EnergySavingsCategoriesPotentialReduction buildEnergySavingsCategories() {
+		return EnergySavingsCategoriesPotentialReduction.builder()
+				.energyManagementPractices(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.behaviourChangeInterventions(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.training(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.controlsImprovements(PotentialReductionPair.builder()
+						.energyConsumption(200L)
+						.energyCost(BigDecimal.valueOf(11.11))
+						.build())
+				.capitalInvestments(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.otherMeasures(PotentialReductionPair.builder()
+						.energyConsumption(200L)
+						.energyCost(BigDecimal.valueOf(11.11))
+						.build())
+				.energyConsumptionTotal(400L)
+				.energyCostTotal(BigDecimal.valueOf(22.22))
 				.build();
 	}
 
-	private EnergyConsumption buildEnergyConsumption() {
-		return EnergyConsumption.builder()
-				.buildings(100)
-				.transport(100)
-				.industrialProcesses(100)
-				.otherProcesses(100)
-				.total(400)
+	private EnergyConsumptionPotentialReduction buildEnergyConsumption() {
+		return EnergyConsumptionPotentialReduction.builder()
+				.buildings(PotentialReductionPair.builder().energyConsumption(100L).energyCost(BigDecimal.valueOf(10.11)).build())
+				.transport(PotentialReductionPair.builder().energyConsumption(100L).energyCost(BigDecimal.valueOf(10.11)).build())
+				.industrialProcesses(PotentialReductionPair.builder().energyConsumption(100L).energyCost(BigDecimal.valueOf(10.11)).build())
+				.otherProcesses(PotentialReductionPair.builder().energyConsumption(100L).energyCost(BigDecimal.valueOf(10.11)).build())
+				.energyConsumptionTotal(400L)
+				.energyCostTotal(BigDecimal.valueOf(40.44))
 				.build();
 	}
 	
-	private EnergySavingsCategories buildEnergySavingsCategoriesZeroTotal() {
-		return EnergySavingsCategories.builder()
-				.energyManagementPractices(0)
-				.behaviourChangeInterventions(0)
-				.training(0)
-				.controlsImprovements(0)
-				.shortTermCapitalInvestments(0)
-				.longTermCapitalInvestments(0)
-				.otherMeasures(0)
-				.total(0)
+	private EnergySavingsCategoriesPotentialReduction buildEnergySavingsCategoriesZeroTotal() {
+		return EnergySavingsCategoriesPotentialReduction.builder()
+				.energyManagementPractices(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.behaviourChangeInterventions(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.training(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.controlsImprovements(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.capitalInvestments(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.otherMeasures(PotentialReductionPair.builder()
+						.energyConsumption(0L)
+						.energyCost(BigDecimal.ZERO)
+						.build())
+				.energyConsumptionTotal(0L)
+				.energyCostTotal(BigDecimal.ZERO)
 				.build();
 	}
 
-	private EnergyConsumption buildEnergyConsumptionZeroTotal() {
-		return EnergyConsumption.builder()
-				.buildings(0)
-				.transport(0)
-				.industrialProcesses(0)
-				.otherProcesses(0)
-				.total(0)
+	private EnergyConsumptionPotentialReduction buildEnergyConsumptionZeroTotal() {
+		return EnergyConsumptionPotentialReduction.builder()
+				.buildings(PotentialReductionPair.builder().energyConsumption(0L).energyCost(BigDecimal.ZERO).build())
+				.transport(PotentialReductionPair.builder().energyConsumption(0L).energyCost(BigDecimal.ZERO).build())
+				.industrialProcesses(PotentialReductionPair.builder().energyConsumption(0L).energyCost(BigDecimal.ZERO).build())
+				.otherProcesses(PotentialReductionPair.builder().energyConsumption(0L).energyCost(BigDecimal.ZERO).build())
+				.energyConsumptionTotal(0L)
+				.energyCostTotal(BigDecimal.ZERO)
 				.build();
 	}
 }

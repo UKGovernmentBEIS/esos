@@ -44,39 +44,41 @@ describe('EnergyConsumptionReductionComponent', () => {
     }
 
     get buildings(): number {
-      return +this.getInputValue('#buildings');
+      return +this.getInputValue('#buildings.energyConsumption');
     }
 
     set buildings(value: number) {
-      this.setInputValue('#buildings', value);
+      this.setInputValue('#buildings.energyConsumption', value);
     }
 
     get transport(): number {
-      return +this.getInputValue('#transport');
+      return +this.getInputValue('#transport.energyConsumption');
     }
 
     set transport(value: number) {
-      this.setInputValue('#transport', value);
+      this.setInputValue('#transport.energyConsumption', value);
     }
 
     get industrialProcesses(): number {
-      return +this.getInputValue('#industrialProcesses');
+      return +this.getInputValue('#industrialProcesses.energyConsumption');
     }
 
     set industrialProcesses(value: number) {
-      this.setInputValue('#industrialProcesses', value);
+      this.setInputValue('#industrialProcesses.energyConsumption', value);
     }
 
     get otherProcesses(): number {
-      return +this.getInputValue('#otherProcesses');
+      return +this.getInputValue('#otherProcesses.energyConsumption');
     }
 
     set otherProcesses(value: number) {
-      this.setInputValue('#otherProcesses', value);
+      this.setInputValue('#otherProcesses.energyConsumption', value);
     }
 
-    get total() {
-      return this.query<HTMLParagraphElement>('p.govuk-body').textContent.trim();
+    get totalConsumption() {
+      return this.query<HTMLParagraphElement>(
+        '.govuk-heading-m + .govuk-grid-row .govuk-grid-column-one-third:nth-child(1)',
+      ).textContent.trim();
     }
 
     get errorSummary(): HTMLDivElement {
@@ -144,11 +146,12 @@ describe('EnergyConsumptionReductionComponent', () => {
             alternativeComplianceRoutes: {
               ...mockAlternativeComplianceRoutes,
               energyConsumptionReduction: {
-                buildings: 1,
-                transport: 2,
-                industrialProcesses: 3,
-                otherProcesses: 4,
-                total: 10,
+                buildings: { energyConsumption: 1, energyCost: null },
+                transport: { energyConsumption: 2, energyCost: null },
+                industrialProcesses: { energyConsumption: 3, energyCost: null },
+                otherProcesses: { energyConsumption: 4, energyCost: null },
+                energyConsumptionTotal: 10,
+                energyCostTotal: null,
               },
             },
           },
@@ -178,10 +181,10 @@ describe('EnergyConsumptionReductionComponent', () => {
       expect(page.heading1).toBeTruthy();
       expect(page.heading1.textContent.trim()).toEqual(alternativeComplianceRoutesMap.energyConsumptionReduction.title);
       expect(page.buildings).toEqual(1);
-      expect(page.transport).toEqual(5);
+      expect(page.transport).toEqual(2);
       expect(page.industrialProcesses).toEqual(4);
       expect(page.otherProcesses).toEqual(2);
-      expect(page.total).toEqual('12 kWh');
+      expect(page.totalConsumption).toEqual('9 kWh');
       expect(page.submitButton).toBeTruthy();
     });
 
@@ -198,7 +201,13 @@ describe('EnergyConsumptionReductionComponent', () => {
         route: route,
         payload: {
           noc: {
-            alternativeComplianceRoutes: mockAlternativeComplianceRoutes,
+            alternativeComplianceRoutes: {
+              ...mockAlternativeComplianceRoutes,
+              energyConsumptionReduction: {
+                ...mockAlternativeComplianceRoutes.energyConsumptionReduction,
+                energyConsumptionTotal: 9,
+              },
+            },
           },
         },
       });

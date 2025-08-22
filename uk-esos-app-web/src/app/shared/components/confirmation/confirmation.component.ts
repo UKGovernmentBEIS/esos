@@ -17,10 +17,9 @@ import { LinkDirective, PanelComponent } from 'govuk-components';
         </govuk-panel>
         <ng-container
           *ngTemplateOutlet="whatHappensNextTemplate ? whatHappensNextTemplate : defaultWhatHappensNextTemplate"
-        >
-        </ng-container>
+        />
         <ng-template #defaultWhatHappensNextTemplate></ng-template>
-        <a govukLink [routerLink]="returnToLink"> Return to dashboard </a>
+        <a govukLink [routerLink]="returnToLink">Return to dashboard</a>
       </div>
     </div>
   `,

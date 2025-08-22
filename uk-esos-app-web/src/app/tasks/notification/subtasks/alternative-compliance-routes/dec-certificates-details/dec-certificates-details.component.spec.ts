@@ -40,7 +40,7 @@ describe('DecCertificatesDetailsComponent', () => {
   const mockValidFrom1 = new Date('2022-01-01');
   const mockValidUntil1 = new Date('2024-01-01');
   const mockValidFrom2 = new Date('2020-01-01');
-  const mockValidUntil2 = new Date('2021-01-01');
+  const mockValidUntil2 = new Date('2023-12-15');
 
   class Page extends BasePage<DecCertificatesDetailsComponent> {
     get heading1(): HTMLHeadingElement {
@@ -154,18 +154,31 @@ describe('DecCertificatesDetailsComponent', () => {
       expect(page.submitButton).toBeTruthy();
     });
 
+    it('should display an error if the valid until date is before 2023-12-05', () => {
+      page.validFrom1 = mockValidFrom1;
+      page.validUntil1 = new Date('2023-12-04');
+      page.certificateNumber1 = 'dec1';
+      page.submitButton.click();
+      fixture.detectChanges();
+      expect(page.errorSummary).toBeTruthy();
+      expect(page.errorSummaryListContents).toEqual(['Valid until date must be the same as or after 5 December 2023']);
+    });
+
+    it('should display an error if the valid from date is after 2024-06-05', () => {
+      page.validFrom1 = new Date('2024-06-06');
+      page.validUntil1 = new Date('2024-08-21');
+      page.certificateNumber1 = 'dec1';
+      page.submitButton.click();
+      fixture.detectChanges();
+      expect(page.errorSummary).toBeTruthy();
+      expect(page.errorSummaryListContents).toContain('Valid from date must be the same as or before 5 June 2024');
+    });
+
     it('should submit a valid form and navigate to nextRoute', () => {
       const taskServiceSpy = jest.spyOn(taskService, 'saveSubtask');
 
       page.submitButton.click();
       fixture.detectChanges();
-
-      expect(page.errorSummaryListContents).toEqual([
-        'Valid until date must be later than valid from date',
-        'Enter a Display Energy Certificate number',
-        'Enter a date',
-        'Enter a date',
-      ]);
 
       page.certificateNumber1 = 'dec1';
       page.validFrom1 = mockValidFrom1;
@@ -221,6 +234,33 @@ describe('DecCertificatesDetailsComponent', () => {
           },
         },
       });
+    });
+
+    it('should show errors when not all fields are filled', () => {
+      page.validFrom1 = mockValidFrom1;
+
+      fixture.detectChanges();
+      page.submitButton.click();
+      fixture.detectChanges();
+
+      expect(page.errorSummary).toBeTruthy();
+      expect(page.errorSummaryListContents).toEqual(['', 'Enter a Display Energy Certificate number', 'Enter a date']);
+    });
+
+    it('should not show errors when all fields are filled or all fields are empty', () => {
+      // Fill all fields to pass the validator
+      page.certificateNumber1 = 'dec1';
+      page.validFrom1 = mockValidFrom1;
+      page.validUntil1 = mockValidUntil1;
+
+      // Optionally, test the scenario where all fields are left empty
+
+      fixture.detectChanges();
+      page.submitButton.click();
+      fixture.detectChanges();
+
+      // Expect no errors to be shown
+      expect(page.errorSummary).toBeFalsy();
     });
   });
 

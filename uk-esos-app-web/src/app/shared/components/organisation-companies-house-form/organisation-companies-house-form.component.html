@@ -1,27 +1,43 @@
-<div class="govuk-!-width-two-thirds">
-  <esos-wizard-step
-    [formGroup]="formGroup"
-    heading="Is the UK organisation registered at Companies House?"
-    caption="Organisation details"
-    (formSubmit)="onSubmit()"
-    [showBackLink]="true"
-    [showCancelLink]="showCancelLink"
-    [cancelLinkPath]="cancelLinkPath"
-  >
-    <div formControlName="registrationStatus" govuk-radio>
-      <govuk-radio-option [value]="true" label="Yes">
-        <ng-container govukConditionalContent>
-          <div
-            formControlName="registrationNumber"
-            govuk-text-input
-            hint="The Company Registration Number must be either 8 digits, 1 letter followed by 7 digits or 2 letters followed by 6 digits.
-              If your Company Registration Number has less than 8 digits then you may need to add zeros at the beginning."
-            label="Enter the Company Registration Number"
-            widthClass="govuk-!-width-one-third"
-          ></div>
-        </ng-container>
-      </govuk-radio-option>
-      <govuk-radio-option [value]="false" label="No"></govuk-radio-option>
-    </div>
-  </esos-wizard-step>
+<div class="govuk-body">
+  <div>
+    If your organisation is registered, you must enter your Company Registration Number. The Company registration number
+    must either be:
+  </div>
+
+  <ul>
+    <li>8 numbers, for example 87654321</li>
+    <li>1 letter and 7 numbers, for example A7654321</li>
+    <li>2 letters and 6 numbers, for example AA654321</li>
+    <li>2 letters, 5 numbers and a final letter, for example AA12345A</li>
+  </ul>
+
+  <div>
+    If your Company Registration Number has fewer than 8 numbers, add zeroes at the start of the number, for example
+    00654321
+  </div>
+</div>
+
+<div
+  formControlName="registrationNumberExist"
+  govuk-radio
+  legend="Is the UK organisation registered at Companies House?"
+  [isLegendHidden]="true"
+>
+  <govuk-radio-option [value]="true" label="Yes">
+    <ng-container govukConditionalContent>
+      <div
+        formControlName="registrationNumber"
+        govuk-text-input
+        hint="Enter the Company Registration Number"
+        label="Enter the Company Registration Number"
+        [isLabelHidden]="true"
+        widthClass="govuk-!-width-one-third"
+      ></div>
+    </ng-container>
+  </govuk-radio-option>
+
+  <govuk-radio-option
+    [value]="false"
+    label="No, the organisation is not registered and does not have a Company Registration Number"
+  ></govuk-radio-option>
 </div>

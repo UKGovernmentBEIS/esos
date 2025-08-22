@@ -5,7 +5,7 @@ import { RequestTaskStore } from '@common/request-task/+state';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { TASK_FORM } from '@tasks/task-form.token';
 
-import { allCheckedValidator } from '../responsibility-assessment-types/responsibility-assessment-types-form.provider';
+import { allCheckedValidator } from '../confirmation.validators';
 
 export const SecondResponsibleOfficerEnergyTypesFormProvider: Provider = {
   provide: TASK_FORM,
@@ -15,7 +15,7 @@ export const SecondResponsibleOfficerEnergyTypesFormProvider: Provider = {
     const secondResponsibleOfficerEnergyTypes = state()?.secondResponsibleOfficerEnergyTypes;
 
     return fb.group({
-      secondResponsibleOfficerEnergyTypes: [secondResponsibleOfficerEnergyTypes ?? null, allCheckedValidator(5)],
+      secondResponsibleOfficerEnergyTypes: [secondResponsibleOfficerEnergyTypes ?? null, allCheckedValidator(4)],
     });
   },
 };

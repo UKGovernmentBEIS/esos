@@ -1,31 +1,34 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Resolve } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, CanDeactivateFn } from '@angular/router';
 
-import { first, map, Observable, tap } from 'rxjs';
+import { first, map } from 'rxjs';
 
 import { OrganisationAccountDTO, OrganisationAccountViewService } from 'esos-api';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AccountGuard implements CanActivate, CanDeactivate<any>, Resolve<OrganisationAccountDTO> {
-  account: OrganisationAccountDTO;
+import { AccountsStore } from './store';
 
-  constructor(private readonly accountViewService: OrganisationAccountViewService) {}
+export const canActivateAccount: CanActivateFn = (route) => {
+  const accountsStore = inject(AccountsStore);
+  const accountViewService = inject(OrganisationAccountViewService);
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    return this.accountViewService.getOrganisationAccountById(Number(route.paramMap.get('accountId'))).pipe(
-      first(),
-      tap((account) => (this.account = account)),
-      map((account) => !!account.name),
-    );
-  }
+  return accountViewService.getOrganisationAccountById(Number(route.paramMap.get('accountId'))).pipe(
+    first(),
+    map((account) => {
+      accountsStore.setSelectedAccount(account);
+      return !!account.name;
+    }),
+  );
+};
 
-  canDeactivate(): boolean {
-    return true;
-  }
+export const canDeactivateAccount: CanDeactivateFn<any> = () => {
+  const accountsStore = inject(AccountsStore);
 
-  resolve(): OrganisationAccountDTO {
-    return this.account;
-  }
-}
+  accountsStore.setSelectedAccount(undefined);
+  return true;
+};
+
+export const resolveAccount = (): OrganisationAccountDTO['name'] => {
+  const accountsStore = inject(AccountsStore);
+
+  return accountsStore.getState().selectedAccount.name;
+};

@@ -1,4 +1,4 @@
-FROM nginx:1.24
+FROM nginx:1.28
 RUN apt-get update
 RUN apt-get install -y tzdata
 RUN cp /usr/share/zoneinfo/Europe/London /etc/localtime

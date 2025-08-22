@@ -12,7 +12,10 @@ export const isWizardCompleted = (
     const recommendationsExist = energySavingsAchieved?.energySavingsRecommendationsExist;
     const recommendations = !!energySavingsAchieved?.energySavingsRecommendations;
 
-    return totalEstimation && ((recommendationsExist && recommendations) || recommendationsExist === false);
+    return (
+      totalEstimation &&
+      ((recommendationsExist && recommendations) || ['NO', 'SKIP_QUESTION'].includes(recommendationsExist))
+    );
   } else {
     const estimation = !!energySavingsAchieved?.energySavingsEstimation;
 
@@ -22,13 +25,10 @@ export const isWizardCompleted = (
     const recommendationsExist = energySavingsAchieved?.energySavingsRecommendationsExist;
     const recommendations = !!energySavingsAchieved?.energySavingsRecommendations;
 
-    const equalTotals =
-      energySavingsAchieved?.energySavingsEstimation?.total === energySavingsAchieved?.energySavingsCategories?.total;
-
     return (
       estimation &&
-      ((categoriesExist && categories && equalTotals) || categoriesExist === false) &&
-      ((recommendationsExist && recommendations) || recommendationsExist === false)
+      ((categoriesExist === 'YES' && categories) || ['NO', 'SKIP_QUESTION'].includes(categoriesExist)) &&
+      ((recommendationsExist === 'YES' && recommendations) || ['NO', 'SKIP_QUESTION'].includes(recommendationsExist))
     );
   }
 };

@@ -148,103 +148,52 @@ describe('SignificantEnergyComponent', () => {
         requestTaskActionPayload: {
           payloadType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD',
           noc: {
-            ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.noc,
+            assessmentPersonnel: {},
+            confirmations: {},
+            contactPersons: {},
             energyConsumptionDetails: {
-              ...mockEnergyConsumptionDetails,
+              additionalInformation: 'Additional info',
+              additionalInformationExists: true,
+              energyIntensityRatioData: {
+                buildings: {
+                  additionalInformation: 'Buildings additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '50',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+                industrialProcesses: {
+                  additionalInformation: 'Industrial processes additional information',
+                  energyIntensityRatios: [
+                    {
+                      ratio: '70',
+                      unit: 'm2',
+                    },
+                  ],
+                },
+              },
               significantEnergyConsumption: {
                 buildings: 100,
+                industrialProcesses: 50,
+                otherProcesses: 0,
+                significantEnergyConsumptionPct: 100,
+                total: 150,
                 transport: 0,
+              },
+              significantEnergyConsumptionExists: true,
+              totalEnergyConsumption: {
+                buildings: 100,
                 industrialProcesses: 50,
                 otherProcesses: 0,
                 total: 150,
-                significantEnergyConsumptionPct: 100,
-              },
-            },
-          },
-          nocSectionsCompleted: {
-            ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.nocSectionsCompleted,
-            energyConsumptionDetails: TaskItemStatus.IN_PROGRESS,
-          },
-        } as RequestTaskActionPayload,
-      });
-
-      expect(navigateSpy).toHaveBeenCalledWith(['../energy-intensity-ratio'], { relativeTo: route });
-    });
-  });
-
-  describe('for new significant energy', () => {
-    beforeEach(() => {
-      store = TestBed.inject(RequestTaskStore);
-      store.setState(
-        mockStateBuild(
-          {
-            energyConsumptionDetails: {
-              totalEnergyConsumption: mockEnergyConsumptionDetails.totalEnergyConsumption,
-              significantEnergyConsumptionExists: true,
-            },
-          },
-          { energyConsumptionDetails: TaskItemStatus.IN_PROGRESS },
-        ),
-      );
-
-      fixture = TestBed.createComponent(SignificantEnergyComponent);
-      component = fixture.componentInstance;
-      page = new Page(fixture);
-      router = TestBed.inject(Router);
-      fixture.detectChanges();
-    });
-
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
-
-    it('should show default input values', () => {
-      expect(page.buildings).toEqual('0');
-      expect(page.transport).toEqual('0');
-      expect(page.industrialProcesses).toEqual('0');
-      expect(page.otherProcesses).toEqual('0');
-    });
-
-    it('should submit and navigate to energy intensity ratio page', () => {
-      const navigateSpy = jest.spyOn(router, 'navigate');
-
-      expect(page.errorSummary).toBeFalsy();
-
-      page.submitButton.click();
-      fixture.detectChanges();
-
-      expect(page.errorSummary).toBeTruthy();
-      expect(page.errors.map((error) => error.textContent.trim())).toEqual([
-        'The total significant energy consumption must be between 95% and 100%',
-        'Enter a value of energy in KWh',
-      ]);
-
-      page.buildings = 100;
-      page.transport = 0;
-      page.industrialProcesses = 48;
-      page.otherProcesses = 0;
-
-      page.submitButton.click();
-      fixture.detectChanges();
-
-      expect(tasksService.processRequestTaskAction).toHaveBeenCalledWith({
-        requestTaskActionType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT',
-        requestTaskId: 2,
-        requestTaskActionPayload: {
-          payloadType: 'NOTIFICATION_OF_COMPLIANCE_P3_SAVE_APPLICATION_SUBMIT_PAYLOAD',
-          noc: {
-            ...mockNotificationRequestTask.requestTaskItem.requestTask.payload.noc,
-            energyConsumptionDetails: {
-              totalEnergyConsumption: mockEnergyConsumptionDetails.totalEnergyConsumption,
-              significantEnergyConsumptionExists: true,
-              significantEnergyConsumption: {
-                buildings: 100,
                 transport: 0,
-                industrialProcesses: 48,
-                otherProcesses: 0,
-                total: 148,
-                significantEnergyConsumptionPct: 98,
               },
+            },
+            organisationStructure: {},
+            reportingObligation: {
+              qualificationType: 'QUALIFY',
             },
           },
           nocSectionsCompleted: {

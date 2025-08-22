@@ -1,10 +1,11 @@
 <esos-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  heading="When did the board director review the ESOS assessment recommendations?"
-  caption="Confirmation"
+  heading="When did the responsible officer review the ESOS assessment recommendations?"
+  caption="Responsible officer confirmation"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <div formControlName="reviewAssessmentDate" govuk-date-input></div>
+  <div formControlName="reviewAssessmentDate" govuk-date-input [max]="today"></div>
 </esos-wizard-step>

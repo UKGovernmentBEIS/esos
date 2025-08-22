@@ -5,7 +5,7 @@ import { RequestTaskStore } from '@common/request-task/+state';
 import { notificationQuery } from '@tasks/notification/+state/notification.selectors';
 import { TASK_FORM } from '@tasks/task-form.token';
 
-import { numberValidators } from '../energy-savings-achieved.validators';
+import { mandatoryNumberValidators } from '../energy-savings-achieved.validators';
 
 export const energySavingsAchievedEstimateFormProvider: Provider = {
   provide: TASK_FORM,
@@ -16,10 +16,10 @@ export const energySavingsAchievedEstimateFormProvider: Provider = {
 
     return fb.group(
       {
-        buildings: [energySavingsEstimation?.buildings ?? 0, numberValidators],
-        transport: [energySavingsEstimation?.transport ?? 0, numberValidators],
-        industrialProcesses: [energySavingsEstimation?.industrialProcesses ?? 0, numberValidators],
-        otherProcesses: [energySavingsEstimation?.otherProcesses ?? 0, numberValidators],
+        buildings: [energySavingsEstimation?.buildings ?? null, mandatoryNumberValidators],
+        transport: [energySavingsEstimation?.transport ?? null, mandatoryNumberValidators],
+        industrialProcesses: [energySavingsEstimation?.industrialProcesses ?? null, mandatoryNumberValidators],
+        otherProcesses: [energySavingsEstimation?.otherProcesses ?? null, mandatoryNumberValidators],
       },
       { updateOn: 'change' },
     );

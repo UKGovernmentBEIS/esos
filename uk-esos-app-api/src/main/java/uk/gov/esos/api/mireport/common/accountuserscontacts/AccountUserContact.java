@@ -17,8 +17,8 @@ import java.util.List;
 public class AccountUserContact {
     private String userId;
 
-    @JsonProperty(value = "Account type")
-    private String accountType;
+    @JsonProperty(value = "Account registration number")
+    private String registrationNumber;
 
     @JsonProperty(value = "Account ID")
     private String accountId;
@@ -29,25 +29,11 @@ public class AccountUserContact {
     @JsonProperty(value = "Account status")
     private String accountStatus;
 
-    @JsonProperty(value = "Permit ID")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String permitId;
-
-    @JsonProperty(value = "Permit type/Account category")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String permitType;
-
     @JsonProperty(value = "Is User Primary contact?")
     private Boolean primaryContact;
 
     @JsonProperty(value = "Is User Secondary contact?")
     private Boolean secondaryContact;
-
-    @JsonProperty(value = "Is User Financial contact?")
-    private Boolean financialContact;
-
-    @JsonProperty(value = "Is User Service contact?")
-    private Boolean serviceContact;
 
     @JsonProperty(value = "User status")
     private String authorityStatus;
@@ -71,9 +57,12 @@ public class AccountUserContact {
     @JsonProperty(value = "User role")
     private String role;
 
-    public static final List<String> getColumnNames() {
-        return List.of("Account type", "Account ID", "Account name", "Account status", "Permit ID", "Permit type/Account category",
-                "Is User Primary contact?", "Is User Secondary contact?", "Is User Financial contact?", "Is User Service contact?",
-                "User status", "Name", "Telephone", "Last logon", "Email", "User role");
+    @JsonProperty(value = "Location of registered office")
+    private String accountLocation;
+
+    public static List<String> getColumnNames() {
+        return List.of("Account registration number", "Account ID", "Account name", "Account status",
+            "Is User Primary contact?", "Is User Secondary contact?",
+            "User status", "Name", "Telephone", "Last logon", "Email", "User role", "Location of registered office");
     }
 }

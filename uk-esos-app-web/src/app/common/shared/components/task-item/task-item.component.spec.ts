@@ -1,7 +1,7 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 
 import { tasks } from '../testing';
 import { TaskItemComponent } from './task-item.component';
@@ -34,7 +34,7 @@ describe('TaskItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, TaskItemComponent],
+      imports: [RouterModule.forRoot([]), TaskItemComponent],
     }).compileComponents();
   });
 
@@ -55,8 +55,12 @@ describe('TaskItemComponent', () => {
 
     expect(items.length).toEqual(4);
     items.forEach((item, index) => {
-      expect(item.querySelector('a').textContent.trim()).toEqual(tasks[index].linkText);
-      expect(item.querySelector('a').href).toContain(tasks[index].link);
+      if (tasks[index].status === 'CANNOT_START_YET') {
+        expect(item.querySelector('a')).toBeFalsy();
+      } else {
+        expect(item.querySelector('a').href).toContain(tasks[index].link);
+      }
+      expect(item.querySelector('span').textContent.trim()).toEqual(tasks[index].linkText);
     });
     expect(items[0].querySelector('strong').classList.contains('govuk-tag--grey')).toBeTruthy();
     expect(items[1].querySelector('strong').classList.contains('govuk-tag--grey')).toBeTruthy();

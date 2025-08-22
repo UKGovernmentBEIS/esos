@@ -4,13 +4,13 @@ import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TaskService } from '@common/forms/services/task.service';
-import { getTotalSum } from '@shared/components/energy-consumption-input/energy-consumption-input';
+import { getEnergyConsumptionTotalSum } from '@shared/components/energy-consumption-input/energy-consumption-input';
 import { EnergyConsumptionInputComponent } from '@shared/components/energy-consumption-input/energy-consumption-input.component';
 import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
 import { NotificationTaskPayload } from '@tasks/notification/notification.types';
 import {
-  CurrentStep,
   ENERGY_CONSUMPTION_SUB_TASK,
+  EnergyConsumptionCurrentStep,
 } from '@tasks/notification/subtasks/energy-consumption/energy-consumption.helper';
 import { totalEnergyFormProvider } from '@tasks/notification/subtasks/energy-consumption/total-energy/total-energy-form.provider';
 import { TASK_FORM } from '@tasks/task-form.token';
@@ -29,7 +29,7 @@ import { EnergyConsumption } from 'esos-api';
 export class TotalEnergyComponent {
   private formData: Signal<EnergyConsumption> = toSignal(this.form.valueChanges, { initialValue: this.form.value });
 
-  total: Signal<number> = computed(() => getTotalSum(this.formData()));
+  total: Signal<number> = computed(() => getEnergyConsumptionTotalSum(this.formData()));
 
   constructor(
     @Inject(TASK_FORM) readonly form: UntypedFormGroup,
@@ -40,7 +40,7 @@ export class TotalEnergyComponent {
   submit() {
     this.service.saveSubtask({
       subtask: ENERGY_CONSUMPTION_SUB_TASK,
-      currentStep: CurrentStep.TOTAL_ENERGY,
+      currentStep: EnergyConsumptionCurrentStep.TOTAL_ENERGY,
       route: this.route,
       payload: produce(this.service.payload, (payload) => {
         payload.noc.energyConsumptionDetails = {

@@ -1,0 +1,34 @@
+<govuk-notification-banner *ngIf="showSuccess()" type="success" heading="Success">
+  <h3 class="govuk-notification-banner__heading">File uploaded successfully</h3>
+</govuk-notification-banner>
+
+<esos-csv-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  heading="Upload a file with verified organisation accounts"
+  submitText="Save"
+  [showReturnLink]="false"
+  [hideSubmit]="!parsedData() || showSuccess()"
+>
+  <p class="govuk-body">
+    Download and complete the Verified organisation accounts template and upload it below.<br /><br />
+    <a href="assets/files/Verified_organisation_accounts_template.xlsx" govukLink target="_self">
+      Verified organisation accounts template.xlsx
+    </a>
+  </p>
+
+  <p class="govuk-body govuk-!-margin-bottom-0">Upload a file</p>
+  <p class="govuk-body govuk-!-margin-bottom-0">Your file must be:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>a CSV file</li>
+    <li>no more than 20MB</li>
+  </ul>
+
+  <input type="file" (change)="onFileSelect($event)" style="display: none" #fileInput />
+
+  <div class="govuk-button-group">
+    <button type="button" govukSecondaryButton (click)="fileInput.click()">Choose file</button>
+    <p class="govuk-body" *ngIf="this.uploadedFile">{{ this.uploadedFile?.name }}</p>
+  </div>
+</esos-csv-wizard-step>

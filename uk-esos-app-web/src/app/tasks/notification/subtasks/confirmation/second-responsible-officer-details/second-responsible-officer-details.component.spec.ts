@@ -56,6 +56,6 @@ describe('SecondResponsibleOfficerDetailsComponent', () => {
   });
 
   it('should display correct form labels', () => {
-    expect(screen.getByText('Details of the 2nd responsible officer')).toBeInTheDocument();
+    expect(screen.getByText('Details of the second responsible officer')).toBeInTheDocument();
   });
 });

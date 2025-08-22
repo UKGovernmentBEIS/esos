@@ -22,6 +22,8 @@ export class ActivatedRouteStub {
   readonly fragment = this.fragmentSubject.asObservable();
   private urlSubject = new ReplaySubject<UrlSegment[]>(1);
   readonly url = this.urlSubject.asObservable();
+  private titleSubject = new ReplaySubject<string>(1);
+  readonly title = this.titleSubject.asObservable();
 
   constructor(
     initialParams?: Params,
@@ -29,13 +31,15 @@ export class ActivatedRouteStub {
     resolves: Params = {},
     fragment?: string,
     url?: UrlSegment[],
+    title?: string,
   ) {
-    this.snapshot = new ActivatedRouteSnapshotStub(initialParams, initialQueryParams, resolves);
+    this.snapshot = new ActivatedRouteSnapshotStub(initialParams, initialQueryParams, resolves, title);
     this.setParamMap(initialParams);
     this.setQueryParamMap(initialQueryParams);
     this.setResolveMap(resolves);
     this.setFragment(fragment);
     this.setUrl(url);
+    this.setTitle(title);
   }
 
   get firstChild(): ActivatedRouteStub | null {
@@ -66,5 +70,9 @@ export class ActivatedRouteStub {
 
   setUrl(url?: UrlSegment[]): void {
     this.urlSubject.next(url);
+  }
+
+  setTitle(title?: string): void {
+    this.titleSubject.next(title);
   }
 }

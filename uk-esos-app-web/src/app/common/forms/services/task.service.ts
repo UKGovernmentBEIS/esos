@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { TaskApiService } from '@common/forms/services/task-api.service';
+import { TaskApiService, TaskApiServiceExtended } from '@common/forms/services/task-api.service';
 import { TaskStateService } from '@common/forms/services/task-state.service';
 import { SideEffectsHandler } from '@common/forms/side-effects';
 import { StepFlowManager } from '@common/forms/step-flow';
@@ -19,6 +19,14 @@ export type SaveConfig<T extends RequestTaskPayload> = {
 
 export type SubmitConfig<T extends RequestTaskPayload> = Omit<SaveConfig<T>, 'payload'>;
 
+export type SendToRestrictedConfig = {
+  subtask: string;
+  userId: string;
+  data?: any;
+  currentStep: string;
+  route: ActivatedRoute;
+};
+
 export abstract class TaskService<T extends RequestTaskPayload> {
   protected stateService = inject(TaskStateService);
   protected apiService = inject(TaskApiService);
@@ -28,10 +36,13 @@ export abstract class TaskService<T extends RequestTaskPayload> {
   abstract get payload(): T;
 
   abstract saveSubtask(config: SaveConfig<T>): void;
-
   abstract submitSubtask(config: SaveConfig<T>): void;
+  abstract submit(config: SubmitConfig<T>): void;
+}
+
+export abstract class TaskServiceExtended<T extends RequestTaskPayload> extends TaskService<T> {
+  protected apiService = inject(TaskApiServiceExtended);
 
   abstract returnToSubmit(config: SubmitConfig<T>): void;
-
-  abstract submit(config: SubmitConfig<T>): void;
+  abstract sendToRestricted(config: SendToRestrictedConfig): void;
 }

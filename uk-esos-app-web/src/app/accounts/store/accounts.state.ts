@@ -1,7 +1,7 @@
-import { AccountSearchResultsInfoDTO } from 'esos-api';
+import { OrganisationAccountDTO, OrganisationAccountSearchResultsInfoDTO } from 'esos-api';
 
-export type AccountSearchResult = AccountSearchResultsInfoDTO;
-export type AccountStatus = AccountSearchResultsInfoDTO['status'];
+export type AccountSearchResult = OrganisationAccountSearchResultsInfoDTO;
+export type AccountStatus = OrganisationAccountSearchResultsInfoDTO['status'];
 
 export interface AccountsState {
   searchTerm: string;
@@ -12,6 +12,7 @@ export interface AccountsState {
     page: number;
     pageSize: number;
   };
+  selectedAccount?: OrganisationAccountDTO;
 }
 
 export const initialState: AccountsState = {
@@ -23,4 +24,5 @@ export const initialState: AccountsState = {
     page: 1,
     pageSize: 30,
   },
+  selectedAccount: undefined,
 };

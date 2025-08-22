@@ -37,7 +37,7 @@ describe('AboutNocP3DescriptionComponent', () => {
 
   it('should display all HTML Elements', () => {
     expect(page.summaryComponent).toBeTruthy();
-    expect(page.paragraphs).toHaveLength(8);
-    expect(page.lists).toHaveLength(6);
+    expect(page.paragraphs).toHaveLength(4);
+    expect(page.lists).toHaveLength(4);
   });
 });

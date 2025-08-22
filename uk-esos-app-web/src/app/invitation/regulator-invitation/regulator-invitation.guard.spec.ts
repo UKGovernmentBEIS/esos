@@ -1,67 +1,96 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { lastValueFrom, of, throwError } from 'rxjs';
+import { lastValueFrom, of } from 'rxjs';
 
-import { ActivatedRouteSnapshotStub, mockClass } from '@testing';
+import { AuthService } from '@core/services/auth.service';
+import { AuthStore } from '@core/store';
+import { ActivatedRouteSnapshotStub, mockClass, MockType } from '@testing';
 
-import { InvitedUserInfoDTO, RegulatorUsersRegistrationService } from 'esos-api';
+import { RegulatorUsersRegistrationService, UserTokenService } from 'esos-api';
 
 import { RegulatorInvitationGuard } from './regulator-invitation.guard';
 
 describe('RegulatorInvitationGuard', () => {
   let guard: RegulatorInvitationGuard;
   let router: Router;
+  let authStore: AuthStore;
+  let userTokenService: UserTokenService;
+
   let regulatorUsersRegistrationService: jest.Mocked<RegulatorUsersRegistrationService>;
+
+  const authService: MockType<AuthService> = {
+    checkUser: jest.fn(() => of(undefined)),
+  };
 
   beforeEach(() => {
     regulatorUsersRegistrationService = mockClass(RegulatorUsersRegistrationService);
 
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      providers: [{ provide: RegulatorUsersRegistrationService, useValue: regulatorUsersRegistrationService }],
+      imports: [RouterTestingModule, HttpClientTestingModule],
+      providers: [
+        { provide: AuthService, useValue: authService },
+        { provide: RegulatorUsersRegistrationService, useValue: regulatorUsersRegistrationService },
+      ],
     });
 
+    authStore = TestBed.inject(AuthStore);
+    authStore.setIsLoggedIn(true);
     guard = TestBed.inject(RegulatorInvitationGuard);
     router = TestBed.inject(Router);
+    userTokenService = TestBed.inject(UserTokenService);
   });
 
   it('should be created', () => {
     expect(guard).toBeTruthy();
   });
 
-  it('should navigate to root if there is no token query param', async () => {
-    await expect(lastValueFrom(guard.canActivate(new ActivatedRouteSnapshotStub()))).resolves.toEqual(
-      router.parseUrl('landing'),
-    );
-    expect(regulatorUsersRegistrationService.acceptRegulatorInvitation).not.toHaveBeenCalled();
+  it('should navigate to invalid-link if there is no token query param', async () => {
+    jest.spyOn(userTokenService, 'resolveEmailByToken').mockReturnValue(of({ email: 'email@email' }));
+    const navigateSpy = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    await expect(
+      lastValueFrom(
+        guard.canActivate(new ActivatedRouteSnapshotStub(null, { token: '123' }), {
+          url: '/?param1=foo',
+        } as RouterStateSnapshot),
+      ),
+    ).resolves.toBeFalsy();
+    expect(navigateSpy).toHaveBeenCalledWith(['invitation/regulator/invalid-link']);
+    expect(regulatorUsersRegistrationService.acceptRegulatorInvitationAndRegister).not.toHaveBeenCalled();
+    expect(userTokenService.resolveEmailByToken).not.toHaveBeenCalled();
   });
 
-  it('should navigate to invalid link for all 400 errors', async () => {
-    const navigateSpy = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    regulatorUsersRegistrationService.acceptRegulatorInvitation.mockReturnValue(
-      throwError(() => new HttpErrorResponse({ error: { code: 'testCode' }, status: 400 })),
-    );
+  it('should redirect to start-login page if user is not logged', async () => {
+    authStore.setIsLoggedIn(false);
+    jest.spyOn(userTokenService, 'resolveEmailByToken').mockReturnValue(of({ email: 'email@email' }));
+    await expect(
+      lastValueFrom(
+        guard.canActivate(new ActivatedRouteSnapshotStub(null, { token: '123' }), {
+          url: '/?token=123',
+        } as RouterStateSnapshot),
+      ),
+    ).resolves.toEqual(router.parseUrl('start-login?redirectUrl=http://localhost/?token=123&email=email@email'));
+    expect(regulatorUsersRegistrationService.acceptRegulatorInvitationAndRegister).not.toHaveBeenCalled();
+    expect(userTokenService.resolveEmailByToken).toHaveBeenCalledWith({ token: '123', type: 'REGULATOR_INVITATION' });
+  });
+
+  it('should return true if user is logged', async () => {
+    authStore.setIsLoggedIn(true);
+
+    regulatorUsersRegistrationService.acceptRegulatorInvitationAndRegister.mockReturnValue(of(null));
 
     await expect(
-      lastValueFrom(guard.canActivate(new ActivatedRouteSnapshotStub(null, { token: 'email-token' }))),
-    ).resolves.toBeFalsy();
-    expect(navigateSpy).toHaveBeenCalledWith(['invitation/regulator/invalid-link'], {
-      queryParams: { code: 'testCode' },
-    });
-  });
+      lastValueFrom(
+        guard.canActivate(new ActivatedRouteSnapshotStub(null, { token: '123' }), {
+          url: '/?token=123',
+        } as RouterStateSnapshot),
+      ),
+    ).resolves.toBeTruthy();
 
-  it('should resolved the invited user', async () => {
-    const invitedUser: InvitedUserInfoDTO = { email: 'user@esos.uk' };
-    regulatorUsersRegistrationService.acceptRegulatorInvitation.mockReturnValue(of(invitedUser));
-
-    await lastValueFrom(guard.canActivate(new ActivatedRouteSnapshotStub(undefined, { token: 'token' })));
-
-    expect(guard.resolve()).toEqual(invitedUser);
-    expect(regulatorUsersRegistrationService.acceptRegulatorInvitation).toHaveBeenCalledWith({
-      token: 'token',
+    expect(regulatorUsersRegistrationService.acceptRegulatorInvitationAndRegister).toHaveBeenCalledWith({
+      token: '123',
     });
   });
 });

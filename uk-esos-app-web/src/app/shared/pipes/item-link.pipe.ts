@@ -15,10 +15,13 @@ export class ItemLinkPipe implements PipeTransform {
   private transformWorkflowUrl(value: ItemDTO, routerLooks: string) {
     switch (value?.requestType) {
       case 'ORGANISATION_ACCOUNT_OPENING':
+      case 'NOTIFICATION_OF_COMPLIANCE_P3':
+      case 'ACTION_PLAN_P3':
+      case 'ACCOUNT_CLOSURE':
+      case 'PROGRESS_UPDATE_1_P3':
+      case 'PROGRESS_UPDATE_2_P3':
         return [routerLooks + 'tasks', value.taskId];
 
-      case 'NOTIFICATION_OF_COMPLIANCE_P3':
-        return [routerLooks + 'tasks', value.taskId];
       default:
         return ['.'];
     }

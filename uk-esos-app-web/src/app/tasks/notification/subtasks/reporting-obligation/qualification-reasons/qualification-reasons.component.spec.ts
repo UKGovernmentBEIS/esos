@@ -49,8 +49,10 @@ describe('QualificationReasonsComponent', () => {
   });
 
   it('should show qualification type fields', () => {
-    expect(turnoverMoreThan44mCheckbox()).toBeVisible();
-    expect(staffMembersMoreThan250Checkbox()).toBeVisible();
+    expect(turnoverMoreThan44mRadio()).toBeVisible();
+    expect(staffMembersMoreThan250Radio()).toBeVisible();
+    expect(turnoverMoreThan44mAndStaffMembersMoreThan250Radio()).toBeVisible();
+    expect(conditionsNotMetRadio()).toBeVisible();
   });
 
   it('should show errors when no selection', async () => {
@@ -58,15 +60,31 @@ describe('QualificationReasonsComponent', () => {
     fixture.detectChanges();
 
     expect(screen.getByRole('alert')).toBeVisible();
-    expect(screen.getAllByText(/Select at least one reason/)).toHaveLength(2);
+    expect(screen.getAllByText(/Select an option/)).toHaveLength(2);
   });
 
-  function turnoverMoreThan44mCheckbox() {
-    return screen.getByRole('checkbox', { name: /The annual turnover is over/ });
+  function turnoverMoreThan44mRadio() {
+    return screen.getByRole('radio', {
+      name: 'The annual turnover is over £44 million and annual balance sheet total in excess of £38 million',
+    });
   }
 
-  function staffMembersMoreThan250Checkbox() {
-    return screen.getByRole('checkbox', { name: /The organisation has over 250 members of staff/ });
+  function staffMembersMoreThan250Radio() {
+    return screen.getByRole('radio', {
+      name: 'The organisation has 250 or more members of staff',
+    });
+  }
+
+  function turnoverMoreThan44mAndStaffMembersMoreThan250Radio() {
+    return screen.getByRole('radio', {
+      name: 'The annual turnover is over £44 million and annual balance sheet total in excess of £38 million, and the organisation has 250 or more members of staff',
+    });
+  }
+
+  function conditionsNotMetRadio() {
+    return screen.getByRole('radio', {
+      name: 'The organisation does not meet any of these conditions, but belongs to a corporate group containing an organisation that does meet these conditions',
+    });
   }
 
   function submitBtn() {

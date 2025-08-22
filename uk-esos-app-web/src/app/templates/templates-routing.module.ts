@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { PendingRequestGuard } from '../core/guards/pending-request.guard';
+import { PendingRequestGuard } from '@core/guards/pending-request.guard';
+
 import { DocumentTemplateGuard } from './document/document-template.guard';
 import { DocumentTemplateOverviewComponent } from './document/document-template-overview.component';
 import { DocumentTemplateComponent } from './document/edit/document-template.component';
@@ -21,8 +22,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        title: 'Email template',
         data: {
-          pageTitle: 'Email template',
           breadcrumb: ({ emailTemplate }) => emailTemplate.name,
         },
         component: EmailTemplateOverviewComponent,
@@ -31,8 +32,8 @@ const routes: Routes = [
       },
       {
         path: 'edit',
+        title: 'Edit email template',
         data: {
-          pageTitle: 'Edit email template',
           breadcrumb: ({ emailTemplate }) => `Edit ${emailTemplate.name}`,
         },
         component: EmailTemplateComponent,
@@ -47,8 +48,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        title: 'Document template',
         data: {
-          pageTitle: 'Document template',
           breadcrumb: ({ documentTemplate }) => documentTemplate.name,
         },
         component: DocumentTemplateOverviewComponent,
@@ -57,8 +58,8 @@ const routes: Routes = [
       },
       {
         path: 'edit',
+        title: 'Edit document template',
         data: {
-          pageTitle: 'Edit document template',
           breadcrumb: ({ documentTemplate }) => `Edit ${documentTemplate.name}`,
         },
         component: DocumentTemplateComponent,
@@ -68,6 +69,7 @@ const routes: Routes = [
       },
       {
         path: 'file-download/:uuid',
+        title: 'Download file',
         component: TemplateFileDownloadComponent,
       },
     ],

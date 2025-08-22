@@ -5,5 +5,5 @@ export const regulatorSchemeMap: Record<OrganisationAccountDTO['competentAuthori
   WALES: 'Wales',
   SCOTLAND: 'Scotland',
   NORTHERN_IRELAND: 'Northern Ireland',
-  OPRED: 'Offshore (i.e. operated by OPRED)',
+  OPRED: 'Offshore (Regulated by the Offshore Petroleum Regulator for Environment and Decommissioning (OPRED))',
 };

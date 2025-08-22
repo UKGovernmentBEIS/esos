@@ -19,16 +19,27 @@ import uk.gov.esos.api.user.core.domain.enumeration.AuthenticationStatus;
 public class ExistingOperatorUserInvitationService {
 
     private final UserRoleTypeService userRoleTypeService;
+    private final OperatorUserAuthService operatorUserAuthService;
     private final OperatorAuthorityService operatorAuthorityService;
     private final AccountQueryService accountQueryService;
     private final OperatorUserNotificationGateway operatorUserNotificationGateway;
-    private final OperatorUserAuthService operatorUserAuthService;
 
     @Transactional
     public void addExistingUserToAccount(OperatorUserInvitationDTO operatorUserInvitationDTO,
                                          Long accountId, String userId, AuthenticationStatus authenticationStatus, AppUser currentUser) {
         log.debug("Adding existing operator user '{}' to account '{}'", () -> userId, () -> accountId);
-        checkInvitedUserStatus(userId, authenticationStatus, operatorUserInvitationDTO);
+
+    	if(authenticationStatus == null) {
+        	throw new UnsupportedOperationException("Processing for user status null is not supported yet");
+        }
+        
+        if (!userRoleTypeService.isUserOperator(userId)) {
+            log.error("User '{}' has already been introduced with role other than Operator", () -> userId);
+            throw new BusinessException(ErrorCode.USER_ALREADY_REGISTERED);
+        }
+        
+        //update operator user
+        operatorUserAuthService.updateUser(operatorUserInvitationDTO);
 
         String authorityUuid = 
         		operatorAuthorityService.createPendingAuthorityForOperator(
@@ -40,28 +51,5 @@ public class ExistingOperatorUserInvitationService {
         		operatorUserInvitationDTO,
         		accountName,
         		authorityUuid);
-    }
-
-    private void checkInvitedUserStatus(String userId, AuthenticationStatus authenticationStatus,
-                                        OperatorUserInvitationDTO operatorUserInvitationDTO) {
-        switch (authenticationStatus) {
-            case REGISTERED:
-                checkInvitedUserRole(userId);
-                break;
-            case PENDING:
-            case DELETED:
-                operatorUserAuthService.updateOperatorUserToPending(userId, operatorUserInvitationDTO);
-                break;
-            default:
-                throw new UnsupportedOperationException(String.format("Processing for user status  %s is not supported yet",
-                    authenticationStatus));
-        }
-    }
-
-    private void checkInvitedUserRole(String userId) {
-        if (!userRoleTypeService.isUserOperator(userId)) {
-            log.error("User '{}' has already been introduced with role other than Operator", () -> userId);
-            throw new BusinessException(ErrorCode.USER_ALREADY_REGISTERED);
-        }
     }
 }

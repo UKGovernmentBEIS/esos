@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ConfirmationSummaryPageComponent } from '@shared/components/summaries';
-import { WizardStep } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
+import { ResponsibleUndertakingWizardStep } from '@tasks/notification/subtasks/responsible-undertaking/responsible-undertaking.helper';
 import { mockConfirmations } from '@tasks/notification/testing/mock-data';
 import { ActivatedRouteStub, BasePage } from '@testing';
 
@@ -32,7 +32,7 @@ describe('ConfirmationSummaryPageComponent', () => {
     component = fixture.componentInstance;
     component.isEditable = true;
     component.confirmation = routeDMock;
-    component.wizardStep = WizardStep;
+    component.wizardStep = ResponsibleUndertakingWizardStep;
     page = new Page(fixture);
     fixture.detectChanges();
   });
@@ -43,11 +43,7 @@ describe('ConfirmationSummaryPageComponent', () => {
 
   it('should display all HTMLElements', () => {
     expect(page.summaries).toEqual([
-      'Yes',
-      'Change',
-      'Yes',
-      'Change',
-      'Yes',
+      'the organisation is within scope of the scheme but does not have any energy responsibilitythe organisation is compliant with the scheme the relevant sections of the ESOS report have been shared with all undertakings in the corporate group, unless there is a declared reason why this is prohibited by law the information provided in this notification of compliance is correct',
       'Change',
       'John',
       'Change',

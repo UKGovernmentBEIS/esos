@@ -62,7 +62,7 @@ describe('ResponsibilityAssessmentTypesComponent', () => {
   });
 
   it('should display correct form labels', () => {
-    expect(screen.getByText('Confirm that a responsible officer...')).toBeInTheDocument();
+    expect(screen.getByText('Responsible officer review')).toBeInTheDocument();
   });
 
   it(`should submit a valid form and navigate to nextRoute`, () => {

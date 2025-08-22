@@ -90,7 +90,6 @@ describe('SummaryComponent', () => {
       ['Postcode', 'Postcode', 'Change'],
       ['Phone number 1', 'UK (44) 1234567890', 'Change'],
       ['Phone number 2', '', 'Change'],
-      [undefined, 'Yes', 'Change'],
       ['First name', 'Jane', 'Change'],
       ['Last name', 'Doe', 'Change'],
       ['Job title', 'Job title', 'Change'],

@@ -1,17 +1,20 @@
 package uk.gov.esos.api.user.operator.domain;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import uk.gov.esos.api.common.domain.dto.CountyAddressDTO;
-import uk.gov.esos.api.user.core.domain.dto.ApplicationUserDTO;
 import uk.gov.esos.api.common.domain.dto.PhoneNumberDTO;
 import uk.gov.esos.api.common.domain.dto.validation.PhoneNumberIntegrity;
 import uk.gov.esos.api.common.domain.dto.validation.PhoneNumberNotBlank;
 import uk.gov.esos.api.common.domain.dto.validation.PhoneNumberValidity;
+import uk.gov.esos.api.user.core.domain.dto.ApplicationUserDTO;
 import uk.gov.esos.api.user.core.domain.enumeration.AuthenticationStatus;
 
 /**
@@ -33,7 +36,6 @@ public class OperatorUserDTO extends ApplicationUserDTO {
     @Valid
     private CountyAddressDTO address;
 
-    @NotBlank(message = "{userAccount.jobTitle.notEmpty}")
     @Size(max = 255, message = "{userAccount.jobTitle.typeMismatch}")
     private String jobTitle;
 

@@ -5,12 +5,22 @@
   (formSubmit)="onSubmit()"
   submitText="Save and continue"
   [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <div formControlName="certificateNumber" govuk-text-input
-       label="Certificate number" hint="This can be found at the top of your certificate"
-       widthClass="govuk-!-width-one-third"></div>
-  <div formControlName="validFrom" govuk-date-input
-       label="Valid from" [hint]="dateHint" [max]="dateMax"></div>
-  <div formControlName="validUntil" govuk-date-input
-       label="Valid until" [hint]="dateHint"></div>
+  <p class="govuk-body">For the third ESOS compliance period, the certificate must remain valid on either:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>the original compliance date of 5 December 2023</li>
+    <li>the new compliance date of 5 June 2024</li>
+  </ul>
+
+  <div
+    formControlName="certificateNumber"
+    govuk-text-input
+    label="Certificate number"
+    hint="This can be found at the top of your certificate"
+    widthClass="govuk-!-width-one-third"
+  ></div>
+  <div formControlName="validFrom" govuk-date-input label="Valid from" [hint]="dateHint"></div>
+  <div formControlName="validUntil" govuk-date-input label="Valid until" [hint]="dateHint"></div>
 </esos-wizard-step>

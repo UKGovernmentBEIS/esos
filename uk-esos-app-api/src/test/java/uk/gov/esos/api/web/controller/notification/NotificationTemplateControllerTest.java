@@ -173,7 +173,7 @@ class NotificationTemplateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(pmrvUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(pmrvUser, new RoleType[]{REGULATOR});
+            .evaluate(pmrvUser, new RoleType[]{REGULATOR}, true);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/v1.0/organisation/notification-templates")

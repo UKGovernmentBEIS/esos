@@ -7,92 +7,135 @@
     <!-- see https://camunda.jfrog.io/ui/native/camunda-bpm/org/camunda/bpm/distro/camunda-sql-scripts/ for details-->
     <changeSet id="0_1_0_CAMUNDA_CREATE_SCHEMA" author="kliropog">
         <validCheckSum>1:any</validCheckSum>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/create/activiti.postgres.create.engine.sql" />
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/create/activiti.postgres.create.history.sql" />
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/create/activiti.postgres.create.case.engine.sql" />
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/create/activiti.postgres.create.case.history.sql" />
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/create/activiti.postgres.create.decision.engine.sql" />
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/create/activiti.postgres.create.decision.history.sql" />
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/create/activiti.postgres.create.identity.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/create/activiti.postgres.create.engine.sql"/>
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/create/activiti.postgres.create.history.sql"/>
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/create/activiti.postgres.create.case.engine.sql"/>
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/create/activiti.postgres.create.case.history.sql"/>
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/create/activiti.postgres.create.decision.engine.sql"/>
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/create/activiti.postgres.create.decision.history.sql"/>
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/create/activiti.postgres.create.identity.sql"/>
 
         <rollback>
-            <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.identity.sql" />
-            <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.decision.history.sql" />
-            <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.decision.engine.sql" />
-            <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.case.history.sql" />
-            <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.case.engine.sql" />
-            <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.history.sql" />
-            <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.engine.sql" />
+            <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                     path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.identity.sql"/>
+            <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                     path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.decision.history.sql"/>
+            <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                     path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.decision.engine.sql"/>
+            <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                     path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.case.history.sql"/>
+            <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                     path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.case.engine.sql"/>
+            <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                     path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.history.sql"/>
+            <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                     path="org/camunda/bpm/engine/db/drop/activiti.postgres.drop.engine.sql"/>
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.13_patch_7.13.4_to_7.13.5_1" author="stassinopoulosp">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.13.5_1', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.13.5_1', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.13_patch_7.13.4_to_7.13.5_1.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.13_patch_7.13.4_to_7.13.5_1.sql"/>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.13_patch_7.13.4_to_7.13.5_2" author="stassinopoulosp">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.13.5_2', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.13.5_2', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.13_patch_7.13.4_to_7.13.5_2.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.13_patch_7.13.4_to_7.13.5_2.sql"/>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.13_patch_7.13.5_to_7.13.6" author="stassinopoulosp">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.13.6', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.13.6', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.13_patch_7.13.5_to_7.13.6.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.13_patch_7.13.5_to_7.13.6.sql"/>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.13_to_7.14" author="stassinopoulosp">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.14.0', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.14.0', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.13_to_7.14.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.13_to_7.14.sql"/>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.14_to_7.15" author="stassinopoulosp">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.15.0', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.15.0', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.14_to_7.15.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.14_to_7.15.sql"/>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.15_to_7.16" author="stassinopoulosp">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.16.0', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.16.0', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.15_to_7.16.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.15_to_7.16.sql"/>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.16_to_7.17_db_updates" author="stassinopoulosp">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.17.0', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.17.0', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.16_to_7.17.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.16_to_7.17.sql"/>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.17_to_7.18_db_updates" author="stassinopoulosp">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.18.0', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.18.0', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.17_to_7.18.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.17_to_7.18.sql"/>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.18_to_7.19_db_updates" author="p70453">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.19.0', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.19.0', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.18_to_7.19.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.18_to_7.19.sql"/>
     </changeSet>
 
     <changeSet id="0_1_0_CAMUNDA_engine_7.19_to_7.20_db_updates" author="p70453">
         <preConditions onFail="CONTINUE">
-            <sqlCheck expectedResult="1">select case when string_to_array(replace('7.20.0', '_', '.'),'.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.20.0', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
         </preConditions>
-        <sqlFile encoding="utf8" splitStatements="true" stripComments="true" path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.19_to_7.20.sql" />
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.19_to_7.20.sql"/>
+    </changeSet>
+
+    <changeSet id="0_1_0_CAMUNDA_engine_7.20_to_7.21_db_updates" author="p70453">
+        <preConditions onFail="CONTINUE">
+            <sqlCheck
+                    expectedResult="1">select case when string_to_array(replace('7.21.0', '_', '.'), '.')::int[] > string_to_array(replace((select max(version_) from act_ge_schema_log), '_', '.'),'.')::int[] then 1 else 0 end diff</sqlCheck>
+        </preConditions>
+        <sqlFile encoding="utf8" splitStatements="true" stripComments="true"
+                 path="org/camunda/bpm/engine/db/upgrade/postgres_engine_7.20_to_7.21.sql"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,16 +1,19 @@
 <esos-wizard-step
   [formGroup]="form"
   [heading]="heading"
+  [caption]="isFirstCompliancePeriod ? 'First compliance period' : 'Second compliance period'"
   (formSubmit)="submit()"
-  [hideSubmit]="false"
   submitText="Save and continue"
-  [showBackLink]="true"
+  [hideSubmit]="false"
+  [showReturnLink]="true"
 >
-  <esos-energy-consumption-input></esos-energy-consumption-input>
+  <p class="govuk-hint govuk-!-margin-bottom-6">{{ hint }}</p>
 
-  <div>
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-    <h2 class="govuk-heading-m">Total</h2>
-    <div class="govuk-body govuk-!-font-size-19">{{ total() }} kWh</div>
-  </div>
+  <div
+    class="govuk-!-width-one-third"
+    govuk-text-input
+    inputType="number"
+    suffix="kWh"
+    formControlName="organisationalEnergyConsumption"
+  ></div>
 </esos-wizard-step>

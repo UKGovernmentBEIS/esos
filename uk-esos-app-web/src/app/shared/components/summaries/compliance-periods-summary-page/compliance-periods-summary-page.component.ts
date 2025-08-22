@@ -1,16 +1,22 @@
-import { JsonPipe, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 
 import { EnergyConsumptionDetailsSummaryTemplateComponent, WIZARD_STEP_HEADINGS } from '@shared/components/summaries';
 import { BooleanToTextPipe } from '@shared/pipes/boolean-to-text.pipe';
 import { PipesModule } from '@shared/pipes/pipes.module';
+import { SkipQuestionPipe } from '@shared/pipes/skip-question.pipe';
 
 import {
-  GovukComponentsModule,
+  LinkDirective,
   SummaryListColumnActionsDirective,
   SummaryListColumnDirective,
-  SummaryListColumnValueDirective
+  SummaryListColumnValueDirective,
+  SummaryListComponent,
+  SummaryListRowActionsDirective,
+  SummaryListRowDirective,
+  SummaryListRowKeyDirective,
+  SummaryListRowValueDirective,
 } from 'govuk-components';
 
 import { SecondCompliancePeriod } from 'esos-api';
@@ -19,16 +25,21 @@ import { SecondCompliancePeriod } from 'esos-api';
   selector: 'esos-compliance-periods-summary-page',
   standalone: true,
   imports: [
-    GovukComponentsModule,
     NgIf,
     PipesModule,
     RouterLink,
-    JsonPipe,
     EnergyConsumptionDetailsSummaryTemplateComponent,
     BooleanToTextPipe,
+    LinkDirective,
+    SummaryListComponent,
+    SummaryListRowDirective,
+    SummaryListRowKeyDirective,
+    SummaryListRowValueDirective,
+    SummaryListRowActionsDirective,
     SummaryListColumnDirective,
     SummaryListColumnValueDirective,
-    SummaryListColumnActionsDirective
+    SummaryListColumnActionsDirective,
+    SkipQuestionPipe,
   ],
   templateUrl: './compliance-periods-summary-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,13 +53,11 @@ export class CompliancePeriodsSummaryPageComponent implements OnInit {
 
   //headings
   informationExistsHeading: string;
-  organisationalEnergyConsumptionHeading: string;
-  significantEnergyConsumptionExistsHeading: string;
+  organisationalEnergyConsumption: string;
+  organisationalEnergyConsumptionBreakdownHeading: string;
   significantEnergyConsumptionHeading: string;
   explanationOfChangesToTotalConsumptionHeading: string;
-  potentialReductionExistsHeading: string;
   potentialReductionHeading: string;
-  reductionAchievedExistsHeading: string;
   reductionAchievedHeading: string;
 
   constructor(readonly route: ActivatedRoute) {}
@@ -57,27 +66,26 @@ export class CompliancePeriodsSummaryPageComponent implements OnInit {
     this.informationExistsHeading = WIZARD_STEP_HEADINGS[this.wizardStep.INFORMATION_EXISTS](
       this.isFirstCompliancePeriod,
     );
-    this.organisationalEnergyConsumptionHeading = WIZARD_STEP_HEADINGS[
-      this.wizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION
+    this.organisationalEnergyConsumption = WIZARD_STEP_HEADINGS[this.wizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION](
+      this.isFirstCompliancePeriod,
+    );
+
+    this.organisationalEnergyConsumptionBreakdownHeading = WIZARD_STEP_HEADINGS[
+      this.wizardStep.ORGANISATIONAL_ENERGY_CONSUMPTION_BREAKDOWN
     ](this.isFirstCompliancePeriod);
-    this.significantEnergyConsumptionExistsHeading = WIZARD_STEP_HEADINGS[
-      this.wizardStep.SIGNIFICANT_ENERGY_CONSUMPTION_EXISTS
-    ](this.isFirstCompliancePeriod);
+
     this.significantEnergyConsumptionHeading = WIZARD_STEP_HEADINGS[this.wizardStep.SIGNIFICANT_ENERGY_CONSUMPTION](
       this.isFirstCompliancePeriod,
     );
+
     this.explanationOfChangesToTotalConsumptionHeading = WIZARD_STEP_HEADINGS[
       this.wizardStep.EXPLANATION_OF_CHANGES_TO_TOTAL_CONSUMPTION
     ](this.isFirstCompliancePeriod);
-    this.potentialReductionExistsHeading = WIZARD_STEP_HEADINGS[this.wizardStep.POTENTIAL_REDUCTION_EXISTS](
-      this.isFirstCompliancePeriod,
-    );
+
     this.potentialReductionHeading = WIZARD_STEP_HEADINGS[this.wizardStep.POTENTIAL_REDUCTION](
       this.isFirstCompliancePeriod,
     );
-    this.reductionAchievedExistsHeading = WIZARD_STEP_HEADINGS[this.wizardStep.REDUCTION_ACHIEVED_EXISTS](
-      this.isFirstCompliancePeriod,
-    );
+
     this.reductionAchievedHeading = WIZARD_STEP_HEADINGS[this.wizardStep.REDUCTION_ACHIEVED](
       this.isFirstCompliancePeriod,
     );

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.org.bouncycastle.cert.ocsp.Req;
 import uk.gov.esos.api.AbstractContainerBaseTest;
 import uk.gov.esos.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.esos.api.workflow.request.core.domain.Request;
@@ -16,6 +17,7 @@ import uk.gov.esos.api.workflow.request.core.domain.enumeration.RequestType;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -112,6 +114,66 @@ class RequestRepositoryIT extends AbstractContainerBaseTest {
         
         assertThat(result).isFalse();
     }
+
+    @Test
+    void existsByAccountIdAndTypeAndStatus_exists() {
+        RequestType type = RequestType.PROGRESS_UPDATE_1_P3;
+        RequestStatus status= RequestStatus.COMPLETED;
+        CompetentAuthorityEnum competentAuthority = CompetentAuthorityEnum.ENGLAND;
+
+        createRequest(1L, competentAuthority, type, status, LocalDateTime.now());
+
+        flushAndClear();
+
+        boolean result = requestRepository.existsByAccountIdAndTypeAndStatus(1L,type, status);
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void existsByAccountIdAndTypeAndStatus_not_exists() {
+        RequestType type = RequestType.ACTION_PLAN_P3;
+        RequestStatus status= RequestStatus.IN_PROGRESS;
+        CompetentAuthorityEnum competentAuthority = CompetentAuthorityEnum.ENGLAND;
+
+        createRequest(2L, competentAuthority, type, status, LocalDateTime.now());
+
+        boolean result = requestRepository.existsByAccountIdAndTypeAndStatus(1L,type, status);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void findByAccountAndType() {
+        RequestType type = RequestType.PROGRESS_UPDATE_1_P3;
+        RequestStatus status= RequestStatus.COMPLETED;
+        CompetentAuthorityEnum competentAuthority = CompetentAuthorityEnum.ENGLAND;
+
+        Request request = createRequest(1L, competentAuthority, type, status, LocalDateTime.now());
+
+        flushAndClear();
+
+        Optional<Request> result = requestRepository.findByAccountIdAndType(1L,type);
+
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get()).isEqualTo(request);
+    }
+
+    @Test
+    void findByAccountAndType_not_found() {
+        RequestType type = RequestType.PROGRESS_UPDATE_1_P3;
+        RequestStatus status= RequestStatus.COMPLETED;
+        CompetentAuthorityEnum competentAuthority = CompetentAuthorityEnum.ENGLAND;
+
+        Request request = createRequest(2L, competentAuthority, type, status, LocalDateTime.now());
+
+        flushAndClear();
+
+        Optional<Request> result = requestRepository.findByAccountIdAndType(1L,type);
+
+        assertThat(result.isPresent()).isFalse();
+    }
+
     
 	private Request createRequest(Long accountId, CompetentAuthorityEnum competentAuthority, RequestType type,
 			RequestStatus status, LocalDateTime endDate) {

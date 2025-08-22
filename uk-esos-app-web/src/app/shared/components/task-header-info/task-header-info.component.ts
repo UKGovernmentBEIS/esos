@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { DaysRemainingPipe } from '@shared/pipes/days-remaining.pipe';
@@ -7,17 +6,23 @@ import { DaysRemainingPipe } from '@shared/pipes/days-remaining.pipe';
   selector: 'esos-task-header-info',
   standalone: true,
   template: `
-    <div class="govuk-!-margin-top-2">
-      <p class="govuk-body"><strong>Assigned to:</strong> {{ assignee }}</p>
-    </div>
-    <ng-container *ngIf="daysRemaining !== undefined && daysRemaining !== null">
+    <p class="govuk-body"><strong>Assigned to:</strong> {{ assignee ?? 'Unassigned' }}</p>
+
+    @if (daysRemaining !== undefined && daysRemaining !== null) {
       <div class="govuk-!-margin-top-2">
         <p class="govuk-body"><strong>Days Remaining:</strong> {{ daysRemaining | daysRemaining }}</p>
       </div>
-    </ng-container>
+    }
   `,
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, DaysRemainingPipe],
+  imports: [DaysRemainingPipe],
 })
 export class TaskHeaderInfoComponent {
   @Input() assignee: string;

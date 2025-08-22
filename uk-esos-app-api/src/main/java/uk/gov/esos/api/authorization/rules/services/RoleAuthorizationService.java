@@ -18,10 +18,12 @@ public class RoleAuthorizationService {
      *
      * @param pmrvUser {@link AppUser}
      * @param roleTypes the {@link RoleType} array
+     * @param authoritiesRequired
      */
-    public void evaluate(AppUser pmrvUser, RoleType[] roleTypes) {
-        if (!Arrays.asList(roleTypes).contains(pmrvUser.getRoleType()) || pmrvUser.getAuthorities().isEmpty()) {
-            throw new BusinessException(ErrorCode.FORBIDDEN);
-        }
+    public void evaluate(AppUser pmrvUser, RoleType[] roleTypes, boolean authoritiesRequired) {
+		if (!Arrays.asList(roleTypes).contains(pmrvUser.getRoleType())
+				|| (authoritiesRequired && pmrvUser.getAuthorities().isEmpty())) {
+			throw new BusinessException(ErrorCode.FORBIDDEN);
+		}
     }
 }

@@ -1,14 +1,15 @@
 <dialog
   #modal
-  role="dialog"
+  role="alertdialog"
   class="govuk-timeout-warning dialog fixed"
   aria-live="polite"
+  aria-modal="true"
   aria-labelledby="dialog-title"
-  aria-describedby="at-timer"
+  aria-describedby="dialog-description"
 >
   <esos-page-heading size="l" id="dialog-title">Your session will end soon</esos-page-heading>
 
-  <div class="govuk-body">
+  <div class="govuk-body" id="dialog-description">
     <ng-container *ngIf="timeoutBannerService.timeExtensionAllowed$ | async; else noMoreTimeExtension">
       <div aria-hidden="true" aria-relevant="additions">
         You must select "Continue" within the next

@@ -5,8 +5,14 @@
   (formSubmit)="submit()"
   submitText="Save and continue"
   [hideSubmit]="!isEditable"
+  [showReturnLink]="true"
 >
-  <div formControlName="qualificationType" govuk-radio>
+  <div
+    formControlName="qualificationType"
+    govuk-radio
+    legend="Does your organisation qualify for ESOS?"
+    [isLegendHidden]="true"
+  >
     <govuk-radio-option
       value="QUALIFY"
       label="Yes, the organisation qualifies for ESOS and will submit a notification"

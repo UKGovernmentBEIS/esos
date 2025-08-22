@@ -12,6 +12,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -32,6 +33,7 @@ import java.io.IOException;
 @RequestMapping(path = "/v1.0/regulator-users/invite")
 @Tag(name = "Regulator Users")
 @RequiredArgsConstructor
+@Validated
 public class RegulatorUserInvitationController {
 
     private final RegulatorUserInvitationService regulatorUserInvitationService;
@@ -49,9 +51,9 @@ public class RegulatorUserInvitationController {
     public ResponseEntity<Void> inviteRegulatorUserToCA(
             @Parameter(hidden = true) AppUser currentUser,
             @RequestPart @Valid @Parameter(description = "The regulator to invite", required = true) RegulatorInvitedUserDTO regulatorInvitedUser,
-            @RequestPart(value = "signature", required = false) @Valid @Parameter(description = "The signature file") MultipartFile signature) throws IOException {
+            @RequestPart(value = "signature", required = false) @Parameter(description = "The signature file") MultipartFile signature) throws IOException {
         FileDTO signatureDTO = fileDtoMapper.toFileDTO(signature);
-        regulatorUserInvitationService.inviteRegulatorUser(regulatorInvitedUser, signatureDTO, currentUser);
+        regulatorUserInvitationService.inviteUser(regulatorInvitedUser, signatureDTO, currentUser);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

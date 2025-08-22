@@ -13,7 +13,13 @@ import { RequestMetadata } from './requestMetadata';
 
 export interface RequestInfoDTO {
   id?: string;
-  type?: 'ORGANISATION_ACCOUNT_OPENING' | 'NOTIFICATION_OF_COMPLIANCE_P3';
+  type?:
+    | 'ORGANISATION_ACCOUNT_OPENING'
+    | 'NOTIFICATION_OF_COMPLIANCE_P3'
+    | 'ACTION_PLAN_P3'
+    | 'ACCOUNT_CLOSURE'
+    | 'PROGRESS_UPDATE_1_P3'
+    | 'PROGRESS_UPDATE_2_P3';
   competentAuthority?: 'ENGLAND' | 'NORTHERN_IRELAND' | 'OPRED' | 'SCOTLAND' | 'WALES';
   accountId?: number;
   requestMetadata?: RequestMetadata;

@@ -1,16 +1,31 @@
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+
+import { TagColor } from '../tag';
 
 @Component({
   selector: 'govuk-phase-banner',
   standalone: true,
-  imports: [NgIf],
-  templateUrl: './phase-banner.component.html',
+  imports: [NgIf, NgClass],
+  template: `
+    <div class="govuk-phase-banner">
+      <div class="govuk-phase-banner__content">
+        <strong
+          *ngIf="phase"
+          class="govuk-tag govuk-phase-banner__content__tag"
+          [ngClass]="tagColor ? 'govuk-tag--' + tagColor : null"
+        >
+          {{ phase }}
+        </strong>
+        <span class="govuk-phase-banner__text">
+          <ng-content></ng-content>
+        </span>
+      </div>
+    </div>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./phase-banner.component.scss'],
 })
 export class PhaseBannerComponent {
   @Input() phase: string;
-  @Input() tagColor: string;
-  @Input() tagAlign: 'right' | 'left' = 'left';
+  @Input() tagColor: TagColor;
 }
