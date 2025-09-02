@@ -369,6 +369,7 @@ export class RegulatorUsersService {
    * @param userId Regulator\&#39;s user id to reset 2FA
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
+   * @deprecated
    */
   public resetRegulator2Fa(userId: string): Observable<RegulatorUserUpdateDTO>;
   public resetRegulator2Fa(

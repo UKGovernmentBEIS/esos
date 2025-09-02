@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.esos.api.authorization.core.domain.AppUser;
 import uk.gov.esos.api.common.domain.enumeration.RoleType;
+import uk.gov.esos.api.user.core.domain.dto.EmailDTO;
 import uk.gov.esos.api.user.verifier.domain.VerifierUserDTO;
 import uk.gov.esos.api.user.verifier.service.VerifierUserManagementService;
 import uk.gov.esos.api.web.constants.SwaggerApiInfo;
@@ -103,9 +104,11 @@ public class VerifierUserManagementController {
     /**
      * Resets the 2FA device for a verifier user by user id.
      *
+     * @deprecated Reset 2fa is only allowed through {@link UserSecuritySetupController#requestToReset2fa(EmailDTO)}
      * @param pmrvUser {@link AppUser}
      * @param userId Keycloak user id
      */
+    @Deprecated(forRemoval = true)
     @PatchMapping(path = "/{userId}/reset-2fa")
     @Operation(summary = "Resets the 2FA device for a verifier user by user id")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = VerifierUserDTO.class))})

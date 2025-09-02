@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 
 import { Configuration } from '../configuration';
 import { CustomHttpParameterCodec } from '../encoder';
+import { EmailDTO } from '../model/emailDTO';
 import { OneTimePasswordDTO } from '../model/oneTimePasswordDTO';
 import { TokenDTO } from '../model/tokenDTO';
 import { BASE_PATH } from '../variables';
@@ -87,6 +88,7 @@ export class UsersSecuritySetupService {
    * @param tokenDTO
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
+   * @deprecated
    */
   public deleteOtpCredentials(tokenDTO: TokenDTO): Observable<any>;
   public deleteOtpCredentials(
@@ -151,10 +153,89 @@ export class UsersSecuritySetupService {
   }
 
   /**
+   * Resets user\&#39;s 2fa
+   * @param emailDTO
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public requestToReset2fa(emailDTO: EmailDTO): Observable<any>;
+  public requestToReset2fa(
+    emailDTO: EmailDTO,
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<any>>;
+  public requestToReset2fa(
+    emailDTO: EmailDTO,
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<any>>;
+  public requestToReset2fa(
+    emailDTO: EmailDTO,
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any>;
+  public requestToReset2fa(
+    emailDTO: EmailDTO,
+    observe: any = 'body',
+    reportProgress: boolean = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (emailDTO === null || emailDTO === undefined) {
+      throw new Error('Required parameter emailDTO was null or undefined when calling requestToReset2fa.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.post<any>(
+      `${this.configuration.basePath}/v1.0/users/security-setup/2fa/reset-2fa`,
+      emailDTO,
+      {
+        responseType: <any>responseType_,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
    * Requests the update of the two factor authentication
    * @param oneTimePasswordDTO
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
+   * @deprecated
    */
   public requestTwoFactorAuthChange(oneTimePasswordDTO: OneTimePasswordDTO): Observable<any>;
   public requestTwoFactorAuthChange(

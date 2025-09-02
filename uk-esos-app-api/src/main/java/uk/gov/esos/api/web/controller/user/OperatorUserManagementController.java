@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.esos.api.authorization.core.domain.AppUser;
+import uk.gov.esos.api.user.core.domain.dto.EmailDTO;
 import uk.gov.esos.api.user.operator.domain.OperatorUserDTO;
 import uk.gov.esos.api.user.operator.service.OperatorUserManagementService;
 import uk.gov.esos.api.web.constants.SwaggerApiInfo;
@@ -105,7 +106,9 @@ public class OperatorUserManagementController {
      *
      * @param accountId Account id
      * @param userId Keycloak user id
+     * @deprecated Reset 2fa is only allowed through {@link UserSecuritySetupController#requestToReset2fa(EmailDTO)}
      */
+    @Deprecated(forRemoval = true)
     @PatchMapping(path = "/account/{accountId}/{userId}/reset-2fa")
     @Operation(summary = "Resets the 2FA device for an operator user by account and user id")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = OperatorUserDTO.class))})

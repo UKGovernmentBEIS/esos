@@ -14,10 +14,12 @@ import uk.gov.esos.api.token.JwtTokenActionEnum;
 import uk.gov.esos.api.user.NavigationOutcomes;
 import uk.gov.esos.api.token.JwtProperties;
 import uk.gov.esos.api.user.core.domain.dto.TokenDTO;
+import uk.gov.esos.api.user.core.domain.dto.UserInfoDTO;
 import uk.gov.esos.api.user.core.domain.model.UserNotificationWithRedirectionLinkInfo;
 import uk.gov.esos.api.user.core.service.auth.UserAuthService;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -104,6 +106,17 @@ class UserSecuritySetupServiceTest {
 
         verify(userAuthService, times(1)).deleteOtpCredentials(userId);
         verify(userNotificationService, times(1)).notifyUserReset2Fa(userId);
+    }
+
+    @Test
+    void requestToReset2fa() {
+        String email = "email";
+        String userId = "123abcd";
+
+        when(userAuthService.getUserByEmail(email)).thenReturn(Optional.of(UserInfoDTO.builder().userId(userId).build()));
+        userSecuritySetupService.requestToReset2fa(email);
+
+        verify(userAuthService, times(1)).sendUpdateTotpMagicLink(userId);
     }
 
     private UserNotificationWithRedirectionLinkInfo.TokenParams expectedTokenParams(String claimValue, Long expirationInterval) {

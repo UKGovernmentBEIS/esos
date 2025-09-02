@@ -1,10 +1,11 @@
-import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { UntypedFormBuilder } from '@angular/forms';
 
-import { combineLatest, first, map, switchMap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
-import { OperatorUsersService, RegulatorUsersService, VerifierUsersService } from 'esos-api';
+import { GovukValidators } from 'govuk-components';
+
+import { UsersSecuritySetupService } from 'esos-api';
 
 @Component({
   selector: 'esos-reset-two-fa',
@@ -12,34 +13,32 @@ import { OperatorUsersService, RegulatorUsersService, VerifierUsersService } fro
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetTwoFaComponent {
-  userId$ = this.route.paramMap.pipe(map(() => window.history.state['userId']));
-  accountId$ = this.route.paramMap.pipe(map(() => window.history.state['accountId']));
-  userName$ = this.route.paramMap.pipe(map(() => window.history.state['userName']));
-  role$ = this.route.paramMap.pipe(map(() => window.history.state['role']));
+  isSummaryDisplayed$ = new BehaviorSubject<boolean>(false);
+  isEmailSent$ = new BehaviorSubject<boolean>(false);
+
+  form = this.fb.group({
+    email: [
+      null,
+      [
+        GovukValidators.required('Enter your email address'),
+        GovukValidators.email('Enter an email address in the correct format, like name@example.com'),
+        GovukValidators.maxLength(255, 'Enter an email address with a maximum of 255 characters'),
+      ],
+    ],
+  });
 
   constructor(
-    readonly location: Location,
-    private readonly regulatorUsersService: RegulatorUsersService,
-    private readonly verifierUsersService: VerifierUsersService,
-    private readonly operatorUsersService: OperatorUsersService,
-    private readonly route: ActivatedRoute,
+    private readonly usersSecuritySetupService: UsersSecuritySetupService,
+    private readonly fb: UntypedFormBuilder,
   ) {}
 
-  reset() {
-    combineLatest([this.userId$, this.accountId$, this.role$])
-      .pipe(
-        first(),
-        switchMap(([userId, accountId, role]) => {
-          switch (role) {
-            case 'REGULATOR':
-              return this.regulatorUsersService.resetRegulator2Fa(userId);
-            case 'VERIFIER':
-              return this.verifierUsersService.resetVerifier2Fa(userId);
-            case 'OPERATOR':
-              return this.operatorUsersService.resetOperator2Fa(accountId, userId);
-          }
-        }),
-      )
-      .subscribe(() => this.location.back());
+  onSubmit(): void {
+    if (this.form.valid) {
+      this.usersSecuritySetupService.requestToReset2fa({ email: this.form.get('email').value }).subscribe(() => {
+        this.isEmailSent$.next(true);
+      });
+    } else {
+      this.isSummaryDisplayed$.next(true);
+    }
   }
 }

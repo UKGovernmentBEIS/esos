@@ -1,5 +1,5 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout displayMessage=!messagesPerField.existsError('totp'); section>
+<@layout.registrationLayout displayMessage=!messagesPerField.existsError('totp') displayResetLinks=true; section>
     <#if section = "headerCaption">
         ${msg("doLogInTotpCaption")}
     <#elseif section="header">

@@ -13,8 +13,15 @@
       </div>
     </div>
   </ng-container>
+  <ng-container *ngSwitchCase="'TOKEN1002'">
+    <esos-page-heading>This link is invalid</esos-page-heading>
+    <p class="govuk-body">
+      It seems you are signed in with another account. Make sure you sign out from the other account and try to access
+      the link again.
+    </p>
+  </ng-container>
   <ng-container *ngSwitchDefault>
     <esos-page-heading>This link is invalid</esos-page-heading>
-    <p class="govuk-body">Please contact your admin for access.</p>
+    <p class="govuk-body">Contact the ESOS Service Desk for further assistance.</p>
   </ng-container>
 </ng-container>

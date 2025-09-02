@@ -4,7 +4,7 @@
         ${msg("verificationEmailSentTitle")}
     <#elseif section = "form">
         <p class="govuk-body">
-            We have sent a verification email to ${email}<br/><br/>
+            We have sent a verification email to <b>${email}</b><br/><br/>
             Click on the link in the email to confirm you can still access this address.<br/><br/>
             Your email might take a few minutes to arrive. If you do not get an email, check your spam folder.<br/><br/>
             The link will expire in ${linkExpirationHours} hours.<br/><br/>

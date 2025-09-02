@@ -134,12 +134,14 @@
                         <div id="kc-solutions" class="govuk-body">
                             <h4 class="govuk-heading-s">${msg("problemsSignIn")}</h4>
                             <ul class="govuk-list">
-                                <li>
-                                    <a id="forgotPasswordLink" class="govuk-link"
-                                       href="${properties.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a>
-                                    <input type="hidden" id="forgotPasswordPath"
-                                           value="${properties.loginResetCredentialsUrl}"/>
-                                </li>
+                                <#if templateName != "login-otp.ftl">
+                                    <li>
+                                        <a id="forgotPasswordLink" class="govuk-link"
+                                           href="${properties.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a>
+                                        <input type="hidden" id="forgotPasswordPath"
+                                               value="${properties.loginResetCredentialsUrl}"/>
+                                    </li>
+                                </#if>
                                 <li>
                                     <a id="lostAuthAppLink" class="govuk-link"
                                        href="${properties.lost2FADeviceUrl}">${msg("lost2FADevice")}</a>

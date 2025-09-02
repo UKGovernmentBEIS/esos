@@ -156,6 +156,7 @@ export class VerifierUsersService {
    * @param userId The verifier user id
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
+   * @deprecated
    */
   public resetVerifier2Fa(userId: string): Observable<VerifierUserDTO>;
   public resetVerifier2Fa(

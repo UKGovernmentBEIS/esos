@@ -225,8 +225,8 @@ describe('DetailsComponent', () => {
     expect(navigateSpy).not.toHaveBeenCalled();
   });
 
-  it('should display the 2fa link for same user', () => {
-    expect(page.links.map((el) => el.textContent.trim())).toContain('Change two factor authentication');
+  it('should not display the 2fa link for same user', () => {
+    expect(page.links.map((el) => el.textContent.trim())).not.toContain('Change two factor authentication');
   });
 
   it('should not display the 2fa link for other user', async () => {

@@ -1,10 +1,43 @@
-<esos-page-heading size="xl" [caption]="'Reset two-factor authentication'">
-  Are you sure you want to reset two-factor authentication for {{ userName$ | async }} ?
-</esos-page-heading>
-
-<p class="govuk-body">This will send a two-factor authentication reset email to {{ userName$ | async }}</p>
-
-<div class="govuk-button-group">
-  <button type="button" esosPendingButton (click)="reset()" govukWarnButton>Yes, reset authentication</button>
-  <a govukLink routerLink="." (click)="location.back()">Cancel</a>
-</div>
+@if (isEmailSent$ | async) {
+  @let email = form.get('email').value;
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-l">Check your email</h2>
+      <p class="govuk-body">
+        We have sent a verification email to <strong>{{ email }}</strong>
+      </p>
+      <p class="govuk-body">Click on the link in the email to confirm you can still access this address.</p>
+      <p class="govuk-body">
+        Your email might take a few minutes to arrive. If you do not get an email, check your spam folder.
+      </p>
+      <p class="govuk-body">The link will expire in 20 minutes.</p>
+      <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text"> I did not get an email </span>
+        </summary>
+        <div class="govuk-details__text">
+          <p class="govuk-body">
+            If you have not received the email after a few minutes, check your spam or junk folder. The subject of the
+            email is ‘Reset your password and two-factor authenticator app - Manage your ESOS reporting’.
+          </p>
+        </div>
+      </details>
+    </div>
+  </div>
+} @else {
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <h1 class="govuk-heading-l">Reset my two-factor authentication</h1>
+    <p class="govuk-body">
+      We'll send you a link to reset your two-factor authentication. The link will expire after 20 minutes.
+    </p>
+    <div
+      autoComplete="email"
+      formControlName="email"
+      govuk-text-input
+      inputType="email"
+      label="Email address"
+    ></div>
+    <button govukButton type="submit">Confirm</button>
+  </form>
+}
+<esos-back-to-top></esos-back-to-top>

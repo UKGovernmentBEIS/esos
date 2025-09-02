@@ -135,7 +135,7 @@ class OperatorAuthorityUpdateServiceTest {
 				Role.builder().code("newRole").build());
 
 		List<NewUserActivated> expected = List.of(NewUserActivated.builder().userId(userId)
-				.roleCode(AuthorityConstants.OPERATOR_ROLE_CODE).build());
+				.roleCode(newRoleCode).build());
 
 		when(roleRepository.findByType(RoleType.OPERATOR))
 				.thenReturn(operatorRoleCodes);

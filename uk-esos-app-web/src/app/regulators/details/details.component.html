@@ -126,7 +126,7 @@
               <ng-container *ngIf="allowEditPermissions$ | async; else nonEditable">
                 <ng-container *ngIf="permissionGroups$ | async as permissionGroups">
                   <div
-                    *ngIf="permissionGroups[row.permission] | includes : column.field"
+                    *ngIf="permissionGroups[row.permission] | includes: column.field"
                     [formControlName]="row.permission"
                     [index]="column.field"
                     [value]="column.field"
@@ -153,24 +153,6 @@
         </div>
       </div>
     </div>
-
-    <esos-two-fa-link
-      *ngIf="isLoggedUser$ | async; else otherRegulatorUser"
-      [title]="'Change two factor authentication'"
-      [link]="'/2fa/change'"
-    >
-    </esos-two-fa-link>
-    <ng-template #otherRegulatorUser>
-      <esos-two-fa-link
-        *ngIf="(allowEditPermissions$ | async) && (userId$ | async)"
-        [title]="'Reset two-factor authentication'"
-        [link]="'2fa/reset-2fa'"
-        [userId]="userId$ | async"
-        [userName]="userFullName"
-        [role]="'REGULATOR'"
-      >
-      </esos-two-fa-link>
-    </ng-template>
 
     <button esosPendingButton govukButton type="submit">
       {{ userId$ | async | submitIfEmpty }}

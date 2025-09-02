@@ -1072,6 +1072,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       security: []
+  /v1.0/users/security-setup/2fa/reset-2fa:
+    post:
+      tags:
+        - Users Security Setup
+      summary: Resets user's 2fa
+      operationId: requestToReset2fa
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nTOKEN1001 | Invalid Token \t\n EMAIL1001 | The verification link has expired \t\n USER1005 | User not exist \t\n FORM1001 | Form validation failed"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/users/security-setup/2fa/request-change:
     post:
       tags:
@@ -1099,6 +1126,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      deprecated: true
   /v1.0/users/forgot-password/token-verification:
     post:
       tags:
@@ -1731,6 +1759,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      deprecated: true
   /v1.0/regulator-users/registration/accept-invitation-and-register:
     post:
       tags:
@@ -2791,6 +2820,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      deprecated: true
   /v1.0/verifier-users/verifier:
     patch:
       tags:
@@ -2886,6 +2916,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      deprecated: true
       security: []
   /v1.0/operator-users/operator:
     patch:
@@ -3070,6 +3101,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      deprecated: true
   /v1.0/ca-external-contacts/{id}:
     get:
       tags:

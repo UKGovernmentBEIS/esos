@@ -41,6 +41,7 @@ public class ApiSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(
                                 antMatcher("/v1.0/verifier-users/registration/**"),
                                 antMatcher("/v1.0/users/security-setup/2fa/delete*"),
+                                antMatcher("/v1.0/users/security-setup/2fa/reset-2fa*"),
                                 antMatcher("/v1.0/users/forgot-password/**"),
                                 antMatcher("/v1.0/file-attachments/**"),
                                 antMatcher("/v1.0/file-document-templates/**"),

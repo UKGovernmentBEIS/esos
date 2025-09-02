@@ -40,6 +40,7 @@ import static uk.gov.esos.api.user.core.domain.enumeration.KeycloakUserAttribute
 @RequiredArgsConstructor
 @Log4j2
 public class AuthService {
+    public static final Integer UPDATE_OTP_MAGIC_LINK_LIFESPAN = 60 * 20; // 20 minutes
 
     private final Keycloak keycloakAdminClient;
     private final KeycloakCustomClient keycloakCustomClient;
@@ -191,6 +192,11 @@ public class AuthService {
     
     public void validateUnAuthenticatedUserOtp(String otp, String email) {
         keycloakCustomClient.validateUnAuthenticatedUserOtp(otp, email);
+    }
+
+    public void sendUpdateTotpMagicLink(String userId) {
+        List<String> actionsToExecute = List.of("OL_IDP_VERIFY_PASSWORD", "OL_IDP_UPDATE_TOTP");
+        getUsersResource().get(userId).executeActionsEmail(actionsToExecute, UPDATE_OTP_MAGIC_LINK_LIFESPAN);
     }
 
     public void deleteOtpCredentials(String userId) {

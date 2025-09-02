@@ -68,6 +68,7 @@ updatelogScripts=(
 "06_add_roles_to_camunda_identity_service_service_user.sh"
 "07_update_uk_esos_realm.sh"
 "08_disable_org_and_browser_forms_auth.sh"
+"09_activate_and_set_priority_for_custom_actions.sh"
 )
 
 #Get already executed scripts as concatenated string

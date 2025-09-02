@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.esos.api.authorization.AuthorityConstants;
 import uk.gov.esos.api.authorization.core.domain.Authority;
 import uk.gov.esos.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.esos.api.authorization.core.domain.Role;
@@ -87,7 +86,7 @@ public class OperatorAuthorityUpdateService {
         if(previousStatus.equals(AuthorityStatus.ACCEPTED)
                 && operatorUserUpdate.getAuthorityStatus().equals(AuthorityStatus.ACTIVE)){
             return NewUserActivated.builder().userId(operatorUserUpdate.getUserId())
-                    .roleCode(AuthorityConstants.OPERATOR_ROLE_CODE).build();
+                    .roleCode(newRoleCode).build();
         }
         return null;
     }

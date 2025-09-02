@@ -4,19 +4,6 @@
       <govuk-error-summary *ngIf="isSummaryDisplayed | async" [form]="form"></govuk-error-summary>
       <esos-page-heading size="xl">User details</esos-page-heading>
       <esos-user-input phoneType="full"></esos-user-input>
-
-      <esos-two-fa-link
-        [title]="
-          (isLoggedUser$ | async) === true ? 'Change two factor authentication' : 'Reset two-factor authentication'
-        "
-        [link]="(isLoggedUser$ | async) === true ? '2fa/change' : '2fa/reset-2fa'"
-        [userId]="userId$ | async"
-        [accountId]="accountId$ | async"
-        [userName]="userFullName"
-        [role]="'OPERATOR'"
-      >
-      </esos-two-fa-link>
-
       <button esosPendingButton govukButton type="submit">Save</button>
     </form>
   </div>

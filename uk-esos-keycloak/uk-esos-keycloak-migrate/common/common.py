@@ -70,3 +70,24 @@ def set_requirement_for_execution(flow_id, execution_id, priority, requirement):
     response.raise_for_status()
 
     print("Updated execution: ", execution_id, "with requirement: ", requirement)
+
+def get_required_actions(registered=True):
+    prefix = "" if registered else "unregistered-"
+    url = f"{base_url}/admin/realms/{esos_realm_name}/authentication/{prefix}required-actions"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+
+    return response.json()
+
+def register_required_action(required_action):
+    url = f"{base_url}/admin/realms/{esos_realm_name}/authentication/register-required-action"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.post(url, headers=headers, json=required_action)
+    response.raise_for_status()
+
+def update_required_action(updated_required_action):
+    url = f"{base_url}/admin/realms/{esos_realm_name}/authentication/required-actions/{updated_required_action['alias']}"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.put(url, headers=headers, json=updated_required_action)
+    response.raise_for_status()

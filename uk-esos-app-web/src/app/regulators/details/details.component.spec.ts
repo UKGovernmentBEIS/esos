@@ -301,7 +301,7 @@ describe('RegulatorDetailsComponent', () => {
       await expect(firstValueFrom(component.isLoggedUser$)).resolves.toEqual(true);
     });
 
-    it('should display the reset 2fa link when editing other user', async () => {
+    it('should not display the reset 2fa link when editing other user', async () => {
       authStore.setUserState({ ...mockRegulatorUserStatus, userId: '2' });
       activatedRoute.setParamMap({ userId: '222' });
 
@@ -310,7 +310,7 @@ describe('RegulatorDetailsComponent', () => {
 
       await expect(firstValueFrom(component.isLoggedUser$)).resolves.toEqual(false);
       fixture.detectChanges();
-      expect(page.twoFaLink.textContent.trim()).toEqual('Reset two-factor authentication');
+      expect(page.twoFaLink).toBeFalsy();
     });
   });
 

@@ -22,11 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserAuthServiceTest {
@@ -155,6 +151,16 @@ class UserAuthServiceTest {
 		verify(authService, times(1)).setPasswordForRegisteredUser(userRepresentation, password, otp, email);
 		verify(authService, times(1)).deleteUserSessions(userRepresentation.getId());
 	}
+
+    @Test
+    void sendUpdateTotpMagicLink() {
+        String userId = "userId";
+
+        doNothing().when(authService).sendUpdateTotpMagicLink(userId);
+        service.sendUpdateTotpMagicLink(userId);
+
+        verify(authService, times(1)).sendUpdateTotpMagicLink(userId);
+    }
 
 	@Test
 	void resetPassword_user_not_exist() {

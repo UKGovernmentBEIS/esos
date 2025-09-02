@@ -165,6 +165,7 @@ export class OperatorUsersService {
    * @param userId The operator user id
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
+   * @deprecated
    */
   public resetOperator2Fa(accountId: number, userId: string): Observable<OperatorUserDTO>;
   public resetOperator2Fa(

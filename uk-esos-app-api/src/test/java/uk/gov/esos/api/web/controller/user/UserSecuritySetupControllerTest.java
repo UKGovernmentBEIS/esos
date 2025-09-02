@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 import uk.gov.esos.api.authorization.core.domain.AppUser;
+import uk.gov.esos.api.user.core.domain.dto.EmailDTO;
 import uk.gov.esos.api.user.core.domain.dto.OneTimePasswordDTO;
 import uk.gov.esos.api.user.core.domain.dto.TokenDTO;
 import uk.gov.esos.api.user.core.service.UserSecuritySetupService;
@@ -31,6 +32,7 @@ class UserSecuritySetupControllerTest {
     private static final String BASE_PATH = "/v1.0/users/security-setup";
     private static final String REQUEST_TO_CHANGE_2FA_PATH = "/2fa/request-change";
     private static final String CHANGE_2FA_PATH = "/2fa/delete";
+    private static final String RESET_2FA_PATH = "/2fa/reset-2fa";
 
     @InjectMocks
     private UserSecuritySetupController userSecuritySetupController;
@@ -85,5 +87,21 @@ class UserSecuritySetupControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(userSecuritySetupService, times(1)).deleteOtpCredentials(token);
+    }
+
+    @Test
+    void requestToReset2fa() throws Exception {
+        String email = "email";
+        EmailDTO emailDTO = new EmailDTO();
+        emailDTO.setEmail(email);
+
+        doNothing().when(userSecuritySetupService).requestToReset2fa(email);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + RESET_2FA_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(email)))
+                .andExpect(status().isNoContent());
+
+        verify(userSecuritySetupService, times(1)).requestToReset2fa(email);
     }
 }

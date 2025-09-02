@@ -25,6 +25,7 @@ import uk.gov.esos.api.authorization.core.domain.AppUser;
 import uk.gov.esos.api.common.domain.enumeration.RoleType;
 import uk.gov.esos.api.files.common.domain.dto.FileDTO;
 import uk.gov.esos.api.token.FileToken;
+import uk.gov.esos.api.user.core.domain.dto.EmailDTO;
 import uk.gov.esos.api.user.core.service.UserSignatureService;
 import uk.gov.esos.api.user.regulator.domain.RegulatorUserDTO;
 import uk.gov.esos.api.user.regulator.domain.RegulatorUserUpdateDTO;
@@ -116,7 +117,16 @@ public class RegulatorUserManagementController {
                 userSignatureService.generateSignatureFileToken(userId, signatureUuid);
         return new ResponseEntity<>(getFileToken, HttpStatus.OK);
     }
-    
+
+    /**
+     * Resets the 2FA device for the user of type REGULATOR that corresponds to the provided user id.
+     *
+     * @deprecated Reset 2fa is only allowed through {@link UserSecuritySetupController#requestToReset2fa(EmailDTO)}
+     * @param currentUser The current logged-in user
+     * @param userId The regulator user id to reset 2FA
+     * @return An empty response with status 200 (OK)
+     */
+    @Deprecated(forRemoval = true)
     @PostMapping(path = "/{userId}/reset-2fa")
     @Operation(summary = "Resets the 2FA device for the user of type REGULATOR that corresponds to the provided user id")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = RegulatorUserUpdateDTO.class))})

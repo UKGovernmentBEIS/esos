@@ -23,7 +23,7 @@ public class UserAuthService {
     public UserInfoDTO getUserByUserId(String userId) {
         return userMapper.toUserInfoDTO(authService.getUserRepresentationById(userId));
     }
-    
+
 	public Optional<UserInfoDTO> getUserByUserIdOpt(String userId) {
 		return Optional.ofNullable(userMapper.toUserInfoDTO(authService.getUserRepresentationById(userId)));
 	}
@@ -33,19 +33,19 @@ public class UserAuthService {
                 .getByUsername(email)
                 .map(userMapper::toUserInfoDTO);
     }
-    
+
     public List<UserInfo> getUsers(List<String> userIds) {
         return authService.getUsers(userIds);
     }
-    
+
     public <T> List<T> getUsersWithAttributes(List<String> userIds, Class<T> attributesClazz) {
         return authService.getUsersWithAttributes(userIds, attributesClazz);
     }
-    
+
     public Optional<UserDetails> getUserDetails(String userId) {
         return authService.getUserDetails(userId);
     }
-    
+
     public Optional<FileDTO> getUserSignature(String signatureUuid) {
         return authService.getUserSignature(signatureUuid);
     }
@@ -53,7 +53,7 @@ public class UserAuthService {
     public void enablePendingUser(String userId, String password) {
         authService.enablePendingUser(userId, password);
     }
-    
+
     public void updateUserTerms(String userId, Short newTermsVersion) {
         authService.updateUserTerms(userId, newTermsVersion);
     }
@@ -73,6 +73,10 @@ public class UserAuthService {
 		authService.deleteUserSessions(userId);
 	}
 
+    public void sendUpdateTotpMagicLink(String userId) {
+        authService.sendUpdateTotpMagicLink(userId);
+    }
+
 	public void resetPassword(String email, String otp, String password) {
 		authService.getByUsername(email)
 		        .ifPresentOrElse(userRepresentation -> {
@@ -80,6 +84,6 @@ public class UserAuthService {
 		            authService.deleteUserSessions(userRepresentation.getId());
 		            },
                        () -> {throw new BusinessException(ErrorCode.USER_NOT_EXIST);});
-		
+
 	}
 }
