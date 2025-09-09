@@ -34,6 +34,7 @@ public class UIConfigurationController {
                 .features(uiProperties.getFeatures())
                 .expirationTime(jwtProperties.getClaim().getUserInvitationExpIntervalMinutes())
                 .analytics(uiProperties.getAnalytics())
+                .fordwayResetCredentialsUrl(uiProperties.getFordwayResetCredentialsUrl())
                 .build());
     }
 }

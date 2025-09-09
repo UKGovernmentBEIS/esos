@@ -1087,12 +1087,6 @@ paths:
       responses:
         '204':
           description: No Content
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nTOKEN1001 | Invalid Token \t\n EMAIL1001 | The verification link has expired \t\n USER1005 | User not exist \t\n FORM1001 | Form validation failed"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Internal Server Error
           content:
@@ -10521,6 +10515,8 @@ components:
           type: object
           additionalProperties:
             type: string
+        fordwayResetCredentialsUrl:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

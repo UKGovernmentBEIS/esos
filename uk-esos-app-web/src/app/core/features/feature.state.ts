@@ -8,6 +8,7 @@ export interface FeatureState {
   analytics?: {
     gtmContainerId: string;
   };
+  fordwayResetCredentialsUrl: string;
 }
 
 export const initialState: FeatureState = {
@@ -16,4 +17,5 @@ export const initialState: FeatureState = {
   analytics: {
     gtmContainerId: '',
   },
+  fordwayResetCredentialsUrl: null,
 };

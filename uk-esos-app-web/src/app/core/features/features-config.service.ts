@@ -24,6 +24,7 @@ export class FeaturesConfigService {
           analytics: {
             gtmContainerId: props.analytics?.['gtmContainerId'],
           },
+          fordwayResetCredentialsUrl: props.fordwayResetCredentialsUrl,
         }),
       ),
       map(() => true),

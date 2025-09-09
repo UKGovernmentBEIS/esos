@@ -115,6 +115,10 @@ public class OneLoginIdpVerifyPassword implements RequiredActionProvider, Requir
 
         if (user.credentialManager().isValid(UserCredentialModel.password(password))) {
             context.getAuthenticationSession().setAuthNote(AuthenticationManager.PASSWORD_VALIDATED, "true");
+            if (context.getRealm().isBruteForceProtected()) {
+                BruteForceProtector protector = context.getSession().getProvider(BruteForceProtector.class);
+                protector.successfulLogin(context.getRealm(), user, context.getSession().getContext().getConnection(), context.getSession().getContext().getUri());
+            }
             return true;
         } else {
             return badPasswordHandler(context, user, false);
@@ -127,7 +131,7 @@ public class OneLoginIdpVerifyPassword implements RequiredActionProvider, Requir
         context.getEvent().error(Errors.INVALID_USER_CREDENTIALS);
 
         Response challengeResponse = challenge(context, Messages.INVALID_PASSWORD, Validation.FIELD_PASSWORD);
-        if (!isEmptyPassword) {
+        if (!isEmptyPassword && context.getRealm().isBruteForceProtected()) {
             protector.failedLogin(context.getRealm(), user, context.getSession().getContext().getConnection(), context.getSession().getContext().getUri());
         }
 
@@ -142,18 +146,11 @@ public class OneLoginIdpVerifyPassword implements RequiredActionProvider, Requir
         if (bruteForceError != null) {
             context.getEvent().user(user);
             context.getEvent().error(bruteForceError);
-            Response challengeResponse = challenge(context, disabledByBruteForceError(bruteForceError), Validation.FIELD_USERNAME);
+            Response challengeResponse = challenge(context, Messages.INVALID_PASSWORD, Validation.FIELD_PASSWORD);
             context.challenge(challengeResponse);
             return true;
         }
 
         return false;
-    }
-
-    private String disabledByBruteForceError(String error) {
-        if (Errors.USER_TEMPORARILY_DISABLED.equals(error)) {
-            return Messages.ACCOUNT_TEMPORARILY_DISABLED;
-        }
-        return Messages.ACCOUNT_PERMANENTLY_DISABLED;
     }
 }

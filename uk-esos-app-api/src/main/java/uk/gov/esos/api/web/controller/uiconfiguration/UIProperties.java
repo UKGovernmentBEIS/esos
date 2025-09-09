@@ -14,4 +14,5 @@ import java.util.Map;
 public class UIProperties {
 	private Map<String, Boolean> features;
 	private Map<String, String> analytics;
+    private String fordwayResetCredentialsUrl;
 }

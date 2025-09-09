@@ -6,6 +6,7 @@ base_url = "http://localhost:{}/auth".format(kc_port)
 esos_realm_name = "uk-esos"
 admin_realm_name= "master"
 esos_browser_flow = "ESOSBrowser"
+one_login_idp_alias = "govuk-one-login"
 
 admin_username = os.environ['KEYCLOAK_ADMIN']
 admin_password = os.environ['KEYCLOAK_ADMIN_PASSWORD']
@@ -90,4 +91,62 @@ def update_required_action(updated_required_action):
     url = f"{base_url}/admin/realms/{esos_realm_name}/authentication/required-actions/{updated_required_action['alias']}"
     headers = create_common_headers(get_admin_access_token())
     response = requests.put(url, headers=headers, json=updated_required_action)
+    response.raise_for_status()
+
+def get_identity_provider_for_realm(realm_name, idp_alias):
+    url = f"{base_url}/admin/realms/{esos_realm_name}/identity-provider/instances/{idp_alias}"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+
+    return response.json()
+
+def update_identity_provider_for_realm(realm_name, idp_alias, updated_idp):
+    url = f"{base_url}/admin/realms/{realm_name}/identity-provider/instances/{idp_alias}"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.put(url, headers=headers, json=updated_idp)
+    response.raise_for_status()
+
+def get_client_for_realm(realm_name, client_id):
+    url = f"{base_url}/admin/realms/{realm_name}/clients"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+
+    client = list(filter(lambda x: x.get('clientId') == client_id, response.json()))
+    return client[0] if client else None
+
+def update_client_for_realm(realm_name, client_id, updated_client):
+    url = f"{base_url}/admin/realms/{realm_name}/clients/{client_id}"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.put(url, headers=headers, json=updated_client)
+    response.raise_for_status()
+
+def get_client_policy_profiles_for_realm(realm_name):
+    url = f"{base_url}/admin/realms/{realm_name}/client-policies/profiles"
+    headers = create_common_headers(get_admin_access_token())
+    params = {'include-global-profiles': 'true'}
+    response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+
+    return response.json()
+
+def update_client_policy_profiles_for_realm(realm_name, profiles):
+    url = f"{base_url}/admin/realms/{realm_name}/client-policies/profiles"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.put(url, headers=headers, json=profiles)
+    response.raise_for_status()
+
+def get_client_policies_for_realm(realm_name):
+    url = f"{base_url}/admin/realms/{realm_name}/client-policies/policies"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+
+    return response.json()
+
+def update_client_policies_for_realm(realm_name, policies):
+    url = f"{base_url}/admin/realms/{realm_name}/client-policies/policies"
+    headers = create_common_headers(get_admin_access_token())
+    response = requests.put(url, headers=headers, json=policies)
     response.raise_for_status()

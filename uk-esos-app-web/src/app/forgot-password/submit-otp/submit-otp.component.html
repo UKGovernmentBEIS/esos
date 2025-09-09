@@ -3,8 +3,8 @@
   <esos-wizard-step
     (formSubmit)="onSubmit()"
     [formGroup]="form"
-    submitText="Submit"
-    heading="Enter the code shown in the authenticator app"
+    submitText="Continue"
+    heading="Enter the 6 digit code shown in your ESOS authenticator app"
   >
     <div
       formControlName="otp"
@@ -12,7 +12,12 @@
       label="Enter the 6-digit code"
       widthClass="govuk-!-width-one-third"
     ></div>
+
   </esos-wizard-step>
+
+  <a govukLink target="_blank" [href]="fordwayResetCredentialsUrl$ | async">
+    I have forgotten my password and lost access to my authenticator app
+  </a>
 </ng-container>
 
 <ng-template #passwordReset>
@@ -28,7 +33,6 @@
         <a govukLink [routerLink]="[]" (click)="onSignInAgain()">sign in to the ESOS service</a>
         with your new password.
       </p>
-      <esos-back-to-top></esos-back-to-top>
     </div>
   </div>
 </ng-template>

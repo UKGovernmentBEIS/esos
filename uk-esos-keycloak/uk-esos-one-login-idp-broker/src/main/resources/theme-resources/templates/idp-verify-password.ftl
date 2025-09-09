@@ -20,9 +20,22 @@
 
             <div id="kc-form-buttons" class="govuk-button-group">
                 <input class="govuk-button" data-module="govuk-button" name="login" id="kc-login" type="submit"
-                       value="${msg("doLogIn")}"/>
+                       value="${msg("continueButtonText")}"/>
             </div>
         </form>
+
+        <div id="kc-problems-sign-in" class="${properties.kcSignUpClass!}">
+            <div id="kc-problems-sign-in-wrapper" class="${properties.kcInfoAreaWrapperClass!}">
+                <div id="kc-solutions" class="govuk-body">
+                    <ul class="govuk-list">
+                        <li>
+                            <a id="forgotCredentialsLink" class="govuk-link" target="_blank"
+                               href="${properties.fordwayResetCredentialsUrl}">${msg("forgotCredentialsText")}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </#if>
 </@layout.registrationLayout>
 

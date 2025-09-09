@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { BehaviorSubject, combineLatest, EMPTY, first, switchMap } from 'rxjs';
 
+import { FeatureStore } from '@core/features/feature.store';
 import { AuthService } from '@core/services/auth.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 
@@ -22,6 +23,7 @@ export class SubmitOtpComponent {
   isSummaryDisplayed$ = new BehaviorSubject<boolean>(false);
   email$ = this.store.select('email');
   isPasswordReset = false;
+  fordwayResetCredentialsUrl$ = this.featureStore.select('fordwayResetCredentialsUrl');
 
   form = this.fb.group({
     otp: [
@@ -41,7 +43,9 @@ export class SubmitOtpComponent {
     private readonly forgotPasswordService: ForgotPasswordService,
     private readonly fb: UntypedFormBuilder,
     private readonly store: ResetPasswordStore,
-  ) {}
+    private readonly featureStore: FeatureStore,
+  ) {
+  }
 
   onSubmit(): void {
     combineLatest([this.store.select('token'), this.store.select('password')])
@@ -57,7 +61,9 @@ export class SubmitOtpComponent {
         catchBadRequest([ErrorCodes.OTP1001, ErrorCodes.USER1004, ErrorCodes.USER1005], (res) => {
           switch (res.error.code) {
             case ErrorCodes.OTP1001:
-              this.form.get('otp').setErrors({ otpInvalid: 'Invalid OTP' });
+              this.form.get('otp').setErrors({
+                otpInvalid: 'The code you entered is not correct, check your authenticator app and try again.'
+              });
               break;
             case ErrorCodes.USER1004:
             case ErrorCodes.USER1005:

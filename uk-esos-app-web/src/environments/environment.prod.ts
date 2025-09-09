@@ -16,6 +16,7 @@ const keycloakInitOptions: KeycloakInitOptions = {
   onLoad: 'check-sso',
   enableLogging: true,
   pkceMethod: 'S256',
+  responseMode: 'query',
 };
 
 const keycloakOptions: KeycloakOptions = {

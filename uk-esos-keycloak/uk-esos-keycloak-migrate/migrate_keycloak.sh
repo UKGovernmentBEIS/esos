@@ -55,6 +55,9 @@ changelogScripts=(
 "27_create_one_login_first_broker_login_flow.sh"
 "28_update_esos_realm_settings_for_onelogin.sh"
 "29_add_onelogin_idp_event_listener.sh"
+"30_update_onelogin_idp_with_pkce_enabled.sh"
+"31_remove_direct_access_grants_from_web_app_client.sh"
+"32_update_client_policies_for_security_enhancements.sh"
 )
 
 updatelogScripts=(
