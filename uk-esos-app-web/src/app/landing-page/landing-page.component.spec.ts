@@ -109,8 +109,8 @@ describe('LandingPageComponent', () => {
     setUser('OPERATOR', 'ACCEPTED');
     expect(page.pageHeadingContent).toEqual('Your user account needs to be activated.');
     expect(page.paragraphContents).toEqual([
-      'Your user account must be activated before you can sign in to the Manage your Energy Savings Opportunity Scheme reporting service.',
-      "If your account was created by your regulator, they will now activate your account. You'll receive an email once your account has been activated. Contact your regulator if your account has not been activated after 2 working days.",
+      'Your user account must be activated by another Advanced User in the organisation account to which you have been invited, before you can use the Manage your Energy Savings Opportunity Scheme reporting service. If this is not possible, contact your Regulator.',
+      "You'll receive an email once your account has been activated. Contact your regulator if your account has not been activated after 2 working days.",
     ]);
   });
 });

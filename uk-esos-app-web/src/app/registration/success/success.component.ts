@@ -13,7 +13,8 @@ import { UserRegistrationStore } from '../store/user-registration.store';
         <h3 class="govuk-heading-m">What happens next</h3>
         <p class="govuk-body">
           <ng-container *ngIf="isInvited$ | async as isInvited; else nonInvited">
-            Your user account must be activated by Regulator.
+            Your ESOS user account can now be activated by another Advanced User in the organisation account to which
+            you have been invited. If this is not possible, contact your Regulator.
           </ng-container>
           <ng-template #nonInvited>
             You can now apply to create a new organisation account so you can start your ESOS reporting.

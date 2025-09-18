@@ -59,7 +59,9 @@ describe('SuccessComponent', () => {
     });
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Your user account must be activated by Regulator.');
+    expect(compiled.textContent).toContain(
+      'Your ESOS user account can now be activated by another Advanced User in the organisation account to which you have been invited. If this is not possible, contact your Regulator.',
+    );
   });
 
   it('should dispay invited info if non invited', () => {

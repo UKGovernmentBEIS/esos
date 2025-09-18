@@ -2,6 +2,7 @@ package gov.uk.esos.keycloak.onelogin.broker.authenticator;
 
 import gov.uk.esos.keycloak.onelogin.broker.Util;
 import gov.uk.esos.keycloak.onelogin.broker.actiontoken.OneLoginIdpVerifyEmailActionToken;
+import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriBuilderException;
@@ -78,7 +79,11 @@ public class OneLoginIdpEmailVerificationAuthenticator extends AbstractIdpAuthen
 
     @Override
     protected void actionImpl(AuthenticationFlowContext context, SerializedBrokeredIdentityContext serializedCtx, BrokeredIdentityContext brokerContext) {
-        log.debugf("Re-sending email requested for user, details follow");
+        MultivaluedMap<String, String> queryParams = context.getHttpRequest().getUri().getQueryParameters(true);
+        if (queryParams.containsKey("formAction") && "cancel".equals(queryParams.getFirst("formAction"))) {
+            context.cancelLogin();
+            return;
+        }
 
         // This will allow user to re-send email again
         context.getAuthenticationSession().removeAuthNote(Constants.VERIFY_EMAIL_KEY);
