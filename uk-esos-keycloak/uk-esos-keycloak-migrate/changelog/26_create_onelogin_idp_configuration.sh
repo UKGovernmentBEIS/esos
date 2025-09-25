@@ -52,7 +52,7 @@ CREATE_ONELOGIN_IDP=$(curl -s -L -X POST "$UPDATE_REALM_URL$UK_ESOS_REALM_NAME"/
     "sendClientIdOnLogout": "true",
     "metadataDescriptorUrl": "'$ONELOGIN_BASE_URL'/.well-known/openid-configuration",
     "pkceEnabled": "true",
-    "pkceMethod": "S256"
+    "pkceMethod": "S256",
     "forwardParameters": "vtr=[Cl.Cm]",
     "authorizationUrl": "'$ONELOGIN_BASE_URL'/authorize",
     "disableUserInfo": "false",

@@ -28,11 +28,5 @@ public class CloudWatchProperties {
     private String region;
 
     @NotEmpty
-    private String accessKey;
-
-    @NotEmpty
-    private String secretKey;
-
-    @NotEmpty
     private String awsEndpointUrl;
 }
