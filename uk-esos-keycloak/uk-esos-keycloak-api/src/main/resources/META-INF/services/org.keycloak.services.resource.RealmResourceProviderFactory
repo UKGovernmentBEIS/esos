@@ -1,1 +1,2 @@
 gov.uk.esos.keycloak.user.api.provider.UserResourceProviderFactory
+gov.uk.esos.keycloak.user.api.provider.DatabaseLockResourceProviderFactory

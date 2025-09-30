@@ -60,3 +60,43 @@ getChangeLogRealmUsers(){
 	echo $USERS
 }
 export -f getChangeLogRealmUsers
+
+#Locks table databasechangeloglock
+lockDatabase(){
+	#Variables
+	KEYCLOAK_ADMIN_ACCESS_TOKEN=$(getKeycloakAdminAccessToken)
+	LOCK_URL="$BASE_URL/realms/master/database-lock"
+
+	IS_LOCK_SUCCESSFUL=$(curl -s -L -X POST "$LOCK_URL" \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $KEYCLOAK_ADMIN_ACCESS_TOKEN" \
+  | jq -r '.success // false')
+
+  echo $IS_LOCK_SUCCESSFUL
+}
+export -f lockDatabase
+
+#Unlocks table databasechangeloglock
+unlockDatabase(){
+  logMessage "Unlocking database..."
+
+	#Variables
+	KEYCLOAK_ADMIN_ACCESS_TOKEN=$(getKeycloakAdminAccessToken)
+	UNLOCK_URL="$BASE_URL/realms/master/database-lock"
+
+	curl -s -L -X DELETE "$UNLOCK_URL" \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $KEYCLOAK_ADMIN_ACCESS_TOKEN"
+}
+export -f unlockDatabase
+
+#Attempts to lock the table databasechangeloglock
+attemptLockDatabase(){
+  IS_LOCK_SUCCESSFUL=$(lockDatabase)
+
+  if [ "$IS_LOCK_SUCCESSFUL" = false ]; then
+  	logMessage "Error: Could not lock database. Exiting..."
+    exit
+  fi
+}
+export -f attemptLockDatabase

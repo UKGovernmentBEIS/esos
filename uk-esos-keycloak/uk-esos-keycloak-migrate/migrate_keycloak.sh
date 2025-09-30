@@ -74,6 +74,9 @@ updatelogScripts=(
 "09_activate_and_set_priority_for_custom_actions.sh"
 )
 
+#Attempt to lock table databasechangeloglock so that other processes cannot execute the same scripts simultaneously
+attemptLockDatabase
+
 #Get already executed scripts as concatenated string
 EXECUTED_SCRIPTS=$(getChangeLogRealmUsers)
 
@@ -96,5 +99,8 @@ do
 	var="${UPDATELOG_PATH}${script}"
 	eval $CURRENT_PATH/$var
 done
+
+#Unlock table databasechangeloglock
+unlockDatabase
 
 logMessage ">>>>>>>>>> Keycloak configuration finished >>>>>>>>>>"
