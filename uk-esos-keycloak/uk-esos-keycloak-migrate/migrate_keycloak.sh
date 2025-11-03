@@ -72,6 +72,8 @@ updatelogScripts=(
 "07_update_uk_esos_realm.sh"
 "08_disable_org_and_browser_forms_auth.sh"
 "09_activate_and_set_priority_for_custom_actions.sh"
+"10_set_up_2fa_on_master_realm_browser.sh"
+"11_disable_2fa_on_master_realm_direct_grant.sh"
 )
 
 #Attempt to lock table databasechangeloglock so that other processes cannot execute the same scripts simultaneously

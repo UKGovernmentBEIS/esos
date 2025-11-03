@@ -15,17 +15,12 @@ import { GovukComponentsModule } from 'govuk-components';
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-notification-banner heading="Important">
-          <p class="govuk-notification-banner__heading">How your sign in has changed</p>
-          <p>Sign in using your GOV.UK One Login. If you don't have one you can create one.</p>
-          <p>If you have sign in for ESOS, you should use the same email address to create your GOV.UK One Login.</p>
-        </govuk-notification-banner>
         <esos-page-heading>Create a GOV.UK One Login or sign in</esos-page-heading>
         <div class="govuk-body">
           <p>
-            You need a GOV.UK One Login to sign in to this service. You can create one if you do not already have one.
+            You need a GOV.UK One Login to sign in to the ESOS service. You can create one if you do not already have
+            one.
           </p>
-
           <button type="button" class="govuk-button" (click)="continue()">Continue</button>
         </div>
       </div>
